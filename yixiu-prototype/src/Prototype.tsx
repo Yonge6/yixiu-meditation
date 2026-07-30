@@ -126,15 +126,16 @@ export default function Prototype() {
   const [activeScene, setActiveScene] = useState<SceneId>("morning");
   const [activeTab, setActiveTab] = useState<TabId>("listen");
   const [duration, setDuration] = useState<(typeof durations)[number]>(15);
-  const [remainingSeconds, setRemainingSeconds] = useState(15 * 60);
+  const [sessionMinutes, setSessionMinutes] = useState(10);
+  const [remainingSeconds, setRemainingSeconds] = useState(10 * 60);
   const [isPlaying, setIsPlaying] = useState(false);
   const [timerOpen, setTimerOpen] = useState(false);
 
   useAmbientSound(activeScene, isPlaying);
 
   useEffect(() => {
-    setRemainingSeconds(duration * 60);
-  }, [duration, activeScene]);
+    setRemainingSeconds(sessionMinutes * 60);
+  }, [sessionMinutes, activeScene]);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -162,6 +163,7 @@ export default function Prototype() {
 
   const chooseScene = (scene: SceneId) => {
     setActiveScene(scene);
+    setSessionMinutes(duration);
     setIsPlaying(true);
     setActiveTab("listen");
   };
@@ -215,13 +217,13 @@ export default function Prototype() {
               </button>
 
               <div className="session-meta">
-                <strong>{isPlaying ? formatRemaining(remainingSeconds) : `${duration} ${language === "zh" ? "分钟" : "MIN"}`}</strong>
+                <strong>{isPlaying ? formatRemaining(remainingSeconds) : `${sessionMinutes} ${language === "zh" ? "分钟" : "MIN"}`}</strong>
                 <span>
                   {isPlaying
                     ? (language === "zh" ? "正在流动" : "FLOWING NOW")
                     : language === "zh"
-                      ? `${duration} MIN`
-                      : `${duration} 分钟`}
+                      ? `${sessionMinutes} MIN`
+                      : `${sessionMinutes} 分钟`}
                 </span>
               </div>
 
@@ -280,6 +282,7 @@ export default function Prototype() {
                           className={duration === minutes ? "is-selected" : ""}
                           onClick={() => {
                             setDuration(minutes);
+                            setSessionMinutes(minutes);
                             setTimerOpen(false);
                           }}
                         >

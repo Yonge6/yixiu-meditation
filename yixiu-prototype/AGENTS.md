@@ -8,6 +8,8 @@
 - Core product copy: `真实自己，流动人生 / True to Yourself, Flow with Life` and `如水而行 / Be water, my friend.`
 - Keep the home screen focused on starting a meditation; do not turn it into a long philosophy infographic.
 - Prefer rain, ocean, and stream as the three supporting sound scenes.
+- The user-approved visual source of truth is `../design/yixiu-home-water-bilingual-approved.jpg` (and the matching supplied reference): preserve its continuous full-screen sunrise-water background, pronounced translucent asymmetric S-shaped water band, pale-gold ripple lines, and generous ivory water surface.
+- The initial featured Morning Water session is `10 分钟 / 10 MIN`; the separate timer preference control remains `15 分钟 / 15 MIN` until the user changes it.
 
 ## Prototype Instructions
 
