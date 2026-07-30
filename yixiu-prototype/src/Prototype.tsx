@@ -2,13 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronDownIcon,
   ClockIcon,
-  OpacityIcon,
   PauseIcon,
   PersonIcon,
-  SpeakerLoudIcon,
-  TargetIcon,
   TriangleRightIcon,
 } from "@radix-ui/react-icons";
+import { OpacityIcon } from "@radix-ui/react-icons";
 import { MobileScroll } from "./mobile";
 
 type Language = "zh" | "en";
@@ -198,7 +196,7 @@ export default function Prototype() {
             <section className="water-sheet" aria-live="polite">
               <div className="scene-heading">
                 <span className="drop-mark" aria-hidden="true">
-                  <OpacityIcon />
+                  <img src="/assets/yixiu/water-drop-mark.png" alt="" draggable={false} />
                 </span>
                 <div>
                   <h2>{language === "zh" ? active.zh : active.en}</h2>
@@ -325,21 +323,21 @@ export default function Prototype() {
       <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
         <NavButton
           active={activeTab === "listen"}
-          icon={<SpeakerLoudIcon />}
+          icon={<img src="/assets/yixiu/nav-listen.png" alt="" draggable={false} />}
           primary={language === "zh" ? "聆听" : "Listen"}
           secondary={language === "zh" ? "LISTEN" : "聆听"}
           onClick={() => chooseTab("listen")}
         />
         <NavButton
           active={activeTab === "focus"}
-          icon={<TargetIcon />}
+          icon={<img src="/assets/yixiu/nav-focus.png" alt="" draggable={false} />}
           primary={language === "zh" ? "静心" : "Focus"}
           secondary={language === "zh" ? "FOCUS" : "静心"}
           onClick={() => chooseTab("focus")}
         />
         <NavButton
           active={activeTab === "me"}
-          icon={<PersonIcon />}
+          icon={<img src="/assets/yixiu/nav-me.png" alt="" draggable={false} />}
           primary={language === "zh" ? "我的" : "Me"}
           secondary={language === "zh" ? "ME" : "我的"}
           onClick={() => chooseTab("me")}

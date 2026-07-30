@@ -2,64 +2,56 @@
 
 ## Evidence
 
-- Source visual truth: `/Users/yongyuan/Documents/冥想/design/yixiu-home-water-bilingual-approved.jpg` (SHA-256 matches the latest user-supplied reference)
-- Generated background asset: `/Users/yongyuan/Documents/冥想/yixiu-prototype/public/assets/yixiu/water-flow-background-v2.png`
+- Source visual truth: `/Users/yongyuan/Documents/冥想/design/yixiu-home-water-bilingual-approved.jpg` (590 × 1280; SHA-256 matches the latest user-supplied reference)
+- Baseline audit: `/Users/yongyuan/Documents/冥想/design/yixiu-fidelity-audit-before.png`
 - Browser-rendered implementation: `/Users/yongyuan/Documents/冥想/design/yixiu-home-implementation-393x852.png`
 - Full-view comparison: `/Users/yongyuan/Documents/冥想/design/yixiu-home-design-qa-approved-comparison.png`
-- Typography focus comparison: `/Users/yongyuan/Documents/冥想/design/yixiu-home-qa-focus-typography.png`
-- Controls focus comparison: `/Users/yongyuan/Documents/冥想/design/yixiu-home-qa-focus-controls.png`
-- Local implementation URL: `http://localhost:4173/`
-- Browser viewport: `1400 × 1200` CSS pixels
-- App viewport: `[data-phone-screen]`, verified at `393 × 852` CSS pixels
-- Device scale factor: `1`
-- Source pixels: `590 × 1280`
-- Implementation pixels: `393 × 852`
-- Density normalization: the source was downsampled to `393 × 852`; implementation was captured at a 1:1 CSS-pixel scale and compared at `393 × 852`.
+- Top typography focus: `/Users/yongyuan/Documents/冥想/design/yixiu-home-qa-focus-top.png`
+- Session-area focus: `/Users/yongyuan/Documents/冥想/design/yixiu-home-qa-focus-session.png`
+- Controls and navigation focus: `/Users/yongyuan/Documents/冥想/design/yixiu-home-qa-focus-controls.png`
+- Local implementation URL: `http://localhost:5173/`
+- Browser viewport: 1280 × 720 CSS pixels.
+- Runtime phone surface: `[data-phone-screen]`, rendered at 272.826 × 591.471 CSS pixels by the preview shell's 0.694 scale.
+- Density normalization: the phone surface was cropped from the browser screenshot and resized to 393 × 852; the 590 × 1280 source was also normalized to 393 × 852 for direct comparison.
 - State: iPhone, initial Chinese home, Morning Water selected, featured 10-minute session, 15-minute timer preference, paused.
+- Device chrome is template-owned and excluded from app-owned fidelity findings.
 
 ## Findings
 
 - No actionable P0, P1, or P2 findings remain.
-- Fonts and typography: the implementation preserves the source's Song-style Chinese display hierarchy, restrained serif English labels, gold secondary copy, readable weights, and the two-line bilingual philosophy.
-- Spacing and layout rhythm: the hero, left-aligned Morning Water heading, S-shaped water surface, session control, philosophy divider, three-card grid, utility controls, and curved navigation follow the source hierarchy and fit fully above the persistent navigation.
-- Colors and visual tokens: the deep water green, warm ivory, muted gold, translucent surfaces, subtle borders, and low-contrast secondary states remain consistent with the approved direction.
-- Image quality and asset fidelity: the hero and all three nature cards use real raster assets with intentional crops; UI icons use Radix primitives. No placeholder, emoji, ASCII, or handcrafted SVG asset substitutes are present.
-- Copy and content: Chinese and English product copy, “真实自己，流动人生 / True to Yourself, Flow with Life,” and “如水而行 / Be water, my friend.” are present and switch language priority correctly.
-- Accessibility and affordances: play/pause, scene cards, timer, language toggle, breathing action, and navigation expose labeled button states. Text contrast is readable in the rendered capture.
+- Fonts and typography: the implementation matches the source's Song-style Chinese display hierarchy, restrained serif English labels, muted-gold secondary copy, readable weights, and intentional two-line English philosophy.
+- Spacing and layout rhythm: the greeting, philosophy, Morning Water heading, play control, 10-minute badge, philosophy divider, card grid, compact utility controls, and persistent navigation follow the source's measured vertical order.
+- Colors and surfaces: deep water green, warm ivory, pale gold, translucent glass, subtle borders, and the asymmetric water curve remain consistent with the approved visual.
+- Image and icon fidelity: the full-height sunrise/water raster, all three nature cards, water-drop mark, curved navigation panel, and navigation icons are dedicated image assets. No emoji, ASCII, placeholder, or generic icon substitutes remain in the audited home screen.
+- Copy and content: “真实自己，流动人生 / True to Yourself, Flow with Life,” “晨雾之水 / Morning Water,” and “如水而行 / Be Water, My Friend.” are present with the correct bilingual hierarchy.
+- Accessibility and affordances: play/pause, scene cards, timer, language switch, breathing action, and navigation expose labeled button states.
+- Remaining P3 differences are limited to small raster-crop and texture variation, plus source content hidden by preview-shell device chrome. They do not change hierarchy, readability, or task flow.
 
 ## Comparison History
 
+### Baseline — blocked
+
+- [P2] The title was oversized and the philosophy block sat too low.
+- [P2] Morning Water, the water-drop mark, the divider, and the main play area did not follow the source's measured alignment.
+- [P2] Utility controls stretched across the screen instead of using the compact source widths.
+- [P2] The bottom navigation used a generic curve and generic speaker-like icons.
+
 ### Iteration 1 — blocked
 
-- [P2] The hero philosophy crossed a dark tree region and lost contrast.
-- [P2] The content stack was too compressed: the session badge, philosophy divider, cards, and timer row sat noticeably higher than the approved design.
-- [P2] English timer mode repeated `30 MIN` in both lines instead of preserving bilingual context.
-- [P2] Play controls used an outlined triangle that did not match the source's solid play affordance.
+- Corrected the title, bilingual wrapping, compact controls, play scale, and primary content rhythm.
+- The title then read too small, and the lower water/nav silhouette still drifted from the source.
 
-Fixes:
+### Iteration 2 — blocked
 
-- Shifted the hero image crop upward to place the philosophy on the brighter sky.
-- Increased the session-to-badge gap, card height, and card-to-controls spacing while keeping the persistent navigation visible.
-- Corrected timer secondary labels to `MIN / 分钟` according to language priority.
-- Replaced the outlined play glyph with the solid Radix triangle icon.
-
-Post-fix evidence:
-
-- `/Users/yongyuan/Documents/冥想/design/yixiu-home-design-qa-approved-comparison.png`
-- `/Users/yongyuan/Documents/冥想/design/yixiu-home-qa-focus-typography.png`
-- `/Users/yongyuan/Documents/冥想/design/yixiu-home-qa-focus-controls.png`
-
-### Iteration 2 — passed
-
-- Side-by-side full-view and focused comparisons show no remaining actionable P0/P1/P2 mismatch.
-- The earlier implementation used a functional 15-minute default session and treated the reference's 10-minute badge as an example state.
+- Added the dedicated curved navigation panel and compact control geometry.
+- The lower water crop, drop mark, and navigation symbols were still visibly different.
 
 ### Iteration 3 — passed
 
-- Rebuilt the continuous portrait background to match the supplied reference's sunrise lake, translucent asymmetric S-curve, ivory water, and pale-gold ripples.
-- Restored the reference's exact initial content state: Morning Water starts at 10 minutes while the separate timer preference remains 15 minutes.
-- Moved the Morning Water heading to the reference's left alignment, raised the greeting, enlarged the solid play symbol, and tightened the lower vertical rhythm.
-- The final side-by-side comparison shows no remaining actionable P0/P1/P2 mismatch.
+- Blended the continuous background so the upper S-curve remains visible while the lower area returns to warm ivory water.
+- Replaced the drop mark and all three navigation symbols with source-matched raster assets.
+- Re-measured typography, play/badge spacing, card proportions, control widths, and navigation height against the normalized source.
+- Final full-view and focused comparisons contain no actionable P0/P1/P2 mismatch.
 
 ## Primary Interactions Tested
 
@@ -73,7 +65,7 @@ Post-fix evidence:
 
 ## Runtime and Console
 
-- `pnpm run check:runtime`: passed; 28 protected runtime files intact.
+- `pnpm run check:runtime`: passed; protected runtime files intact.
 - `pnpm run build`: passed.
 - Browser warnings/errors checked after the interaction run: none.
 
