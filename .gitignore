@@ -1,0 +1,10 @@
+.DS_Store
+*.xcuserstate
+xcuserdata/
+DerivedData/
+
+yixiu-prototype/node_modules/
+yixiu-prototype/dist/
+yixiu-prototype/dist-gh/
+yixiu-prototype/test-results/
+yixiu-prototype/playwright-report/

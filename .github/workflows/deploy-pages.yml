@@ -1,0 +1,63 @@
+name: Deploy Yixiu Meditation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: yixiu-prototype
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: yixiu-prototype/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify protected mobile runtime
+        run: npm run check:runtime
+
+      - name: Type-check and build GitHub Pages bundle
+        env:
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+        run: |
+          npx tsc
+          npx vite build --base="/${REPOSITORY_NAME}/" --outDir=dist-gh
+          node scripts/prepare-github-pages.mjs dist-gh "/${REPOSITORY_NAME}/"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: yixiu-prototype/dist-gh
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
