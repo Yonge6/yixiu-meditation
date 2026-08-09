@@ -8,6 +8,24 @@
   --yixiu-line: rgba(177, 133, 59, 0.42);
 }
 
+body {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 250, 238, 0.98), rgba(239, 234, 220, 0.96) 72%),
+    #f1ecdf;
+}
+
+.h5-stage {
+  position: relative;
+  width: min(100%, 430px);
+  height: 100%;
+  min-height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--yixiu-ivory);
+  box-shadow: 0 0 0 1px rgba(74, 92, 82, 0.06), 0 18px 60px rgba(42, 59, 51, 0.1);
+  --device-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 button {
   font: inherit;
 }
@@ -686,6 +704,11 @@ button {
 }
 
 @media (max-width: 430px) {
+  .h5-stage {
+    width: 100%;
+    box-shadow: none;
+  }
+
   .scene-card {
     height: 132px;
   }
