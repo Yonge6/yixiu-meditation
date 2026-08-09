@@ -175,13 +175,20 @@ test("opens a Wendao-style right drawer and closes it with Escape", async ({ pag
   await expect(drawer).toBeVisible();
   await expect(drawer.getByText("一休 · YIXIU")).toBeVisible();
   await expect(drawer.getByRole("button", { name: "浏览全部声音" })).toBeVisible();
-  await expect(drawer.getByText("十四种自然白噪音")).toBeVisible();
+  await expect(drawer.getByText("十四种真实自然录音")).toBeVisible();
   await expect(drawer.getByRole("button", { name: /声音播放器/ })).toBeVisible();
   await expect(drawer.getByRole("button", { name: /水之呼吸/ })).toBeVisible();
   await expect(drawer.getByRole("button", { name: /我的一休/ })).toBeVisible();
   await expect(drawer.getByRole("button", { name: /产品哲学/ })).toBeVisible();
   await expect(drawer.getByText("界面语言")).toHaveCount(0);
   await expect(drawer.getByRole("button", { name: "EN", exact: true })).toHaveCount(0);
+
+  await drawer.getByRole("button", { name: /水之呼吸/ }).click();
+  const focusDrawer = page.getByRole("dialog", { name: "水之呼吸" });
+  await expect(focusDrawer.getByRole("button", { name: "返回" })).toBeVisible();
+  await expect(focusDrawer.getByRole("button", { name: "关闭菜单" })).toBeVisible();
+  await focusDrawer.getByRole("button", { name: "返回" }).click();
+  await expect(page.getByRole("dialog", { name: "你的空间" })).toBeVisible();
 
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
@@ -201,16 +208,29 @@ test("runs and pauses the one-minute water breathing practice", async ({ page })
 test("updates and restores local settings", async ({ page }) => {
   await page.getByRole("button", { name: "打开菜单" }).click();
   await page.getByRole("button", { name: /我的一休/ }).click();
-  await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "我的一休" })).toBeVisible();
 
+  await page.getByRole("button", { name: /默认定时/ }).click();
   await page.getByRole("button", { name: "60 分钟" }).click();
+  await page.getByRole("button", { name: "返回" }).click();
   await page.getByRole("switch", { name: "结束提示音" }).click();
   await page.reload();
   await page.getByRole("button", { name: "打开菜单" }).click();
   await page.getByRole("button", { name: /我的一休/ }).click();
 
-  await expect(page.getByRole("button", { name: "60 分钟" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: /默认定时/ })).toContainText("60 分钟");
   await expect(page.getByRole("switch", { name: "结束提示音" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("loads a real morning-birds recording instead of generated noise", async ({ page }) => {
+  const request = page.waitForRequest((candidate) => candidate.url().endsWith("/assets/yixiu/audio/morning-birds.m4a"));
+  await page.getByRole("button", { name: "打开菜单" }).click();
+  await page.getByRole("button", { name: "浏览全部声音" }).click();
+  await page.getByText("晨林鸟语", { exact: true }).click();
+
+  await expect(page.getByRole("heading", { name: "晨林鸟语" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "暂停" })).toHaveAttribute("aria-pressed", "true");
+  expect((await request).url()).toContain("morning-birds.m4a");
 });
 
 test("lays out all fourteen sounds in an even two-column library", async ({ page }) => {

@@ -128,6 +128,31 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    var audioResource: String {
+        switch self {
+        case .ocean, .lake, .tide: "ocean-waves"
+        case .rain, .bamboo, .window: "light-rain"
+        case .spring: "sunrise-river"
+        case .birds: "morning-birds"
+        case .stream: "river-flow"
+        case .valley: "forest-breeze"
+        case .falls: "forest-waterfall"
+        case .thunder: "distant-thunder"
+        case .underwater: "underwater-white-noise"
+        case .snow: "mountain-wind"
+        }
+    }
+
+    var playbackRate: Float {
+        switch self {
+        case .lake: 0.86
+        case .bamboo: 1.04
+        case .window: 0.92
+        case .tide: 0.78
+        default: 1
+        }
+    }
+
     var isBright: Bool {
         switch self {
         case .spring, .birds, .stream, .lake, .valley, .bamboo, .falls, .snow:
