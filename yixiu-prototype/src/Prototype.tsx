@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  ChevronDownIcon,
   ChevronRightIcon,
   ClockIcon,
   Cross2Icon,
@@ -18,7 +17,21 @@ import {
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
-type SceneId = "ocean" | "rain" | "stream" | "lake" | "falls" | "tide";
+type SceneId =
+  | "ocean"
+  | "rain"
+  | "spring"
+  | "birds"
+  | "stream"
+  | "lake"
+  | "valley"
+  | "bamboo"
+  | "falls"
+  | "window"
+  | "thunder"
+  | "underwater"
+  | "snow"
+  | "tide";
 type DurationOption = 15 | 30 | 60 | 0;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
@@ -71,6 +84,32 @@ const scenes: Record<SceneId, Scene> = {
     lfoRate: 0.42,
     lfoDepth: 0.008,
   },
+  spring: {
+    id: "spring",
+    zh: "春日花溪",
+    en: "Spring Creek",
+    useZh: "清晨 · 舒展",
+    useEn: "Morning · Restore",
+    image: "/assets/yixiu/spring-creek.png",
+    filter: "bandpass",
+    frequency: 1850,
+    level: 0.038,
+    lfoRate: 0.52,
+    lfoDepth: 0.004,
+  },
+  birds: {
+    id: "birds",
+    zh: "晨林鸟语",
+    en: "Morning Birds",
+    useZh: "醒神 · 阅读",
+    useEn: "Awake · Read",
+    image: "/assets/yixiu/morning-birds.png",
+    filter: "highpass",
+    frequency: 2100,
+    level: 0.032,
+    lfoRate: 0.9,
+    lfoDepth: 0.003,
+  },
   stream: {
     id: "stream",
     zh: "山间溪流",
@@ -97,6 +136,32 @@ const scenes: Record<SceneId, Scene> = {
     lfoRate: 0.08,
     lfoDepth: 0.012,
   },
+  valley: {
+    id: "valley",
+    zh: "晴谷微风",
+    en: "Sunny Valley",
+    useZh: "工作 · 提振",
+    useEn: "Work · Refresh",
+    image: "/assets/yixiu/sunny-valley.png",
+    filter: "highpass",
+    frequency: 1350,
+    level: 0.036,
+    lfoRate: 0.28,
+    lfoDepth: 0.004,
+  },
+  bamboo: {
+    id: "bamboo",
+    zh: "竹林细雨",
+    en: "Bamboo Rain",
+    useZh: "专注 · 冥想",
+    useEn: "Focus · Meditate",
+    image: "/assets/yixiu/bamboo-rain.png",
+    filter: "highpass",
+    frequency: 1120,
+    level: 0.045,
+    lfoRate: 0.38,
+    lfoDepth: 0.006,
+  },
   falls: {
     id: "falls",
     zh: "林间瀑布",
@@ -109,6 +174,58 @@ const scenes: Record<SceneId, Scene> = {
     level: 0.055,
     lfoRate: 0.34,
     lfoDepth: 0.01,
+  },
+  window: {
+    id: "window",
+    zh: "窗边夜雨",
+    en: "Window Rain",
+    useZh: "睡眠 · 安定",
+    useEn: "Sleep · Settle",
+    image: "/assets/yixiu/window-rain.png",
+    filter: "highpass",
+    frequency: 760,
+    level: 0.048,
+    lfoRate: 0.24,
+    lfoDepth: 0.006,
+  },
+  thunder: {
+    id: "thunder",
+    zh: "远雷",
+    en: "Distant Thunder",
+    useZh: "遮噪 · 入睡",
+    useEn: "Mask · Sleep",
+    image: "/assets/yixiu/distant-thunder.png",
+    filter: "lowpass",
+    frequency: 270,
+    level: 0.075,
+    lfoRate: 0.055,
+    lfoDepth: 0.018,
+  },
+  underwater: {
+    id: "underwater",
+    zh: "水下回响",
+    en: "Underwater Echo",
+    useZh: "深度专注",
+    useEn: "Deep Focus",
+    image: "/assets/yixiu/underwater-echo.png",
+    filter: "lowpass",
+    frequency: 330,
+    level: 0.062,
+    lfoRate: 0.09,
+    lfoDepth: 0.012,
+  },
+  snow: {
+    id: "snow",
+    zh: "雪山风",
+    en: "Snow Wind",
+    useZh: "安静 · 遮噪",
+    useEn: "Quiet · Mask",
+    image: "/assets/yixiu/snow-wind.png",
+    filter: "bandpass",
+    frequency: 680,
+    level: 0.044,
+    lfoRate: 0.16,
+    lfoDepth: 0.007,
   },
   tide: {
     id: "tide",
@@ -125,7 +242,22 @@ const scenes: Record<SceneId, Scene> = {
   },
 };
 
-const sceneOrder: SceneId[] = ["ocean", "rain", "stream", "lake", "falls", "tide"];
+const sceneOrder: SceneId[] = [
+  "ocean",
+  "rain",
+  "spring",
+  "birds",
+  "stream",
+  "lake",
+  "valley",
+  "bamboo",
+  "falls",
+  "window",
+  "thunder",
+  "underwater",
+  "snow",
+  "tide",
+];
 const durations: DurationOption[] = [15, 30, 60, 0];
 
 const wisdoms = [
@@ -252,36 +384,6 @@ function durationLabel(duration: DurationOption, language: Language) {
   return `${duration} ${language === "zh" ? "分钟" : "MIN"}`;
 }
 
-function BottomNavigation({ activeTab, language, onChange }: {
-  activeTab: RootTab;
-  language: Language;
-  onChange: (tab: RootTab) => void;
-}) {
-  const items: Array<{ id: RootTab; zh: string; en: string; icon: React.ReactNode }> = [
-    { id: "sounds", zh: "声音", en: "SOUNDS", icon: <WaterWavesIcon /> },
-    { id: "focus", zh: "静心", en: "FOCUS", icon: <ClockIcon /> },
-    { id: "me", zh: "我的", en: "ME", icon: <PersonIcon /> },
-  ];
-
-  return (
-    <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
-      {items.map((item) => (
-        <button
-          key={item.id}
-          type="button"
-          className={activeTab === item.id ? "is-active" : ""}
-          aria-current={activeTab === item.id ? "page" : undefined}
-          onClick={() => onChange(item.id)}
-        >
-          {item.icon}
-          <span>{language === "zh" ? item.zh : item.en[0] + item.en.slice(1).toLowerCase()}</span>
-          <small>{language === "zh" ? item.en : item.zh}</small>
-        </button>
-      ))}
-    </nav>
-  );
-}
-
 export default function Prototype() {
   const [language, setLanguage] = useStoredState<Language>("yixiu.language", "zh");
   const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean");
@@ -309,8 +411,8 @@ export default function Prototype() {
 
   const active = scenes[activeScene] ?? scenes.ocean;
   const activeIndex = sceneOrder.indexOf(active.id);
-  const previousScene = scenes[sceneOrder[(activeIndex - 1 + sceneOrder.length) % sceneOrder.length]];
-  const nextScene = scenes[sceneOrder[(activeIndex + 1) % sceneOrder.length]];
+  const previousScene = activeIndex > 0 ? scenes[sceneOrder[activeIndex - 1]] : null;
+  const nextScene = activeIndex < sceneOrder.length - 1 ? scenes[sceneOrder[activeIndex + 1]] : null;
   const swipePreviewScene = swipeOffset < 0 ? nextScene : previousScene;
   const isFavorite = favorites.includes(active.id);
   const fadeFactor = duration === 0 || remainingSeconds > 20 ? 1 : Math.max(remainingSeconds / 20, 0);
@@ -355,9 +457,6 @@ export default function Prototype() {
     if (activeTab !== "focus" && breathingStatus === "running") {
       setBreathingStatus("paused");
     }
-    setMenuOpen(false);
-    setTimerOpen(false);
-    setLibraryOpen(false);
   }, [activeTab, breathingStatus]);
 
   useEffect(() => {
@@ -386,7 +485,8 @@ export default function Prototype() {
   );
 
   const moveScene = (direction: -1 | 1) => {
-    const nextIndex = (activeIndex + direction + sceneOrder.length) % sceneOrder.length;
+    const nextIndex = activeIndex + direction;
+    if (nextIndex < 0 || nextIndex >= sceneOrder.length) return;
     setActiveScene(sceneOrder[nextIndex]);
   };
 
@@ -418,9 +518,13 @@ export default function Prototype() {
 
     event.preventDefault();
     const width = Math.max(event.currentTarget.clientWidth, 1);
-    const limitedOffset = Math.max(-width * 0.72, Math.min(width * 0.72, deltaX));
+    const direction = deltaX < 0 ? 1 : -1;
+    const hasDestination = direction === 1 ? nextScene !== null : previousScene !== null;
+    const limitedOffset = hasDestination
+      ? Math.max(-width * 0.48, Math.min(width * 0.48, deltaX))
+      : Math.sign(deltaX) * Math.min(18, Math.abs(deltaX) * 0.09);
     setSwipeOffset(limitedOffset);
-    setSwipeProgress(Math.min(Math.abs(limitedOffset) / (width * 0.62), 1));
+    setSwipeProgress(hasDestination ? Math.min(Math.abs(limitedOffset) / (width * 0.42), 1) : 0);
   };
 
   const resetSceneSwipe = () => {
@@ -448,8 +552,13 @@ export default function Prototype() {
 
     const width = Math.max(event.currentTarget.clientWidth, 1);
     const direction = deltaX < 0 ? 1 : -1;
+    const hasDestination = direction === 1 ? nextScene !== null : previousScene !== null;
+    if (!hasDestination) {
+      resetSceneSwipe();
+      return;
+    }
     setSwipeSettling(true);
-    setSwipeOffset(direction === 1 ? -width : width);
+    setSwipeOffset(direction === 1 ? -width * 0.72 : width * 0.72);
     setSwipeProgress(1);
     swipeSettleTimerRef.current = window.setTimeout(() => {
       moveScene(direction);
@@ -479,15 +588,6 @@ export default function Prototype() {
     if (play) setIsPlaying(true);
   };
 
-  const changeTab = (tab: RootTab) => {
-    if (tab !== "sounds") setIsPlaying(false);
-    if (tab === "sounds" && activeTab === "sounds") {
-      setLibraryOpen(true);
-      return;
-    }
-    setActiveTab(tab);
-  };
-
   const breathingCycleSecond = breathingElapsed % 12;
   const breathingPhase = breathingStatus === "complete"
     ? "complete"
@@ -511,7 +611,7 @@ export default function Prototype() {
       data-scene={active.id}
       data-tab={activeTab}
     >
-      {activeTab === "sounds" && swipeOffset !== 0 ? (
+      {activeTab === "sounds" && swipeOffset !== 0 && swipePreviewScene ? (
         <img
           className="ocean-backdrop scene-preview-backdrop"
           src={swipePreviewScene.image}
@@ -520,7 +620,7 @@ export default function Prototype() {
           draggable={false}
           style={{
             opacity: swipeProgress,
-            transform: `translate3d(${(swipeOffset < 0 ? 1 : -1) * (1 - swipeProgress) * 11}%, 0, 0) scale(${1.035 - swipeProgress * 0.035})`,
+            transform: `translate3d(${(swipeOffset < 0 ? 1 : -1) * (1 - swipeProgress) * 7}%, 0, 0) scale(${1.018 - swipeProgress * 0.018})`,
           }}
         />
       ) : null}
@@ -532,7 +632,7 @@ export default function Prototype() {
         draggable={false}
         style={activeTab === "sounds" ? {
           opacity: 1 - swipeProgress * 0.9,
-          transform: `translate3d(${swipeOffset * 0.16}px, 0, 0) scale(${1 - swipeProgress * 0.025})`,
+          transform: `translate3d(${swipeOffset * 0.1}px, 0, 0) scale(${1 - swipeProgress * 0.012})`,
         } : undefined}
       />
       <div className="ocean-shade" aria-hidden="true" />
@@ -587,7 +687,7 @@ export default function Prototype() {
 
             <div className="yixiu-drawer-scroll">
               <section className="yixiu-drawer-hero">
-                <small>{language === "zh" ? "六种水声" : "SIX WATERS"}</small>
+                <small>{language === "zh" ? "十四种自然白噪音" : "FOURTEEN NATURE SOUNDS"}</small>
                 <h3>{language === "zh" ? "让声音带你回到此刻" : "Let sound return you to now"}</h3>
                 <p>{language === "zh" ? `正在聆听的场景：${active.zh}` : `Current water: ${active.en}`}</p>
                 <button type="button" onClick={() => {
@@ -601,6 +701,32 @@ export default function Prototype() {
               </section>
 
               <nav className="yixiu-drawer-nav" aria-label={language === "zh" ? "你的空间" : "Your space"}>
+                <button type="button" onClick={() => {
+                  setMenuOpen(false);
+                  setActiveTab("sounds");
+                }}>
+                  <span className="yixiu-drawer-nav-icon"><WaterWavesIcon /></span>
+                  <span><strong>{language === "zh" ? "声音播放器" : "Sound player"}</strong><small>{language === "zh" ? "回到正在聆听的画面" : "Return to the current sound"}</small></span>
+                  <ChevronRightIcon />
+                </button>
+                <button type="button" onClick={() => {
+                  setMenuOpen(false);
+                  setIsPlaying(false);
+                  setActiveTab("focus");
+                }}>
+                  <span className="yixiu-drawer-nav-icon">息</span>
+                  <span><strong>{language === "zh" ? "水之呼吸" : "Water breathing"}</strong><small>{language === "zh" ? "一段 1 分钟的静心练习" : "A one-minute focus practice"}</small></span>
+                  <ChevronRightIcon />
+                </button>
+                <button type="button" onClick={() => {
+                  setMenuOpen(false);
+                  setIsPlaying(false);
+                  setActiveTab("me");
+                }}>
+                  <span className="yixiu-drawer-nav-icon"><PersonIcon /></span>
+                  <span><strong>{language === "zh" ? "我的一休" : "My Yixiu"}</strong><small>{language === "zh" ? "收藏、偏好与默认设置" : "Favorites and preferences"}</small></span>
+                  <ChevronRightIcon />
+                </button>
                 <button type="button" onClick={() => {
                   setMenuOpen(false);
                   setActiveTab("sounds");
@@ -656,7 +782,7 @@ export default function Prototype() {
             aria-live="polite"
             style={{
               opacity: 1 - swipeProgress * 0.55,
-              transform: `translate3d(${swipeOffset * 0.12}px, -50%, 0)`,
+              transform: `translate3d(${swipeOffset * 0.08}px, -50%, 0)`,
             }}
           >
             <h1>{localized.scenePrimary}</h1>
@@ -668,17 +794,24 @@ export default function Prototype() {
             </p>
           </section>
 
+          <button className="duration-button" type="button" aria-expanded={timerOpen} onClick={() => {
+            setMenuOpen(false);
+            setTimerOpen((current) => !current);
+          }}>
+            <span>{isPlaying && duration !== 0 ? formatSeconds(remainingSeconds) : durationLabel(duration, language)}</span>
+          </button>
+
           <section className="transport" aria-label={language === "zh" ? "播放控制" : "Playback controls"}>
             <button className={`icon-button favorite-button ${isFavorite ? "is-active" : ""}`} type="button" aria-label={language === "zh" ? "收藏" : "Favorite"} aria-pressed={isFavorite} onClick={() => toggleFavorite(active.id)}>
               {isFavorite ? <HeartFilledIcon /> : <HeartIcon />}
             </button>
-            <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "上一种声音" : "Previous sound"} onClick={() => moveScene(-1)}>
+            <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "上一种声音" : "Previous sound"} disabled={!previousScene} onClick={() => moveScene(-1)}>
               <TrackPreviousIcon />
             </button>
             <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} onClick={() => setIsPlaying((current) => !current)}>
               {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
-            <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "下一种声音" : "Next sound"} onClick={() => moveScene(1)}>
+            <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "下一种声音" : "Next sound"} disabled={!nextScene} onClick={() => moveScene(1)}>
               <TrackNextIcon />
             </button>
             <button className="icon-button timer-shortcut" type="button" aria-label={language === "zh" ? "定时" : "Timer"} aria-expanded={timerOpen} onClick={() => {
@@ -695,13 +828,6 @@ export default function Prototype() {
             <SpeakerLoudIcon />
           </section>
 
-          <button className="duration-button" type="button" aria-expanded={timerOpen} onClick={() => {
-            setMenuOpen(false);
-            setTimerOpen((current) => !current);
-          }}>
-            <span>{isPlaying && duration !== 0 ? formatSeconds(remainingSeconds) : durationLabel(duration, language)}</span>
-            <ChevronDownIcon />
-          </button>
         </section>
       ) : null}
 
@@ -837,7 +963,7 @@ export default function Prototype() {
           <div className="sheet-handle" aria-hidden="true" />
           <header>
             <div>
-              <small>{language === "zh" ? "六种水声" : "SIX WATERS"}</small>
+              <small>{language === "zh" ? "十四种自然白噪音" : "FOURTEEN NATURE SOUNDS"}</small>
               <h2>{language === "zh" ? "声音库" : "Sound Library"}</h2>
             </div>
             <button className="icon-button" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)}><Cross2Icon /></button>
@@ -903,7 +1029,6 @@ export default function Prototype() {
         </section>
       ) : null}
 
-      <BottomNavigation activeTab={activeTab} language={language} onChange={changeTab} />
     </main>
   );
 }

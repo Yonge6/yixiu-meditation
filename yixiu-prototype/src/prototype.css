@@ -67,6 +67,12 @@ button {
   filter: brightness(0.6) saturate(0.82) contrast(1.08) hue-rotate(5deg);
 }
 
+.ocean-backdrop[data-image-scene="spring"],
+.ocean-backdrop[data-image-scene="birds"],
+.ocean-backdrop[data-image-scene="valley"] {
+  filter: brightness(1.04) saturate(0.98) contrast(1.01);
+}
+
 .scene-preview-backdrop {
   z-index: -4;
 }
@@ -87,6 +93,13 @@ button {
   background: rgba(0, 17, 25, 0.18);
   box-shadow: inset 0 -390px 190px rgba(0, 17, 25, 0.95), inset 0 180px 140px rgba(0, 12, 18, 0.22);
   pointer-events: none;
+}
+
+[data-scene="spring"] .ocean-shade,
+[data-scene="birds"] .ocean-shade,
+[data-scene="valley"] .ocean-shade {
+  background: rgba(0, 31, 35, 0.06);
+  box-shadow: inset 0 -360px 190px rgba(0, 25, 29, 0.46), inset 0 150px 110px rgba(0, 28, 31, 0.16);
 }
 
 [data-tab="focus"] .ocean-shade,
@@ -135,6 +148,7 @@ button {
   gap: 12px;
   padding: 4px 0;
   text-align: left;
+  text-shadow: 0 1px 12px rgba(0, 20, 24, 0.72);
   cursor: default;
 }
 
@@ -596,13 +610,18 @@ button {
 .transport {
   position: absolute;
   z-index: 6;
-  top: 68.6%;
+  top: 72.2%;
   right: 22px;
   left: 22px;
   display: grid;
   grid-template-columns: 44px 44px 82px 44px 44px;
   align-items: center;
   justify-content: space-between;
+}
+
+.transport-skip:disabled {
+  cursor: default;
+  opacity: 0.22;
 }
 
 .transport svg {
@@ -642,7 +661,7 @@ button {
 .volume-control {
   position: absolute;
   z-index: 6;
-  top: 81.4%;
+  top: 84.2%;
   right: 31px;
   left: 31px;
   display: grid;
@@ -667,30 +686,25 @@ button {
 .duration-button {
   position: absolute;
   z-index: 8;
-  top: 85.5%;
+  top: 67.1%;
   left: 50%;
   display: flex;
   min-width: 142px;
   min-height: 44px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   transform: translateX(-50%);
   color: #c7d6d8;
   font-size: 17px;
   letter-spacing: 0.08em;
-}
-
-.duration-button svg {
-  width: 17px;
-  height: 17px;
+  text-shadow: 0 2px 14px rgba(0, 15, 21, 0.72);
 }
 
 .timer-panel {
   position: absolute;
   z-index: 45;
   right: 18px;
-  bottom: 92px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   left: 18px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1180,7 +1194,7 @@ button {
   right: 0;
   bottom: 0;
   left: 0;
-  height: min(78%, 680px);
+  height: min(84%, 720px);
   overflow: hidden;
   padding: 8px 18px calc(24px + env(safe-area-inset-bottom, 0px));
   border: 1px solid rgba(168, 226, 230, 0.2);
@@ -1226,7 +1240,9 @@ button {
   overflow-y: auto;
   padding-bottom: 20px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-auto-rows: clamp(190px, 52vw, 218px);
+  align-content: start;
+  gap: 12px 10px;
   scrollbar-width: none;
 }
 
@@ -1236,7 +1252,7 @@ button {
 
 .scene-grid article {
   position: relative;
-  height: 176px;
+  height: 100%;
   overflow: hidden;
   border: 1px solid rgba(160, 217, 222, 0.18);
   border-radius: 18px;
@@ -1405,7 +1421,7 @@ button {
   }
 
   .transport {
-    top: 66.5%;
+    top: 70.5%;
     grid-template-columns: 42px 42px 72px 42px 42px;
   }
 
@@ -1415,11 +1431,11 @@ button {
   }
 
   .volume-control {
-    top: 79.6%;
+    top: 82.5%;
   }
 
   .duration-button {
-    top: 84%;
+    top: 65.1%;
   }
 
   .focus-screen {

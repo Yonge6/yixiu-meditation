@@ -11,6 +11,11 @@ test("opens on the ocean scene in a paused 30-minute state", async ({ page }) =>
   await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
   await expect(page.getByRole("button", { name: "播放" })).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByRole("button", { name: "30 分钟" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "上一种声音" })).toBeDisabled();
+  await expect(page.getByRole("navigation", { name: "主导航" })).toHaveCount(0);
+  const durationBox = await page.getByRole("button", { name: "30 分钟" }).boundingBox();
+  const playBox = await page.getByRole("button", { name: "播放" }).boundingBox();
+  expect(durationBox!.y + durationBox!.height).toBeLessThanOrEqual(playBox!.y + 4);
 });
 
 test("changes scene and persists favorites", async ({ page }) => {
@@ -113,15 +118,54 @@ test("does not change sound for a primarily vertical gesture", async ({ page }) 
   await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
 });
 
+test("gives only a small resisted response at the first scene boundary", async ({ page }) => {
+  const swipeZone = page.locator(".scene-swipe-zone");
+
+  await swipeZone.dispatchEvent("pointerdown", {
+    pointerId: 4,
+    pointerType: "touch",
+    button: 0,
+    clientX: 90,
+    clientY: 300,
+  });
+  await swipeZone.dispatchEvent("pointermove", {
+    pointerId: 4,
+    pointerType: "touch",
+    button: 0,
+    clientX: 350,
+    clientY: 302,
+  });
+
+  await expect(page.locator(".scene-preview-backdrop")).toHaveCount(0);
+  const translatedPixels = await page.locator(".scene-current-backdrop").evaluate((element) => {
+    const match = element.getAttribute("style")?.match(/translate3d\(([-\d.]+)px/);
+    return Math.abs(Number(match?.[1] ?? 0));
+  });
+  expect(translatedPixels).toBeLessThanOrEqual(2);
+
+  await swipeZone.dispatchEvent("pointerup", {
+    pointerId: 4,
+    pointerType: "touch",
+    button: 0,
+    clientX: 350,
+    clientY: 302,
+  });
+  await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
+});
+
 test("selects timer and switches the interface language", async ({ page }) => {
   await page.getByRole("button", { name: "30 分钟" }).click();
   await page.getByRole("button", { name: "15 分钟" }).click();
   await expect(page.getByRole("button", { name: "15 分钟" })).toBeVisible();
+  await page.getByRole("button", { name: "定时" }).click();
+  await expect(page.locator(".timer-panel")).toBeVisible();
+  await page.getByRole("button", { name: "15 分钟" }).last().click();
 
   await page.getByRole("button", { name: "切换到英文" }).click();
   await expect(page.getByRole("heading", { name: "OCEAN WAVES" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Focus/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Switch to Chinese" })).toContainText("中文");
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await expect(page.getByRole("button", { name: /Water breathing/ })).toBeVisible();
 });
 
 test("opens a Wendao-style right drawer and closes it with Escape", async ({ page }) => {
@@ -131,6 +175,10 @@ test("opens a Wendao-style right drawer and closes it with Escape", async ({ pag
   await expect(drawer).toBeVisible();
   await expect(drawer.getByText("一休 · YIXIU")).toBeVisible();
   await expect(drawer.getByRole("button", { name: "浏览全部声音" })).toBeVisible();
+  await expect(drawer.getByText("十四种自然白噪音")).toBeVisible();
+  await expect(drawer.getByRole("button", { name: /声音播放器/ })).toBeVisible();
+  await expect(drawer.getByRole("button", { name: /水之呼吸/ })).toBeVisible();
+  await expect(drawer.getByRole("button", { name: /我的一休/ })).toBeVisible();
   await expect(drawer.getByRole("button", { name: /产品哲学/ })).toBeVisible();
   await expect(drawer.getByText("界面语言")).toHaveCount(0);
   await expect(drawer.getByRole("button", { name: "EN", exact: true })).toHaveCount(0);
@@ -140,7 +188,8 @@ test("opens a Wendao-style right drawer and closes it with Escape", async ({ pag
 });
 
 test("runs and pauses the one-minute water breathing practice", async ({ page }) => {
-  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await page.getByRole("button", { name: "打开菜单" }).click();
+  await page.getByRole("button", { name: /水之呼吸/ }).click();
   await expect(page.getByRole("heading", { name: "水之呼吸" })).toBeVisible();
 
   await page.getByRole("button", { name: "开始 1 分钟" }).click();
@@ -150,14 +199,34 @@ test("runs and pauses the one-minute water breathing practice", async ({ page })
 });
 
 test("updates and restores local settings", async ({ page }) => {
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "打开菜单" }).click();
+  await page.getByRole("button", { name: /我的一休/ }).click();
   await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();
 
   await page.getByRole("button", { name: "60 分钟" }).click();
   await page.getByRole("switch", { name: "结束提示音" }).click();
   await page.reload();
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "打开菜单" }).click();
+  await page.getByRole("button", { name: /我的一休/ }).click();
 
   await expect(page.getByRole("button", { name: "60 分钟" })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("switch", { name: "结束提示音" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("lays out all fourteen sounds in an even two-column library", async ({ page }) => {
+  await page.getByRole("button", { name: "打开菜单" }).click();
+  await page.getByRole("button", { name: "浏览全部声音" }).click();
+
+  const cards = page.locator(".scene-grid article");
+  await expect(cards).toHaveCount(14);
+  await expect(page.getByText("春日花溪", { exact: true })).toBeVisible();
+  await expect(page.getByText("晨林鸟语", { exact: true })).toBeVisible();
+
+  const firstRow = await cards.evaluateAll((elements) => elements.slice(0, 2).map((element) => {
+    const rect = element.getBoundingClientRect();
+    return { width: rect.width, height: rect.height, top: rect.top };
+  }));
+  expect(Math.abs(firstRow[0].width - firstRow[1].width)).toBeLessThan(1);
+  expect(Math.abs(firstRow[0].height - firstRow[1].height)).toBeLessThan(1);
+  expect(Math.abs(firstRow[0].top - firstRow[1].top)).toBeLessThan(1);
 });

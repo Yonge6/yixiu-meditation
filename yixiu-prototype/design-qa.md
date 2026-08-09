@@ -8,7 +8,7 @@ Date: 2026-08-09
 - H5 Sounds: `qa-v1-sounds.png` at 390 × 844.
 - H5 Focus: `qa-v1-focus.png` at 390 × 844.
 - H5 Me: `qa-v1-me.png` at 390 × 844.
-- H5 six-scene library: `qa-v1-library.png` at 390 × 844.
+- H5 sound library: 14 equal-size cards in a stable two-column scrolling grid.
 - H5 Wendao-style drawer: `qa-v1-drawer.png`.
 - H5 state after completed swipe: `qa-v1-swipe-final.png`.
 - Native iOS Sounds: `../YixiuMeditation/yixiu-native-v1-sounds-fixed.png`.
@@ -26,15 +26,17 @@ Date: 2026-08-09
 ## Product-flow verification
 
 - PASS: Play/pause, previous/next, favorite, volume, timer, and scene selection work.
-- PASS: Horizontal swipe follows the pointer with parallax, scale, and crossfade, then changes the sound and full-screen scene together; left advances, right returns, a short gesture springs back, and a primarily vertical gesture is ignored.
-- PASS: The compact `EN / 中文` header action and full-height right drawer follow the established 三慢问道 interaction hierarchy, adapted to Yixiu's deep-water colors and sound settings.
+- PASS: Horizontal swipe follows the pointer with restrained parallax, scale, and crossfade, then changes the sound and full-screen scene together; the first and last scenes are bounded and provide only a small resisted spring-back response.
+- PASS: The compact `EN / 中文` header action and full-height right drawer follow the established 三慢问道 interaction hierarchy, adapted to Yixiu's colors. Sound player, library, breathing, favorites/settings, philosophy, privacy, and support are all reached through the drawer; the former bottom tab bar is removed.
+- PASS: The H5 library contains 14 night and daytime nature sounds, including three bright Image2-generated morning/sunlight scenes.
+- PASS: The active duration sits above the central play button without a chevron; both its label and the clock icon open the same picker.
 - PASS: 15 / 30 / 60 minutes and unlimited duration update the current session.
 - PASS: Chinese/English, scene, favorites, duration, end-bell preference, and background-play preference persist locally.
 - PASS: The full six-scene sound library opens and selects a scene.
 - PASS: The 60-second breathing flow supports start, pause, reset, and phase progression.
 - PASS: Me contains favorites, defaults, language, playback preferences, trust links, version, and product philosophy.
 - PASS: A completed timer fades down and presents a water-wisdom completion panel.
-- PASS: H5 runtime integrity, production build, Sites checks, and all 16 Playwright tests pass.
+- PASS: H5 runtime integrity, production build, Sites checks, and all 18 Playwright tests pass.
 - PASS: Native iOS Simulator Debug build succeeds and the app launches in the simulator.
 
 ## Release boundary
