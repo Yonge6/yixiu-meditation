@@ -8,7 +8,7 @@ struct YixiuMeditationApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(appState)
-                .preferredColorScheme(.light)
+                .preferredColorScheme(.dark)
         }
     }
 }

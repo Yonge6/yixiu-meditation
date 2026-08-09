@@ -2,14 +2,16 @@
 
 ## Yixiu Product Direction
 
-- The selected visual direction is “如水晨光”, based on `../design/yixiu-home-option-1.png` and the user-provided water-philosophy reference.
+- The selected visual direction is now “深水沉浸播放器”, based on `../design/ideation-2026-08-09/yixiu-selected-deep-water-player.png`. It supersedes the rejected pale-ivory “如水晨光” home direction.
 - The app must support Simplified Chinese and English, with a visible `中 / EN` language control.
-- Use water, ripples, flowing S-curves, reflective light, and river-like transitions as the main visual language.
+- Use real moonlit water photography, deep teal/navy, reflective light, restrained ripple accents, and strong low-light contrast as the main visual language.
 - Core product copy: `真实自己，流动人生 / True to Yourself, Flow with Life` and `如水而行 / Be water, my friend.`
 - Keep the home screen focused on starting a meditation; do not turn it into a long philosophy infographic.
 - Prefer rain, ocean, and stream as the three supporting sound scenes.
-- The user-approved visual source of truth is `../design/yixiu-home-water-bilingual-approved.jpg` (and the matching supplied reference): preserve its continuous full-screen sunrise-water background, pronounced translucent asymmetric S-shaped water band, pale-gold ripple lines, and generous ivory water surface.
-- The initial featured Morning Water session is `10 分钟 / 10 MIN`; the separate timer preference control remains `15 分钟 / 15 MIN` until the user changes it.
+- The user-selected visual source of truth is `../design/ideation-2026-08-09/yixiu-selected-deep-water-player.png`: preserve its full-bleed moonlit ocean, lower-half title and philosophy hierarchy, five-control transport row, prominent pause/play button, volume slider, `30 分钟` duration, and minimal three-item navigation.
+- The initial featured sound is `大海 / OCEAN WAVES`, with a default timer of `30 分钟 / 30 MIN`.
+- On the Sounds page, horizontal swipe is a primary scene-control gesture: swipe left for the next water sound and image, swipe right for the previous one. The transition follows the finger with restrained parallax, scale, and crossfade, completes after the threshold, and springs back below it. Preserve vertical scrolling and give sliders, buttons, menus, sheets, and bottom navigation priority over the scene swipe.
+- Follow the 三慢问道 interaction structure for global language and More controls: the header uses one compact language action (`EN` on Chinese, `中文` on English), while More opens a full-height right drawer with a blurred backdrop, fixed bilingual brand/title header, and scrollable content. Keep Yixiu's deep-water visual language rather than Wendao's paper palette.
 - The public custom-domain experience is a standalone mobile-first H5 page: render the water experience directly in the browser without a phone bezel, simulated status bar, home indicator, device picker, or white preview stage. On desktop, center the H5 content as a `430px` column; on mobile, let it fill the viewport. The legacy device preview may remain available only through the explicit internal query `?preview=phone`.
 
 ## Prototype Instructions

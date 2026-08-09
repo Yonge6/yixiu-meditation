@@ -1,11 +1,14 @@
 import SwiftUI
 
 enum YixiuTheme {
-    static let ink = Color(red: 23 / 255, green: 63 / 255, blue: 53 / 255)
-    static let inkSoft = Color(red: 82 / 255, green: 112 / 255, blue: 102 / 255)
-    static let ivory = Color(red: 248 / 255, green: 243 / 255, blue: 232 / 255)
-    static let gold = Color(red: 184 / 255, green: 138 / 255, blue: 62 / 255)
-    static let hairline = gold.opacity(0.42)
+    static let deepWater = Color(red: 3 / 255, green: 23 / 255, blue: 33 / 255)
+    static let deepWaterSoft = Color(red: 9 / 255, green: 44 / 255, blue: 56 / 255)
+    static let moon = Color(red: 244 / 255, green: 248 / 255, blue: 248 / 255)
+    static let mist = Color(red: 168 / 255, green: 192 / 255, blue: 197 / 255)
+    static let aqua = Color(red: 143 / 255, green: 214 / 255, blue: 220 / 255)
+    static let aquaStrong = Color(red: 185 / 255, green: 245 / 255, blue: 247 / 255)
+    static let panel = deepWater.opacity(0.88)
+    static let hairline = aqua.opacity(0.30)
 
     static func chineseDisplay(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
         .custom("Songti SC", size: size).weight(weight)
@@ -23,7 +26,7 @@ struct UppercaseSecondary: ViewModifier {
         content
             .font(YixiuTheme.englishSerif(size, weight: .semibold))
             .tracking(size * 0.12)
-            .foregroundStyle(YixiuTheme.gold)
+            .foregroundStyle(YixiuTheme.aqua)
             .textCase(.uppercase)
     }
 }
@@ -31,5 +34,17 @@ struct UppercaseSecondary: ViewModifier {
 extension View {
     func yixiuSecondary(_ size: CGFloat) -> some View {
         modifier(UppercaseSecondary(size: size))
+    }
+
+    func yixiuPanel() -> some View {
+        background(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .fill(YixiuTheme.panel)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .stroke(YixiuTheme.hairline, lineWidth: 0.8)
+                )
+                .shadow(color: .black.opacity(0.22), radius: 24, y: 14)
+        )
     }
 }
