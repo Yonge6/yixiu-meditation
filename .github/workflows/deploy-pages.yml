@@ -39,12 +39,10 @@ jobs:
         run: npm run check:runtime
 
       - name: Type-check and build GitHub Pages bundle
-        env:
-          REPOSITORY_NAME: ${{ github.event.repository.name }}
         run: |
           npx tsc
-          npx vite build --base="/${REPOSITORY_NAME}/" --outDir=dist-gh
-          node scripts/prepare-github-pages.mjs dist-gh "/${REPOSITORY_NAME}/"
+          npx vite build --base="/" --outDir=dist-gh
+          node scripts/prepare-github-pages.mjs dist-gh "/"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

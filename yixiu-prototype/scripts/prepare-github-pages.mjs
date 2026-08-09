@@ -3,7 +3,8 @@ import path from "node:path";
 
 const outputDirectory = path.resolve(process.argv[2] ?? "dist-gh");
 const requestedBase = process.argv[3] ?? "/yixiu-meditation/";
-const base = `/${requestedBase.split("/").filter(Boolean).join("/")}/`;
+const baseSegments = requestedBase.split("/").filter(Boolean);
+const base = baseSegments.length > 0 ? `/${baseSegments.join("/")}/` : "/";
 const assetPrefix = `${base}assets/`;
 
 async function collectFiles(directory) {
@@ -35,7 +36,7 @@ for (const filePath of await collectFiles(outputDirectory)) {
     await writeFile(filePath, rewritten);
   }
 
-  if (/["'`]\/assets\//.test(rewritten)) {
+  if (base !== "/" && /["'`]\/assets\//.test(rewritten)) {
     throw new Error(`Unscoped asset URL remains in ${filePath}`);
   }
 }
