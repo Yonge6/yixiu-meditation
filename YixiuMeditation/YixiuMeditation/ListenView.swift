@@ -2,8 +2,6 @@ import SwiftUI
 
 struct ListenView: View {
     @EnvironmentObject private var appState: AppState
-    @State private var menuOpen = false
-    @State private var libraryOpen = false
     @State private var timerOpen = false
     @State private var sceneDragOffset: CGFloat = 0
     @State private var sceneSwipeProgress: CGFloat = 0
@@ -28,25 +26,19 @@ struct ListenView: View {
                     )
 
                 sceneIdentity
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.565)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.53)
                     .offset(x: sceneDragOffset * 0.12)
                     .opacity(1 - sceneSwipeProgress * 0.55)
                     .allowsHitTesting(false)
 
+                durationButton
+                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.64)
+
                 transport
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.725)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.73)
 
                 volume
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.815)
-
-                durationButton
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.865)
-
-                if menuOpen {
-                    menuPanel
-                        .padding(.horizontal, 20)
-                        .position(x: geometry.size.width / 2, y: 122)
-                }
+                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.84)
 
                 if timerOpen {
                     timerPanel
@@ -74,18 +66,12 @@ struct ListenView: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .ignoresSafeArea()
-        .sheet(isPresented: $libraryOpen) {
-            SoundLibraryView()
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
-                .presentationBackground(YixiuTheme.deepWater)
-        }
     }
 
     private var background: some View {
         ZStack {
-            if abs(sceneDragOffset) > 0.5 {
-                Image(sceneSwipePreview.assetName)
+            if abs(sceneDragOffset) > 0.5, let preview = sceneSwipePreview {
+                Image(preview.assetName)
                     .resizable()
                     .scaledToFill()
                     .offset(x: (sceneDragOffset < 0 ? 1 : -1) * (1 - sceneSwipeProgress) * 42)
@@ -103,10 +89,14 @@ struct ListenView: View {
                 .ignoresSafeArea()
 
             Color(red: 0, green: 17 / 255, blue: 25 / 255)
-                .opacity(0.18)
+                .opacity(appState.scene.isBright ? 0.07 : 0.18)
 
             LinearGradient(
-                colors: [.clear, YixiuTheme.deepWater.opacity(0.20), YixiuTheme.deepWater.opacity(0.96)],
+                colors: [
+                    .clear,
+                    YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.10 : 0.20),
+                    YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.78 : 0.96)
+                ],
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -114,11 +104,12 @@ struct ListenView: View {
         }
     }
 
-    private var sceneSwipePreview: MeditationScene {
-        guard let index = MeditationScene.allCases.firstIndex(of: appState.scene) else { return .ocean }
+    private var sceneSwipePreview: MeditationScene? {
+        guard let index = MeditationScene.allCases.firstIndex(of: appState.scene) else { return nil }
         let direction = sceneDragOffset < 0 ? 1 : -1
-        let count = MeditationScene.allCases.count
-        return MeditationScene.allCases[(index + direction + count) % count]
+        let previewIndex = index + direction
+        guard MeditationScene.allCases.indices.contains(previewIndex) else { return nil }
+        return MeditationScene.allCases[previewIndex]
     }
 
     private func sceneSwipeGesture(width: CGFloat) -> some Gesture {
@@ -128,14 +119,25 @@ struct ListenView: View {
                 let horizontal = value.translation.width
                 let vertical = value.translation.height
                 guard abs(horizontal) > abs(vertical) * 1.15 else { return }
-                let limit = max(width * 0.72, 1)
+                let direction = horizontal < 0 ? 1 : -1
+                guard appState.canMoveScene(direction) else {
+                    sceneDragOffset = max(-18, min(18, horizontal * 0.09))
+                    sceneSwipeProgress = 0
+                    return
+                }
+                let limit = max(width * 0.48, 1)
                 sceneDragOffset = max(-limit, min(limit, horizontal))
-                sceneSwipeProgress = min(abs(sceneDragOffset) / max(width * 0.62, 1), 1)
+                sceneSwipeProgress = min(abs(sceneDragOffset) / max(width * 0.42, 1), 1)
             }
             .onEnded { value in
                 let horizontal = value.translation.width
                 let vertical = value.translation.height
-                guard abs(horizontal) >= 48, abs(horizontal) > abs(vertical) * 1.2 else {
+                let direction = horizontal < 0 ? 1 : -1
+                guard
+                    appState.canMoveScene(direction),
+                    abs(horizontal) >= 48,
+                    abs(horizontal) > abs(vertical) * 1.2
+                else {
                     withAnimation(.spring(response: 0.34, dampingFraction: 0.82)) {
                         sceneDragOffset = 0
                         sceneSwipeProgress = 0
@@ -143,10 +145,9 @@ struct ListenView: View {
                     return
                 }
 
-                let direction = horizontal < 0 ? 1 : -1
                 sceneSwipeSettling = true
                 withAnimation(.timingCurve(0.22, 1, 0.36, 1, duration: 0.26)) {
-                    sceneDragOffset = direction == 1 ? -width : width
+                    sceneDragOffset = direction == 1 ? -width * 0.72 : width * 0.72
                     sceneSwipeProgress = 1
                 }
 
@@ -183,9 +184,8 @@ struct ListenView: View {
             Spacer()
 
             Button {
-                timerOpen = false
                 withAnimation(.easeOut(duration: 0.18)) {
-                    menuOpen.toggle()
+                    appState.drawerOpen = true
                 }
             } label: {
                 Image(systemName: "line.3.horizontal")
@@ -204,8 +204,8 @@ struct ListenView: View {
             Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                 .font(
                     language == .zh
-                        ? YixiuTheme.chineseDisplay(47)
-                        : YixiuTheme.englishSerif(38)
+                        ? YixiuTheme.chineseDisplay(appState.scene.zhName.count > 4 ? 39 : 47)
+                        : YixiuTheme.englishSerif(appState.scene.enName.count > 13 ? 31 : 38)
                 )
                 .tracking(language == .zh ? 5 : 2)
                 .textCase(language == .en ? .uppercase : nil)
@@ -246,6 +246,8 @@ struct ListenView: View {
             Button { appState.moveScene(-1) } label: {
                 Image(systemName: "backward.end")
             }
+            .disabled(!appState.canMoveScene(-1))
+            .opacity(appState.canMoveScene(-1) ? 1 : 0.28)
             .accessibilityLabel(language.text(zh: "上一种声音", en: "Previous sound"))
 
             Spacer()
@@ -267,12 +269,13 @@ struct ListenView: View {
             Button { appState.moveScene(1) } label: {
                 Image(systemName: "forward.end")
             }
+            .disabled(!appState.canMoveScene(1))
+            .opacity(appState.canMoveScene(1) ? 1 : 0.28)
             .accessibilityLabel(language.text(zh: "下一种声音", en: "Next sound"))
 
             Spacer()
 
             Button {
-                menuOpen = false
                 withAnimation(.easeOut(duration: 0.18)) {
                     timerOpen.toggle()
                 }
@@ -302,73 +305,15 @@ struct ListenView: View {
 
     private var durationButton: some View {
         Button {
-            menuOpen = false
             withAnimation(.easeOut(duration: 0.18)) {
                 timerOpen.toggle()
             }
         } label: {
-            HStack(spacing: 7) {
-                Text(appState.isPlaying ? appState.formattedRemaining : appState.durationLabel)
-                Image(systemName: "chevron.down")
-                    .font(.system(size: 12, weight: .medium))
-            }
+            Text(appState.isPlaying ? appState.formattedRemaining : appState.durationLabel)
             .font(YixiuTheme.chineseDisplay(17))
             .tracking(1.2)
             .foregroundStyle(YixiuTheme.mist)
             .frame(minWidth: 150, minHeight: 44)
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var menuPanel: some View {
-        VStack(spacing: 8) {
-            Button {
-                menuOpen = false
-                libraryOpen = true
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "water.waves")
-                    Text(language.text(zh: "浏览全部声音", en: "Browse all sounds"))
-                    Spacer()
-                }
-                .foregroundStyle(YixiuTheme.aquaStrong)
-                .padding(.horizontal, 14)
-                .frame(height: 48)
-                .background(RoundedRectangle(cornerRadius: 14).fill(YixiuTheme.aqua.opacity(0.08)))
-            }
-
-            HStack {
-                Text(language.text(zh: "界面语言", en: "Language"))
-                    .font(.system(size: 14))
-                Spacer()
-                languageToggle
-            }
-            .padding(.horizontal, 14)
-            .frame(height: 48)
-            .overlay(alignment: .top) {
-                YixiuTheme.hairline.frame(height: 0.6)
-            }
-        }
-        .padding(12)
-        .yixiuPanel()
-    }
-
-    private var languageToggle: some View {
-        HStack(spacing: 4) {
-            languageButton(.zh, title: "中文")
-            languageButton(.en, title: "EN")
-        }
-    }
-
-    private func languageButton(_ option: AppLanguage, title: String) -> some View {
-        Button {
-            appState.language = option
-        } label: {
-            Text(title)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(appState.language == option ? YixiuTheme.deepWater : YixiuTheme.mist)
-                .frame(width: 54, height: 34)
-                .background(Capsule().fill(appState.language == option ? YixiuTheme.aquaStrong : .clear))
         }
         .buttonStyle(.plain)
     }
@@ -428,7 +373,7 @@ struct ListenView: View {
     }
 }
 
-private struct SoundLibraryView: View {
+struct SoundLibraryView: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.dismiss) private var dismiss
 

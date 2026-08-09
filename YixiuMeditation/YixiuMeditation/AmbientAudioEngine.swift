@@ -85,6 +85,14 @@ final class AmbientAudioEngine {
             case .rain:
                 smoothed += 0.24 * (white - smoothed)
                 value = white * 0.09 + smoothed * 0.25
+            case .spring:
+                smoothed += 0.16 * (white - smoothed)
+                let glint = sin(time * .pi * 5.4) * 0.018
+                value = white * 0.038 + smoothed * 0.21 + glint
+            case .birds:
+                smoothed += 0.29 * (white - smoothed)
+                let birdsong = max(0, sin(time * .pi * 1.8)) * sin(time * .pi * 16) * 0.018
+                value = white * 0.032 + smoothed * 0.12 + birdsong
             case .stream:
                 smoothed += 0.09 * (white - smoothed)
                 let shimmer = sin(time * .pi * 7.2) * 0.025
@@ -93,9 +101,33 @@ final class AmbientAudioEngine {
                 smoothed += 0.016 * (white - smoothed)
                 let lap = 0.58 + 0.42 * sin(time * .pi * 0.30)
                 value = smoothed * lap * 0.24
+            case .valley:
+                smoothed += 0.18 * (white - smoothed)
+                let breeze = 0.68 + 0.32 * sin(time * .pi * 0.56)
+                value = (white * 0.025 + smoothed * 0.14) * breeze
+            case .bamboo:
+                smoothed += 0.13 * (white - smoothed)
+                let leaves = sin(time * .pi * 4.7) * 0.014
+                value = white * 0.045 + smoothed * 0.18 + leaves
             case .falls:
                 smoothed += 0.11 * (white - smoothed)
                 value = white * 0.035 + smoothed * 0.31
+            case .window:
+                smoothed += 0.10 * (white - smoothed)
+                let pane = 0.72 + 0.28 * sin(time * .pi * 0.48)
+                value = (white * 0.048 + smoothed * 0.20) * pane
+            case .thunder:
+                smoothed += 0.006 * (white - smoothed)
+                let rumble = 0.56 + 0.44 * sin(time * .pi * 0.11)
+                value = smoothed * rumble * 0.48
+            case .underwater:
+                smoothed += 0.008 * (white - smoothed)
+                let pulse = 0.64 + 0.36 * sin(time * .pi * 0.18)
+                value = smoothed * pulse * 0.38
+            case .snow:
+                smoothed += 0.035 * (white - smoothed)
+                let gust = 0.55 + 0.45 * sin(time * .pi * 0.32)
+                value = (white * 0.025 + smoothed * 0.23) * gust
             case .tide:
                 smoothed += 0.009 * (white - smoothed)
                 let slowSwell = 0.38 + 0.62 * sin(time * .pi * 0.27)

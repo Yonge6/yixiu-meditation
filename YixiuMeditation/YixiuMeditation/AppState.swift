@@ -33,6 +33,7 @@ final class AppState: ObservableObject {
     @Published var isPlaying = false
     @Published var remainingSeconds = 30 * 60
     @Published var activeTab: RootTab = .listen
+    @Published var drawerOpen = false
     @Published var audioError: String?
     @Published var sessionCompleted = false
 
@@ -144,9 +145,14 @@ final class AppState: ObservableObject {
 
     func moveScene(_ direction: Int) {
         guard let currentIndex = MeditationScene.allCases.firstIndex(of: scene) else { return }
-        let count = MeditationScene.allCases.count
-        let nextIndex = (currentIndex + direction + count) % count
+        let nextIndex = currentIndex + direction
+        guard MeditationScene.allCases.indices.contains(nextIndex) else { return }
         selectScene(MeditationScene.allCases[nextIndex], autoplay: isPlaying)
+    }
+
+    func canMoveScene(_ direction: Int) -> Bool {
+        guard let currentIndex = MeditationScene.allCases.firstIndex(of: scene) else { return false }
+        return MeditationScene.allCases.indices.contains(currentIndex + direction)
     }
 
     func selectDuration(_ minutes: Int) {
