@@ -37,9 +37,6 @@ private struct YixiuTabBar: View {
             ForEach(RootTab.allCases) { tab in
                 Button {
                     guard appState.activeTab != tab else { return }
-                    if tab != .listen {
-                        appState.pause()
-                    }
                     withAnimation(.easeOut(duration: 0.18)) {
                         appState.activeTab = tab
                     }

@@ -37,7 +37,7 @@ type DurationOption = 15 | 30 | 60 | 0;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
 type DrawerView = "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
-type MeView = "home" | "philosophy" | "privacy" | "sources" | "support";
+type MeView = "home" | "about" | "privacy" | "sources" | "support";
 
 type SwipeStart = {
   pointerId: number;
@@ -1060,7 +1060,7 @@ export default function Prototype() {
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
-                  <button type="button" onClick={() => setMeView("philosophy")}><span><strong>{language === "zh" ? "产品哲学" : "Our philosophy"}</strong><small>{language === "zh" ? "真实自己，流动人生" : "True to yourself, flow with life"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => setMeView("about")}><span><strong>{language === "zh" ? "关于我们" : "About Us"}</strong><small>{language === "zh" ? "一休是谁，我们相信什么" : "Who we are and what we believe"}</small></span><ChevronRightIcon /></button>
                   <button type="button" onClick={() => setMeView("privacy")}><span><strong>{language === "zh" ? "隐私说明" : "Privacy"}</strong><small>{language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</small></span><ChevronRightIcon /></button>
                   <button type="button" onClick={() => setMeView("sources")}><span><strong>{language === "zh" ? "声音来源" : "Audio sources"}</strong><small>{language === "zh" ? "真实自然录音与授权" : "Field recordings and licensing"}</small></span><ChevronRightIcon /></button>
                   <button type="button" onClick={() => setMeView("support")}><span><strong>{language === "zh" ? "联系与反馈" : "Contact and feedback"}</strong><small>{language === "zh" ? "邮箱与社交媒体" : "Email and social channels"}</small></span><ChevronRightIcon /></button>
@@ -1081,11 +1081,38 @@ export default function Prototype() {
             <div className="me-detail-view">
               <header className="me-detail-header">
                 <button type="button" aria-label={language === "zh" ? "返回" : "Back"} onClick={() => setMeView("home")}><ArrowLeftIcon /></button>
-                <div><small>一休 · YIXIU</small><strong>{meView === "philosophy" ? (language === "zh" ? "产品哲学" : "Philosophy") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
+                <div><small>一休 · YIXIU</small><strong>{meView === "about" ? (language === "zh" ? "关于我们" : "About Us") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
               </header>
               <div className="me-detail-scroll">
-                {meView === "philosophy" ? (
-                  <article className="me-article"><small>{language === "zh" ? "生命观" : "LIFE PHILOSOPHY"}</small><h2>{language === "zh" ? "真实自己，流动人生" : "True to yourself. Flow with life."}</h2><p>{language === "zh" ? "生命不是用来证明自己的，而是用来认识自己、接纳自己、成为自己、活出自己。" : "Life is not something to prove. It is a path to know, accept, become and live as yourself."}</p><p>{language === "zh" ? "水不与万物争，却能抵达远方。每一次聆听，都是少一点对抗、多一点觉察。" : "Water competes with nothing, yet reaches far. Each listening session is an invitation to resist less and notice more."}</p><blockquote>{language === "zh" ? "向内认识自己，向外如水而行。" : "Know within. Move like water."}</blockquote></article>
+                {meView === "about" ? (
+                  <article className="me-article me-about">
+                    <small>{language === "zh" ? "真实自己，流动人生" : "TRUE TO YOURSELF. FLOW WITH LIFE."}</small>
+                    <h2>{language === "zh" ? "一休，是一处让声音带你回到当下的空间。" : "Yixiu is a space where sound brings you back to the present."}</h2>
+                    <p>{language === "zh" ? "我们用真实自然声、定时聆听与水之呼吸，陪你在工作、阅读、睡眠或情绪起伏时先停一停，照顾身体，听见自己，再继续前行。" : "Through real nature sounds, timed listening and water breathing, we help you pause, care for the body, hear yourself and continue—through work, reading, sleep and emotional change."}</p>
+                    <section className="life-philosophy">
+                      <small>{language === "zh" ? "我们的生命观" : "OUR PHILOSOPHY OF LIFE"}</small>
+                      <h3>{language === "zh" ? "生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。" : "Life is not for proving yourself. It is for knowing, accepting, becoming, and living as yourself."}</h3>
+                      <p>{language === "zh" ? "真正的成长，不是把自己改造成某个标准答案，而是在变化中越来越诚实地看见自己，越来越从容地选择自己的活法。" : "Growth is not the work of turning yourself into a standard answer. It is learning to see yourself more honestly through change, and to choose your way of living with greater ease."}</p>
+                      <div className="life-path" aria-label={language === "zh" ? "核心路径" : "Core path"}>
+                        {(language === "zh" ? ["认识自己", "接纳自己", "成为自己", "活出自己"] : ["Know yourself", "Accept yourself", "Become yourself", "Live as yourself"]).map((item, index) => <div key={item}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item}</strong></div>)}
+                      </div>
+                      <div className="life-principles">
+                        {(language === "zh" ? [
+                          ["一休", "先照顾身体，安顿情绪，再继续前行。"],
+                          ["不二", "接纳高峰与低谷，拥抱完整而非完美。"],
+                          ["三慢", "慢下来、慢慢来、慢慢成为，尊重生命的节奏。"],
+                          ["如水", "向内扎根，向外流动；顺应变化，不失本心。"],
+                        ] : [
+                          ["Pause", "Care for the body, settle emotion, then continue."],
+                          ["Wholeness", "Accept peaks and valleys; choose wholeness over perfection."],
+                          ["Go slowly", "Slow down, take your time, and respect the rhythm of becoming."],
+                          ["Be Water", "Root inwardly, move outwardly; adapt without losing your center."],
+                        ]).map(([title, body]) => <article key={title}><strong>{title}</strong><p>{body}</p></article>)}
+                      </div>
+                      <blockquote>{language === "zh" ? "向内认识自己，向外如水而行。" : "Know yourself within; move through the world like water."}</blockquote>
+                      <p className="life-vision">{language === "zh" ? "我们愿陪伴彼此走过低谷与高峰，探索身心健康的工作与生活方式；真实面对自己与世界，善待自己、他人与生命，并在创造和欣赏中活出生命之美。" : "We hope to accompany one another through valleys and peaks, exploring healthier ways to work and live: facing self and world truthfully, treating life with kindness, and creating and appreciating beauty."}</p>
+                    </section>
+                  </article>
                 ) : meView === "privacy" ? (
                   <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
                 ) : meView === "sources" ? (
@@ -1101,8 +1128,8 @@ export default function Prototype() {
 
       <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
         <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><WaterWavesIcon /><span>{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
-        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} onClick={() => { setIsPlaying(false); setActiveTab("focus"); setMeView("home"); }}><span className="nav-focus-orbit" /><span>{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
-        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} onClick={() => { setIsPlaying(false); setActiveTab("me"); setMeView("home"); }}><PersonIcon /><span>{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
+        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-focus-orbit" /><span>{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
+        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} onClick={() => { setActiveTab("me"); setMeView("home"); }}><PersonIcon /><span>{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
       </nav>
 
       {libraryOpen ? (
@@ -1114,7 +1141,7 @@ export default function Prototype() {
             <div className="scene-grid">
               {sceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" onClick={() => selectScene(scene.id)}><img src={scene.image} alt="" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? "收藏" : "Favorite"} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
+                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={scene.image} alt="" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
               })}
             </div>
           </section>

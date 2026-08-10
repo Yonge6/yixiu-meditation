@@ -202,13 +202,24 @@ test("updates and restores local settings", async ({ page }) => {
   await expect(page.getByRole("switch", { name: "结束提示音" })).toHaveAttribute("aria-checked", "true");
 });
 
-test("keeps About content in My and returns from detail pages", async ({ page }) => {
+test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
-  await page.getByRole("button", { name: /产品哲学/ }).click();
-  await expect(page.getByRole("heading", { name: "真实自己，流动人生" })).toBeVisible();
+  await page.getByRole("button", { name: /关于我们/ }).click();
+  await expect(page.getByRole("heading", { name: "一休，是一处让声音带你回到当下的空间。" })).toBeVisible();
+  await expect(page.getByText("生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。", { exact: true })).toBeVisible();
+  await expect(page.getByText("认识自己", { exact: true })).toBeVisible();
+  await expect(page.getByText("如水", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "返回" }).click();
   await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();
   await expect(page.getByRole("button", { name: "打开菜单" })).toHaveCount(0);
+});
+
+test("keeps the current sound playing across Focus and My tabs", async ({ page }) => {
+  await page.getByRole("button", { name: "播放" }).click();
+  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "声音 SOUNDS" }).click();
+  await expect(page.getByRole("button", { name: "暂停" })).toHaveAttribute("aria-pressed", "true");
 });
 
 test("loads a real morning-birds recording instead of generated noise", async ({ page }) => {

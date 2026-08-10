@@ -2,7 +2,7 @@ import SwiftUI
 
 private enum MePage: Equatable {
     case home
-    case philosophy
+    case about
     case privacy
     case sources
     case support
@@ -297,10 +297,10 @@ struct MeView: View {
     private var aboutCard: some View {
         VStack(spacing: 0) {
             infoRow(
-                title: language.text(zh: "产品哲学", en: "Our philosophy"),
-                subtitle: language.text(zh: "真实自己，流动人生", en: "True to yourself, flow with life"),
+                title: language.text(zh: "关于我们", en: "About Us"),
+                subtitle: language.text(zh: "一休是谁，我们相信什么", en: "Who we are and what we believe"),
                 icon: "drop",
-                target: .philosophy
+                target: .about
             )
             Divider().overlay(YixiuTheme.hairline)
             infoRow(
@@ -406,22 +406,8 @@ struct MeView: View {
     @ViewBuilder
     private var detailBody: some View {
         switch page {
-        case .philosophy:
-            MeArticle(
-                eyebrow: language.text(zh: "生命观", en: "LIFE PHILOSOPHY"),
-                title: language.text(zh: "真实自己，流动人生", en: "True to yourself. Flow with life."),
-                paragraphs: [
-                    language.text(
-                        zh: "生命不是用来证明自己的，而是用来认识自己、接纳自己、成为自己、活出自己。",
-                        en: "Life is not something to prove. It is a path to know, accept, become and live as yourself."
-                    ),
-                    language.text(
-                        zh: "水不与万物争，却能抵达远方。每一次聆听，都是少一点对抗、多一点觉察。",
-                        en: "Water competes with nothing, yet reaches far. Each listening session is an invitation to resist less and notice more."
-                    )
-                ],
-                quote: language.text(zh: "向内认识自己，向外如水而行。", en: "Know within. Move like water.")
-            )
+        case .about:
+            AboutYixiuView(language: language)
         case .privacy:
             MeArticle(
                 eyebrow: language.text(zh: "你的数据", en: "YOUR DATA"),
@@ -508,7 +494,7 @@ struct MeView: View {
     private var detailTitle: String {
         switch page {
         case .home: language.text(zh: "我的一休", en: "My Yixiu")
-        case .philosophy: language.text(zh: "产品哲学", en: "Philosophy")
+        case .about: language.text(zh: "关于我们", en: "About Us")
         case .privacy: language.text(zh: "隐私说明", en: "Privacy")
         case .sources: language.text(zh: "声音来源", en: "Audio Sources")
         case .support: language.text(zh: "联系与反馈", en: "Contact")
@@ -647,6 +633,156 @@ struct MeView: View {
             .padding(.horizontal, 18)
             .frame(height: 48)
             .background(Capsule().fill(YixiuTheme.aquaStrong))
+    }
+}
+
+private struct AboutYixiuView: View {
+    let language: AppLanguage
+
+    private var pathItems: [String] {
+        language == .zh
+            ? ["认识自己", "接纳自己", "成为自己", "活出自己"]
+            : ["Know yourself", "Accept yourself", "Become yourself", "Live as yourself"]
+    }
+
+    private var principles: [(String, String)] {
+        language == .zh
+            ? [
+                ("一休", "先照顾身体，安顿情绪，再继续前行。"),
+                ("不二", "接纳高峰与低谷，拥抱完整而非完美。"),
+                ("三慢", "慢下来、慢慢来、慢慢成为，尊重生命的节奏。"),
+                ("如水", "向内扎根，向外流动；顺应变化，不失本心。")
+            ]
+            : [
+                ("Pause", "Care for the body, settle emotion, then continue."),
+                ("Wholeness", "Accept peaks and valleys; choose wholeness over perfection."),
+                ("Go slowly", "Slow down, take your time, and respect the rhythm of becoming."),
+                ("Be Water", "Root inwardly, move outwardly; adapt without losing your center.")
+            ]
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(language.text(zh: "真实自己，流动人生", en: "TRUE TO YOURSELF. FLOW WITH LIFE."))
+                .yixiuSecondary(9)
+
+            Text(language.text(
+                zh: "一休，是一处让声音带你回到当下的空间。",
+                en: "Yixiu is a space where sound brings you back to the present."
+            ))
+            .font(YixiuTheme.chineseDisplay(25))
+            .lineSpacing(7)
+            .foregroundStyle(YixiuTheme.moon)
+            .padding(.top, 12)
+
+            Text(language.text(
+                zh: "我们用真实自然声、定时聆听与水之呼吸，陪你在工作、阅读、睡眠或情绪起伏时先停一停，照顾身体，听见自己，再继续前行。",
+                en: "Through real nature sounds, timed listening and water breathing, we help you pause, care for the body, hear yourself and continue—through work, reading, sleep and emotional change."
+            ))
+            .font(.system(size: 13))
+            .lineSpacing(7)
+            .foregroundStyle(YixiuTheme.mist)
+            .padding(.top, 16)
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text(language.text(zh: "我们的生命观", en: "OUR PHILOSOPHY OF LIFE"))
+                    .yixiuSecondary(9)
+
+                Text(language.text(
+                    zh: "生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。",
+                    en: "Life is not for proving yourself. It is for knowing, accepting, becoming, and living as yourself."
+                ))
+                .font(YixiuTheme.chineseDisplay(20))
+                .lineSpacing(8)
+                .foregroundStyle(YixiuTheme.moon)
+                .padding(.top, 11)
+
+                Text(language.text(
+                    zh: "真正的成长，不是把自己改造成某个标准答案，而是在变化中越来越诚实地看见自己，越来越从容地选择自己的活法。",
+                    en: "Growth is not the work of turning yourself into a standard answer. It is learning to see yourself more honestly through change, and to choose your way of living with greater ease."
+                ))
+                .font(.system(size: 12))
+                .lineSpacing(7)
+                .foregroundStyle(YixiuTheme.mist)
+                .padding(.top, 12)
+
+                HStack(spacing: 0) {
+                    ForEach(Array(pathItems.enumerated()), id: \.offset) { entry in
+                        let index = entry.offset
+                        let item = entry.element
+                        VStack(alignment: .leading, spacing: 7) {
+                            Text(String(format: "%02d", index + 1))
+                                .font(.system(size: 9))
+                                .foregroundStyle(YixiuTheme.aqua)
+                            Text(item)
+                                .font(YixiuTheme.chineseDisplay(11))
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.75)
+                                .foregroundStyle(YixiuTheme.moon)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 68, alignment: .leading)
+                        .padding(.horizontal, 7)
+                        .overlay(alignment: .trailing) {
+                            if index < pathItems.count - 1 {
+                                Rectangle().fill(YixiuTheme.hairline).frame(width: 0.7)
+                            }
+                        }
+                    }
+                }
+                .overlay(alignment: .top) { Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7) }
+                .overlay(alignment: .bottom) { Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7) }
+                .padding(.vertical, 22)
+
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 9) {
+                    ForEach(Array(principles.enumerated()), id: \.offset) { entry in
+                        let principle = entry.element
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(principle.0)
+                                .font(YixiuTheme.chineseDisplay(14))
+                                .foregroundStyle(YixiuTheme.aqua)
+                            Text(principle.1)
+                                .font(.system(size: 10))
+                                .lineSpacing(4)
+                                .foregroundStyle(YixiuTheme.mist)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 96, alignment: .topLeading)
+                        .padding(13)
+                        .background(YixiuTheme.aqua.opacity(0.045))
+                        .overlay(Rectangle().stroke(YixiuTheme.hairline, lineWidth: 0.7))
+                    }
+                }
+
+                Text(language.text(
+                    zh: "向内认识自己，向外如水而行。",
+                    en: "Know yourself within; move through the world like water."
+                ))
+                .font(YixiuTheme.chineseDisplay(17))
+                .lineSpacing(7)
+                .foregroundStyle(YixiuTheme.moon)
+                .frame(maxWidth: .infinity)
+                .multilineTextAlignment(.center)
+                .padding(.top, 22)
+
+                Text(language.text(
+                    zh: "我们愿陪伴彼此走过低谷与高峰，探索身心健康的工作与生活方式；真实面对自己与世界，善待自己、他人与生命，并在创造和欣赏中活出生命之美。",
+                    en: "We hope to accompany one another through valleys and peaks, exploring healthier ways to work and live: facing self and world truthfully, treating life with kindness, and creating and appreciating beauty."
+                ))
+                .font(.system(size: 11))
+                .lineSpacing(6)
+                .foregroundStyle(YixiuTheme.mist)
+                .padding(.top, 16)
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(YixiuTheme.hairline)
+                        .frame(height: 0.7)
+                }
+                .padding(.top, 16)
+            }
+            .padding(.vertical, 24)
+            .overlay(alignment: .top) { Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7) }
+            .overlay(alignment: .bottom) { Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7) }
+            .padding(.top, 30)
+        }
     }
 }
 

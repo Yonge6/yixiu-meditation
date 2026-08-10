@@ -26,7 +26,7 @@ struct ListenView: View {
                 header
                     .position(
                         x: geometry.size.width / 2,
-                        y: max(geometry.safeAreaInsets.top + 26, 58)
+                        y: max(geometry.safeAreaInsets.top + 30, 84)
                     )
 
                 sceneIdentity
@@ -415,51 +415,62 @@ struct SoundLibraryView: View {
     }
 
     private func sceneCard(_ scene: MeditationScene) -> some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .bottomLeading) {
-                Image(scene.assetName)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .clipped()
+        ZStack(alignment: .topTrailing) {
+            Button {
+                appState.selectScene(scene)
+                dismiss()
+            } label: {
+                GeometryReader { geometry in
+                    ZStack(alignment: .bottomLeading) {
+                        Image(scene.assetName)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
 
-                LinearGradient(
-                    colors: [.clear, YixiuTheme.deepWater.opacity(0.92)],
-                    startPoint: .center,
-                    endPoint: .bottom
-                )
+                        LinearGradient(
+                            colors: [.clear, YixiuTheme.deepWater.opacity(0.92)],
+                            startPoint: .center,
+                            endPoint: .bottom
+                        )
 
-                Button {
-                    appState.selectScene(scene)
-                    dismiss()
-                } label: {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(language.text(zh: scene.zhName, en: scene.enName))
-                            .font(YixiuTheme.chineseDisplay(17))
-                        Text(language.secondary(zh: scene.zhName, en: scene.enName.uppercased()))
-                            .font(YixiuTheme.englishSerif(8))
-                            .tracking(1)
-                        Text(language.text(zh: scene.useZh, en: scene.useEn))
-                            .font(.system(size: 9))
-                            .foregroundStyle(YixiuTheme.aqua)
-                            .padding(.top, 6)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(language.text(zh: scene.zhName, en: scene.enName))
+                                .font(YixiuTheme.chineseDisplay(17))
+                            Text(language.secondary(zh: scene.zhName, en: scene.enName.uppercased()))
+                                .font(YixiuTheme.englishSerif(8))
+                                .tracking(1)
+                            Text(language.text(zh: scene.useZh, en: scene.useEn))
+                                .font(.system(size: 9))
+                                .foregroundStyle(YixiuTheme.aqua)
+                                .padding(.top, 6)
+                        }
+                        .foregroundStyle(YixiuTheme.moon)
+                        .padding(13)
                     }
-                    .foregroundStyle(YixiuTheme.moon)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                    .padding(13)
+                    .contentShape(Rectangle())
                 }
-
-                Button {
-                    appState.toggleFavorite(scene)
-                } label: {
-                    Image(systemName: appState.favorites.contains(scene) ? "heart.fill" : "heart")
-                        .foregroundStyle(appState.favorites.contains(scene) ? YixiuTheme.aquaStrong : YixiuTheme.moon)
-                        .frame(width: 36, height: 36)
-                        .background(Circle().fill(YixiuTheme.deepWater.opacity(0.62)))
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                .padding(8)
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel(language.text(
+                zh: "切换到\(scene.zhName)",
+                en: "Switch to \(scene.enName)"
+            ))
+
+            Button {
+                appState.toggleFavorite(scene)
+            } label: {
+                Image(systemName: appState.favorites.contains(scene) ? "heart.fill" : "heart")
+                    .foregroundStyle(appState.favorites.contains(scene) ? YixiuTheme.aquaStrong : YixiuTheme.moon)
+                    .frame(width: 36, height: 36)
+                    .background(Circle().fill(YixiuTheme.deepWater.opacity(0.62)))
+            }
+            .buttonStyle(.plain)
+            .padding(8)
+            .accessibilityLabel(language.text(
+                zh: "收藏\(scene.zhName)",
+                en: "Favorite \(scene.enName)"
+            ))
         }
         .frame(height: 190)
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))

@@ -118,7 +118,7 @@ input:focus-visible {
 .player-header {
   position: absolute;
   z-index: 20;
-  top: max(28px, env(safe-area-inset-top, 0px));
+  top: max(38px, calc(env(safe-area-inset-top, 0px) + 12px));
   right: 24px;
   left: 24px;
   display: flex;
@@ -1713,6 +1713,113 @@ input:focus-visible {
   text-decoration: none;
 }
 
+.me-about > p {
+  margin-top: 16px;
+}
+
+.life-philosophy {
+  margin-top: 30px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(143, 214, 220, 0.24);
+  border-bottom: 1px solid rgba(143, 214, 220, 0.24);
+}
+
+.life-philosophy > small {
+  color: var(--aqua);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+
+.life-philosophy h3 {
+  margin: 11px 0 0;
+  color: var(--moon);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+.life-philosophy > p {
+  margin: 12px 0 0;
+  color: var(--mist);
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.life-path {
+  display: grid;
+  margin: 22px 0;
+  border-top: 1px solid rgba(143, 214, 220, 0.18);
+  border-bottom: 1px solid rgba(143, 214, 220, 0.18);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.life-path div {
+  display: grid;
+  min-width: 0;
+  padding: 12px 6px;
+  border-right: 1px solid rgba(143, 214, 220, 0.14);
+  gap: 7px;
+}
+
+.life-path div:last-child {
+  border-right: 0;
+}
+
+.life-path span {
+  color: var(--aqua);
+  font-size: 9px;
+}
+
+.life-path strong {
+  color: var(--moon);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.life-principles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.life-principles article {
+  padding: 13px;
+  border: 1px solid rgba(143, 214, 220, 0.15);
+  background: rgba(143, 214, 220, 0.045);
+}
+
+.life-principles strong {
+  color: var(--aqua);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.life-principles article p {
+  margin: 6px 0 0;
+  color: var(--mist);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.life-philosophy blockquote {
+  margin: 22px 0 0;
+  padding: 0;
+  border: 0;
+  color: var(--moon);
+  font-size: 17px;
+}
+
+.life-philosophy .life-vision {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(143, 214, 220, 0.14);
+  font-size: 11px;
+}
+
 .me-contact-list {
   margin-top: 22px;
   border-top: 1px solid rgba(143, 214, 220, 0.14);
@@ -1859,6 +1966,7 @@ input:focus-visible {
   padding: 0;
   color: var(--moon);
   text-align: left;
+  touch-action: manipulation;
 }
 
 .scene-select img {
