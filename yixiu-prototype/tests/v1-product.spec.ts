@@ -158,7 +158,13 @@ test("selects timer and switches the interface language", async ({ page }) => {
   await page.getByRole("button", { name: "15 分钟" }).click();
   await expect(page.getByRole("button", { name: "15 分钟" })).toBeVisible();
   await page.getByRole("button", { name: "定时" }).click();
-  await expect(page.locator(".timer-panel")).toBeVisible();
+  const timerPanel = page.locator(".timer-panel");
+  await expect(timerPanel).toBeVisible();
+  const timerBox = await timerPanel.boundingBox();
+  const transportBox = await page.locator(".transport").boundingBox();
+  expect(timerBox).not.toBeNull();
+  expect(transportBox).not.toBeNull();
+  expect(timerBox!.y + timerBox!.height).toBeLessThan(transportBox!.y);
   await page.getByRole("button", { name: "15 分钟" }).last().click();
 
   await page.getByRole("button", { name: "切换到英文" }).click();
@@ -204,6 +210,7 @@ test("updates and restores local settings", async ({ page }) => {
 
 test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
+  await expect(page.getByRole("link", { name: /下载一休 App/ })).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");
   await page.getByRole("button", { name: /关于我们/ }).click();
   await expect(page.getByRole("heading", { name: "一休，是一处让声音带你回到当下的空间。" })).toBeVisible();
   await expect(page.getByText("生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。", { exact: true })).toBeVisible();

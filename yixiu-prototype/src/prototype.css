@@ -902,13 +902,19 @@ input:focus-visible {
   font-size: 17px;
   letter-spacing: 0.08em;
   text-shadow: 0 2px 14px rgba(0, 15, 21, 0.72);
+  transition: opacity 140ms ease;
+}
+
+.duration-button.is-picker-open {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .timer-panel {
   position: absolute;
   z-index: 45;
+  top: 60.8%;
   right: 18px;
-  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   left: 18px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -920,6 +926,18 @@ input:focus-visible {
   background: var(--panel);
   box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(18px);
+  animation: timer-panel-in 160ms ease-out both;
+}
+
+@keyframes timer-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .timer-panel button {
@@ -1464,6 +1482,66 @@ input:focus-visible {
 .switch-control.is-active i {
   transform: translateX(20px);
   background: #03212b;
+}
+
+.me-app-download {
+  display: grid;
+  min-height: 92px;
+  margin-bottom: 12px;
+  align-items: center;
+  padding: 16px 17px;
+  border: 1px solid rgba(177, 235, 239, 0.28);
+  border-radius: 22px;
+  grid-template-columns: minmax(0, 1fr) auto 18px;
+  gap: 12px;
+  color: var(--moon);
+  background: linear-gradient(118deg, rgba(8, 58, 70, 0.92), rgba(4, 31, 40, 0.78));
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+
+.me-app-download > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.me-app-download small {
+  color: var(--aqua);
+  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+
+.me-app-download strong {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.me-app-download em {
+  overflow: hidden;
+  color: var(--mist);
+  font-size: 9px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.me-app-download > b {
+  padding: 8px 10px;
+  border: 1px solid rgba(191, 240, 243, 0.24);
+  border-radius: 999px;
+  color: #d9eff0;
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.me-app-download > svg {
+  color: var(--aqua);
 }
 
 .trust-links {

@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 private enum MePage: Equatable {
     case home
@@ -10,6 +11,7 @@ private enum MePage: Equatable {
 
 struct MeView: View {
     @EnvironmentObject private var appState: AppState
+    @Environment(\.requestReview) private var requestReview
     @State private var page: MePage = .home
     @State private var libraryOpen = false
 
@@ -323,6 +325,34 @@ struct MeView: View {
                 icon: "envelope",
                 target: .support
             )
+            Divider().overlay(YixiuTheme.hairline)
+            Button {
+                requestReview()
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "star")
+                        .font(.system(size: 16, weight: .light))
+                        .foregroundStyle(YixiuTheme.aqua)
+                        .frame(width: 36, height: 36)
+                        .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(language.text(zh: "给一休评分", en: "Rate Yixiu"))
+                            .font(YixiuTheme.chineseDisplay(15))
+                        Text(language.text(zh: "在 App Store 分享你的感受", en: "Share your experience on the App Store"))
+                            .font(.system(size: 10))
+                            .foregroundStyle(YixiuTheme.mist)
+                            .lineLimit(1)
+                    }
+                    Spacer()
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 12, weight: .light))
+                        .foregroundStyle(YixiuTheme.mist)
+                }
+                .foregroundStyle(YixiuTheme.moon)
+                .frame(minHeight: 66)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
         }
         .padding(.horizontal, 16)
         .yixiuPanel()

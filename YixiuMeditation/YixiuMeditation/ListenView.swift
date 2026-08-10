@@ -35,8 +35,15 @@ struct ListenView: View {
                     .opacity(1 - sceneSwipeProgress * 0.55)
                     .allowsHitTesting(false)
 
-                durationButton
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.64)
+                if timerOpen {
+                    timerPanel
+                        .padding(.horizontal, 18)
+                        .position(x: geometry.size.width / 2, y: geometry.size.height * 0.615)
+                        .transition(.scale(scale: 0.96).combined(with: .opacity))
+                } else {
+                    durationButton
+                        .position(x: geometry.size.width / 2, y: geometry.size.height * 0.64)
+                }
 
                 transport
                     .position(x: geometry.size.width / 2, y: geometry.size.height * 0.73)
@@ -50,12 +57,6 @@ struct ListenView: View {
                     .foregroundStyle(YixiuTheme.mist.opacity(0.62))
                     .position(x: geometry.size.width / 2, y: geometry.size.height - 108)
                     .allowsHitTesting(false)
-
-                if timerOpen {
-                    timerPanel
-                        .padding(.horizontal, 18)
-                        .position(x: geometry.size.width / 2, y: geometry.size.height - 128)
-                }
 
                 if let audioError = appState.audioError {
                     Text(audioError)

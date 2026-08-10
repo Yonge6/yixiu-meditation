@@ -901,7 +901,7 @@ export default function Prototype() {
             </p>
           </section>
 
-          <button className="duration-button" type="button" aria-expanded={timerOpen} onClick={() => {
+          <button className={`duration-button ${timerOpen ? "is-picker-open" : ""}`} type="button" aria-expanded={timerOpen} onClick={() => {
             setMenuOpen(false);
             setTimerOpen((current) => !current);
           }}>
@@ -1057,6 +1057,16 @@ export default function Prototype() {
                     <button className={`switch-control ${backgroundPlayback ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "后台播放" : "Background playback"} aria-checked={backgroundPlayback} onClick={() => setBackgroundPlayback((current) => !current)}><i /></button>
                   </div>
                 </section>
+
+                <a className="me-app-download" href="https://apps.apple.com/app/id1461182261" target="_blank" rel="noreferrer">
+                  <span>
+                    <small>YIXIU FOR IPHONE</small>
+                    <strong>{language === "zh" ? "下载一休 App" : "Download Yixiu"}</strong>
+                    <em>{language === "zh" ? "随时聆听，支持后台播放" : "Listen anytime with background playback"}</em>
+                  </span>
+                  <b>App Store</b>
+                  <ExternalLinkIcon />
+                </a>
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
