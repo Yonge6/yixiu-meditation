@@ -1696,7 +1696,7 @@ input:focus-visible {
 .me-detail-header {
   position: absolute;
   z-index: 3;
-  top: max(24px, env(safe-area-inset-top, 0px));
+  top: max(58px, calc(env(safe-area-inset-top, 0px) + 8px));
   right: 20px;
   left: 20px;
   display: grid;
@@ -1736,7 +1736,7 @@ input:focus-visible {
 
 .me-detail-scroll {
   position: absolute;
-  top: 100px;
+  top: max(128px, calc(env(safe-area-inset-top, 0px) + 78px));
   right: 18px;
   bottom: 96px;
   left: 18px;

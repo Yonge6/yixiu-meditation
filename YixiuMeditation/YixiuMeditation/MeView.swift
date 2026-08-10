@@ -417,7 +417,7 @@ struct MeView: View {
                 Spacer()
             }
             .padding(.horizontal, 18)
-            .padding(.top, geometry.safeAreaInsets.top + 5)
+            .padding(.top, max(geometry.safeAreaInsets.top + 8, 60))
             .padding(.bottom, 12)
             .background(YixiuTheme.deepWater.opacity(0.82))
 

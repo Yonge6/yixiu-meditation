@@ -212,6 +212,9 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   await page.getByRole("button", { name: "我的 ME" }).click();
   await expect(page.getByRole("link", { name: /下载一休 App/ })).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");
   await page.getByRole("button", { name: /关于我们/ }).click();
+  const detailHeaderBox = await page.locator(".me-detail-header").boundingBox();
+  expect(detailHeaderBox).not.toBeNull();
+  expect(detailHeaderBox!.y).toBeGreaterThanOrEqual(58);
   await expect(page.getByRole("heading", { name: "一休，是一处让声音带你回到当下的空间。" })).toBeVisible();
   await expect(page.getByText("生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。", { exact: true })).toBeVisible();
   await expect(page.getByText("认识自己", { exact: true })).toBeVisible();
