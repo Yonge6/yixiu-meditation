@@ -987,7 +987,7 @@ input:focus-visible {
   position: relative;
   display: flex;
   min-width: 0;
-  min-height: 64px;
+  height: 68px;
   align-items: center;
   flex-direction: column;
   justify-content: center;
@@ -1008,12 +1008,24 @@ input:focus-visible {
   content: "";
 }
 
-.bottom-nav svg {
-  width: 23px;
-  height: 23px;
+.bottom-nav .nav-icon {
+  display: grid;
+  width: 30px;
+  height: 24px;
+  margin: 0;
+  flex: 0 0 24px;
+  place-items: center;
+  font-size: initial;
+  line-height: normal;
 }
 
-.bottom-nav .water-waves-icon {
+.bottom-nav .nav-icon svg {
+  width: 23px;
+  height: 23px;
+  display: block;
+}
+
+.bottom-nav .nav-icon .water-waves-icon {
   width: 28px;
   height: 24px;
   overflow: visible;
@@ -1024,15 +1036,16 @@ input:focus-visible {
 }
 
 .nav-focus-orbit {
-  width: 24px;
-  height: 24px;
+  display: block;
+  width: 23px;
+  height: 23px;
   margin: 0 !important;
   border: 1px solid currentColor;
   border-radius: 50%;
   box-shadow: inset 0 0 0 5px rgba(143, 214, 220, 0.09);
 }
 
-.bottom-nav span {
+.bottom-nav .nav-label {
   margin-top: 4px;
   font-size: 12px;
   line-height: 1;

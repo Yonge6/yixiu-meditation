@@ -229,6 +229,23 @@ test("keeps the current sound playing across Focus and My tabs", async ({ page }
   await expect(page.getByRole("button", { name: "暂停" })).toHaveAttribute("aria-pressed", "true");
 });
 
+test("keeps all three bottom tabs on one fixed baseline", async ({ page }) => {
+  const tabs = page.locator(".bottom-nav button");
+  const initialBoxes = await tabs.evaluateAll((buttons) => buttons.map((button) => {
+    const box = button.getBoundingClientRect();
+    return { y: box.y, height: box.height };
+  }));
+  expect(new Set(initialBoxes.map((box) => box.y)).size).toBe(1);
+  expect(new Set(initialBoxes.map((box) => box.height)).size).toBe(1);
+
+  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  const activeBoxes = await tabs.evaluateAll((buttons) => buttons.map((button) => {
+    const box = button.getBoundingClientRect();
+    return { y: box.y, height: box.height };
+  }));
+  expect(activeBoxes).toEqual(initialBoxes);
+});
+
 test("loads a real morning-birds recording instead of generated noise", async ({ page }) => {
   const request = page.waitForRequest((candidate) => candidate.url().endsWith("/assets/yixiu/audio/morning-birds.m4a"));
   await page.getByRole("button", { name: "我的 ME" }).click();

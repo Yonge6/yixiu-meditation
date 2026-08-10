@@ -1137,9 +1137,9 @@ export default function Prototype() {
       ) : null}
 
       <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
-        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><WaterWavesIcon /><span>{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
-        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-focus-orbit" /><span>{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
-        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} onClick={() => { setActiveTab("me"); setMeView("home"); }}><PersonIcon /><span>{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
+        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><span className="nav-icon"><WaterWavesIcon /></span><span className="nav-label">{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
+        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-icon"><span className="nav-focus-orbit" /></span><span className="nav-label">{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
+        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} onClick={() => { setActiveTab("me"); setMeView("home"); }}><span className="nav-icon"><PersonIcon /></span><span className="nav-label">{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
       </nav>
 
       {libraryOpen ? (

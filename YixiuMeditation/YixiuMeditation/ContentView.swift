@@ -43,16 +43,18 @@ private struct YixiuTabBar: View {
                     VStack(spacing: 3) {
                         Image(systemName: tab.icon)
                             .font(.system(size: 19, weight: .light))
-                            .frame(height: 22)
+                            .frame(width: 28, height: 22)
                         Text(appState.language.text(zh: tab.zhName, en: tab.enName.capitalized))
                             .font(YixiuTheme.chineseDisplay(13))
+                            .frame(height: 16)
                         Text(appState.language.secondary(zh: tab.zhName, en: tab.enName))
                             .font(YixiuTheme.englishSerif(8, weight: .semibold))
                             .tracking(1)
+                            .frame(height: 10)
                     }
                     .foregroundStyle(appState.activeTab == tab ? YixiuTheme.aquaStrong : YixiuTheme.mist.opacity(0.72))
                     .frame(maxWidth: .infinity)
-                    .frame(minHeight: 58)
+                    .frame(height: 58)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
