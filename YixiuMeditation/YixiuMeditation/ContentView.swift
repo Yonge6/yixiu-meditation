@@ -6,6 +6,11 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { rootGeometry in
             ZStack {
+                statusBarBackdrop
+                    .frame(width: rootGeometry.size.width, height: rootGeometry.size.height)
+                    .ignoresSafeArea()
+                    .allowsHitTesting(false)
+
                 Group {
                     switch appState.activeTab {
                     case .listen:
@@ -25,6 +30,28 @@ struct ContentView: View {
         }
         .background(YixiuTheme.deepWater)
         .preferredColorScheme(.dark)
+    }
+
+    private var statusBarBackdrop: some View {
+        ZStack {
+            Image(statusBarAssetName)
+                .resizable()
+                .scaledToFill()
+
+            Color(red: 0, green: 17 / 255, blue: 25 / 255)
+                .opacity(appState.activeTab == .listen && appState.scene.isBright ? 0.08 : 0.30)
+        }
+    }
+
+    private var statusBarAssetName: String {
+        switch appState.activeTab {
+        case .listen:
+            appState.scene.assetName
+        case .focus:
+            "MorningLake"
+        case .me:
+            "NightTide"
+        }
     }
 }
 

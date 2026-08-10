@@ -1,4 +1,3 @@
-import Combine
 import SwiftUI
 
 struct FocusView: View {
@@ -6,8 +5,6 @@ struct FocusView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var status: BreathingStatus = .idle
     @State private var elapsed = 0
-
-    private let clock = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private var phase: String {
         if status == .complete { return "complete" }
@@ -118,13 +115,18 @@ struct FocusView: View {
             .multilineTextAlignment(.center)
             .padding(.horizontal, 24)
         }
-        .onReceive(clock) { _ in
+        .task(id: status) {
             guard status == .running else { return }
-            if elapsed >= 59 {
-                elapsed = 60
-                status = .complete
-            } else {
+
+            while status == .running, elapsed < 60, !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                guard status == .running, !Task.isCancelled else { return }
+
                 elapsed += 1
+                if elapsed >= 60 {
+                    status = .complete
+                    return
+                }
             }
         }
         .onDisappear {
