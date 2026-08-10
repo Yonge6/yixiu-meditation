@@ -36,6 +36,13 @@ button {
   cursor: pointer;
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 2px;
+}
+
 .yixiu-app {
   position: absolute;
   inset: 0;
@@ -284,7 +291,7 @@ button {
   z-index: 4;
   inset: 0;
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: none;
   user-select: none;
 }
 
@@ -901,7 +908,7 @@ button {
   position: absolute;
   z-index: 45;
   right: 18px;
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   left: 18px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -948,10 +955,14 @@ button {
   bottom: max(8px, env(safe-area-inset-bottom, 0px));
   left: 14px;
   display: grid;
-  height: 74px;
-  padding: 0;
+  height: 76px;
+  padding: 2px 8px 4px;
   grid-template-columns: repeat(3, 1fr);
-  background: transparent;
+  border: 1px solid rgba(157, 222, 226, 0.16);
+  border-radius: 24px;
+  background: rgba(3, 25, 34, 0.82);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(20px);
 }
 
 .bottom-nav button {
@@ -992,6 +1003,15 @@ button {
   stroke: currentColor;
   stroke-linecap: round;
   stroke-width: 1.4;
+}
+
+.nav-focus-orbit {
+  width: 24px;
+  height: 24px;
+  margin: 0 !important;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 5px rgba(143, 214, 220, 0.09);
 }
 
 .bottom-nav span {
@@ -1187,9 +1207,9 @@ button {
 
 .me-scroll {
   position: absolute;
-  top: 178px;
+  top: 190px;
   right: 14px;
-  bottom: 82px;
+  bottom: 96px;
   left: 14px;
   overflow-y: auto;
   padding: 4px 4px 28px;
@@ -1304,10 +1324,108 @@ button {
   padding-bottom: 4px;
 }
 
+.me-sound-space {
+  position: relative;
+  min-height: 184px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(159, 222, 226, 0.22);
+  border-radius: 24px;
+  background: var(--deep-water-soft);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+}
+
+.me-sound-space > img,
+.me-sound-space-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.me-sound-space > img {
+  object-fit: cover;
+  filter: brightness(0.72) saturate(0.82);
+}
+
+.me-sound-space-shade {
+  background: linear-gradient(90deg, rgba(1, 21, 29, 0.92) 0%, rgba(2, 24, 32, 0.63) 62%, rgba(2, 24, 32, 0.18) 100%);
+}
+
+.me-sound-space-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 184px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  padding: 21px;
+}
+
+.me-sound-space-copy > small {
+  color: var(--aqua);
+  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+}
+
+.me-sound-space-copy > strong {
+  margin-top: 9px;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.me-sound-space-copy > span {
+  margin-top: 5px;
+  color: #b6cbce;
+  font-size: 10px;
+}
+
+.me-sound-space-copy > button {
+  display: inline-flex;
+  min-height: 40px;
+  margin-top: 19px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1px solid rgba(184, 244, 247, 0.34);
+  border-radius: 999px;
+  color: #03212b;
+  background: var(--aqua-strong);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.me-sound-space-copy > button svg {
+  width: 19px;
+  height: 16px;
+}
+
 .setting-row {
   min-height: 56px;
   border-bottom: 1px solid rgba(164, 221, 225, 0.12);
   font-size: 13px;
+}
+
+.setting-row > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.setting-row > span strong {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.setting-row > span small {
+  color: var(--mist);
+  font-size: 9px;
 }
 
 .setting-row:last-child {
@@ -1358,7 +1476,7 @@ button {
 .trust-links button {
   display: flex;
   width: 100%;
-  min-height: 50px;
+  min-height: 66px;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
@@ -1371,9 +1489,253 @@ button {
   border-bottom: 0 !important;
 }
 
-.trust-links span {
+.trust-links button > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trust-links button strong {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.trust-links button small {
+  color: var(--mist);
+  font-size: 9px;
+}
+
+.trust-links button > svg {
+  flex: 0 0 auto;
   color: var(--aqua);
+}
+
+.me-group-label {
+  margin: 24px 4px 9px;
+  color: var(--aqua);
+  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+}
+
+.me-works {
+  overflow: hidden;
+  border: 1px solid rgba(159, 222, 226, 0.16);
+  border-radius: 20px;
+  background: rgba(4, 31, 40, 0.68);
+}
+
+.me-works a {
+  display: grid;
+  min-height: 108px;
+  align-items: center;
+  padding: 15px 14px;
+  border-bottom: 1px solid rgba(164, 221, 225, 0.1);
+  grid-template-columns: 31px minmax(0, 1fr) 18px;
+  gap: 12px;
+  color: var(--moon);
+  text-decoration: none;
+}
+
+.me-works a:last-child {
+  border-bottom: 0;
+}
+
+.me-works b {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid rgba(143, 214, 220, 0.22);
+  border-radius: 50%;
+  color: var(--aqua);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.me-works a > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.me-works strong {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.me-works em {
+  margin-top: 3px;
+  color: var(--aqua);
+  font-size: 9px;
+  font-style: normal;
+}
+
+.me-works small {
+  margin-top: 7px;
+  color: var(--mist);
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.me-works a > svg {
+  color: var(--aqua);
+}
+
+.me-philosophy-footnote {
+  margin: 28px 0 0;
+  color: rgba(194, 218, 220, 0.62);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.me-detail-view {
+  position: absolute;
+  inset: 0;
+  text-align: left;
+}
+
+.me-detail-header {
+  position: absolute;
+  z-index: 3;
+  top: max(24px, env(safe-area-inset-top, 0px));
+  right: 20px;
+  left: 20px;
+  display: grid;
+  min-height: 58px;
+  align-items: center;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.me-detail-header > button {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(159, 222, 226, 0.22);
+  border-radius: 50%;
+  background: rgba(3, 25, 34, 0.68);
+}
+
+.me-detail-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.me-detail-header small {
+  color: var(--aqua);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+
+.me-detail-header strong {
+  font-family: "Songti SC", "STSong", serif;
   font-size: 20px;
+  font-weight: 400;
+}
+
+.me-detail-scroll {
+  position: absolute;
+  top: 100px;
+  right: 18px;
+  bottom: 96px;
+  left: 18px;
+  overflow-y: auto;
+  padding: 10px 0 30px;
+  scrollbar-width: none;
+}
+
+.me-detail-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.me-article {
+  overflow: hidden;
+  padding: 28px 24px;
+  border: 1px solid rgba(159, 222, 226, 0.18);
+  border-radius: 24px;
+  background: rgba(4, 31, 40, 0.8);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+}
+
+.me-article > small {
+  color: var(--aqua);
+  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+}
+
+.me-article h2 {
+  margin: 14px 0 0;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.me-article p {
+  margin: 18px 0 0;
+  color: #b4c9cc;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.me-article blockquote {
+  margin: 26px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid rgba(143, 214, 220, 0.16);
+  color: var(--aqua-strong);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 17px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.me-article > a {
+  display: inline-flex;
+  min-height: 42px;
+  margin-top: 22px;
+  align-items: center;
+  padding: 0 17px;
+  border: 1px solid rgba(143, 214, 220, 0.34);
+  border-radius: 999px;
+  color: var(--aqua-strong);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.me-contact-list {
+  margin-top: 22px;
+  border-top: 1px solid rgba(143, 214, 220, 0.14);
+}
+
+.me-contact-list a {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(143, 214, 220, 0.12);
+  color: var(--moon);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.me-contact-list span {
+  color: var(--mist);
+}
+
+.me-contact-list strong {
+  color: var(--aqua);
+  font-weight: 500;
 }
 
 .version-copy {
@@ -1383,6 +1745,30 @@ button {
   font-size: 9px;
   letter-spacing: 0.12em;
   text-align: center;
+}
+
+.sound-swipe-hint {
+  position: absolute;
+  z-index: 7;
+  right: 0;
+  bottom: calc(94px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  margin: 0;
+  color: rgba(211, 229, 231, 0.48);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-align: center;
+  pointer-events: none;
+}
+
+.library-scrim {
+  position: absolute;
+  z-index: 49;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgba(0, 12, 18, 0.52);
+  backdrop-filter: blur(3px);
 }
 
 .sound-library {
@@ -1667,7 +2053,7 @@ button {
   }
 
   .me-scroll {
-    top: 162px;
+    top: 180px;
   }
 }
 

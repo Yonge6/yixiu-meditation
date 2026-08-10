@@ -33,7 +33,6 @@ final class AppState: ObservableObject {
     @Published var isPlaying = false
     @Published var remainingSeconds = 30 * 60
     @Published var activeTab: RootTab = .listen
-    @Published var drawerOpen = false
     @Published var audioError: String?
     @Published var sessionCompleted = false
 

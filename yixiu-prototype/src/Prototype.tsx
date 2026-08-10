@@ -4,7 +4,7 @@ import {
   ChevronRightIcon,
   ClockIcon,
   Cross2Icon,
-  HamburgerMenuIcon,
+  ExternalLinkIcon,
   HeartFilledIcon,
   HeartIcon,
   PauseIcon,
@@ -37,6 +37,7 @@ type DurationOption = 15 | 30 | 60 | 0;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
 type DrawerView = "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
+type MeView = "home" | "philosophy" | "privacy" | "sources" | "support";
 
 type SwipeStart = {
   pointerId: number;
@@ -376,6 +377,8 @@ export default function Prototype() {
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
   const [backgroundPlayback, setBackgroundPlayback] = useStoredState<boolean>("yixiu.backgroundPlayback", true);
   const [activeTab, setActiveTab] = useState<RootTab>("sounds");
+  const [meView, setMeView] = useState<MeView>("home");
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(62);
   const [remainingSeconds, setRemainingSeconds] = useState(duration === 0 ? 0 : duration * 60);
@@ -564,6 +567,12 @@ export default function Prototype() {
 
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
+    if (deltaY <= -64 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
+      setSwipeOffset(0);
+      setSwipeProgress(0);
+      setLibraryOpen(true);
+      return;
+    }
     const isHorizontalSwipe = Math.abs(deltaX) >= 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
     if (!isHorizontalSwipe) {
       resetSceneSwipe();
@@ -604,6 +613,7 @@ export default function Prototype() {
   const selectScene = (sceneId: SceneId, play = true) => {
     setActiveScene(sceneId);
     setActiveTab("sounds");
+    setLibraryOpen(false);
     if (play) setIsPlaying(true);
   };
 
@@ -668,7 +678,7 @@ export default function Prototype() {
       />
       <div className="ocean-shade" aria-hidden="true" />
 
-      <header className="player-header">
+      {activeTab === "sounds" ? <header className="player-header">
         <div className="brand-button">
           <span>{language === "zh" ? "一休" : "YIXIU"}</span>
           <small>{language === "zh" ? "YIXIU" : "一休"}</small>
@@ -682,22 +692,8 @@ export default function Prototype() {
           >
             {language === "zh" ? "EN" : "中文"}
           </button>
-          <button
-            ref={menuButtonRef}
-            className="icon-button menu-button"
-            type="button"
-            aria-label={language === "zh" ? "打开菜单" : "Open menu"}
-            aria-expanded={menuOpen}
-            onClick={() => {
-              setTimerOpen(false);
-              setDrawerView("home");
-              setMenuOpen(true);
-            }}
-          >
-            <HamburgerMenuIcon />
-          </button>
         </div>
-      </header>
+      </header> : null}
 
       {menuOpen ? (
         <div className="yixiu-drawer-layer">
@@ -939,6 +935,8 @@ export default function Prototype() {
             <SpeakerLoudIcon />
           </section>
 
+          <p className="sound-swipe-hint">{language === "zh" ? "上滑浏览全部声音" : "SWIPE UP FOR ALL SOUNDS"}</p>
+
         </section>
       ) : null}
 
@@ -988,74 +986,139 @@ export default function Prototype() {
       ) : null}
 
       {activeTab === "me" ? (
-        <section className="me-screen" aria-label={language === "zh" ? "我的一休" : "My Yixiu"}>
-          <div className="section-kicker">{language === "zh" ? "我的一休 · MY YIXIU" : "MY YIXIU · 我的一休"}</div>
-          <h1>{language === "zh" ? "回到自己的节奏" : "Return to your own rhythm"}</h1>
+        <section className="me-screen" data-me-view={meView} aria-label={language === "zh" ? "我的一休" : "My Yixiu"}>
+          {meView === "home" ? (
+            <>
+              <div className="section-kicker">{language === "zh" ? "我的一休 · MY YIXIU" : "MY YIXIU · 我的一休"}</div>
+              <h1>{language === "zh" ? "回到自己的节奏" : "Return to your own rhythm"}</h1>
 
-          <div className="me-scroll">
-            <section className="me-card favorites-card">
-              <div className="card-heading">
-                <div>
-                  <strong>{language === "zh" ? "我的收藏" : "Favorites"}</strong>
-                  <small>{language === "zh" ? "常听的水声" : "Your returning waters"}</small>
-                </div>
-                <HeartIcon />
-              </div>
-              {favorites.length ? (
-                <div className="favorite-scenes">
-                  {favorites.map((sceneId) => (
-                    <button key={sceneId} type="button" onClick={() => selectScene(sceneId, false)}>
-                      <img src={scenes[sceneId].image} alt="" />
-                      <span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <p className="empty-copy">{language === "zh" ? "在聆听页点亮心形，常听的水声会留在这里。" : "Tap the heart while listening and your favorite waters will stay here."}</p>
-              )}
-            </section>
+              <div className="me-scroll">
+                <section className="me-sound-space">
+                  <img src={active.image} alt="" />
+                  <div className="me-sound-space-shade" />
+                  <div className="me-sound-space-copy">
+                    <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
+                    <strong>{language === "zh" ? active.zh : active.en}</strong>
+                    <span>{language === "zh" ? "正在聆听 · 共 14 种真实自然声" : "Now listening · 14 real nature sounds"}</span>
+                    <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
+                  </div>
+                </section>
 
-            <section className="me-card">
-              <div className="setting-title">
-                <strong>{language === "zh" ? "默认定时" : "Default timer"}</strong>
-                <span>{durationLabel(duration, language)}</span>
-              </div>
-              <div className="duration-options settings-duration">
-                {durations.map((minutes) => (
-                  <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => selectDuration(minutes)}>
-                    {minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}
-                  </button>
-                ))}
-              </div>
-            </section>
+                <section className="me-card favorites-card">
+                  <div className="card-heading">
+                    <div>
+                      <strong>{language === "zh" ? "我的收藏" : "Favorites"}</strong>
+                      <small>{language === "zh" ? "常听的自然声" : "Your returning sounds"}</small>
+                    </div>
+                    <HeartIcon />
+                  </div>
+                  {favorites.length ? (
+                    <div className="favorite-scenes">
+                      {favorites.map((sceneId) => (
+                        <button key={sceneId} type="button" onClick={() => selectScene(sceneId, false)}>
+                          <img src={scenes[sceneId].image} alt="" />
+                          <span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="empty-copy">{language === "zh" ? "在声音页点亮心形，常听的自然声会留在这里。" : "Tap the heart while listening and your favorite sounds will stay here."}</p>
+                  )}
+                </section>
 
-            <section className="me-card settings-list">
-              <div className="setting-row">
-                <span>{language === "zh" ? "界面语言" : "Language"}</span>
-                <div className="language-switch compact">
-                  <button type="button" className={language === "zh" ? "is-active" : ""} onClick={() => setLanguage("zh")}>中</button>
-                  <button type="button" className={language === "en" ? "is-active" : ""} onClick={() => setLanguage("en")}>EN</button>
-                </div>
-              </div>
-              <div className="setting-row">
-                <span>{language === "zh" ? "结束提示音" : "End bell"}</span>
-                <button className={`switch-control ${endBell ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "结束提示音" : "End bell"} aria-checked={endBell} onClick={() => setEndBell((current) => !current)}><i /></button>
-              </div>
-              <div className="setting-row">
-                <span>{language === "zh" ? "后台播放" : "Background playback"}</span>
-                <button className={`switch-control ${backgroundPlayback ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "后台播放" : "Background playback"} aria-checked={backgroundPlayback} onClick={() => setBackgroundPlayback((current) => !current)}><i /></button>
-              </div>
-            </section>
+                <section className="me-card">
+                  <div className="setting-title">
+                    <strong>{language === "zh" ? "默认定时" : "Default timer"}</strong>
+                    <span>{durationLabel(duration, language)}</span>
+                  </div>
+                  <div className="duration-options settings-duration">
+                    {durations.map((minutes) => (
+                      <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => selectDuration(minutes)}>
+                        {minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}
+                      </button>
+                    ))}
+                  </div>
+                </section>
 
-            <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
-              <button type="button" onClick={() => setInfoPanel("philosophy")}>{language === "zh" ? "产品哲学" : "Our philosophy"}<span>›</span></button>
-              <button type="button" onClick={() => setInfoPanel("privacy")}>{language === "zh" ? "隐私说明" : "Privacy"}<span>›</span></button>
-              <button type="button" onClick={() => setInfoPanel("support")}>{language === "zh" ? "支持与反馈" : "Support"}<span>›</span></button>
-            </section>
+                <section className="me-card settings-list">
+                  <div className="setting-row">
+                    <span><strong>{language === "zh" ? "界面语言" : "Language"}</strong><small>{language === "zh" ? "中英双语随时切换" : "Chinese and English"}</small></span>
+                    <div className="language-switch compact">
+                      <button type="button" className={language === "zh" ? "is-active" : ""} onClick={() => setLanguage("zh")}>中</button>
+                      <button type="button" className={language === "en" ? "is-active" : ""} onClick={() => setLanguage("en")}>EN</button>
+                    </div>
+                  </div>
+                  <div className="setting-row">
+                    <span><strong>{language === "zh" ? "结束提示音" : "End bell"}</strong><small>{language === "zh" ? "定时结束时轻声提醒" : "A gentle ending cue"}</small></span>
+                    <button className={`switch-control ${endBell ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "结束提示音" : "End bell"} aria-checked={endBell} onClick={() => setEndBell((current) => !current)}><i /></button>
+                  </div>
+                  <div className="setting-row">
+                    <span><strong>{language === "zh" ? "后台播放" : "Background playback"}</strong><small>{language === "zh" ? "离开画面，水声仍可继续" : "Keep listening off-screen"}</small></span>
+                    <button className={`switch-control ${backgroundPlayback ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "后台播放" : "Background playback"} aria-checked={backgroundPlayback} onClick={() => setBackgroundPlayback((current) => !current)}><i /></button>
+                  </div>
+                </section>
 
-            <p className="version-copy">YIXIU 2.0 · {language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</p>
-          </div>
+                <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
+                <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
+                  <button type="button" onClick={() => setMeView("philosophy")}><span><strong>{language === "zh" ? "产品哲学" : "Our philosophy"}</strong><small>{language === "zh" ? "真实自己，流动人生" : "True to yourself, flow with life"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => setMeView("privacy")}><span><strong>{language === "zh" ? "隐私说明" : "Privacy"}</strong><small>{language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => setMeView("sources")}><span><strong>{language === "zh" ? "声音来源" : "Audio sources"}</strong><small>{language === "zh" ? "真实自然录音与授权" : "Field recordings and licensing"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => setMeView("support")}><span><strong>{language === "zh" ? "联系与反馈" : "Contact and feedback"}</strong><small>{language === "zh" ? "邮箱与社交媒体" : "Email and social channels"}</small></span><ChevronRightIcon /></button>
+                </section>
+
+                <p className="me-group-label">{language === "zh" ? "沿途所作" : "WORKS ALONG THE WAY"}</p>
+                <section className="me-works">
+                  <a href="https://xiazishuo.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "一" : "01"}</b><span><strong>{language === "zh" ? "虾子曰" : "Xiazi Says"}</strong><em>{language === "zh" ? "昨日世界" : "Yesterday's World"}</em><small>{language === "zh" ? "每天用全球热点与双语海报，看清复杂世界。" : "Global stories and bilingual posters make the world easier to see."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://wendao.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "二" : "02"}</b><span><strong>{language === "zh" ? "三慢问道" : "Wendao"}</strong><em>{language === "zh" ? "慢读经典" : "Read slowly"}</em><small>{language === "zh" ? "读懂经典，也在慢下来时读懂自己。" : "Read the classic slowly—and yourself with it."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://style-atlas.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "三" : "03"}</b><span><strong>{language === "zh" ? "艺术风格图鉴" : "Style Atlas"}</strong><em>{language === "zh" ? "学习看懂一种美" : "Learn to see a style"}</em><small>{language === "zh" ? "沿着艺术与设计风格的脉络，找到自己的观看方式。" : "Follow art and design lineages to find your own way of looking."}</small></span><ExternalLinkIcon /></a>
+                </section>
+
+                <p className="me-philosophy-footnote">{language === "zh" ? "向内认识自己，向外如水而行。" : "Know within. Move like water."}</p>
+                <p className="version-copy">YIXIU 2.0 · {language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</p>
+              </div>
+            </>
+          ) : (
+            <div className="me-detail-view">
+              <header className="me-detail-header">
+                <button type="button" aria-label={language === "zh" ? "返回" : "Back"} onClick={() => setMeView("home")}><ArrowLeftIcon /></button>
+                <div><small>一休 · YIXIU</small><strong>{meView === "philosophy" ? (language === "zh" ? "产品哲学" : "Philosophy") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
+              </header>
+              <div className="me-detail-scroll">
+                {meView === "philosophy" ? (
+                  <article className="me-article"><small>{language === "zh" ? "生命观" : "LIFE PHILOSOPHY"}</small><h2>{language === "zh" ? "真实自己，流动人生" : "True to yourself. Flow with life."}</h2><p>{language === "zh" ? "生命不是用来证明自己的，而是用来认识自己、接纳自己、成为自己、活出自己。" : "Life is not something to prove. It is a path to know, accept, become and live as yourself."}</p><p>{language === "zh" ? "水不与万物争，却能抵达远方。每一次聆听，都是少一点对抗、多一点觉察。" : "Water competes with nothing, yet reaches far. Each listening session is an invitation to resist less and notice more."}</p><blockquote>{language === "zh" ? "向内认识自己，向外如水而行。" : "Know within. Move like water."}</blockquote></article>
+                ) : meView === "privacy" ? (
+                  <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
+                ) : meView === "sources" ? (
+                  <article className="me-article"><small>{language === "zh" ? "真实自然录音" : "FIELD RECORDINGS"}</small><h2>{language === "zh" ? "每个场景，都有相应的声音" : "A fitting sound for every scene"}</h2><p>{language === "zh" ? "鸟语、雨声、河流、海浪、瀑布、远雷与山风均使用对应的自然环境录音，不以合成噪音替代具名场景。" : "Birds, rain, rivers, waves, waterfalls, thunder and wind use matching field recordings rather than generic generated noise."}</p><p>{language === "zh" ? "录音素材按 Mixkit Sound Effects Free License 使用。" : "Recordings are used under the Mixkit Sound Effects Free License."}</p><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">{language === "zh" ? "查看 Mixkit 授权" : "View Mixkit license"}</a></article>
+                ) : (
+                  <article className="me-article me-contact"><small>{language === "zh" ? "联系与反馈" : "CONTACT"}</small><h2>{language === "zh" ? "让一休更像你需要的样子" : "Help Yixiu become more useful to you"}</h2><p>{language === "zh" ? "如果声音无法播放、画面显示异常，或你希望加入新的自然声，请告诉我们设备、系统版本与声音名称。" : "If audio cannot play, a scene looks wrong, or you would like a new sound, tell us your device, system version and the sound name."}</p><div className="me-contact-list"><a href="mailto:hustyy986@gmail.com?subject=Yixiu%20Feedback"><span>{language === "zh" ? "邮箱" : "Email"}</span><strong>hustyy986@gmail.com</strong></a><a href="https://xhslink.cn/m/3OF5qu7Peui" target="_blank" rel="noreferrer"><span>{language === "zh" ? "小红书" : "RED"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://v.douyin.com/d9L1thkye0Y/" target="_blank" rel="noreferrer"><span>{language === "zh" ? "抖音" : "Douyin"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://x.com/yongyuan1?s=11" target="_blank" rel="noreferrer"><span>X</span><strong>@yongyuan1</strong></a><a href="https://www.tiktok.com/@wonderelian" target="_blank" rel="noreferrer"><span>TikTok</span><strong>@wonderelian</strong></a></div></article>
+                )}
+              </div>
+            </div>
+          )}
         </section>
+      ) : null}
+
+      <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
+        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><WaterWavesIcon /><span>{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
+        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} onClick={() => { setIsPlaying(false); setActiveTab("focus"); setMeView("home"); }}><span className="nav-focus-orbit" /><span>{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
+        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} onClick={() => { setIsPlaying(false); setActiveTab("me"); setMeView("home"); }}><PersonIcon /><span>{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
+      </nav>
+
+      {libraryOpen ? (
+        <>
+          <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
+          <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
+            <div className="sheet-handle" />
+            <header><div><small>{language === "zh" ? "十四种真实自然录音" : "14 REAL NATURE SOUNDS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
+            <div className="scene-grid">
+              {sceneOrder.map((sceneId) => {
+                const scene = scenes[sceneId];
+                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" onClick={() => selectScene(scene.id)}><img src={scene.image} alt="" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? "收藏" : "Favorite"} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
+              })}
+            </div>
+          </section>
+        </>
       ) : null}
 
       {timerOpen ? (

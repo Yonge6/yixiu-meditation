@@ -3,6 +3,7 @@ import SwiftUI
 struct ListenView: View {
     @EnvironmentObject private var appState: AppState
     @State private var timerOpen = false
+    @State private var libraryOpen = false
     @State private var sceneDragOffset: CGFloat = 0
     @State private var sceneSwipeProgress: CGFloat = 0
     @State private var sceneSwipeSettling = false
@@ -43,6 +44,13 @@ struct ListenView: View {
                 volume
                     .position(x: geometry.size.width / 2, y: geometry.size.height * 0.84)
 
+                Text(language.text(zh: "上滑浏览全部声音", en: "SWIPE UP FOR ALL SOUNDS"))
+                    .font(.system(size: 9, weight: .medium))
+                    .tracking(1.2)
+                    .foregroundStyle(YixiuTheme.mist.opacity(0.62))
+                    .position(x: geometry.size.width / 2, y: geometry.size.height - 108)
+                    .allowsHitTesting(false)
+
                 if timerOpen {
                     timerPanel
                         .padding(.horizontal, 18)
@@ -69,6 +77,12 @@ struct ListenView: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .ignoresSafeArea()
+        .sheet(isPresented: $libraryOpen) {
+            SoundLibraryView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(YixiuTheme.deepWater)
+        }
     }
 
     private var background: some View {
@@ -135,6 +149,14 @@ struct ListenView: View {
             .onEnded { value in
                 let horizontal = value.translation.width
                 let vertical = value.translation.height
+
+                if vertical <= -64, abs(vertical) > abs(horizontal) * 1.2 {
+                    sceneDragOffset = 0
+                    sceneSwipeProgress = 0
+                    libraryOpen = true
+                    return
+                }
+
                 let direction = horizontal < 0 ? 1 : -1
                 guard
                     appState.canMoveScene(direction),
@@ -185,18 +207,6 @@ struct ListenView: View {
             .buttonStyle(.plain)
 
             Spacer()
-
-            Button {
-                withAnimation(.easeOut(duration: 0.18)) {
-                    appState.drawerOpen = true
-                }
-            } label: {
-                Image(systemName: "line.3.horizontal")
-                    .font(.system(size: 29, weight: .light))
-                    .frame(width: 44, height: 44)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(language.text(zh: "打开菜单", en: "Open menu"))
         }
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity)
