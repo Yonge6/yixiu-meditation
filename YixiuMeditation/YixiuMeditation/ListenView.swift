@@ -13,6 +13,9 @@ struct ListenView: View {
         GeometryReader { geometry in
             ZStack {
                 background
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+                    .allowsHitTesting(false)
 
                 Color.clear
                     .contentShape(Rectangle())
@@ -402,49 +405,51 @@ struct SoundLibraryView: View {
     }
 
     private func sceneCard(_ scene: MeditationScene) -> some View {
-        ZStack(alignment: .bottomLeading) {
-            Image(scene.assetName)
-                .resizable()
-                .scaledToFill()
-                .frame(height: 190)
-                .clipped()
+        GeometryReader { geometry in
+            ZStack(alignment: .bottomLeading) {
+                Image(scene.assetName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
 
-            LinearGradient(
-                colors: [.clear, YixiuTheme.deepWater.opacity(0.92)],
-                startPoint: .center,
-                endPoint: .bottom
-            )
+                LinearGradient(
+                    colors: [.clear, YixiuTheme.deepWater.opacity(0.92)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
 
-            Button {
-                appState.selectScene(scene)
-                dismiss()
-            } label: {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(language.text(zh: scene.zhName, en: scene.enName))
-                        .font(YixiuTheme.chineseDisplay(17))
-                    Text(language.secondary(zh: scene.zhName, en: scene.enName.uppercased()))
-                        .font(YixiuTheme.englishSerif(8))
-                        .tracking(1)
-                    Text(language.text(zh: scene.useZh, en: scene.useEn))
-                        .font(.system(size: 9))
-                        .foregroundStyle(YixiuTheme.aqua)
-                        .padding(.top, 6)
+                Button {
+                    appState.selectScene(scene)
+                    dismiss()
+                } label: {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(language.text(zh: scene.zhName, en: scene.enName))
+                            .font(YixiuTheme.chineseDisplay(17))
+                        Text(language.secondary(zh: scene.zhName, en: scene.enName.uppercased()))
+                            .font(YixiuTheme.englishSerif(8))
+                            .tracking(1)
+                        Text(language.text(zh: scene.useZh, en: scene.useEn))
+                            .font(.system(size: 9))
+                            .foregroundStyle(YixiuTheme.aqua)
+                            .padding(.top, 6)
+                    }
+                    .foregroundStyle(YixiuTheme.moon)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                    .padding(13)
                 }
-                .foregroundStyle(YixiuTheme.moon)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                .padding(13)
-            }
 
-            Button {
-                appState.toggleFavorite(scene)
-            } label: {
-                Image(systemName: appState.favorites.contains(scene) ? "heart.fill" : "heart")
-                    .foregroundStyle(appState.favorites.contains(scene) ? YixiuTheme.aquaStrong : YixiuTheme.moon)
-                    .frame(width: 36, height: 36)
-                    .background(Circle().fill(YixiuTheme.deepWater.opacity(0.62)))
+                Button {
+                    appState.toggleFavorite(scene)
+                } label: {
+                    Image(systemName: appState.favorites.contains(scene) ? "heart.fill" : "heart")
+                        .foregroundStyle(appState.favorites.contains(scene) ? YixiuTheme.aquaStrong : YixiuTheme.moon)
+                        .frame(width: 36, height: 36)
+                        .background(Circle().fill(YixiuTheme.deepWater.opacity(0.62)))
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                .padding(8)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-            .padding(8)
         }
         .frame(height: 190)
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
