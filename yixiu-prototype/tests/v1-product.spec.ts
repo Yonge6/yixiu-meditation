@@ -18,6 +18,22 @@ test("opens on the ocean scene in a paused 30-minute state", async ({ page }) =>
   expect(durationBox!.y + durationBox!.height).toBeLessThanOrEqual(playBox!.y + 4);
 });
 
+test("animates the scene gently only while sound is playing", async ({ page }) => {
+  const app = page.locator(".yixiu-app");
+  const backdrop = page.locator(".scene-current-backdrop");
+
+  await expect(app).not.toHaveClass(/is-audio-playing/);
+  expect(await backdrop.evaluate((element) => getComputedStyle(element).animationName)).toBe("none");
+
+  await page.getByRole("button", { name: "播放" }).click();
+  await expect(app).toHaveClass(/is-audio-playing/);
+  expect(await backdrop.evaluate((element) => getComputedStyle(element).animationName)).toBe("yixiu-scene-breathe");
+
+  await page.getByRole("button", { name: "暂停" }).click();
+  await expect(app).not.toHaveClass(/is-audio-playing/);
+  expect(await backdrop.evaluate((element) => getComputedStyle(element).animationName)).toBe("none");
+});
+
 test("changes scene and persists favorites", async ({ page }) => {
   await page.getByRole("button", { name: "下一种声音" }).click();
   await expect(page.getByRole("heading", { name: "屋檐雨" })).toBeVisible();

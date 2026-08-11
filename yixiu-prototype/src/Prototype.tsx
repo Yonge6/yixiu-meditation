@@ -648,7 +648,7 @@ export default function Prototype() {
 
   return (
     <main
-      className={`yixiu-app ${swipeSettling ? "is-swipe-settling" : ""}`}
+      className={`yixiu-app ${isPlaying ? "is-audio-playing" : ""} ${swipeOffset !== 0 ? "is-scene-dragging" : ""} ${swipeSettling ? "is-swipe-settling" : ""}`}
       data-language={language}
       data-scene={active.id}
       data-tab={activeTab}

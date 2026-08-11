@@ -69,6 +69,16 @@ input:focus-visible {
   will-change: transform, opacity;
 }
 
+.is-audio-playing[data-tab="sounds"]:not(.is-scene-dragging):not(.is-swipe-settling) .scene-current-backdrop {
+  animation: yixiu-scene-breathe 20s ease-in-out infinite alternate;
+}
+
+@keyframes yixiu-scene-breathe {
+  0% { transform: translate3d(-0.8%, -0.35%, 0) scale(1.035); }
+  48% { transform: translate3d(0.35%, -0.8%, 0) scale(1.055); }
+  100% { transform: translate3d(0.9%, 0.4%, 0) scale(1.07); }
+}
+
 .ocean-backdrop[data-image-scene="rain"],
 .ocean-backdrop[data-image-scene="stream"] {
   filter: brightness(0.6) saturate(0.82) contrast(1.08) hue-rotate(5deg);
@@ -100,6 +110,29 @@ input:focus-visible {
   background: rgba(0, 17, 25, 0.18);
   box-shadow: inset 0 -390px 190px rgba(0, 17, 25, 0.95), inset 0 180px 140px rgba(0, 12, 18, 0.22);
   pointer-events: none;
+}
+
+.ocean-shade::after {
+  position: absolute;
+  inset: -18%;
+  background:
+    radial-gradient(ellipse at 38% 34%, rgba(190, 245, 247, 0.2), transparent 30%),
+    radial-gradient(ellipse at 70% 62%, rgba(115, 207, 218, 0.13), transparent 34%);
+  content: "";
+  opacity: 0;
+  transform: translate3d(-3%, 1%, 0) rotate(-2deg);
+  transition: opacity 700ms ease;
+  mix-blend-mode: soft-light;
+}
+
+.is-audio-playing[data-tab="sounds"] .ocean-shade::after {
+  opacity: 0.42;
+  animation: yixiu-water-light 12s ease-in-out infinite alternate;
+}
+
+@keyframes yixiu-water-light {
+  from { transform: translate3d(-3%, 1%, 0) rotate(-2deg) scale(1); }
+  to { transform: translate3d(3%, -2%, 0) rotate(2deg) scale(1.06); }
 }
 
 [data-scene="spring"] .ocean-shade,
