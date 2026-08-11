@@ -1916,14 +1916,21 @@ input:focus-visible {
   border-top: 1px solid rgba(143, 214, 220, 0.14);
 }
 
-.me-contact-list a {
+.me-contact-list a,
+.me-contact-list button {
   display: flex;
+  width: 100%;
   min-height: 58px;
   align-items: center;
   justify-content: space-between;
+  padding: 0;
+  border: 0;
   border-bottom: 1px solid rgba(143, 214, 220, 0.12);
+  background: transparent;
   color: var(--moon);
+  font-family: inherit;
   font-size: 11px;
+  text-align: left;
   text-decoration: none;
 }
 
@@ -1934,6 +1941,65 @@ input:focus-visible {
 .me-contact-list strong {
   color: var(--aqua);
   font-weight: 500;
+}
+
+.video-channel-modal {
+  position: fixed;
+  z-index: 120;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.video-channel-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgba(0, 22, 29, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.video-channel-modal figure {
+  position: relative;
+  width: min(100%, 390px);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(143, 214, 220, 0.38);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.4);
+}
+
+.video-channel-modal figure > button {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 44, 54, 0.86);
+  color: #fff;
+  font-size: 24px;
+}
+
+.video-channel-modal img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.video-channel-modal figcaption {
+  padding: 13px;
+  color: #123f49;
+  font-size: 11px;
+  text-align: center;
 }
 
 .version-copy {

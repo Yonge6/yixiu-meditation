@@ -386,6 +386,7 @@ export default function Prototype() {
   const [drawerView, setDrawerView] = useState<DrawerView>("home");
   const [timerOpen, setTimerOpen] = useState(false);
   const [wisdomOpen, setWisdomOpen] = useState(false);
+  const [videoChannelOpen, setVideoChannelOpen] = useState(false);
   const [wisdomIndex, setWisdomIndex] = useState(0);
   const [breathingStatus, setBreathingStatus] = useState<BreathingStatus>("idle");
   const [breathingElapsed, setBreathingElapsed] = useState(0);
@@ -1128,7 +1129,7 @@ export default function Prototype() {
                 ) : meView === "sources" ? (
                   <article className="me-article"><small>{language === "zh" ? "真实自然录音" : "FIELD RECORDINGS"}</small><h2>{language === "zh" ? "每个场景，都有相应的声音" : "A fitting sound for every scene"}</h2><p>{language === "zh" ? "鸟语、雨声、河流、海浪、瀑布、远雷与山风均使用对应的自然环境录音，不以合成噪音替代具名场景。" : "Birds, rain, rivers, waves, waterfalls, thunder and wind use matching field recordings rather than generic generated noise."}</p><p>{language === "zh" ? "录音素材按 Mixkit Sound Effects Free License 使用。" : "Recordings are used under the Mixkit Sound Effects Free License."}</p><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">{language === "zh" ? "查看 Mixkit 授权" : "View Mixkit license"}</a></article>
                 ) : (
-                  <article className="me-article me-contact"><small>{language === "zh" ? "联系与反馈" : "CONTACT"}</small><h2>{language === "zh" ? "让一休更像你需要的样子" : "Help Yixiu become more useful to you"}</h2><p>{language === "zh" ? "如果声音无法播放、画面显示异常，或你希望加入新的自然声，请告诉我们设备、系统版本与声音名称。" : "If audio cannot play, a scene looks wrong, or you would like a new sound, tell us your device, system version and the sound name."}</p><div className="me-contact-list"><a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><span>WonderElian</span><strong>wonderelian.com</strong></a><a href="mailto:hustyy986@gmail.com?subject=Yixiu%20Feedback"><span>{language === "zh" ? "邮箱" : "Email"}</span><strong>hustyy986@gmail.com</strong></a><a href="https://xhslink.cn/m/3OF5qu7Peui" target="_blank" rel="noreferrer"><span>{language === "zh" ? "小红书" : "RED"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://v.douyin.com/d9L1thkye0Y/" target="_blank" rel="noreferrer"><span>{language === "zh" ? "抖音" : "Douyin"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://x.com/yongyuan1?s=11" target="_blank" rel="noreferrer"><span>X</span><strong>@yongyuan1</strong></a><a href="https://www.tiktok.com/@wonderelian" target="_blank" rel="noreferrer"><span>TikTok</span><strong>@wonderelian</strong></a></div></article>
+                  <article className="me-article me-contact"><small>{language === "zh" ? "联系与反馈" : "CONTACT"}</small><h2>{language === "zh" ? "让一休更像你需要的样子" : "Help Yixiu become more useful to you"}</h2><p>{language === "zh" ? "如果声音无法播放、画面显示异常，或你希望加入新的自然声，请告诉我们设备、系统版本与声音名称。" : "If audio cannot play, a scene looks wrong, or you would like a new sound, tell us your device, system version and the sound name."}</p><div className="me-contact-list"><a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><span>WonderElian</span><strong>wonderelian.com</strong></a><a href="mailto:hustyy986@gmail.com?subject=Yixiu%20Feedback"><span>{language === "zh" ? "邮箱" : "Email"}</span><strong>hustyy986@gmail.com</strong></a><a href="https://xhslink.cn/m/3OF5qu7Peui" target="_blank" rel="noreferrer"><span>{language === "zh" ? "小红书" : "RED"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://v.douyin.com/d9L1thkye0Y/" target="_blank" rel="noreferrer"><span>{language === "zh" ? "抖音" : "Douyin"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://x.com/yongyuan1?s=11" target="_blank" rel="noreferrer"><span>X</span><strong>@yongyuan1</strong></a><a href="https://www.tiktok.com/@wonderelian" target="_blank" rel="noreferrer"><span>TikTok</span><strong>@wonderelian</strong></a><button type="button" onClick={() => setVideoChannelOpen(true)}><span>{language === "zh" ? "视频号" : "WeChat Channels"}</span><strong>{language === "zh" ? "查看二维码" : "View QR code"}</strong></button></div></article>
                 )}
               </div>
             </div>
@@ -1203,6 +1204,17 @@ export default function Prototype() {
             </>
           )}
         </section>
+      ) : null}
+
+      {videoChannelOpen ? (
+        <div className="video-channel-modal" role="dialog" aria-modal="true" aria-label={language === "zh" ? "视频号二维码" : "WeChat Channels QR code"}>
+          <button className="video-channel-backdrop" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setVideoChannelOpen(false)} />
+          <figure>
+            <button type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setVideoChannelOpen(false)}>×</button>
+            <img src="/assets/yixiu/video-channel.jpg" alt={language === "zh" ? "WonderElian 视频号二维码" : "WonderElian WeChat Channels QR code"} />
+            <figcaption>{language === "zh" ? "扫码关注视频号" : "Scan to follow on WeChat Channels"}</figcaption>
+          </figure>
+        </div>
       ) : null}
 
     </main>

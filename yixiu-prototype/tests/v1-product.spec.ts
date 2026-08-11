@@ -224,6 +224,20 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   await expect(page.getByRole("button", { name: "打开菜单" })).toHaveCount(0);
 });
 
+test("shows the WonderElian WeChat Channels QR code in Contact", async ({ page }) => {
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: /联系与反馈/ }).click();
+
+  const website = page.getByRole("link", { name: "WonderElian wonderelian.com" });
+  await expect(website).toHaveAttribute("href", "https://wonderelian.com/");
+
+  await page.getByRole("button", { name: "视频号 查看二维码" }).click();
+  const qrDialog = page.getByRole("dialog", { name: "视频号二维码" });
+  await expect(qrDialog.getByRole("img", { name: "WonderElian 视频号二维码" })).toBeVisible();
+  await qrDialog.getByRole("button", { name: "关闭" }).last().click();
+  await expect(qrDialog).toBeHidden();
+});
+
 test("keeps the current sound playing across Focus and My tabs", async ({ page }) => {
   await page.getByRole("button", { name: "播放" }).click();
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
