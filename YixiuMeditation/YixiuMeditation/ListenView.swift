@@ -238,6 +238,27 @@ struct ListenView: View {
             .buttonStyle(.plain)
 
             Spacer()
+
+            ShareLink(
+                item: appState.scene.shareURL(language: language),
+                subject: Text(appState.scene.shareTitle(language: language)),
+                message: Text(appState.scene.shareMessage(language: language)),
+                preview: SharePreview(
+                    appState.scene.shareTitle(language: language),
+                    image: Image(appState.scene.assetName)
+                )
+            ) {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundStyle(YixiuTheme.moon)
+                    .frame(width: 44, height: 44)
+                    .background(Circle().fill(YixiuTheme.deepWater.opacity(0.34)))
+                    .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+            }
+            .accessibilityLabel(language.text(
+                zh: "分享\(appState.scene.zhName)",
+                en: "Share \(appState.scene.enName)"
+            ))
         }
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity)

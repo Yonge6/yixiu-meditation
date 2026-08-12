@@ -18,6 +18,25 @@ test("opens on the ocean scene in a paused 30-minute state", async ({ page }) =>
   expect(durationBox!.y + durationBox!.height).toBeLessThanOrEqual(playBox!.y + 4);
 });
 
+test("opens shared scene links and shares the current scene URL", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async (payload: ShareData) => {
+        (window as Window & { __yixiuShare?: ShareData }).__yixiuShare = payload;
+      },
+    });
+  });
+  await page.goto("/?scene=birds&lang=en");
+
+  await expect(page.getByRole("heading", { name: "MORNING BIRDS" })).toBeVisible();
+  await page.getByRole("button", { name: "Share Morning Birds" }).click();
+
+  const payload = await page.evaluate(() => (window as Window & { __yixiuShare?: ShareData }).__yixiuShare);
+  expect(payload?.title).toContain("Morning Birds");
+  expect(payload?.url).toBe("https://yixiu.wonderelian.com/?scene=birds&lang=en");
+});
+
 test("animates the scene gently only while sound is playing", async ({ page }) => {
   const app = page.locator(".yixiu-app");
   const backdrop = page.locator(".scene-current-backdrop");

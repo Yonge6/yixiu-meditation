@@ -10,6 +10,7 @@ import {
   PauseIcon,
   PersonIcon,
   PlayIcon,
+  Share1Icon,
   SpeakerLoudIcon,
   SpeakerQuietIcon,
   TrackNextIcon,
@@ -282,6 +283,7 @@ const sceneOrder: SceneId[] = [
   "tide",
 ];
 const durations: DurationOption[] = [15, 30, 60, 0];
+const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 
 const wisdoms = [
   { zh: "水不争先，却从未停止。", en: "Water does not hurry, yet it keeps moving." },
@@ -290,8 +292,9 @@ const wisdoms = [
   { zh: "柔软不是退让，而是另一种力量。", en: "Softness is not surrender. It is another kind of strength." },
 ];
 
-function useStoredState<T>(key: string, fallback: T) {
+function useStoredState<T>(key: string, fallback: T, linkedValue: T | null = null) {
   const [value, setValue] = useState<T>(() => {
+    if (linkedValue !== null) return linkedValue;
     try {
       const stored = window.localStorage.getItem(key);
       return stored === null ? fallback : JSON.parse(stored) as T;
@@ -369,9 +372,26 @@ function durationLabel(duration: DurationOption, language: Language) {
   return `${duration} ${language === "zh" ? "分钟" : "MIN"}`;
 }
 
+function sceneShareUrl(sceneId: SceneId, language: Language) {
+  const url = new URL(publicYixiuUrl);
+  url.searchParams.set("scene", sceneId);
+  url.searchParams.set("lang", language);
+  return url.toString();
+}
+
+function linkedScene() {
+  const sceneId = new URLSearchParams(window.location.search).get("scene");
+  return sceneId && sceneOrder.includes(sceneId as SceneId) ? sceneId as SceneId : null;
+}
+
+function linkedLanguage() {
+  const language = new URLSearchParams(window.location.search).get("lang");
+  return language === "zh" || language === "en" ? language : null;
+}
+
 export default function Prototype() {
-  const [language, setLanguage] = useStoredState<Language>("yixiu.language", "zh");
-  const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean");
+  const [language, setLanguage] = useStoredState<Language>("yixiu.language", "zh", linkedLanguage());
+  const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene());
   const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30);
   const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", []);
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
@@ -410,6 +430,13 @@ export default function Prototype() {
   const fadeFactor = duration === 0 || remainingSeconds > 20 ? 1 : Math.max(remainingSeconds / 20, 0);
 
   useAmbientSound(active.id, isPlaying, volume, fadeFactor);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("scene", active.id);
+    url.searchParams.set("lang", language);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }, [active.id, language]);
 
   useEffect(() => {
     setRemainingSeconds(duration === 0 ? 0 : duration * 60);
@@ -512,6 +539,27 @@ export default function Prototype() {
     const nextIndex = activeIndex + direction;
     if (nextIndex < 0 || nextIndex >= sceneOrder.length) return;
     setActiveScene(sceneOrder[nextIndex]);
+  };
+
+  const shareScene = async () => {
+    const title = language === "zh"
+      ? `一休 · ${active.zh}｜如水而行`
+      : `Yixiu · ${active.en} | Be water, my friend.`;
+    const text = language === "zh"
+      ? `此刻，我在一休聆听「${active.zh}」。真实自己，流动人生。`
+      : `I am listening to ${active.en} in Yixiu. True to yourself, flow with life.`;
+    const url = sceneShareUrl(active.id, language);
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, text, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      console.error("Unable to share the current Yixiu scene", error);
+    }
   };
 
   const startSceneSwipe = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -685,6 +733,14 @@ export default function Prototype() {
           <small>{language === "zh" ? "YIXIU" : "一休"}</small>
         </div>
         <div className="header-actions">
+          <button
+            className="header-share-button"
+            type="button"
+            aria-label={language === "zh" ? `分享${active.zh}` : `Share ${active.en}`}
+            onClick={shareScene}
+          >
+            <Share1Icon />
+          </button>
           <button
             className="header-language-toggle"
             type="button"

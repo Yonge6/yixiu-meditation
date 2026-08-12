@@ -161,6 +161,29 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
             false
         }
     }
+
+    func shareURL(language: AppLanguage) -> URL {
+        var components = URLComponents(string: "https://yixiu.wonderelian.com/")!
+        components.queryItems = [
+            URLQueryItem(name: "scene", value: rawValue),
+            URLQueryItem(name: "lang", value: language.rawValue)
+        ]
+        return components.url!
+    }
+
+    func shareTitle(language: AppLanguage) -> String {
+        language.text(
+            zh: "一休 · \(zhName)｜如水而行",
+            en: "Yixiu · \(enName) | Be water, my friend."
+        )
+    }
+
+    func shareMessage(language: AppLanguage) -> String {
+        language.text(
+            zh: "此刻，我在一休聆听「\(zhName)」。真实自己，流动人生。",
+            en: "I am listening to \(enName) in Yixiu. True to yourself, flow with life."
+        )
+    }
 }
 
 enum RootTab: String, CaseIterable, Identifiable {
