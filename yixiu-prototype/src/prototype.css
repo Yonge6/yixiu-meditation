@@ -1136,7 +1136,7 @@ input:focus-visible {
 .bottom-nav .nav-label {
   margin-top: 3px;
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1;
 }
 
@@ -1144,7 +1144,7 @@ input:focus-visible {
   margin-top: 3px;
   color: inherit;
   font-family: var(--serif);
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -1321,7 +1321,7 @@ input:focus-visible {
 }
 
 .me-screen h1 {
-  font-size: 29px;
+  font-size: 31px;
 }
 
 .me-screen[data-me-view="home"] {
@@ -1370,7 +1370,7 @@ input:focus-visible {
 .setting-title strong {
   display: block;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 400;
   letter-spacing: 0.08em;
 }
@@ -1379,13 +1379,13 @@ input:focus-visible {
   display: block;
   margin-top: 4px;
   color: var(--mist);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .empty-copy {
   margin: 15px 0 2px;
   color: rgba(207, 225, 227, 0.6);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -1423,12 +1423,12 @@ input:focus-visible {
   right: 8px;
   bottom: 8px;
   left: 8px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .setting-title span {
   color: var(--aqua);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .duration-options {
@@ -1444,7 +1444,7 @@ input:focus-visible {
   border: 1px solid rgba(163, 225, 230, 0.2) !important;
   border-radius: 13px;
   color: var(--mist) !important;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .duration-options button.is-active {
@@ -1500,14 +1500,14 @@ input:focus-visible {
 .me-sound-space-copy > small {
   color: var(--aqua);
   font-family: var(--serif);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.22em;
 }
 
 .me-sound-space-copy > strong {
   margin-top: 5px;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 400;
   letter-spacing: 0.08em;
 }
@@ -1515,7 +1515,7 @@ input:focus-visible {
 .me-sound-space-copy > span {
   margin-top: 5px;
   color: #b6cbce;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .me-sound-space-copy > button {
@@ -1529,7 +1529,7 @@ input:focus-visible {
   border-radius: 999px;
   color: #03212b;
   background: var(--aqua-strong);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -1541,7 +1541,7 @@ input:focus-visible {
 .setting-row {
   min-height: 56px;
   border-bottom: 1px solid rgba(164, 221, 225, 0.12);
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .setting-row > span {
@@ -1553,13 +1553,13 @@ input:focus-visible {
 
 .setting-row > span strong {
   font-family: var(--serif);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
 }
 
 .setting-row > span small {
   color: var(--mist);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .setting-row:last-child {
@@ -1634,13 +1634,13 @@ input:focus-visible {
 .me-app-download small {
   color: var(--aqua);
   font-family: var(--serif);
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.2em;
 }
 
 .me-app-download strong {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 400;
   letter-spacing: 0.08em;
 }
@@ -1648,7 +1648,7 @@ input:focus-visible {
 .me-app-download em {
   overflow: hidden;
   color: var(--mist);
-  font-size: 9px;
+  font-size: 11px;
   font-style: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1659,7 +1659,7 @@ input:focus-visible {
   border: 1px solid rgba(191, 240, 243, 0.24);
   border-radius: 999px;
   color: #d9eff0;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -1727,13 +1727,13 @@ input:focus-visible {
 
 .trust-links button strong {
   font-family: var(--serif);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
 }
 
 .trust-links button small {
   color: var(--mist);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .trust-links button > svg {
@@ -1745,7 +1745,7 @@ input:focus-visible {
   margin: 24px 4px 9px;
   color: var(--aqua);
   font-family: var(--serif);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.22em;
 }
 
@@ -1793,21 +1793,21 @@ input:focus-visible {
 
 .me-works strong {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 400;
 }
 
 .me-works em {
   margin-top: 3px;
   color: var(--aqua);
-  font-size: 9px;
+  font-size: 10px;
   font-style: normal;
 }
 
 .me-works small {
   margin-top: 7px;
   color: var(--mist);
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.55;
 }
 
@@ -1840,7 +1840,7 @@ input:focus-visible {
   flex: 0 0 auto;
   align-items: center;
   box-sizing: border-box;
-  padding: max(60px, calc(env(safe-area-inset-top, 0px) + 8px)) 18px 12px;
+  padding: max(14px, env(safe-area-inset-top, 0px)) 18px 10px;
   grid-template-columns: 48px minmax(0, 1fr);
   gap: 12px;
   border-bottom: 1px solid rgba(143, 214, 220, 0.3);
@@ -1866,13 +1866,13 @@ input:focus-visible {
 
 .me-detail-header small {
   color: var(--aqua);
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.2em;
 }
 
 .me-detail-header strong {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 400;
 }
 
@@ -1881,7 +1881,7 @@ input:focus-visible {
   min-height: 0;
   flex: 1 1 auto;
   overflow-y: auto;
-  padding: 26px 20px calc(124px + env(safe-area-inset-bottom, 0px));
+  padding: 16px 20px calc(124px + env(safe-area-inset-bottom, 0px));
   scrollbar-width: none;
 }
 
@@ -2146,7 +2146,7 @@ input:focus-visible {
   margin: 18px 0 0;
   color: rgba(200, 220, 222, 0.42);
   font-family: var(--serif);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.12em;
   text-align: center;
 }
