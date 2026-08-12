@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ListenView: View {
     @EnvironmentObject private var appState: AppState
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var timerOpen = false
     @State private var libraryOpen = false
     @State private var sceneDragOffset: CGFloat = 0
@@ -87,39 +88,68 @@ struct ListenView: View {
     }
 
     private var background: some View {
-        ZStack {
-            if abs(sceneDragOffset) > 0.5, let preview = sceneSwipePreview {
-                Image(preview.assetName)
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: !backgroundMotionEnabled)) { context in
+            let phase = context.date.timeIntervalSinceReferenceDate
+            let driftX = backgroundMotionEnabled ? CGFloat(sin(phase * 0.25)) * 4 : 0
+            let driftY = backgroundMotionEnabled ? CGFloat(cos(phase * 0.20)) * 3 : 0
+            let breathingScale = backgroundMotionEnabled
+                ? 1.05 + CGFloat(sin(phase * 0.18)) * 0.015
+                : 1
+
+            ZStack {
+                if abs(sceneDragOffset) > 0.5, let preview = sceneSwipePreview {
+                    Image(preview.assetName)
+                        .resizable()
+                        .scaledToFill()
+                        .offset(x: (sceneDragOffset < 0 ? 1 : -1) * (1 - sceneSwipeProgress) * 42)
+                        .scaleEffect(1.035 - sceneSwipeProgress * 0.035)
+                        .opacity(sceneSwipeProgress)
+                        .ignoresSafeArea()
+                }
+
+                Image(appState.scene.assetName)
                     .resizable()
                     .scaledToFill()
-                    .offset(x: (sceneDragOffset < 0 ? 1 : -1) * (1 - sceneSwipeProgress) * 42)
-                    .scaleEffect(1.035 - sceneSwipeProgress * 0.035)
-                    .opacity(sceneSwipeProgress)
+                    .offset(x: sceneDragOffset * 0.16 + driftX, y: driftY)
+                    .scaleEffect((1 - sceneSwipeProgress * 0.025) * breathingScale)
+                    .opacity(1 - sceneSwipeProgress * 0.90)
                     .ignoresSafeArea()
-            }
 
-            Image(appState.scene.assetName)
-                .resizable()
-                .scaledToFill()
-                .offset(x: sceneDragOffset * 0.16)
-                .scaleEffect(1 - sceneSwipeProgress * 0.025)
-                .opacity(1 - sceneSwipeProgress * 0.90)
+                if backgroundMotionEnabled {
+                    RadialGradient(
+                        colors: [YixiuTheme.moon.opacity(0.12), .clear],
+                        center: .center,
+                        startRadius: 18,
+                        endRadius: 210
+                    )
+                    .scaleEffect(1.08 + CGFloat(sin(phase * 0.16)) * 0.04)
+                    .offset(x: CGFloat(sin(phase * 0.11)) * 22, y: CGFloat(cos(phase * 0.13)) * 14)
+                    .blendMode(.softLight)
+                    .allowsHitTesting(false)
+                }
+
+                Color(red: 0, green: 17 / 255, blue: 25 / 255)
+                    .opacity(appState.scene.isBright ? 0.07 : 0.18)
+
+                LinearGradient(
+                    colors: [
+                        .clear,
+                        YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.10 : 0.20),
+                        YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.78 : 0.96)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
                 .ignoresSafeArea()
-
-            Color(red: 0, green: 17 / 255, blue: 25 / 255)
-                .opacity(appState.scene.isBright ? 0.07 : 0.18)
-
-            LinearGradient(
-                colors: [
-                    .clear,
-                    YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.10 : 0.20),
-                    YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.78 : 0.96)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+            }
         }
+    }
+
+    private var backgroundMotionEnabled: Bool {
+        appState.isPlaying
+            && !reduceMotion
+            && abs(sceneDragOffset) < 0.5
+            && !sceneSwipeSettling
     }
 
     private var sceneSwipePreview: MeditationScene? {

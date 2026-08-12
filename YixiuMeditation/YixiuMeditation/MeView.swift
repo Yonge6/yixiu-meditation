@@ -14,6 +14,7 @@ struct MeView: View {
     @Environment(\.requestReview) private var requestReview
     @State private var page: MePage = .home
     @State private var libraryOpen = false
+    @State private var videoChannelOpen = false
 
     private var language: AppLanguage { appState.language }
 
@@ -35,6 +36,12 @@ struct MeView: View {
         .sheet(isPresented: $libraryOpen) {
             SoundLibraryView()
                 .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(YixiuTheme.deepWater)
+        }
+        .sheet(isPresented: $videoChannelOpen) {
+            VideoChannelSheet(language: language)
+                .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
         }
@@ -506,6 +513,8 @@ struct MeView: View {
             .foregroundStyle(YixiuTheme.mist)
 
             VStack(spacing: 0) {
+                contactLink(title: "WonderElian", value: "wonderelian.com", icon: "globe", url: "https://wonderelian.com/")
+                Divider().overlay(YixiuTheme.hairline)
                 contactLink(title: language.text(zh: "邮箱", en: "Email"), value: "hustyy986@gmail.com", icon: "envelope", url: "mailto:hustyy986@gmail.com?subject=Yixiu%20Feedback")
                 Divider().overlay(YixiuTheme.hairline)
                 contactLink(title: language.text(zh: "小红书", en: "RED"), value: language.text(zh: "打开主页", en: "Open profile"), icon: "book", url: "https://xhslink.cn/m/3OF5qu7Peui")
@@ -515,6 +524,30 @@ struct MeView: View {
                 contactLink(title: "X", value: "@yongyuan1", icon: "at", url: "https://x.com/yongyuan1?s=11")
                 Divider().overlay(YixiuTheme.hairline)
                 contactLink(title: "TikTok", value: "@wonderelian", icon: "play.rectangle", url: "https://www.tiktok.com/@wonderelian")
+                Divider().overlay(YixiuTheme.hairline)
+                Button {
+                    videoChannelOpen = true
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "qrcode")
+                            .font(.system(size: 15, weight: .light))
+                            .foregroundStyle(YixiuTheme.aqua)
+                            .frame(width: 34)
+                        Text(language.text(zh: "视频号", en: "WeChat Channels"))
+                            .font(YixiuTheme.chineseDisplay(14))
+                        Spacer()
+                        Text(language.text(zh: "扫码关注", en: "View QR code"))
+                            .font(.system(size: 10))
+                            .foregroundStyle(YixiuTheme.mist)
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 10, weight: .light))
+                            .foregroundStyle(YixiuTheme.mist)
+                    }
+                    .foregroundStyle(YixiuTheme.moon)
+                    .frame(minHeight: 58)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
             .padding(.horizontal, 16)
             .yixiuPanel()
@@ -663,6 +696,48 @@ struct MeView: View {
             .padding(.horizontal, 18)
             .frame(height: 48)
             .background(Capsule().fill(YixiuTheme.aquaStrong))
+    }
+}
+
+private struct VideoChannelSheet: View {
+    let language: AppLanguage
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                Image("VideoChannelQR")
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+                    .frame(maxWidth: 260)
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .fill(.white)
+                    )
+
+                Text(language.text(zh: "微信扫码关注 WonderElian 视频号", en: "Scan in WeChat to follow WonderElian Channels"))
+                    .font(YixiuTheme.chineseDisplay(16))
+                    .foregroundStyle(YixiuTheme.moon)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 18)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(YixiuTheme.deepWater)
+            .navigationTitle(language.text(zh: "视频号", en: "WeChat Channels"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(language.text(zh: "完成", en: "Done")) {
+                        dismiss()
+                    }
+                    .foregroundStyle(YixiuTheme.aqua)
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
     }
 }
 
