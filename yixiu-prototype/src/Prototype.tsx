@@ -1,4 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import "@fontsource/noto-sans-sc/400.css";
+import "@fontsource/noto-sans-sc/500.css";
+import "@fontsource/noto-serif-sc/400.css";
+import "@fontsource/noto-serif-sc/600.css";
 import {
   ArrowLeftIcon,
   ChevronRightIcon,
@@ -407,6 +411,7 @@ export default function Prototype() {
   const [timerOpen, setTimerOpen] = useState(false);
   const [wisdomOpen, setWisdomOpen] = useState(false);
   const [videoChannelOpen, setVideoChannelOpen] = useState(false);
+  const [downloadFeedback, setDownloadFeedback] = useState(false);
   const [wisdomIndex, setWisdomIndex] = useState(0);
   const [breathingStatus, setBreathingStatus] = useState<BreathingStatus>("idle");
   const [breathingElapsed, setBreathingElapsed] = useState(0);
@@ -441,6 +446,12 @@ export default function Prototype() {
   useEffect(() => {
     setRemainingSeconds(duration === 0 ? 0 : duration * 60);
   }, [duration]);
+
+  useEffect(() => {
+    if (!downloadFeedback) return;
+    const timeout = window.setTimeout(() => setDownloadFeedback(false), 2200);
+    return () => window.clearTimeout(timeout);
+  }, [downloadFeedback]);
 
   useEffect(() => {
     if (!isPlaying || duration === 0) return;
@@ -988,7 +999,7 @@ export default function Prototype() {
 
           <section className="volume-control" aria-label={language === "zh" ? "音量" : "Volume"}>
             <SpeakerQuietIcon />
-            <input aria-label={language === "zh" ? "音量" : "Volume"} type="range" min="0" max="100" value={volume} onChange={(event) => setVolume(Number(event.currentTarget.value))} />
+            <input aria-label={language === "zh" ? "音量" : "Volume"} type="range" min="0" max="100" value={volume} style={{ "--volume-progress": `${volume}%` } as CSSProperties} onChange={(event) => setVolume(Number(event.currentTarget.value))} />
             <SpeakerLoudIcon />
           </section>
 
@@ -1115,7 +1126,7 @@ export default function Prototype() {
                   </div>
                 </section>
 
-                <a className="me-app-download" href="https://apps.apple.com/app/id1461182261" target="_blank" rel="noreferrer">
+                <a className="me-app-download" href="https://apps.apple.com/app/id1461182261" target="_blank" rel="noreferrer" onClick={() => setDownloadFeedback(true)}>
                   <span>
                     <small>YIXIU FOR IPHONE</small>
                     <strong>{language === "zh" ? "下载一休 App" : "Download Yixiu"}</strong>
@@ -1124,6 +1135,10 @@ export default function Prototype() {
                   <b>App Store</b>
                   <ExternalLinkIcon />
                 </a>
+
+                <p className={`download-feedback ${downloadFeedback ? "is-visible" : ""}`} role="status" aria-live="polite">
+                  {language === "zh" ? "正在打开 App Store…" : "Opening the App Store…"}
+                </p>
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>

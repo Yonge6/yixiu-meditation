@@ -9,6 +9,8 @@
   --aqua-strong: #b9f5f7;
   --panel: rgba(3, 22, 31, 0.92);
   --panel-soft: rgba(8, 39, 49, 0.78);
+  --serif: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --sans: "Noto Sans SC", "PingFang SC", sans-serif;
 }
 
 body {
@@ -46,10 +48,10 @@ input:focus-visible {
 .yixiu-app {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow: clip;
   color: var(--moon);
   background: var(--deep-water);
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC", "Segoe UI", sans-serif;
+  font-family: var(--sans);
   isolation: isolate;
 }
 
@@ -193,7 +195,7 @@ input:focus-visible {
 }
 
 .brand-button span {
-  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+  font-family: var(--serif);
   font-size: 25px;
   font-weight: 400;
   letter-spacing: 0.11em;
@@ -215,7 +217,7 @@ input:focus-visible {
   border-radius: 999px;
   color: #d8e6e8;
   background: rgba(3, 24, 33, 0.34);
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -449,7 +451,7 @@ input:focus-visible {
 
 .yixiu-drawer-header h2 {
   margin: 0;
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 23px;
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -503,7 +505,7 @@ input:focus-visible {
   position: relative;
   z-index: 1;
   margin: 11px 0 8px;
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 20px;
   font-weight: 400;
   line-height: 1.45;
@@ -570,7 +572,7 @@ input:focus-visible {
 }
 
 .yixiu-drawer-nav strong {
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 15px;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -595,7 +597,7 @@ input:focus-visible {
   border: 1px solid rgba(143, 214, 220, 0.16);
   border-radius: 50%;
   color: var(--aqua);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 13px;
 }
 
@@ -611,7 +613,7 @@ input:focus-visible {
 .yixiu-drawer-footnote {
   margin: 27px 0 0;
   color: rgba(168, 192, 197, 0.72);
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 12px;
   letter-spacing: 0.08em;
   line-height: 1.8;
@@ -656,7 +658,7 @@ input:focus-visible {
 
 .drawer-focus h3 {
   margin: 11px 0 0;
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 22px;
   font-weight: 400;
   letter-spacing: 0.08em;
@@ -740,7 +742,7 @@ input:focus-visible {
 
 .drawer-timer .duration-options button {
   min-height: 72px;
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 14px;
 }
 
@@ -777,7 +779,7 @@ input:focus-visible {
   position: relative;
   z-index: 1;
   margin: 16px 0 0;
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 24px;
   font-weight: 400;
   line-height: 1.45;
@@ -813,7 +815,7 @@ input:focus-visible {
 }
 
 .scene-identity h1 {
-  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+  font-family: var(--serif);
   font-size: clamp(42px, 11.8vw, 54px);
   font-weight: 400;
   letter-spacing: 0.12em;
@@ -821,7 +823,7 @@ input:focus-visible {
 }
 
 [data-language="en"] .scene-identity h1 {
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(34px, 9vw, 42px);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -830,14 +832,14 @@ input:focus-visible {
 .scene-english {
   margin-top: 10px !important;
   color: var(--mist);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 14px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
 }
 
 [data-language="en"] .scene-english {
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 18px;
   letter-spacing: 0.16em;
 }
@@ -849,7 +851,7 @@ input:focus-visible {
   justify-content: center;
   gap: 11px;
   color: #a9c0c4;
-  font-family: "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
+  font-family: var(--serif);
   font-size: 12px;
   letter-spacing: 0.13em;
 }
@@ -859,7 +861,7 @@ input:focus-visible {
 }
 
 .scene-philosophy em {
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 11px;
   font-style: italic;
   letter-spacing: 0.12em;
@@ -884,23 +886,45 @@ input:focus-visible {
 }
 
 .transport svg {
-  width: 25px;
-  height: 25px;
+  width: 21px;
+  height: 21px;
+}
+
+.transport > .icon-button {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 1px solid rgba(174, 231, 234, 0.2);
+  border-radius: 50%;
+  background: rgba(3, 30, 40, 0.34);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 10px 24px rgba(0, 8, 13, 0.12);
+  backdrop-filter: blur(10px);
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.transport > .icon-button:active:not(:disabled) {
+  transform: scale(0.93);
+  border-color: rgba(185, 245, 247, 0.48);
+  background: rgba(20, 73, 83, 0.48);
 }
 
 .favorite-button.is-active {
   color: var(--aqua-strong);
+  border-color: rgba(185, 245, 247, 0.5);
+  background: rgba(24, 86, 94, 0.46);
 }
 
 .primary-transport {
+  position: relative;
   display: grid;
   width: 82px;
   height: 82px;
   place-items: center;
-  border: 1px solid rgba(157, 229, 233, 0.76);
+  border: 1px solid rgba(185, 245, 247, 0.82);
   border-radius: 50%;
   background: rgba(3, 34, 44, 0.58);
-  box-shadow: 0 0 34px rgba(105, 203, 211, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 34px rgba(105, 203, 211, 0.18), inset 0 0 0 6px rgba(3, 23, 33, 0.34), inset 0 0 0 7px rgba(185, 245, 247, 0.1);
   transition: transform 160ms ease, background 160ms ease;
 }
 
@@ -913,8 +937,8 @@ input:focus-visible {
 }
 
 .primary-transport svg {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
 }
 
 .volume-control {
@@ -935,11 +959,32 @@ input:focus-visible {
 }
 
 .volume-control input {
+  appearance: none;
   width: 100%;
   height: 4px;
   margin: 0;
-  accent-color: var(--aqua);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--aqua) 0 var(--volume-progress, 50%), rgba(174, 210, 214, 0.2) var(--volume-progress, 50%) 100%);
   cursor: pointer;
+}
+
+.volume-control input::-webkit-slider-thumb {
+  appearance: none;
+  width: 19px;
+  height: 19px;
+  border: 2px solid rgba(3, 23, 33, 0.7);
+  border-radius: 50%;
+  background: #f4f8f8;
+  box-shadow: 0 4px 14px rgba(0, 8, 13, 0.34);
+}
+
+.volume-control input::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(3, 23, 33, 0.7);
+  border-radius: 50%;
+  background: #f4f8f8;
+  box-shadow: 0 4px 14px rgba(0, 8, 13, 0.34);
 }
 
 .duration-button {
@@ -1024,17 +1069,15 @@ input:focus-visible {
 .bottom-nav {
   position: absolute;
   z-index: 18;
-  right: 14px;
-  bottom: max(8px, env(safe-area-inset-bottom, 0px));
-  left: 14px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: grid;
-  height: 76px;
-  padding: 2px 8px 4px;
+  min-height: calc(72px + env(safe-area-inset-bottom, 0px));
+  padding: 7px 18px max(5px, env(safe-area-inset-bottom, 0px));
   grid-template-columns: repeat(3, 1fr);
-  border: 1px solid rgba(157, 222, 226, 0.16);
-  border-radius: 24px;
-  background: rgba(3, 25, 34, 0.82);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  border-top: 1px solid rgba(143, 214, 220, 0.3);
+  background: rgba(3, 23, 33, 0.96);
   backdrop-filter: blur(20px);
 }
 
@@ -1042,7 +1085,7 @@ input:focus-visible {
   position: relative;
   display: flex;
   min-width: 0;
-  height: 68px;
+  height: 58px;
   align-items: center;
   flex-direction: column;
   justify-content: center;
@@ -1050,39 +1093,29 @@ input:focus-visible {
 }
 
 .bottom-nav button.is-active {
-  color: var(--moon);
-}
-
-.bottom-nav button.is-active::after {
-  position: absolute;
-  bottom: 1px;
-  width: 35px;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--aqua-strong);
-  content: "";
+  color: var(--aqua-strong);
 }
 
 .bottom-nav .nav-icon {
   display: grid;
-  width: 30px;
-  height: 24px;
+  width: 28px;
+  height: 22px;
   margin: 0;
-  flex: 0 0 24px;
+  flex: 0 0 22px;
   place-items: center;
   font-size: initial;
   line-height: normal;
 }
 
 .bottom-nav .nav-icon svg {
-  width: 23px;
-  height: 23px;
+  width: 19px;
+  height: 19px;
   display: block;
 }
 
 .bottom-nav .nav-icon .water-waves-icon {
-  width: 28px;
-  height: 24px;
+  width: 25px;
+  height: 22px;
   overflow: visible;
   fill: none;
   stroke: currentColor;
@@ -1092,24 +1125,25 @@ input:focus-visible {
 
 .nav-focus-orbit {
   display: block;
-  width: 23px;
-  height: 23px;
+  width: 19px;
+  height: 19px;
   margin: 0 !important;
   border: 1px solid currentColor;
   border-radius: 50%;
-  box-shadow: inset 0 0 0 5px rgba(143, 214, 220, 0.09);
+  box-shadow: inset 0 0 0 4px rgba(143, 214, 220, 0.09);
 }
 
 .bottom-nav .nav-label {
-  margin-top: 4px;
-  font-size: 12px;
+  margin-top: 3px;
+  font-family: var(--serif);
+  font-size: 13px;
   line-height: 1;
 }
 
 .bottom-nav small {
-  margin-top: 4px;
+  margin-top: 3px;
   color: inherit;
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 8px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1117,7 +1151,7 @@ input:focus-visible {
 
 .section-kicker {
   color: var(--aqua);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 10px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -1135,7 +1169,7 @@ input:focus-visible {
 .focus-screen h1,
 .me-screen h1 {
   margin: 12px 0 0;
-  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+  font-family: var(--serif);
   font-size: 32px;
   font-weight: 400;
   letter-spacing: 0.08em;
@@ -1143,7 +1177,7 @@ input:focus-visible {
 
 [data-language="en"] .focus-screen h1,
 [data-language="en"] .me-screen h1 {
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 30px;
   letter-spacing: 0.02em;
 }
@@ -1151,7 +1185,7 @@ input:focus-visible {
 .section-intro {
   margin: 9px 0 0;
   color: var(--mist);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 14px;
   letter-spacing: 0.16em;
 }
@@ -1230,7 +1264,7 @@ input:focus-visible {
 }
 
 .breathing-readout strong {
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 23px;
   font-weight: 400;
   letter-spacing: 0.18em;
@@ -1283,23 +1317,28 @@ input:focus-visible {
 }
 
 .me-screen {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding: 0;
 }
 
 .me-screen h1 {
   font-size: 29px;
 }
 
-.me-scroll {
-  position: absolute;
-  top: 190px;
-  right: 14px;
-  bottom: 96px;
-  left: 14px;
+.me-screen[data-me-view="home"] {
   overflow-y: auto;
-  padding: 4px 4px 28px;
+  padding: max(70px, calc(env(safe-area-inset-top, 0px) + 11px)) 18px calc(122px + env(safe-area-inset-bottom, 0px));
   scrollbar-width: none;
+}
+
+.me-screen[data-me-view="home"]::-webkit-scrollbar {
+  display: none;
+}
+
+.me-scroll {
+  position: static;
+  margin-top: 20px;
+  overflow: visible;
+  padding: 0;
   text-align: left;
 }
 
@@ -1312,7 +1351,9 @@ input:focus-visible {
   padding: 17px;
   border: 1px solid rgba(159, 222, 226, 0.18);
   border-radius: 22px;
-  background: rgba(4, 31, 40, 0.74);
+  background:
+    linear-gradient(145deg, rgba(11, 53, 63, 0.52), rgba(3, 25, 34, 0.78)),
+    rgba(4, 31, 40, 0.74);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(14px);
 }
@@ -1328,7 +1369,7 @@ input:focus-visible {
 .card-heading strong,
 .setting-title strong {
   display: block;
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 17px;
   font-weight: 400;
   letter-spacing: 0.08em;
@@ -1349,15 +1390,22 @@ input:focus-visible {
 }
 
 .favorite-scenes {
-  display: grid;
+  display: flex;
   margin-top: 14px;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 9px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.favorite-scenes::-webkit-scrollbar {
+  display: none;
 }
 
 .favorite-scenes button {
   position: relative;
-  height: 86px;
+  width: 105px;
+  height: 88px;
+  flex: 0 0 105px;
   overflow: hidden;
   border-radius: 13px;
   text-align: left;
@@ -1412,7 +1460,7 @@ input:focus-visible {
 
 .me-sound-space {
   position: relative;
-  min-height: 184px;
+  min-height: 158px;
   margin-bottom: 12px;
   overflow: hidden;
   border: 1px solid rgba(159, 222, 226, 0.22);
@@ -1442,24 +1490,24 @@ input:focus-visible {
   position: relative;
   z-index: 1;
   display: flex;
-  min-height: 184px;
+  min-height: 158px;
   align-items: flex-start;
   flex-direction: column;
   justify-content: center;
-  padding: 21px;
+  padding: 17px;
 }
 
 .me-sound-space-copy > small {
   color: var(--aqua);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 9px;
   letter-spacing: 0.22em;
 }
 
 .me-sound-space-copy > strong {
-  margin-top: 9px;
-  font-family: "Songti SC", "STSong", serif;
-  font-size: 24px;
+  margin-top: 5px;
+  font-family: var(--serif);
+  font-size: 20px;
   font-weight: 400;
   letter-spacing: 0.08em;
 }
@@ -1472,8 +1520,8 @@ input:focus-visible {
 
 .me-sound-space-copy > button {
   display: inline-flex;
-  min-height: 40px;
-  margin-top: 19px;
+  min-height: 38px;
+  margin-top: 10px;
   align-items: center;
   gap: 8px;
   padding: 0 16px;
@@ -1504,7 +1552,7 @@ input:focus-visible {
 }
 
 .setting-row > span strong {
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 14px;
   font-weight: 400;
 }
@@ -1566,6 +1614,14 @@ input:focus-visible {
   background: linear-gradient(118deg, rgba(8, 58, 70, 0.92), rgba(4, 31, 40, 0.78));
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   text-decoration: none;
+  transition: transform 140ms ease, border-color 140ms ease, filter 140ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.me-app-download:active {
+  transform: scale(0.985);
+  border-color: rgba(185, 245, 247, 0.72);
+  filter: brightness(1.08);
 }
 
 .me-app-download > span {
@@ -1577,13 +1633,13 @@ input:focus-visible {
 
 .me-app-download small {
   color: var(--aqua);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 8px;
   letter-spacing: 0.2em;
 }
 
 .me-app-download strong {
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 17px;
   font-weight: 400;
   letter-spacing: 0.08em;
@@ -1610,6 +1666,33 @@ input:focus-visible {
 
 .me-app-download > svg {
   color: var(--aqua);
+}
+
+.download-feedback {
+  position: sticky;
+  z-index: 2;
+  bottom: 8px;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  margin: -4px auto 12px;
+  padding: 8px 14px;
+  transform: translateY(6px);
+  border: 1px solid rgba(185, 245, 247, 0.28);
+  border-radius: 999px;
+  color: var(--deep-water);
+  background: var(--aqua-strong);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  font-family: var(--sans);
+  font-size: 11px;
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.download-feedback.is-visible {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .trust-links {
@@ -1643,7 +1726,7 @@ input:focus-visible {
 }
 
 .trust-links button strong {
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 14px;
   font-weight: 400;
 }
@@ -1661,7 +1744,7 @@ input:focus-visible {
 .me-group-label {
   margin: 24px 4px 9px;
   color: var(--aqua);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 9px;
   letter-spacing: 0.22em;
 }
@@ -1697,7 +1780,7 @@ input:focus-visible {
   border: 1px solid rgba(143, 214, 220, 0.22);
   border-radius: 50%;
   color: var(--aqua);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 12px;
   font-weight: 400;
 }
@@ -1709,7 +1792,7 @@ input:focus-visible {
 }
 
 .me-works strong {
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 15px;
   font-weight: 400;
 }
@@ -1735,7 +1818,7 @@ input:focus-visible {
 .me-philosophy-footnote {
   margin: 28px 0 0;
   color: rgba(194, 218, 220, 0.62);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 12px;
   letter-spacing: 0.08em;
   line-height: 1.7;
@@ -1745,26 +1828,30 @@ input:focus-visible {
 .me-detail-view {
   position: absolute;
   inset: 0;
+  display: flex;
+  flex-direction: column;
   text-align: left;
 }
 
 .me-detail-header {
-  position: absolute;
+  position: relative;
   z-index: 3;
-  top: max(58px, calc(env(safe-area-inset-top, 0px) + 8px));
-  right: 20px;
-  left: 20px;
   display: grid;
-  min-height: 58px;
+  flex: 0 0 auto;
   align-items: center;
-  grid-template-columns: 44px minmax(0, 1fr);
-  gap: 10px;
+  box-sizing: border-box;
+  padding: max(60px, calc(env(safe-area-inset-top, 0px) + 8px)) 18px 12px;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  border-bottom: 1px solid rgba(143, 214, 220, 0.3);
+  background: rgba(3, 23, 33, 0.82);
+  backdrop-filter: blur(18px);
 }
 
 .me-detail-header > button {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   place-items: center;
   border: 1px solid rgba(159, 222, 226, 0.22);
   border-radius: 50%;
@@ -1784,19 +1871,17 @@ input:focus-visible {
 }
 
 .me-detail-header strong {
-  font-family: "Songti SC", "STSong", serif;
-  font-size: 20px;
+  font-family: var(--serif);
+  font-size: 22px;
   font-weight: 400;
 }
 
 .me-detail-scroll {
-  position: absolute;
-  top: max(128px, calc(env(safe-area-inset-top, 0px) + 78px));
-  right: 18px;
-  bottom: 96px;
-  left: 18px;
+  position: relative;
+  min-height: 0;
+  flex: 1 1 auto;
   overflow-y: auto;
-  padding: 10px 0 30px;
+  padding: 26px 20px calc(124px + env(safe-area-inset-bottom, 0px));
   scrollbar-width: none;
 }
 
@@ -1815,14 +1900,14 @@ input:focus-visible {
 
 .me-article > small {
   color: var(--aqua);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 9px;
   letter-spacing: 0.22em;
 }
 
 .me-article h2 {
   margin: 14px 0 0;
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 25px;
   font-weight: 400;
   line-height: 1.45;
@@ -1840,7 +1925,7 @@ input:focus-visible {
   padding: 18px 0 0;
   border-top: 1px solid rgba(143, 214, 220, 0.16);
   color: var(--aqua-strong);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 17px;
   line-height: 1.7;
   text-align: center;
@@ -1879,7 +1964,7 @@ input:focus-visible {
 .life-philosophy h3 {
   margin: 11px 0 0;
   color: var(--moon);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 19px;
   font-weight: 400;
   line-height: 1.75;
@@ -1919,7 +2004,7 @@ input:focus-visible {
 
 .life-path strong {
   color: var(--moon);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 11px;
   font-weight: 400;
   line-height: 1.45;
@@ -1939,7 +2024,7 @@ input:focus-visible {
 
 .life-principles strong {
   color: var(--aqua);
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 13px;
   font-weight: 400;
 }
@@ -2060,7 +2145,7 @@ input:focus-visible {
 .version-copy {
   margin: 18px 0 0;
   color: rgba(200, 220, 222, 0.42);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 9px;
   letter-spacing: 0.12em;
   text-align: center;
@@ -2129,7 +2214,7 @@ input:focus-visible {
 
 .sound-library h2 {
   margin: 4px 0 0;
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 25px;
   font-weight: 400;
   letter-spacing: 0.08em;
@@ -2200,7 +2285,7 @@ input:focus-visible {
 }
 
 .scene-card-copy strong {
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 16px;
   font-weight: 400;
 }
@@ -2208,7 +2293,7 @@ input:focus-visible {
 .scene-card-copy small {
   margin-top: 3px;
   color: #d1e4e6;
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 8px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -2265,14 +2350,14 @@ input:focus-visible {
 .wisdom-panel small,
 .info-panel small {
   color: var(--aqua);
-  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-family: var(--serif);
   font-size: 9px;
   letter-spacing: 0.24em;
 }
 
 .wisdom-panel blockquote {
   margin: 24px 0;
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 22px;
   line-height: 1.55;
 }
@@ -2297,7 +2382,7 @@ input:focus-visible {
 
 .info-panel h2 {
   margin: 14px 0 0;
-  font-family: "Songti SC", "STSong", serif;
+  font-family: var(--serif);
   font-size: 23px;
   font-weight: 400;
   line-height: 1.4;
@@ -2372,9 +2457,6 @@ input:focus-visible {
     margin-top: 20px;
   }
 
-  .me-scroll {
-    top: 180px;
-  }
 }
 
 @media (max-width: 430px) {
