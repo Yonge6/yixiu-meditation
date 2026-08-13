@@ -310,6 +310,10 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   expect(await page.locator(".me-screen").evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
   const humanDesignLink = page.getByRole("link", { name: /不二 认识自己.*人生使用说明书/ });
   await expect(humanDesignLink).toHaveAttribute("href", "https://human-design.wonderelian.com/");
+  const workLinks = page.locator(".me-works > a");
+  await expect(workLinks.nth(1)).toContainText("不二 认识自己");
+  await expect(workLinks.nth(2)).toContainText("三慢问道");
+  await expect(workLinks.nth(2)).toContainText("道德经");
   await expect(page.getByText(/YIXIU 2\.0/)).toHaveCount(0);
   const downloadLink = page.getByRole("link", { name: /下载一休 App/ });
   await expect(downloadLink).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");

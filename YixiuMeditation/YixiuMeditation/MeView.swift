@@ -451,26 +451,26 @@ struct MeView: View {
             Divider().overlay(YixiuTheme.hairline)
             workLink(
                 index: language.text(zh: "二", en: "02"),
+                title: language.text(zh: "不二 认识自己", en: "Not Two · Know Yourself"),
+                tagline: language.text(zh: "人生使用说明书", en: "A User Manual for Life"),
+                description: language.text(zh: "看见自己的能量结构，理解真实而独特的自己。", en: "See your energy design and understand your authentic, individual self."),
+                url: "https://human-design.wonderelian.com/"
+            )
+            Divider().overlay(YixiuTheme.hairline)
+            workLink(
+                index: language.text(zh: "三", en: "03"),
                 title: language.text(zh: "三慢问道", en: "Wendao"),
-                tagline: language.text(zh: "慢读经典", en: "Read slowly"),
+                tagline: language.text(zh: "道德经", en: "Tao Te Ching"),
                 description: language.text(zh: "读懂经典，也在慢下来时读懂自己。", en: "Read the classic slowly—and yourself with it."),
                 url: "https://wendao.wonderelian.com"
             )
             Divider().overlay(YixiuTheme.hairline)
             workLink(
-                index: language.text(zh: "三", en: "03"),
+                index: language.text(zh: "四", en: "04"),
                 title: language.text(zh: "艺术风格图鉴", en: "Style Atlas"),
                 tagline: language.text(zh: "学习看懂一种美", en: "Learn to see a style"),
                 description: language.text(zh: "沿着艺术与设计风格的脉络，找到自己的观看方式。", en: "Follow art and design lineages to find your own way of looking."),
                 url: "https://style-atlas.wonderelian.com"
-            )
-            Divider().overlay(YixiuTheme.hairline)
-            workLink(
-                index: language.text(zh: "四", en: "04"),
-                title: language.text(zh: "不二 认识自己", en: "Not Two · Know Yourself"),
-                tagline: language.text(zh: "人生使用说明书", en: "A User Manual for Life"),
-                description: language.text(zh: "看见自己的能量结构，理解真实而独特的自己。", en: "See your energy design and understand your authentic, individual self."),
-                url: "https://human-design.wonderelian.com/"
             )
         }
         .padding(.horizontal, 16)
