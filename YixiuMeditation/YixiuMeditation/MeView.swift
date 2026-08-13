@@ -24,7 +24,7 @@ struct MeView: View {
                 background
 
                 if page == .home {
-                    home
+                    home(geometry: geometry)
                         .transition(.opacity)
                 } else {
                     detail(geometry: geometry)
@@ -32,6 +32,7 @@ struct MeView: View {
                 }
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipped()
         }
         .sheet(isPresented: $libraryOpen) {
             SoundLibraryView()
@@ -67,7 +68,7 @@ struct MeView: View {
         }
     }
 
-    private var home: some View {
+    private func home(geometry: GeometryProxy) -> some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 0) {
                 Text(language.text(zh: "我的一休 · MY YIXIU", en: "MY YIXIU · 我的一休"))
@@ -114,8 +115,11 @@ struct MeView: View {
                     .padding(.top, 10)
                     .padding(.bottom, 122)
             }
+            .frame(width: max(geometry.size.width - 36, 0))
             .padding(.horizontal, 18)
         }
+        .frame(width: geometry.size.width)
+        .clipped()
     }
 
     private var soundSpaceCard: some View {
@@ -432,11 +436,16 @@ struct MeView: View {
 
             ScrollView(showsIndicators: false) {
                 detailBody
+                    .frame(width: max(geometry.size.width - 40, 0), alignment: .leading)
                     .padding(.horizontal, 20)
                     .padding(.top, 26)
                     .padding(.bottom, 124)
             }
+            .frame(width: geometry.size.width)
+            .clipped()
         }
+        .frame(width: geometry.size.width, height: geometry.size.height)
+        .clipped()
         .ignoresSafeArea(edges: .top)
     }
 

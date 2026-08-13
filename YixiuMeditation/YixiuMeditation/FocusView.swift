@@ -33,24 +33,27 @@ struct FocusView: View {
     }
 
     var body: some View {
-        ZStack {
-            Image("MorningLake")
-                .resizable()
-                .scaledToFill()
+        GeometryReader { geometry in
+            ZStack {
+                Image("MorningLake")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+                    .ignoresSafeArea()
+
+                Color(red: 0, green: 18 / 255, blue: 26 / 255)
+                    .opacity(0.42)
+                    .ignoresSafeArea()
+
+                LinearGradient(
+                    colors: [YixiuTheme.deepWater.opacity(0.14), YixiuTheme.deepWater.opacity(0.94)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
                 .ignoresSafeArea()
 
-            Color(red: 0, green: 18 / 255, blue: 26 / 255)
-                .opacity(0.42)
-                .ignoresSafeArea()
-
-            LinearGradient(
-                colors: [YixiuTheme.deepWater.opacity(0.14), YixiuTheme.deepWater.opacity(0.94)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-
-            VStack(spacing: 0) {
+                VStack(spacing: 0) {
                 Text(appState.language.text(zh: "静心 · FOCUS", en: "FOCUS · 静心"))
                     .yixiuSecondary(9)
                     .padding(.top, 76)
@@ -111,9 +114,13 @@ struct FocusView: View {
                 .padding(.top, 23)
 
                 Spacer(minLength: 92)
+                }
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
+                .frame(width: geometry.size.width)
             }
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 24)
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipped()
         }
         .task(id: status) {
             guard status == .running else { return }
