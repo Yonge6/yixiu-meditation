@@ -204,7 +204,7 @@ test("selects timer and switches the interface language", async ({ page }) => {
 
   await page.getByRole("button", { name: "切换到英文" }).click();
   await expect(page.getByRole("heading", { name: "OCEAN WAVES" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Switch to Chinese" })).toContainText("中文");
+  await expect(page.getByRole("button", { name: "Switch to Chinese" })).toContainText("YIXIU");
   await expect(page.getByRole("button", { name: "Focus 静心" })).toBeVisible();
 });
 

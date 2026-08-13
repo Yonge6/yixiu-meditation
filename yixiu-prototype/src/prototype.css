@@ -168,7 +168,7 @@ input:focus-visible {
 .player-header {
   position: absolute;
   z-index: 20;
-  top: max(38px, calc(env(safe-area-inset-top, 0px) + 12px));
+  top: max(62px, calc(env(safe-area-inset-top, 0px) + 30px));
   right: 24px;
   left: 24px;
   display: flex;
@@ -179,7 +179,7 @@ input:focus-visible {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0;
 }
 
 .brand-button,
@@ -206,7 +206,7 @@ input:focus-visible {
   padding: 4px 0;
   text-align: left;
   text-shadow: 0 1px 12px rgba(0, 20, 24, 0.72);
-  cursor: default;
+  cursor: pointer;
 }
 
 .brand-button span {
@@ -222,28 +222,10 @@ input:focus-visible {
   letter-spacing: 0.34em;
 }
 
-.header-language-toggle {
-  display: grid;
-  min-width: 36px;
-  min-height: 32px;
-  place-items: center;
-  padding: 0 7px;
-  border: 1px solid rgba(168, 220, 225, 0.22);
-  border-radius: 999px;
-  color: #d8e6e8;
-  background: rgba(3, 24, 33, 0.34);
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  backdrop-filter: blur(10px);
-}
-
 .header-share-button {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   padding: 0;
   border: 1px solid rgba(168, 220, 225, 0.22);
@@ -259,10 +241,6 @@ input:focus-visible {
 }
 
 .header-share-button:active {
-  background: rgba(143, 214, 220, 0.16);
-}
-
-.header-language-toggle:active {
   background: rgba(143, 214, 220, 0.16);
 }
 
@@ -348,7 +326,7 @@ input:focus-visible {
 .scene-identity {
   position: absolute;
   z-index: 5;
-  top: 61.2%;
+  top: 53%;
   right: 24px;
   left: 24px;
   transform: translateY(-50%);
@@ -886,9 +864,9 @@ input:focus-visible {
 .transport {
   position: absolute;
   z-index: 6;
-  top: 72.2%;
-  right: 22px;
-  left: 22px;
+  top: calc(73% - 41px);
+  right: 28px;
+  left: 28px;
   display: grid;
   grid-template-columns: 44px 44px 82px 44px 44px;
   align-items: center;
@@ -959,9 +937,9 @@ input:focus-visible {
 .volume-control {
   position: absolute;
   z-index: 6;
-  top: 84.2%;
-  right: 31px;
-  left: 31px;
+  top: calc(84% - 10px);
+  right: 32px;
+  left: 32px;
   display: grid;
   grid-template-columns: 24px 1fr 24px;
   align-items: center;
@@ -1005,7 +983,7 @@ input:focus-visible {
 .duration-button {
   position: absolute;
   z-index: 8;
-  top: 67.1%;
+  top: calc(64% - 22px);
   left: 50%;
   display: flex;
   min-width: 142px;
@@ -1028,7 +1006,7 @@ input:focus-visible {
 .timer-panel {
   position: absolute;
   z-index: 45;
-  top: 60.8%;
+  top: 56.5%;
   right: 18px;
   left: 18px;
   display: grid;
@@ -1151,7 +1129,7 @@ input:focus-visible {
 .bottom-nav .nav-label {
   margin-top: 3px;
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1;
 }
 
@@ -2219,7 +2197,7 @@ input:focus-visible {
   position: absolute;
   z-index: 7;
   right: 0;
-  bottom: calc(94px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(108px + env(safe-area-inset-bottom, 0px));
   left: 0;
   margin: 0;
   color: rgba(211, 229, 231, 0.48);

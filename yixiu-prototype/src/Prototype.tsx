@@ -14,11 +14,11 @@ import {
   PauseIcon,
   PersonIcon,
   PlayIcon,
-  Share1Icon,
   SpeakerLoudIcon,
   SpeakerQuietIcon,
   TrackNextIcon,
   TrackPreviousIcon,
+  UploadIcon,
 } from "@radix-ui/react-icons";
 
 type Language = "zh" | "en";
@@ -404,7 +404,7 @@ export default function Prototype() {
   const [meView, setMeView] = useState<MeView>("home");
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(62);
+  const [volume, setVolume] = useState(72);
   const [remainingSeconds, setRemainingSeconds] = useState(duration === 0 ? 0 : duration * 60);
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("home");
@@ -697,11 +697,6 @@ export default function Prototype() {
       y: event.clientY,
       axis: null,
     };
-    try {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    } catch {
-      // Synthetic pointer events may not have an active pointer to capture.
-    }
   };
 
   const moveMeBackSwipe = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -711,6 +706,13 @@ export default function Prototype() {
     const deltaY = event.clientY - start.y;
     if (start.axis === null && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= 8) {
       start.axis = Math.abs(deltaX) > Math.abs(deltaY) * 1.15 ? "horizontal" : "vertical";
+      if (start.axis === "horizontal") {
+        try {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        } catch {
+          // Synthetic pointer events may not have an active pointer to capture.
+        }
+      }
     }
     if (start.axis !== "horizontal" || deltaX <= 0) return;
     event.preventDefault();
@@ -801,10 +803,15 @@ export default function Prototype() {
       <div className="ocean-shade" aria-hidden="true" />
 
       {activeTab === "sounds" ? <header className="player-header">
-        <div className="brand-button">
+        <button
+          className="brand-button"
+          type="button"
+          aria-label={language === "zh" ? "切换到英文" : "Switch to Chinese"}
+          onClick={() => setLanguage((current) => current === "zh" ? "en" : "zh")}
+        >
           <span>{language === "zh" ? "一休" : "YIXIU"}</span>
           <small>{language === "zh" ? "YIXIU" : "一休"}</small>
-        </div>
+        </button>
         <div className="header-actions">
           <button
             className="header-share-button"
@@ -812,15 +819,7 @@ export default function Prototype() {
             aria-label={language === "zh" ? `分享${active.zh}` : `Share ${active.en}`}
             onClick={shareScene}
           >
-            <Share1Icon />
-          </button>
-          <button
-            className="header-language-toggle"
-            type="button"
-            aria-label={language === "zh" ? "切换到英文" : "Switch to Chinese"}
-            onClick={() => setLanguage((current) => current === "zh" ? "en" : "zh")}
-          >
-            {language === "zh" ? "EN" : "中文"}
+            <UploadIcon />
           </button>
         </div>
       </header> : null}
