@@ -18,6 +18,17 @@ test("opens on the ocean scene in a paused 30-minute state", async ({ page }) =>
   expect(durationBox!.y + durationBox!.height).toBeLessThanOrEqual(playBox!.y + 4);
 });
 
+test("keeps a low-saturation color in every scene image slot while assets load", async ({ page }) => {
+  const backdrop = page.locator(".scene-current-backdrop");
+  await expect(backdrop).toHaveAttribute("data-image-scene", "ocean");
+  expect(await backdrop.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(82, 109, 120)");
+
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  const soundSpaceImage = page.locator(".me-sound-space img");
+  await expect(soundSpaceImage).toHaveAttribute("data-image-scene", "ocean");
+  expect(await soundSpaceImage.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(82, 109, 120)");
+});
+
 test("opens shared scene links and shares the current scene URL", async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(navigator, "share", {
@@ -245,6 +256,8 @@ test("updates and restores local settings", async ({ page }) => {
 
 test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
+  await expect(page.getByRole("link", { name: /不二.*认识自己/ })).toHaveAttribute("href", "https://human-design.wonderelian.com/");
+  await expect(page.getByText(/YIXIU 2\.0/)).toHaveCount(0);
   const downloadLink = page.getByRole("link", { name: /下载一休 App/ });
   await expect(downloadLink).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");
   await downloadLink.evaluate((element) => {

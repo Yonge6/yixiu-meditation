@@ -113,12 +113,7 @@ struct MeView: View {
                     .foregroundStyle(YixiuTheme.mist.opacity(0.52))
                     .padding(.top, 24)
 
-                Text("YIXIU 2.0 · \(language.text(zh: "偏好只保存在这台设备", en: "Preferences stay on this device"))")
-                    .font(YixiuTheme.englishSerif(9))
-                    .tracking(1)
-                    .foregroundStyle(YixiuTheme.mist.opacity(0.38))
-                    .padding(.top, 10)
-                    .padding(.bottom, 122)
+                Spacer(minLength: 122)
             }
             .frame(width: max(geometry.size.width - 36, 0))
             .padding(.horizontal, 18)
@@ -398,6 +393,14 @@ struct MeView: View {
                 tagline: language.text(zh: "学习看懂一种美", en: "Learn to see a style"),
                 description: language.text(zh: "沿着艺术与设计风格的脉络，找到自己的观看方式。", en: "Follow art and design lineages to find your own way of looking."),
                 url: "https://style-atlas.wonderelian.com"
+            )
+            Divider().overlay(YixiuTheme.hairline)
+            workLink(
+                index: language.text(zh: "四", en: "04"),
+                title: language.text(zh: "不二", en: "Not Two"),
+                tagline: language.text(zh: "认识自己", en: "Know yourself"),
+                description: language.text(zh: "看见自己的能量结构，理解真实而独特的自己。", en: "See your energy design and understand your authentic, individual self."),
+                url: "https://human-design.wonderelian.com/"
             )
         }
         .padding(.horizontal, 16)

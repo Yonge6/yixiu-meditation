@@ -71,6 +71,43 @@ input:focus-visible {
   will-change: transform, opacity;
 }
 
+/* Low-saturation color blocks remain visible until each image has decoded. */
+img[data-image-scene] {
+  background-color: #60777a;
+}
+
+img[data-image-scene="ocean"],
+img[data-image-scene="underwater"] {
+  background-color: #526d78;
+}
+
+img[data-image-scene="rain"],
+img[data-image-scene="bamboo"] {
+  background-color: #5b7069;
+}
+
+img[data-image-scene="spring"],
+img[data-image-scene="birds"],
+img[data-image-scene="valley"] {
+  background-color: #87907b;
+}
+
+img[data-image-scene="stream"],
+img[data-image-scene="falls"] {
+  background-color: #5e766b;
+}
+
+img[data-image-scene="lake"],
+img[data-image-scene="snow"] {
+  background-color: #71858b;
+}
+
+img[data-image-scene="window"],
+img[data-image-scene="thunder"],
+img[data-image-scene="tide"] {
+  background-color: #586374;
+}
+
 .is-audio-playing[data-tab="sounds"]:not(.is-scene-dragging):not(.is-swipe-settling) .scene-current-backdrop {
   animation: yixiu-scene-breathe 20s ease-in-out infinite alternate;
 }
@@ -2175,6 +2212,7 @@ input:focus-visible {
   display: block;
   width: 100%;
   height: auto;
+  background-color: #718587;
 }
 
 .video-channel-modal figcaption {

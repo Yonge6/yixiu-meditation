@@ -930,7 +930,7 @@ export default function Prototype() {
                             setDrawerView("home");
                             setMenuOpen(false);
                           }}>
-                            <img src={scene.image} alt="" />
+                            <img src={scene.image} data-image-scene={scene.id} alt="" />
                             <span className="scene-card-shade" />
                             <span className="scene-card-copy">
                               <strong>{language === "zh" ? scene.zh : scene.en}</strong>
@@ -970,14 +970,13 @@ export default function Prototype() {
                 <section className="yixiu-drawer-subview drawer-me">
                   <section className="me-card favorites-card">
                     <div className="card-heading"><div><strong>{language === "zh" ? "我的收藏" : "Favorites"}</strong><small>{language === "zh" ? "常听的自然声" : "Your returning sounds"}</small></div><HeartIcon /></div>
-                    {favorites.length ? <div className="favorite-scenes">{favorites.map((sceneId) => <button key={sceneId} type="button" onClick={() => { setActiveScene(sceneId); setDrawerView("home"); setMenuOpen(false); }}><img src={scenes[sceneId].image} alt="" /><span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span></button>)}</div> : <p className="empty-copy">{language === "zh" ? "在播放器点亮心形，常听的声音会留在这里。" : "Favorite a sound in the player and it will stay here."}</p>}
+                    {favorites.length ? <div className="favorite-scenes">{favorites.map((sceneId) => <button key={sceneId} type="button" onClick={() => { setActiveScene(sceneId); setDrawerView("home"); setMenuOpen(false); }}><img src={scenes[sceneId].image} data-image-scene={sceneId} alt="" /><span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span></button>)}</div> : <p className="empty-copy">{language === "zh" ? "在播放器点亮心形，常听的声音会留在这里。" : "Favorite a sound in the player and it will stay here."}</p>}
                   </section>
                   <section className="me-card settings-list">
                     <div className="setting-row"><span>{language === "zh" ? "结束提示音" : "End bell"}</span><button className={`switch-control ${endBell ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "结束提示音" : "End bell"} aria-checked={endBell} onClick={() => setEndBell((current) => !current)}><i /></button></div>
                     <div className="setting-row"><span>{language === "zh" ? "后台播放" : "Background playback"}</span><button className={`switch-control ${backgroundPlayback ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "后台播放" : "Background playback"} aria-checked={backgroundPlayback} onClick={() => setBackgroundPlayback((current) => !current)}><i /></button></div>
                     <button className="drawer-setting-link" type="button" onClick={() => setDrawerView("timer")}><span>{language === "zh" ? "默认定时" : "Default timer"}</span><strong>{durationLabel(duration, language)}</strong><ChevronRightIcon /></button>
                   </section>
-                  <p className="version-copy">YIXIU 2.0 · {language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</p>
                 </section>
               ) : drawerView === "timer" ? (
                 <section className="yixiu-drawer-subview drawer-timer">
@@ -1123,7 +1122,7 @@ export default function Prototype() {
 
               <div className="me-scroll">
                 <section className="me-sound-space">
-                  <img src={active.image} alt="" />
+                  <img src={active.image} data-image-scene={active.id} alt="" />
                   <div className="me-sound-space-shade" />
                   <div className="me-sound-space-copy">
                     <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
@@ -1145,7 +1144,7 @@ export default function Prototype() {
                     <div className="favorite-scenes">
                       {favorites.map((sceneId) => (
                         <button key={sceneId} type="button" onClick={() => selectScene(sceneId, false)}>
-                          <img src={scenes[sceneId].image} alt="" />
+                          <img src={scenes[sceneId].image} data-image-scene={sceneId} alt="" />
                           <span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span>
                         </button>
                       ))}
@@ -1214,10 +1213,10 @@ export default function Prototype() {
                   <a href="https://xiazishuo.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "一" : "01"}</b><span><strong>{language === "zh" ? "虾子曰" : "Xiazi Says"}</strong><em>{language === "zh" ? "昨日世界" : "Yesterday's World"}</em><small>{language === "zh" ? "每天用全球热点与双语海报，看清复杂世界。" : "Global stories and bilingual posters make the world easier to see."}</small></span><ExternalLinkIcon /></a>
                   <a href="https://wendao.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "二" : "02"}</b><span><strong>{language === "zh" ? "三慢问道" : "Wendao"}</strong><em>{language === "zh" ? "慢读经典" : "Read slowly"}</em><small>{language === "zh" ? "读懂经典，也在慢下来时读懂自己。" : "Read the classic slowly—and yourself with it."}</small></span><ExternalLinkIcon /></a>
                   <a href="https://style-atlas.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "三" : "03"}</b><span><strong>{language === "zh" ? "艺术风格图鉴" : "Style Atlas"}</strong><em>{language === "zh" ? "学习看懂一种美" : "Learn to see a style"}</em><small>{language === "zh" ? "沿着艺术与设计风格的脉络，找到自己的观看方式。" : "Follow art and design lineages to find your own way of looking."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://human-design.wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "四" : "04"}</b><span><strong>{language === "zh" ? "不二" : "Not Two"}</strong><em>{language === "zh" ? "认识自己" : "Know yourself"}</em><small>{language === "zh" ? "看见自己的能量结构，理解真实而独特的自己。" : "See your energy design and understand your authentic, individual self."}</small></span><ExternalLinkIcon /></a>
                 </section>
 
                 <p className="me-philosophy-footnote">{language === "zh" ? "向内认识自己，向外如水而行。" : "Know within. Move like water."}</p>
-                <p className="version-copy">YIXIU 2.0 · {language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</p>
               </div>
             </>
           ) : (
@@ -1291,7 +1290,7 @@ export default function Prototype() {
             <div className="scene-grid">
               {sceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={scene.image} alt="" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
+                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={scene.image} data-image-scene={scene.id} alt="" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
               })}
             </div>
           </section>
