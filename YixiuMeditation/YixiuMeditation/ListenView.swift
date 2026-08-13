@@ -129,13 +129,13 @@ struct ListenView: View {
                 }
 
                 Color(red: 0, green: 17 / 255, blue: 25 / 255)
-                    .opacity(appState.scene.isBright ? 0.07 : 0.18)
+                    .opacity(appState.scene.isBright ? 0.035 : (appState.scene.isNight ? 0.09 : 0.055))
 
                 LinearGradient(
                     colors: [
                         .clear,
-                        YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.10 : 0.20),
-                        YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.78 : 0.96)
+                        YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.07 : (appState.scene.isNight ? 0.16 : 0.11)),
+                        YixiuTheme.deepWater.opacity(appState.scene.isBright ? 0.56 : (appState.scene.isNight ? 0.76 : 0.64))
                     ],
                     startPoint: .top,
                     endPoint: .bottom

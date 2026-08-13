@@ -162,6 +162,15 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    var isNight: Bool {
+        switch self {
+        case .window, .thunder, .underwater, .tide:
+            true
+        default:
+            false
+        }
+    }
+
     func shareURL(language: AppLanguage) -> URL {
         var components = URLComponents(string: "https://yixiu.wonderelian.com/")!
         components.queryItems = [
