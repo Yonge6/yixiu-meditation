@@ -113,7 +113,7 @@ struct MeView: View {
                 worksCard
 
                 Text(language.text(zh: "向内认识自己，向外如水而行。", en: "Know within. Move like water."))
-                    .font(YixiuTheme.chineseDisplay(12))
+                    .font(YixiuTheme.chineseDisplay(13))
                     .tracking(1)
                     .foregroundStyle(YixiuTheme.mist.opacity(0.52))
                     .padding(.top, 24)
@@ -143,19 +143,19 @@ struct MeView: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(language.text(zh: "声音空间", en: "SOUND SPACE"))
-                    .yixiuSecondary(8)
+                    .yixiuSecondary(9)
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
-                    .font(YixiuTheme.chineseDisplay(20))
+                    .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
                 Text(language.text(zh: "正在聆听 · 共 14 种真实自然声", en: "Now listening · 14 real nature sounds"))
-                    .font(.system(size: 10))
+                    .font(.system(size: 11))
                     .foregroundStyle(YixiuTheme.mist)
 
                 Button {
                     libraryOpen = true
                 } label: {
                     Label(language.text(zh: "浏览全部声音", en: "Browse all sounds"), systemImage: "water.waves")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(YixiuTheme.deepWater)
                         .padding(.horizontal, 16)
                         .frame(height: 38)
@@ -180,9 +180,9 @@ struct MeView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(language.text(zh: "我的收藏", en: "Favorites"))
-                        .font(YixiuTheme.chineseDisplay(17))
+                        .font(YixiuTheme.chineseDisplay(18))
                     Text(language.text(zh: "常听的水声", en: "Your returning waters"))
-                        .font(.system(size: 10))
+                        .font(.system(size: 11))
                         .foregroundStyle(YixiuTheme.mist)
                 }
                 Spacer()
@@ -195,7 +195,7 @@ struct MeView: View {
                     zh: "在声音页点亮心形，常听的自然声会留在这里。",
                     en: "Tap the heart while listening and your favorite sounds will stay here."
                 ))
-                .font(.system(size: 12))
+                .font(.system(size: 13))
                 .foregroundStyle(YixiuTheme.mist.opacity(0.66))
                 .lineSpacing(5)
             } else {
@@ -218,7 +218,7 @@ struct MeView: View {
                                         endPoint: .bottom
                                     )
                                     Text(language.text(zh: scene.zhName, en: scene.enName))
-                                        .font(YixiuTheme.chineseDisplay(11))
+                                        .font(YixiuTheme.chineseDisplay(12))
                                         .foregroundStyle(YixiuTheme.moon)
                                         .padding(9)
                                 }
@@ -239,9 +239,9 @@ struct MeView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(language.text(zh: "最近聆听", en: "Recently played"))
-                        .font(YixiuTheme.chineseDisplay(17))
+                        .font(YixiuTheme.chineseDisplay(18))
                     Text(language.text(zh: "一点继续，不必重新寻找", en: "Continue with one tap"))
-                        .font(.system(size: 10))
+                        .font(.system(size: 11))
                         .foregroundStyle(YixiuTheme.mist)
                 }
                 Spacer()
@@ -270,10 +270,10 @@ struct MeView: View {
 
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(language.text(zh: scene.zhName, en: scene.enName))
-                                    .font(YixiuTheme.chineseDisplay(13))
+                                    .font(YixiuTheme.chineseDisplay(14))
                                     .lineLimit(1)
                                 Text(language.text(zh: scene.useZh, en: scene.useEn))
-                                    .font(.system(size: 8))
+                                    .font(.system(size: 9))
                                     .foregroundStyle(YixiuTheme.aqua)
                                     .lineLimit(1)
                             }
@@ -303,10 +303,10 @@ struct MeView: View {
         VStack(spacing: 14) {
             HStack {
                 Text(language.text(zh: "默认定时", en: "Default timer"))
-                    .font(YixiuTheme.chineseDisplay(17))
+                    .font(YixiuTheme.chineseDisplay(18))
                 Spacer()
                 Text(appState.durationLabel)
-                    .font(.system(size: 11))
+                    .font(.system(size: 12))
                     .foregroundStyle(YixiuTheme.aqua)
             }
 
@@ -318,7 +318,7 @@ struct MeView: View {
                         Text(minutes == 0
                             ? language.text(zh: "不限时", en: "∞")
                             : "\(minutes) \(language == .zh ? "分钟" : "MIN")")
-                            .font(.system(size: 10, weight: .medium))
+                            .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(appState.duration == minutes ? YixiuTheme.deepWater : YixiuTheme.mist)
                             .frame(maxWidth: .infinity)
                             .frame(height: 40)
@@ -345,7 +345,7 @@ struct MeView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(language.text(zh: "界面语言", en: "Language"))
                     Text(language.text(zh: "中英双语随时切换", en: "Switch between Chinese and English"))
-                        .font(.system(size: 9))
+                        .font(.system(size: 10))
                         .foregroundStyle(YixiuTheme.mist)
                 }
                 Spacer()
@@ -372,7 +372,7 @@ struct MeView: View {
                 isOn: $appState.backgroundPlayback
             )
         }
-        .font(.system(size: 13))
+        .font(.system(size: 14))
         .padding(.horizontal, 17)
         .yixiuPanel()
     }
@@ -418,9 +418,9 @@ struct MeView: View {
                         .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
                     VStack(alignment: .leading, spacing: 3) {
                         Text(language.text(zh: "给一休评分", en: "Rate Yixiu"))
-                            .font(YixiuTheme.chineseDisplay(15))
+                            .font(YixiuTheme.chineseDisplay(16))
                         Text(language.text(zh: "在 App Store 分享你的感受", en: "Share your experience on the App Store"))
-                            .font(.system(size: 10))
+                            .font(.system(size: 11))
                             .foregroundStyle(YixiuTheme.mist)
                             .lineLimit(1)
                     }
@@ -693,7 +693,7 @@ struct MeView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                 Text(subtitle)
-                    .font(.system(size: 9))
+                    .font(.system(size: 10))
                     .foregroundStyle(YixiuTheme.mist)
             }
             Spacer()
@@ -718,9 +718,9 @@ struct MeView: View {
                     .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
-                        .font(YixiuTheme.chineseDisplay(15))
+                        .font(YixiuTheme.chineseDisplay(16))
                     Text(subtitle)
-                        .font(.system(size: 10))
+                        .font(.system(size: 11))
                         .foregroundStyle(YixiuTheme.mist)
                         .lineLimit(1)
                 }
@@ -744,15 +744,15 @@ struct MeView: View {
                     .foregroundStyle(YixiuTheme.aqua)
                     .frame(width: 28, alignment: .leading)
                 VStack(alignment: .leading, spacing: 5) {
-                    HStack(spacing: 8) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(title)
-                            .font(YixiuTheme.chineseDisplay(15))
+                            .font(YixiuTheme.chineseDisplay(16))
                         Text(tagline)
-                            .font(.system(size: 9))
+                            .font(.system(size: 10))
                             .foregroundStyle(YixiuTheme.aqua)
                     }
                     Text(description)
-                        .font(.system(size: 10))
+                        .font(.system(size: 11))
                         .lineSpacing(3)
                         .foregroundStyle(YixiuTheme.mist)
                         .multilineTextAlignment(.leading)
@@ -763,7 +763,7 @@ struct MeView: View {
                     .foregroundStyle(YixiuTheme.mist)
             }
             .foregroundStyle(YixiuTheme.moon)
-            .padding(.vertical, 14)
+            .padding(.vertical, 15)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

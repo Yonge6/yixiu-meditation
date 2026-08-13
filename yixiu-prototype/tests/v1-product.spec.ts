@@ -303,6 +303,11 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   const groupLabels = page.locator(".me-group-label");
   await expect(groupLabels).toHaveCount(2);
   expect(await groupLabels.first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("14px");
+  expect(await page.locator(".card-heading strong").first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("20px");
+  expect(await page.locator(".setting-row > span strong").first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("17px");
+  expect(await page.locator(".trust-links button strong").first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("17px");
+  expect(await page.locator(".me-works strong").first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("18px");
+  expect(await page.locator(".me-screen").evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
   const humanDesignLink = page.getByRole("link", { name: /不二 认识自己.*人生使用说明书/ });
   await expect(humanDesignLink).toHaveAttribute("href", "https://human-design.wonderelian.com/");
   await expect(page.getByText(/YIXIU 2\.0/)).toHaveCount(0);
@@ -323,6 +328,7 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   expect(detailBackBox!.y).toBeGreaterThanOrEqual(12);
   expect(detailBackBox!.y).toBeLessThan(58);
   await expect(page.getByRole("heading", { name: "一休，是一处让声音带你回到当下的空间。" })).toBeVisible();
+  expect(await page.locator(".me-article p").first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("14px");
   await expect(page.getByText("生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。", { exact: true })).toBeVisible();
   await expect(page.getByText("认识自己", { exact: true })).toBeVisible();
   await expect(page.getByText("如水", { exact: true })).toBeVisible();

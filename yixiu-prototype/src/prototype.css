@@ -1477,7 +1477,7 @@ img[data-image-scene="tide"] {
 .setting-title strong {
   display: block;
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 400;
   letter-spacing: 0.08em;
 }
@@ -1486,13 +1486,13 @@ img[data-image-scene="tide"] {
   display: block;
   margin-top: 4px;
   color: var(--mist);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .empty-copy {
   margin: 15px 0 2px;
   color: rgba(207, 225, 227, 0.6);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -1530,7 +1530,7 @@ img[data-image-scene="tide"] {
   right: 8px;
   bottom: 8px;
   left: 8px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .recent-scenes {
@@ -1576,7 +1576,7 @@ img[data-image-scene="tide"] {
 .recent-scenes span {
   overflow: hidden;
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1585,14 +1585,14 @@ img[data-image-scene="tide"] {
   margin-top: 4px;
   overflow: hidden;
   color: var(--aqua);
-  font-size: 8px;
+  font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .setting-title span {
   color: var(--aqua);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .duration-options {
@@ -1608,7 +1608,7 @@ img[data-image-scene="tide"] {
   border: 1px solid rgba(163, 225, 230, 0.2) !important;
   border-radius: 13px;
   color: var(--mist) !important;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .duration-options button.is-active {
@@ -1664,14 +1664,14 @@ img[data-image-scene="tide"] {
 .me-sound-space-copy > small {
   color: var(--aqua);
   font-family: var(--serif);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.22em;
 }
 
 .me-sound-space-copy > strong {
   margin-top: 5px;
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 400;
   letter-spacing: 0.08em;
 }
@@ -1679,7 +1679,7 @@ img[data-image-scene="tide"] {
 .me-sound-space-copy > span {
   margin-top: 5px;
   color: #b6cbce;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .me-sound-space-copy > button {
@@ -1693,7 +1693,7 @@ img[data-image-scene="tide"] {
   border-radius: 999px;
   color: #03212b;
   background: var(--aqua-strong);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -1703,7 +1703,7 @@ img[data-image-scene="tide"] {
 }
 
 .setting-row {
-  min-height: 56px;
+  min-height: 60px;
   border-bottom: 1px solid rgba(164, 221, 225, 0.12);
   font-size: 15px;
 }
@@ -1717,13 +1717,13 @@ img[data-image-scene="tide"] {
 
 .setting-row > span strong {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 400;
 }
 
 .setting-row > span small {
   color: var(--mist);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .setting-row:last-child {
@@ -1798,13 +1798,13 @@ img[data-image-scene="tide"] {
 .me-app-download small {
   color: var(--aqua);
   font-family: var(--serif);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.2em;
 }
 
 .me-app-download strong {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 400;
   letter-spacing: 0.08em;
 }
@@ -1812,7 +1812,7 @@ img[data-image-scene="tide"] {
 .me-app-download em {
   overflow: hidden;
   color: var(--mist);
-  font-size: 11px;
+  font-size: 12px;
   font-style: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1823,7 +1823,7 @@ img[data-image-scene="tide"] {
   border: 1px solid rgba(191, 240, 243, 0.24);
   border-radius: 999px;
   color: #d9eff0;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -1869,7 +1869,7 @@ img[data-image-scene="tide"] {
 .trust-links button {
   display: flex;
   width: 100%;
-  min-height: 66px;
+  min-height: 70px;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
@@ -1891,13 +1891,13 @@ img[data-image-scene="tide"] {
 
 .trust-links button strong {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 400;
 }
 
 .trust-links button small {
   color: var(--mist);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .trust-links button > svg {
@@ -1922,7 +1922,7 @@ img[data-image-scene="tide"] {
 
 .me-works a {
   display: grid;
-  min-height: 108px;
+  min-height: 114px;
   align-items: center;
   padding: 15px 14px;
   border-bottom: 1px solid rgba(164, 221, 225, 0.1);
@@ -1945,7 +1945,7 @@ img[data-image-scene="tide"] {
   border-radius: 50%;
   color: var(--aqua);
   font-family: var(--serif);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
 }
 
@@ -1957,21 +1957,21 @@ img[data-image-scene="tide"] {
 
 .me-works strong {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 400;
 }
 
 .me-works em {
   margin-top: 3px;
   color: var(--aqua);
-  font-size: 10px;
+  font-size: 11px;
   font-style: normal;
 }
 
 .me-works small {
   margin-top: 7px;
   color: var(--mist);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.55;
 }
 
@@ -1983,7 +1983,7 @@ img[data-image-scene="tide"] {
   margin: 28px 0 0;
   color: rgba(194, 218, 220, 0.62);
   font-family: var(--serif);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   line-height: 1.7;
   text-align: center;
@@ -2090,7 +2090,7 @@ img[data-image-scene="tide"] {
 .me-article > small {
   color: var(--aqua);
   font-family: var(--serif);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.22em;
 }
 
@@ -2105,7 +2105,7 @@ img[data-image-scene="tide"] {
 .me-article p {
   margin: 18px 0 0;
   color: #b4c9cc;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.9;
 }
 
@@ -2129,7 +2129,7 @@ img[data-image-scene="tide"] {
   border: 1px solid rgba(143, 214, 220, 0.34);
   border-radius: 999px;
   color: var(--aqua-strong);
-  font-size: 11px;
+  font-size: 12px;
   text-decoration: none;
 }
 
@@ -2162,7 +2162,7 @@ img[data-image-scene="tide"] {
 .life-philosophy > p {
   margin: 12px 0 0;
   color: var(--mist);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.9;
 }
 
@@ -2194,7 +2194,7 @@ img[data-image-scene="tide"] {
 .life-path strong {
   color: var(--moon);
   font-family: var(--serif);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1.45;
 }
@@ -2221,7 +2221,7 @@ img[data-image-scene="tide"] {
 .life-principles article p {
   margin: 6px 0 0;
   color: var(--mist);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.7;
 }
 
@@ -2237,7 +2237,7 @@ img[data-image-scene="tide"] {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid rgba(143, 214, 220, 0.14);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .me-contact-list {
@@ -2258,7 +2258,7 @@ img[data-image-scene="tide"] {
   background: transparent;
   color: var(--moon);
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   text-align: left;
   text-decoration: none;
 }
