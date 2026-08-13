@@ -242,6 +242,50 @@ test("runs and pauses the one-minute water breathing practice", async ({ page })
   await expect(page.getByRole("button", { name: "继续呼吸" })).toBeVisible();
 });
 
+test("offers a persistent three-minute focus session with optional nature sound", async ({ page }) => {
+  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await page.getByRole("button", { name: "3 分钟" }).click();
+  await expect(page.getByText("03:00", { exact: true })).toBeVisible();
+
+  const natureSound = page.getByRole("switch", { name: "自然声" });
+  await natureSound.click();
+  await expect(natureSound).toHaveAttribute("aria-checked", "true");
+  await page.getByRole("button", { name: "开始 3 分钟" }).click();
+  await expect(page.getByRole("button", { name: "暂停呼吸" })).toBeVisible();
+
+  await page.reload();
+  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await expect(page.getByRole("button", { name: "3 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("switch", { name: "自然声" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("filters the sound library by use and serves lightweight thumbnails", async ({ page }) => {
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "浏览全部声音" }).click();
+
+  const library = page.getByRole("dialog", { name: "声音库" });
+  await library.getByRole("tab", { name: "睡眠" }).click();
+  await expect(library.locator(".scene-grid article")).toHaveCount(6);
+  await library.getByRole("tab", { name: "清晨" }).click();
+  await expect(library.locator(".scene-grid article")).toHaveCount(4);
+  await expect(library.locator(".scene-grid img").first()).toHaveAttribute("src", /\/assets\/yixiu\/thumbs\/.+\.jpg$/);
+});
+
+test("keeps recent listening in My and restores it after reload", async ({ page }) => {
+  await page.getByRole("button", { name: "播放" }).click();
+  await page.getByRole("button", { name: "下一种声音" }).click();
+  await page.getByRole("button", { name: "我的 ME" }).click();
+
+  const recent = page.locator(".recent-card");
+  await expect(recent.getByText("最近聆听", { exact: true })).toBeVisible();
+  await expect(recent.getByRole("button")).toHaveCount(2);
+  await expect(recent.getByRole("button").first()).toContainText("屋檐雨");
+
+  await page.reload();
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  await expect(page.locator(".recent-card").getByRole("button").first()).toContainText("屋檐雨");
+});
+
 test("updates and restores local settings", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();

@@ -5,6 +5,9 @@ struct FocusView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var status: BreathingStatus = .idle
     @State private var elapsed = 0
+    @State private var originalAudioWasPlaying = false
+
+    private var totalSeconds: Int { appState.focusDuration * 60 }
 
     private var phase: String {
         if status == .complete { return "complete" }
@@ -73,6 +76,9 @@ struct FocusView: View {
                     .foregroundStyle(YixiuTheme.mist)
                     .padding(.top, 8)
 
+                focusPreferences
+                    .padding(.top, 18)
+
                 ZStack {
                     Circle()
                         .stroke(YixiuTheme.aqua.opacity(0.28), lineWidth: 1)
@@ -89,14 +95,14 @@ struct FocusView: View {
                 .scaleEffect(phaseScale)
                 .animation(reduceMotion ? nil : .easeInOut(duration: phase == "exhale" ? 6 : 4), value: phase)
                 .frame(height: 230)
-                .padding(.top, 35)
+                .padding(.top, 12)
 
                 Text(phaseCopy)
                     .font(YixiuTheme.chineseDisplay(23))
                     .tracking(3)
                     .foregroundStyle(YixiuTheme.moon)
 
-                Text(format(remaining: max(60 - elapsed, 0)))
+                Text(format(remaining: max(totalSeconds - elapsed, 0)))
                     .font(.system(size: 12, weight: .regular))
                     .tracking(2)
                     .foregroundStyle(YixiuTheme.mist)
@@ -125,22 +131,74 @@ struct FocusView: View {
         .task(id: status) {
             guard status == .running else { return }
 
-            while status == .running, elapsed < 60, !Task.isCancelled {
+            while status == .running, elapsed < totalSeconds, !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
                 guard status == .running, !Task.isCancelled else { return }
 
                 elapsed += 1
-                if elapsed >= 60 {
+                if elapsed >= totalSeconds {
                     status = .complete
+                    restoreOriginalPlayback()
                     return
                 }
             }
         }
         .onDisappear {
-            if status == .running {
+            if status == .running || status == .paused {
+                restoreOriginalPlayback()
                 status = .paused
             }
         }
+        .sensoryFeedback(.selection, trigger: phase)
+    }
+
+    private var focusPreferences: some View {
+        HStack(spacing: 8) {
+            HStack(spacing: 3) {
+                ForEach([1, 3], id: \.self) { minutes in
+                    Button {
+                        guard status == .idle || status == .complete else { return }
+                        appState.focusDuration = minutes
+                        elapsed = 0
+                    } label: {
+                        Text("\(minutes) \(appState.language == .zh ? "分钟" : "MIN")")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(appState.focusDuration == minutes ? YixiuTheme.deepWater : YixiuTheme.mist)
+                            .frame(width: 58, height: 34)
+                            .background(
+                                Capsule().fill(appState.focusDuration == minutes ? YixiuTheme.aquaStrong : .clear)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(3)
+            .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+            .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+
+            Button {
+                guard status == .idle || status == .complete else { return }
+                appState.focusSoundEnabled.toggle()
+            } label: {
+                Label(
+                    appState.language.text(zh: "自然声", en: "Nature sound"),
+                    systemImage: "water.waves"
+                )
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(appState.focusSoundEnabled ? YixiuTheme.aquaStrong : YixiuTheme.mist)
+                .padding(.horizontal, 12)
+                .frame(height: 40)
+                .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                .overlay(
+                    Capsule().stroke(
+                        appState.focusSoundEnabled ? YixiuTheme.aqua.opacity(0.7) : YixiuTheme.hairline,
+                        lineWidth: 0.8
+                    )
+                )
+            }
+            .buttonStyle(.plain)
+        }
+        .opacity(status == .running || status == .paused ? 0.58 : 1)
     }
 
     @ViewBuilder
@@ -148,12 +206,14 @@ struct FocusView: View {
         switch status {
         case .idle, .complete:
             Button {
-                elapsed = 0
-                status = .running
+                beginSession()
             } label: {
                 Text(status == .complete
                      ? appState.language.text(zh: "再来一次", en: "Begin again")
-                     : appState.language.text(zh: "开始 1 分钟", en: "Start 1 minute"))
+                     : appState.language.text(
+                        zh: "开始 \(appState.focusDuration) 分钟",
+                        en: "Start \(appState.focusDuration) minute\(appState.focusDuration == 1 ? "" : "s")"
+                     ))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(YixiuTheme.deepWater)
                     .frame(width: 220, height: 52)
@@ -179,8 +239,7 @@ struct FocusView: View {
                 }
 
                 Button {
-                    elapsed = 0
-                    status = .idle
+                    resetSession()
                 } label: {
                     Text(appState.language.text(zh: "重新开始", en: "Restart"))
                         .frame(width: 116, height: 48)
@@ -196,5 +255,30 @@ struct FocusView: View {
 
     private func format(remaining: Int) -> String {
         String(format: "%02d:%02d", remaining / 60, remaining % 60)
+    }
+
+    private func beginSession() {
+        originalAudioWasPlaying = appState.isPlaying
+        if appState.focusSoundEnabled {
+            if !appState.isPlaying { appState.play() }
+        } else if appState.isPlaying {
+            appState.pause()
+        }
+        elapsed = 0
+        status = .running
+    }
+
+    private func resetSession() {
+        restoreOriginalPlayback()
+        elapsed = 0
+        status = .idle
+    }
+
+    private func restoreOriginalPlayback() {
+        if originalAudioWasPlaying, !appState.isPlaying {
+            appState.play()
+        } else if !originalAudioWasPlaying, appState.isPlaying {
+            appState.pause()
+        }
     }
 }

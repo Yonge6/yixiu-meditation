@@ -18,6 +18,15 @@ final class AppState: ObservableObject {
     @Published var favorites: [MeditationScene] = [] {
         didSet { defaults.set(favorites.map(\.rawValue), forKey: "favorites") }
     }
+    @Published var recentScenes: [MeditationScene] = [] {
+        didSet { defaults.set(recentScenes.map(\.rawValue), forKey: "recentScenes") }
+    }
+    @Published var focusDuration = 1 {
+        didSet { defaults.set(focusDuration, forKey: "focusDuration") }
+    }
+    @Published var focusSoundEnabled = false {
+        didSet { defaults.set(focusSoundEnabled, forKey: "focusSoundEnabled") }
+    }
     @Published var endBell = false {
         didSet { defaults.set(endBell, forKey: "endBell") }
     }
@@ -39,6 +48,7 @@ final class AppState: ObservableObject {
     private let audio = AmbientAudioEngine()
     private let defaults = UserDefaults.standard
     private var timer: Timer?
+    private var hasStartedPlayback = false
 
     init() {
         if
@@ -63,6 +73,15 @@ final class AppState: ObservableObject {
 
         favorites = (defaults.stringArray(forKey: "favorites") ?? [])
             .compactMap(MeditationScene.init(rawValue:))
+        recentScenes = (defaults.stringArray(forKey: "recentScenes") ?? [])
+            .compactMap(MeditationScene.init(rawValue:))
+        let savedFocusDuration = defaults.integer(forKey: "focusDuration")
+        if [1, 3].contains(savedFocusDuration) {
+            focusDuration = savedFocusDuration
+        }
+        if defaults.object(forKey: "focusSoundEnabled") != nil {
+            focusSoundEnabled = defaults.bool(forKey: "focusSoundEnabled")
+        }
         endBell = defaults.bool(forKey: "endBell")
         if defaults.object(forKey: "backgroundPlayback") != nil {
             backgroundPlayback = defaults.bool(forKey: "backgroundPlayback")
@@ -75,6 +94,18 @@ final class AppState: ObservableObject {
             Task { @MainActor in
                 self?.pause()
             }
+        }
+        audio.onPlay = { [weak self] in
+            Task { @MainActor in self?.play() }
+        }
+        audio.onPause = { [weak self] in
+            Task { @MainActor in self?.pause() }
+        }
+        audio.onNext = { [weak self] in
+            Task { @MainActor in self?.moveScene(1) }
+        }
+        audio.onPrevious = { [weak self] in
+            Task { @MainActor in self?.moveScene(-1) }
         }
     }
 
@@ -109,8 +140,11 @@ final class AppState: ObservableObject {
             try audio.play(scene: scene, volume: Float(volume) * fadeFactor)
             audioError = nil
             sessionCompleted = false
+            hasStartedPlayback = true
+            recordRecentScene(scene)
             isPlaying = true
             startTimer()
+            syncNowPlaying()
         } catch {
             audioError = language.text(
                 zh: "声音暂时无法播放，请检查音量或输出设备。",
@@ -125,16 +159,20 @@ final class AppState: ObservableObject {
         timer?.invalidate()
         timer = nil
         isPlaying = false
+        syncNowPlaying()
     }
 
     func selectScene(_ newScene: MeditationScene, autoplay: Bool = true) {
         scene = newScene
+        recordRecentScene(newScene)
         if isPlaying || autoplay {
             do {
                 try audio.play(scene: newScene, volume: Float(volume) * fadeFactor)
                 audioError = nil
                 isPlaying = true
                 startTimer()
+                hasStartedPlayback = true
+                syncNowPlaying()
             } catch {
                 pause()
                 audioError = language.text(zh: "该声音暂时无法播放。", en: "This sound could not be played.")
@@ -160,6 +198,7 @@ final class AppState: ObservableObject {
         if isPlaying {
             startTimer()
         }
+        syncNowPlaying()
     }
 
     func toggleFavorite(_ target: MeditationScene? = nil) {
@@ -176,6 +215,10 @@ final class AppState: ObservableObject {
         remainingSeconds = duration == 0 ? 0 : duration * 60
     }
 
+    func recordRecentScene(_ target: MeditationScene) {
+        recentScenes = [target] + recentScenes.filter { $0 != target }.prefix(3)
+    }
+
     private func startTimer() {
         timer?.invalidate()
         timer = nil
@@ -187,6 +230,7 @@ final class AppState: ObservableObject {
                 if self.remainingSeconds > 1 {
                     self.remainingSeconds -= 1
                     self.audio.setVolume(Float(self.volume) * self.fadeFactor)
+                    self.syncNowPlaying()
                 } else {
                     self.remainingSeconds = 0
                     self.pause()
@@ -194,5 +238,18 @@ final class AppState: ObservableObject {
                 }
             }
         }
+    }
+
+    private func syncNowPlaying() {
+        guard hasStartedPlayback else { return }
+        audio.updateNowPlaying(
+            scene: scene,
+            language: language,
+            isPlaying: isPlaying,
+            remainingSeconds: remainingSeconds,
+            durationMinutes: duration,
+            canMovePrevious: canMoveScene(-1),
+            canMoveNext: canMoveScene(1)
+        )
     }
 }

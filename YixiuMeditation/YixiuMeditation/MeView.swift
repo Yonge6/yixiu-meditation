@@ -88,6 +88,11 @@ struct MeView: View {
                 soundSpaceCard
                     .padding(.top, 20)
 
+                if !appState.recentScenes.isEmpty {
+                    recentScenesCard
+                        .padding(.top, 12)
+                }
+
                 favoritesCard
                     .padding(.top, 12)
 
@@ -222,6 +227,71 @@ struct MeView: View {
                             .buttonStyle(.plain)
                         }
                     }
+                }
+            }
+        }
+        .padding(17)
+        .yixiuPanel()
+    }
+
+    private var recentScenesCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(language.text(zh: "最近聆听", en: "Recently played"))
+                        .font(YixiuTheme.chineseDisplay(17))
+                    Text(language.text(zh: "一点继续，不必重新寻找", en: "Continue with one tap"))
+                        .font(.system(size: 10))
+                        .foregroundStyle(YixiuTheme.mist)
+                }
+                Spacer()
+                Image(systemName: "clock")
+                    .foregroundStyle(YixiuTheme.mist)
+            }
+
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 9) {
+                ForEach(appState.recentScenes) { scene in
+                    Button {
+                        appState.selectScene(scene)
+                        appState.activeTab = .listen
+                    } label: {
+                        ZStack(alignment: .bottomLeading) {
+                            Image(scene.assetName)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 78)
+                                .clipped()
+
+                            LinearGradient(
+                                colors: [.clear, YixiuTheme.deepWater.opacity(0.94)],
+                                startPoint: .center,
+                                endPoint: .bottom
+                            )
+
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(language.text(zh: scene.zhName, en: scene.enName))
+                                    .font(YixiuTheme.chineseDisplay(13))
+                                    .lineLimit(1)
+                                Text(language.text(zh: scene.useZh, en: scene.useEn))
+                                    .font(.system(size: 8))
+                                    .foregroundStyle(YixiuTheme.aqua)
+                                    .lineLimit(1)
+                            }
+                            .foregroundStyle(YixiuTheme.moon)
+                            .padding(11)
+                        }
+                        .frame(height: 78)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(YixiuTheme.hairline, lineWidth: 0.8)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(language.text(
+                        zh: "继续聆听\(scene.zhName)",
+                        en: "Continue listening to \(scene.enName)"
+                    ))
                 }
             }
         }

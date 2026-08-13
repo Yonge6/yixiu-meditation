@@ -39,7 +39,9 @@ type SceneId =
   | "snow"
   | "tide";
 type DurationOption = 15 | 30 | 60 | 0;
+type FocusDuration = 1 | 3;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
+type SceneCategory = "all" | "sleep" | "focus" | "morning" | "relax";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
 type DrawerView = "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
 type MeView = "home" | "about" | "privacy" | "sources" | "support";
@@ -287,7 +289,32 @@ const sceneOrder: SceneId[] = [
   "tide",
 ];
 const durations: DurationOption[] = [15, 30, 60, 0];
+const focusDurations: FocusDuration[] = [1, 3];
+const sceneCategories: SceneCategory[] = ["all", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
+
+const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
+  sceneOrder.map((sceneId) => [sceneId, `/assets/yixiu/thumbs/${sceneId}.jpg`]),
+) as Record<SceneId, string>;
+
+const scenesByCategory: Record<SceneCategory, SceneId[]> = {
+  all: sceneOrder,
+  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide"],
+  focus: ["rain", "birds", "stream", "bamboo", "falls", "underwater", "snow"],
+  morning: ["spring", "birds", "lake", "valley"],
+  relax: ["ocean", "spring", "lake", "valley", "falls", "tide"],
+};
+
+function categoryLabel(category: SceneCategory, language: Language) {
+  const labels: Record<SceneCategory, { zh: string; en: string }> = {
+    all: { zh: "全部", en: "All" },
+    sleep: { zh: "睡眠", en: "Sleep" },
+    focus: { zh: "专注", en: "Focus" },
+    morning: { zh: "清晨", en: "Morning" },
+    relax: { zh: "放松", en: "Relax" },
+  };
+  return labels[category][language];
+}
 
 const wisdoms = [
   { zh: "水不争先，却从未停止。", en: "Water does not hurry, yet it keeps moving." },
@@ -337,29 +364,78 @@ function stopAudioGraph(graph: AudioGraph | null) {
 
 function useAmbientSound(sceneId: SceneId, isPlaying: boolean, volume: number, fadeFactor: number) {
   const graphRef = useRef<AudioGraph | null>(null);
+  const fadingGraphRef = useRef<AudioGraph | null>(null);
+  const fadeFrameRef = useRef<number | null>(null);
+  const fadeGenerationRef = useRef(0);
+  const fadeActiveRef = useRef(false);
 
   useEffect(() => {
-    stopAudioGraph(graphRef.current);
-    graphRef.current = null;
-    if (!isPlaying) return;
+    fadeGenerationRef.current += 1;
+    const generation = fadeGenerationRef.current;
+    if (fadeFrameRef.current !== null) {
+      window.cancelAnimationFrame(fadeFrameRef.current);
+      fadeFrameRef.current = null;
+    }
+    fadeActiveRef.current = false;
+    stopAudioGraph(fadingGraphRef.current);
+    fadingGraphRef.current = null;
+
+    if (!isPlaying) {
+      stopAudioGraph(graphRef.current);
+      graphRef.current = null;
+      return;
+    }
+
     const scene = scenes[sceneId];
+    const previousGraph = graphRef.current;
     const audio = new Audio(scene.audio);
     audio.loop = true;
     audio.preload = "auto";
     audio.playbackRate = scene.playbackRate ?? 1;
-    audio.volume = Math.min(1, (volume / 100) * Math.min(scene.level * 11, 1) * fadeFactor);
+    const targetVolume = Math.min(1, (volume / 100) * Math.min(scene.level * 11, 1) * fadeFactor);
+    audio.volume = previousGraph ? 0 : targetVolume;
+    fadeActiveRef.current = previousGraph !== null;
+    fadingGraphRef.current = previousGraph;
     graphRef.current = { audio };
-    void audio.play().catch(() => undefined);
-
-    return () => {
-      stopAudioGraph(graphRef.current);
-      graphRef.current = null;
-    };
+    void audio.play().then(() => {
+      if (!previousGraph || generation !== fadeGenerationRef.current) return;
+      fadeActiveRef.current = true;
+      const startedAt = performance.now();
+      const previousStartVolume = previousGraph.audio.volume;
+      const animate = (now: number) => {
+        if (generation !== fadeGenerationRef.current) return;
+        const progress = Math.max(0, Math.min((now - startedAt) / 600, 1));
+        audio.volume = targetVolume * progress;
+        previousGraph.audio.volume = previousStartVolume * (1 - progress);
+        if (progress < 1) {
+          fadeFrameRef.current = window.requestAnimationFrame(animate);
+        } else {
+          stopAudioGraph(previousGraph);
+          if (fadingGraphRef.current === previousGraph) fadingGraphRef.current = null;
+          fadeFrameRef.current = null;
+          fadeActiveRef.current = false;
+        }
+      };
+      fadeFrameRef.current = window.requestAnimationFrame(animate);
+    }).catch(() => {
+      if (graphRef.current?.audio === audio) graphRef.current = previousGraph;
+      fadeActiveRef.current = false;
+      stopAudioGraph({ audio });
+    });
   }, [isPlaying, sceneId]);
+
+  useEffect(() => () => {
+    fadeGenerationRef.current += 1;
+    if (fadeFrameRef.current !== null) window.cancelAnimationFrame(fadeFrameRef.current);
+    stopAudioGraph(graphRef.current);
+    stopAudioGraph(fadingGraphRef.current);
+    graphRef.current = null;
+    fadingGraphRef.current = null;
+  }, []);
 
   useEffect(() => {
     const graph = graphRef.current;
-    if (!graph) return;
+    if (!graph || fadeActiveRef.current) return;
     const scene = scenes[sceneId];
     graph.audio.volume = Math.min(1, (volume / 100) * Math.min(scene.level * 11, 1) * fadeFactor);
   }, [fadeFactor, sceneId, volume]);
@@ -398,11 +474,15 @@ export default function Prototype() {
   const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene());
   const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30);
   const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", []);
+  const [recentScenes, setRecentScenes] = useStoredState<SceneId[]>("yixiu.recentScenes", []);
+  const [focusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1);
+  const [focusSoundEnabled, setFocusSoundEnabled] = useStoredState<boolean>("yixiu.focusSoundEnabled", false);
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
   const [backgroundPlayback, setBackgroundPlayback] = useStoredState<boolean>("yixiu.backgroundPlayback", true);
   const [activeTab, setActiveTab] = useState<RootTab>("sounds");
   const [meView, setMeView] = useState<MeView>("home");
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [sceneCategory, setSceneCategory] = useState<SceneCategory>("all");
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(72);
   const [remainingSeconds, setRemainingSeconds] = useState(duration === 0 ? 0 : duration * 60);
@@ -425,6 +505,7 @@ export default function Prototype() {
   const drawerRef = useRef<HTMLElement>(null);
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const breathingOriginalPlaybackRef = useRef(false);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [swipeProgress, setSwipeProgress] = useState(0);
   const [swipeSettling, setSwipeSettling] = useState(false);
@@ -438,6 +519,8 @@ export default function Prototype() {
   const swipePreviewScene = swipeOffset < 0 ? nextScene : previousScene;
   const isFavorite = favorites.includes(active.id);
   const fadeFactor = duration === 0 || remainingSeconds > 20 ? 1 : Math.max(remainingSeconds / 20, 0);
+  const breathingTotalSeconds = focusDuration * 60;
+  const filteredSceneOrder = scenesByCategory[sceneCategory];
 
   useAmbientSound(active.id, isPlaying, volume, fadeFactor);
 
@@ -447,6 +530,15 @@ export default function Prototype() {
     url.searchParams.set("lang", language);
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   }, [active.id, language]);
+
+  useEffect(() => {
+    [previousScene, active, nextScene].forEach((scene) => {
+      if (!scene) return;
+      const image = new Image();
+      image.decoding = "async";
+      image.src = scene.image;
+    });
+  }, [active, nextScene, previousScene]);
 
   useEffect(() => {
     setRemainingSeconds(duration === 0 ? 0 : duration * 60);
@@ -477,19 +569,21 @@ export default function Prototype() {
     if (breathingStatus !== "running") return;
     const interval = window.setInterval(() => {
       setBreathingElapsed((current) => {
-        if (current >= 59) {
+        if (current >= breathingTotalSeconds - 1) {
           setBreathingStatus("complete");
+          setIsPlaying(breathingOriginalPlaybackRef.current);
           window.clearInterval(interval);
-          return 60;
+          return breathingTotalSeconds;
         }
         return current + 1;
       });
     }, 1000);
     return () => window.clearInterval(interval);
-  }, [breathingStatus]);
+  }, [breathingStatus, breathingTotalSeconds]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
+      setIsPlaying(breathingOriginalPlaybackRef.current);
       setBreathingStatus("paused");
     }
   }, [activeTab, breathingStatus]);
@@ -551,10 +645,16 @@ export default function Prototype() {
     [active, language],
   );
 
+  const recordRecentScene = (sceneId: SceneId) => {
+    setRecentScenes((current) => [sceneId, ...current.filter((item) => item !== sceneId)].slice(0, 4));
+  };
+
   const moveScene = (direction: -1 | 1) => {
     const nextIndex = activeIndex + direction;
     if (nextIndex < 0 || nextIndex >= sceneOrder.length) return;
-    setActiveScene(sceneOrder[nextIndex]);
+    const sceneId = sceneOrder[nextIndex];
+    setActiveScene(sceneId);
+    recordRecentScene(sceneId);
   };
 
   const shareScene = async () => {
@@ -736,9 +836,51 @@ export default function Prototype() {
 
   const selectScene = (sceneId: SceneId, play = true) => {
     setActiveScene(sceneId);
+    recordRecentScene(sceneId);
     setActiveTab("sounds");
     setLibraryOpen(false);
     if (play) setIsPlaying(true);
+  };
+
+  useEffect(() => {
+    if (!("mediaSession" in navigator)) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: language === "zh" ? active.zh : active.en,
+      artist: "一休 · YIXIU",
+      album: language === "zh" ? "如水而行" : "Be Water, My Friend.",
+      artwork: [{ src: new URL(active.image, window.location.origin).toString(), sizes: "1200x1600", type: "image/jpeg" }],
+    });
+    navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+
+    const actions: Array<[MediaSessionAction, MediaSessionActionHandler | null]> = [
+      ["play", () => { recordRecentScene(active.id); setIsPlaying(true); }],
+      ["pause", () => setIsPlaying(false)],
+      ["previoustrack", previousScene ? () => moveScene(-1) : null],
+      ["nexttrack", nextScene ? () => moveScene(1) : null],
+    ];
+    actions.forEach(([action, handler]) => {
+      try { navigator.mediaSession.setActionHandler(action, handler); } catch { /* unsupported action */ }
+    });
+
+    return () => {
+      actions.forEach(([action]) => {
+        try { navigator.mediaSession.setActionHandler(action, null); } catch { /* unsupported action */ }
+      });
+    };
+  }, [active, isPlaying, language, nextScene, previousScene]);
+
+  const beginBreathing = () => {
+    breathingOriginalPlaybackRef.current = isPlaying;
+    setIsPlaying(focusSoundEnabled);
+    setBreathingElapsed(0);
+    setBreathingStatus("running");
+  };
+
+  const resetBreathing = () => {
+    setIsPlaying(breathingOriginalPlaybackRef.current);
+    setBreathingElapsed(0);
+    setBreathingStatus("idle");
   };
 
   const breathingCycleSecond = breathingElapsed % 12;
@@ -1043,7 +1185,10 @@ export default function Prototype() {
             <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "上一种声音" : "Previous sound"} disabled={!previousScene} onClick={() => moveScene(-1)}>
               <TrackPreviousIcon />
             </button>
-            <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} onClick={() => setIsPlaying((current) => !current)}>
+            <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} onClick={() => setIsPlaying((current) => {
+              if (!current) recordRecentScene(active.id);
+              return !current;
+            })}>
               {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
             <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "下一种声音" : "Next sound"} disabled={!nextScene} onClick={() => moveScene(1)}>
@@ -1074,6 +1219,24 @@ export default function Prototype() {
           <h1>{language === "zh" ? "水之呼吸" : "Water Breathing"}</h1>
           <p className="section-intro">{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</p>
 
+          <div className="focus-preferences" aria-label={language === "zh" ? "静心设置" : "Focus settings"}>
+            <div className="focus-duration-options">
+              {focusDurations.map((minutes) => (
+                <button key={minutes} type="button" className={focusDuration === minutes ? "is-active" : ""} aria-pressed={focusDuration === minutes} onClick={() => {
+                  if (breathingStatus === "running" || breathingStatus === "paused") return;
+                  setFocusDuration(minutes);
+                  setBreathingElapsed(0);
+                }}>
+                  {minutes} {language === "zh" ? "分钟" : "MIN"}
+                </button>
+              ))}
+            </div>
+            <button className={`focus-sound-toggle ${focusSoundEnabled ? "is-active" : ""}`} type="button" role="switch" aria-checked={focusSoundEnabled} onClick={() => setFocusSoundEnabled((current) => !current)}>
+              <WaterWavesIcon />
+              <span>{language === "zh" ? "自然声" : "Nature sound"}</span>
+            </button>
+          </div>
+
           <div className={`breathing-orbit phase-${breathingPhase} status-${breathingStatus}`} aria-hidden="true">
             <span className="ripple ripple-one" />
             <span className="ripple ripple-two" />
@@ -1082,17 +1245,14 @@ export default function Prototype() {
 
           <div className="breathing-readout" aria-live="polite">
             <strong>{breathingPhaseCopy}</strong>
-            <span>{formatSeconds(Math.max(60 - breathingElapsed, 0))}</span>
+            <span>{formatSeconds(Math.max(breathingTotalSeconds - breathingElapsed, 0))}</span>
           </div>
 
           {breathingStatus === "idle" || breathingStatus === "complete" ? (
-            <button className="focus-primary" type="button" onClick={() => {
-              setBreathingElapsed(0);
-              setBreathingStatus("running");
-            }}>
+            <button className="focus-primary" type="button" onClick={beginBreathing}>
               {breathingStatus === "complete"
                 ? (language === "zh" ? "再来一次" : "Begin again")
-                : (language === "zh" ? "开始 1 分钟" : "Start 1 minute")}
+                : (language === "zh" ? `开始 ${focusDuration} 分钟` : `Start ${focusDuration} minute${focusDuration === 1 ? "" : "s"}`)}
             </button>
           ) : (
             <div className="focus-actions">
@@ -1100,10 +1260,7 @@ export default function Prototype() {
                 {breathingStatus === "running" ? <PauseIcon /> : <PlayIcon />}
                 <span>{breathingStatus === "running" ? (language === "zh" ? "暂停" : "Pause") : (language === "zh" ? "继续" : "Continue")}</span>
               </button>
-              <button type="button" onClick={() => {
-                setBreathingElapsed(0);
-                setBreathingStatus("idle");
-              }}>
+              <button type="button" onClick={resetBreathing}>
                 <span>{language === "zh" ? "重新开始" : "Restart"}</span>
               </button>
             </div>
@@ -1153,6 +1310,27 @@ export default function Prototype() {
                     <p className="empty-copy">{language === "zh" ? "在声音页点亮心形，常听的自然声会留在这里。" : "Tap the heart while listening and your favorite sounds will stay here."}</p>
                   )}
                 </section>
+
+                {recentScenes.length ? (
+                  <section className="me-card recent-card">
+                    <div className="card-heading">
+                      <div>
+                        <strong>{language === "zh" ? "最近聆听" : "Recently played"}</strong>
+                        <small>{language === "zh" ? "一点继续，不必重新寻找" : "Continue with one tap"}</small>
+                      </div>
+                      <ClockIcon />
+                    </div>
+                    <div className="recent-scenes">
+                      {recentScenes.map((sceneId) => (
+                        <button key={sceneId} type="button" onClick={() => selectScene(sceneId)}>
+                          <img src={sceneThumbs[sceneId]} data-image-scene={sceneId} alt="" />
+                          <span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span>
+                          <small>{language === "zh" ? scenes[sceneId].useZh : scenes[sceneId].useEn}</small>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
 
                 <section className="me-card">
                   <div className="setting-title">
@@ -1287,10 +1465,17 @@ export default function Prototype() {
           <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
             <div className="sheet-handle" />
             <header><div><small>{language === "zh" ? "十四种真实自然录音" : "14 REAL NATURE SOUNDS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
+            <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
+              {sceneCategories.map((category) => (
+                <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
+                  {categoryLabel(category, language)}
+                </button>
+              ))}
+            </div>
             <div className="scene-grid">
-              {sceneOrder.map((sceneId) => {
+              {filteredSceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={scene.image} data-image-scene={scene.id} alt="" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
+                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
               })}
             </div>
           </section>

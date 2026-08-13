@@ -171,6 +171,21 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    func matches(_ category: SceneCategory) -> Bool {
+        switch category {
+        case .all:
+            true
+        case .sleep:
+            [.ocean, .rain, .window, .thunder, .snow, .tide].contains(self)
+        case .focus:
+            [.rain, .birds, .stream, .bamboo, .falls, .underwater, .snow].contains(self)
+        case .morning:
+            [.spring, .birds, .lake, .valley].contains(self)
+        case .relax:
+            [.ocean, .spring, .lake, .valley, .falls, .tide].contains(self)
+        }
+    }
+
     func shareURL(language: AppLanguage) -> URL {
         var components = URLComponents(string: "https://yixiu.wonderelian.com/")!
         components.queryItems = [
@@ -192,6 +207,26 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
             zh: "此刻，我在一休聆听「\(zhName)」。真实自己，流动人生。",
             en: "I am listening to \(enName) in Yixiu. True to yourself, flow with life."
         )
+    }
+}
+
+enum SceneCategory: String, CaseIterable, Identifiable {
+    case all
+    case sleep
+    case focus
+    case morning
+    case relax
+
+    var id: String { rawValue }
+
+    func title(language: AppLanguage) -> String {
+        switch self {
+        case .all: language.text(zh: "全部", en: "All")
+        case .sleep: language.text(zh: "睡眠", en: "Sleep")
+        case .focus: language.text(zh: "专注", en: "Focus")
+        case .morning: language.text(zh: "清晨", en: "Morning")
+        case .relax: language.text(zh: "放松", en: "Relax")
+        }
     }
 }
 

@@ -441,15 +441,46 @@ struct ListenView: View {
 struct SoundLibraryView: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.dismiss) private var dismiss
+    @State private var selectedCategory: SceneCategory = .all
 
     private var language: AppLanguage { appState.language }
+    private var filteredScenes: [MeditationScene] {
+        MeditationScene.allCases.filter { $0.matches(selectedCategory) }
+    }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 11) {
-                    ForEach(MeditationScene.allCases) { scene in
-                        sceneCard(scene)
+                VStack(spacing: 14) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 7) {
+                            ForEach(SceneCategory.allCases) { category in
+                                Button {
+                                    selectedCategory = category
+                                } label: {
+                                    Text(category.title(language: language))
+                                        .font(.system(size: 11, weight: .medium))
+                                        .foregroundStyle(selectedCategory == category ? YixiuTheme.deepWater : YixiuTheme.mist)
+                                        .padding(.horizontal, 15)
+                                        .frame(height: 34)
+                                        .background(
+                                            Capsule().fill(selectedCategory == category ? YixiuTheme.aquaStrong : YixiuTheme.deepWaterSoft.opacity(0.56))
+                                        )
+                                        .overlay(
+                                            Capsule().stroke(selectedCategory == category ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
+                            }
+                        }
+                        .padding(.horizontal, 1)
+                    }
+
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 11) {
+                        ForEach(filteredScenes) { scene in
+                            sceneCard(scene)
+                        }
                     }
                 }
                 .padding(18)

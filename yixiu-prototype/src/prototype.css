@@ -1230,11 +1230,67 @@ img[data-image-scene="tide"] {
   letter-spacing: 0.16em;
 }
 
+.focus-preferences {
+  display: flex;
+  width: min(100%, 286px);
+  min-height: 38px;
+  margin: 20px auto 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.focus-duration-options {
+  display: flex;
+  padding: 3px;
+  border: 1px solid rgba(163, 225, 230, 0.2);
+  border-radius: 999px;
+  background: rgba(3, 29, 38, 0.56);
+}
+
+.focus-duration-options button,
+.focus-sound-toggle {
+  min-height: 34px;
+  border-radius: 999px !important;
+  color: var(--mist) !important;
+  font-size: 10px;
+}
+
+.focus-duration-options button {
+  min-width: 58px;
+  padding: 0 10px;
+}
+
+.focus-duration-options button.is-active {
+  color: var(--deep-water) !important;
+  background: var(--aqua-strong) !important;
+}
+
+.focus-sound-toggle {
+  display: inline-flex;
+  padding: 0 12px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(163, 225, 230, 0.24) !important;
+  background: rgba(3, 29, 38, 0.56) !important;
+}
+
+.focus-sound-toggle.is-active {
+  border-color: rgba(174, 239, 242, 0.62) !important;
+  color: var(--aqua-strong) !important;
+  background: rgba(61, 135, 143, 0.28) !important;
+}
+
+.focus-sound-toggle svg {
+  width: 18px;
+  height: 14px;
+}
+
 .breathing-orbit {
   position: relative;
   width: 220px;
   height: 220px;
-  margin: 50px auto 0;
+  margin: 24px auto 0;
 }
 
 .breathing-orbit .ripple,
@@ -1475,6 +1531,63 @@ img[data-image-scene="tide"] {
   bottom: 8px;
   left: 8px;
   font-size: 12px;
+}
+
+.recent-scenes {
+  display: grid;
+  margin-top: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.recent-scenes button {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 76px;
+  overflow: hidden;
+  padding: 12px;
+  align-content: end;
+  border: 1px solid rgba(163, 225, 230, 0.16) !important;
+  border-radius: 14px;
+  color: var(--moon);
+  text-align: left;
+  isolation: isolate;
+}
+
+.recent-scenes img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.5) saturate(0.72);
+}
+
+.recent-scenes button::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, rgba(1, 20, 28, 0.9));
+  content: "";
+}
+
+.recent-scenes span {
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-scenes small {
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--aqua);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .setting-title span {
@@ -2300,10 +2413,40 @@ img[data-image-scene="tide"] {
   letter-spacing: 0.08em;
 }
 
+.scene-category-tabs {
+  display: flex;
+  margin: 13px -2px 0;
+  overflow-x: auto;
+  gap: 7px;
+  scrollbar-width: none;
+}
+
+.scene-category-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.scene-category-tabs button {
+  min-width: 54px;
+  min-height: 32px;
+  flex: 0 0 auto;
+  padding: 0 13px;
+  border: 1px solid rgba(159, 222, 226, 0.18) !important;
+  border-radius: 999px !important;
+  color: var(--mist) !important;
+  background: rgba(4, 35, 44, 0.52) !important;
+  font-size: 10px;
+}
+
+.scene-category-tabs button.is-active {
+  border-color: var(--aqua-strong) !important;
+  color: var(--deep-water) !important;
+  background: var(--aqua-strong) !important;
+}
+
 .scene-grid {
   display: grid;
-  height: calc(100% - 74px);
-  margin-top: 16px;
+  height: calc(100% - 119px);
+  margin-top: 12px;
   overflow-y: auto;
   padding-bottom: 20px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
