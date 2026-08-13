@@ -300,7 +300,11 @@ test("updates and restores local settings", async ({ page }) => {
 
 test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
-  await expect(page.getByRole("link", { name: /不二.*认识自己/ })).toHaveAttribute("href", "https://human-design.wonderelian.com/");
+  const groupLabels = page.locator(".me-group-label");
+  await expect(groupLabels).toHaveCount(2);
+  expect(await groupLabels.first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("14px");
+  const humanDesignLink = page.getByRole("link", { name: /不二 认识自己.*人生使用说明书/ });
+  await expect(humanDesignLink).toHaveAttribute("href", "https://human-design.wonderelian.com/");
   await expect(page.getByText(/YIXIU 2\.0/)).toHaveCount(0);
   const downloadLink = page.getByRole("link", { name: /下载一休 App/ });
   await expect(downloadLink).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");

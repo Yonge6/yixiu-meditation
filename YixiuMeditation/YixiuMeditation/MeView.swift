@@ -467,8 +467,8 @@ struct MeView: View {
             Divider().overlay(YixiuTheme.hairline)
             workLink(
                 index: language.text(zh: "四", en: "04"),
-                title: language.text(zh: "不二", en: "Not Two"),
-                tagline: language.text(zh: "认识自己", en: "Know yourself"),
+                title: language.text(zh: "不二 认识自己", en: "Not Two · Know Yourself"),
+                tagline: language.text(zh: "人生使用说明书", en: "A User Manual for Life"),
                 description: language.text(zh: "看见自己的能量结构，理解真实而独特的自己。", en: "See your energy design and understand your authentic, individual self."),
                 url: "https://human-design.wonderelian.com/"
             )
@@ -670,7 +670,7 @@ struct MeView: View {
 
     private func sectionLabel(_ title: String) -> some View {
         Text(title)
-            .yixiuSecondary(8)
+            .yixiuSecondary(11)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.bottom, 10)
     }
