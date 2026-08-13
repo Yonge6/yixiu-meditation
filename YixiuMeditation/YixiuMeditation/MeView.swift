@@ -15,6 +15,7 @@ struct MeView: View {
     @State private var page: MePage = .home
     @State private var libraryOpen = false
     @State private var videoChannelOpen = false
+    @GestureState private var detailBackOffset: CGFloat = 0
 
     private var language: AppLanguage { appState.language }
 
@@ -23,11 +24,15 @@ struct MeView: View {
             ZStack {
                 background
 
-                if page == .home {
-                    home(geometry: geometry)
-                        .transition(.opacity)
-                } else {
+                home(geometry: geometry)
+                    .opacity(page == .home ? 1 : 0)
+                    .allowsHitTesting(page == .home)
+                    .accessibilityHidden(page != .home)
+
+                if page != .home {
                     detail(geometry: geometry)
+                        .offset(x: min(detailBackOffset, 36))
+                        .simultaneousGesture(detailBackGesture)
                         .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
             }
@@ -447,6 +452,23 @@ struct MeView: View {
         .frame(width: geometry.size.width, height: geometry.size.height)
         .clipped()
         .ignoresSafeArea(edges: .top)
+    }
+
+    private var detailBackGesture: some Gesture {
+        DragGesture(minimumDistance: 10)
+            .updating($detailBackOffset) { value, state, _ in
+                let horizontal = value.translation.width > 0
+                    && value.translation.width > abs(value.translation.height) * 1.15
+                state = horizontal ? value.translation.width * 0.18 : 0
+            }
+            .onEnded { value in
+                let distance = max(value.translation.width, value.predictedEndTranslation.width)
+                guard distance >= 72,
+                      value.translation.width > abs(value.translation.height) * 1.15 else { return }
+                withAnimation(.easeOut(duration: 0.2)) {
+                    page = .home
+                }
+            }
     }
 
     @ViewBuilder

@@ -1871,6 +1871,13 @@ input:focus-visible {
   overflow-x: hidden;
   flex-direction: column;
   text-align: left;
+  touch-action: pan-y;
+  transition: transform 180ms ease-out;
+  will-change: transform;
+}
+
+.me-detail-view.is-back-dragging {
+  transition: none;
 }
 
 .me-detail-header {

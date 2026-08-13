@@ -417,6 +417,9 @@ export default function Prototype() {
   const [breathingElapsed, setBreathingElapsed] = useState(0);
   const [infoPanel, setInfoPanel] = useState<InfoPanel>(null);
   const swipeStartRef = useRef<SwipeStart | null>(null);
+  const meBackSwipeRef = useRef<SwipeStart | null>(null);
+  const meScreenRef = useRef<HTMLElement>(null);
+  const meHomeScrollTopRef = useRef(0);
   const swipeSettleTimerRef = useRef<number | null>(null);
   const drawerScrollRef = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
@@ -425,6 +428,8 @@ export default function Prototype() {
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [swipeProgress, setSwipeProgress] = useState(0);
   const [swipeSettling, setSwipeSettling] = useState(false);
+  const [meBackOffset, setMeBackOffset] = useState(0);
+  const [meBackDragging, setMeBackDragging] = useState(false);
 
   const active = scenes[activeScene] ?? scenes.ocean;
   const activeIndex = sceneOrder.indexOf(active.id);
@@ -668,6 +673,63 @@ export default function Prototype() {
     setDuration(minutes);
     setRemainingSeconds(minutes === 0 ? 0 : minutes * 60);
     setTimerOpen(false);
+  };
+
+  const openMeDetail = (view: Exclude<MeView, "home">) => {
+    meHomeScrollTopRef.current = meScreenRef.current?.scrollTop ?? 0;
+    setMeView(view);
+  };
+
+  const returnToMeHome = () => {
+    setMeBackOffset(0);
+    setMeBackDragging(false);
+    setMeView("home");
+    window.requestAnimationFrame(() => {
+      meScreenRef.current?.scrollTo({ top: meHomeScrollTopRef.current, behavior: "instant" });
+    });
+  };
+
+  const startMeBackSwipe = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    meBackSwipeRef.current = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      axis: null,
+    };
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Synthetic pointer events may not have an active pointer to capture.
+    }
+  };
+
+  const moveMeBackSwipe = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = meBackSwipeRef.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    if (start.axis === null && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= 8) {
+      start.axis = Math.abs(deltaX) > Math.abs(deltaY) * 1.15 ? "horizontal" : "vertical";
+    }
+    if (start.axis !== "horizontal" || deltaX <= 0) return;
+    event.preventDefault();
+    setMeBackDragging(true);
+    setMeBackOffset(Math.min(36, deltaX * 0.18));
+  };
+
+  const finishMeBackSwipe = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = meBackSwipeRef.current;
+    meBackSwipeRef.current = null;
+    if (!start || start.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    if (deltaX >= 72 && deltaX > Math.abs(deltaY) * 1.15) {
+      returnToMeHome();
+      return;
+    }
+    setMeBackDragging(false);
+    setMeBackOffset(0);
   };
 
   const selectScene = (sceneId: SceneId, play = true) => {
@@ -1054,7 +1116,7 @@ export default function Prototype() {
       ) : null}
 
       {activeTab === "me" ? (
-        <section className="me-screen" data-me-view={meView} aria-label={language === "zh" ? "我的一休" : "My Yixiu"}>
+        <section ref={meScreenRef} className="me-screen" data-me-view={meView} aria-label={language === "zh" ? "我的一休" : "My Yixiu"}>
           {meView === "home" ? (
             <>
               <div className="section-kicker">{language === "zh" ? "我的一休 · MY YIXIU" : "MY YIXIU · 我的一休"}</div>
@@ -1142,10 +1204,10 @@ export default function Prototype() {
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
-                  <button type="button" onClick={() => setMeView("about")}><span><strong>{language === "zh" ? "关于我们" : "About Us"}</strong><small>{language === "zh" ? "一休是谁，我们相信什么" : "Who we are and what we believe"}</small></span><ChevronRightIcon /></button>
-                  <button type="button" onClick={() => setMeView("privacy")}><span><strong>{language === "zh" ? "隐私说明" : "Privacy"}</strong><small>{language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</small></span><ChevronRightIcon /></button>
-                  <button type="button" onClick={() => setMeView("sources")}><span><strong>{language === "zh" ? "声音来源" : "Audio sources"}</strong><small>{language === "zh" ? "真实自然录音与授权" : "Field recordings and licensing"}</small></span><ChevronRightIcon /></button>
-                  <button type="button" onClick={() => setMeView("support")}><span><strong>{language === "zh" ? "联系与反馈" : "Contact and feedback"}</strong><small>{language === "zh" ? "邮箱与社交媒体" : "Email and social channels"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => openMeDetail("about")}><span><strong>{language === "zh" ? "关于我们" : "About Us"}</strong><small>{language === "zh" ? "一休是谁，我们相信什么" : "Who we are and what we believe"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => openMeDetail("privacy")}><span><strong>{language === "zh" ? "隐私说明" : "Privacy"}</strong><small>{language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => openMeDetail("sources")}><span><strong>{language === "zh" ? "声音来源" : "Audio sources"}</strong><small>{language === "zh" ? "真实自然录音与授权" : "Field recordings and licensing"}</small></span><ChevronRightIcon /></button>
+                  <button type="button" onClick={() => openMeDetail("support")}><span><strong>{language === "zh" ? "联系与反馈" : "Contact and feedback"}</strong><small>{language === "zh" ? "邮箱与社交媒体" : "Email and social channels"}</small></span><ChevronRightIcon /></button>
                 </section>
 
                 <p className="me-group-label">{language === "zh" ? "沿途所作" : "WORKS ALONG THE WAY"}</p>
@@ -1160,9 +1222,16 @@ export default function Prototype() {
               </div>
             </>
           ) : (
-            <div className="me-detail-view">
+            <div
+              className={`me-detail-view ${meBackDragging ? "is-back-dragging" : ""}`}
+              style={{ transform: `translate3d(${meBackOffset}px, 0, 0)` }}
+              onPointerDown={startMeBackSwipe}
+              onPointerMove={moveMeBackSwipe}
+              onPointerUp={finishMeBackSwipe}
+              onPointerCancel={finishMeBackSwipe}
+            >
               <header className="me-detail-header">
-                <button type="button" aria-label={language === "zh" ? "返回" : "Back"} onClick={() => setMeView("home")}><ArrowLeftIcon /></button>
+                <button type="button" aria-label={language === "zh" ? "返回" : "Back"} onClick={returnToMeHome}><ArrowLeftIcon /></button>
                 <div><small>一休 · YIXIU</small><strong>{meView === "about" ? (language === "zh" ? "关于我们" : "About Us") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
               </header>
               <div className="me-detail-scroll">
