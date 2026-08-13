@@ -137,6 +137,7 @@ input:focus-visible {
   to { transform: translate3d(3%, -2%, 0) rotate(2deg) scale(1.06); }
 }
 
+[data-scene="ocean"] .ocean-shade,
 [data-scene="spring"] .ocean-shade,
 [data-scene="birds"] .ocean-shade,
 [data-scene="valley"] .ocean-shade {

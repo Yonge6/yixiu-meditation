@@ -155,7 +155,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isBright: Bool {
         switch self {
-        case .spring, .birds, .stream, .lake, .valley, .bamboo, .falls, .snow:
+        case .ocean, .spring, .birds, .stream, .lake, .valley, .bamboo, .falls, .snow:
             true
         default:
             false
