@@ -311,9 +311,13 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   const humanDesignLink = page.getByRole("link", { name: /不二 认识自己.*人生使用说明书/ });
   await expect(humanDesignLink).toHaveAttribute("href", "https://human-design.wonderelian.com/");
   const workLinks = page.locator(".me-works > a");
-  await expect(workLinks.nth(1)).toContainText("不二 认识自己");
-  await expect(workLinks.nth(2)).toContainText("三慢问道");
-  await expect(workLinks.nth(2)).toContainText("道德经");
+  await expect(workLinks).toHaveCount(5);
+  await expect(workLinks.nth(0)).toHaveAttribute("href", "https://wonderelian.com/");
+  await expect(workLinks.nth(0)).toContainText("WonderElian");
+  await expect(workLinks.nth(0)).toContainText("让复杂的想法变得清晰、好看而有人情味");
+  await expect(workLinks.nth(2)).toContainText("不二 认识自己");
+  await expect(workLinks.nth(3)).toContainText("三慢问道");
+  await expect(workLinks.nth(3)).toContainText("道德经");
   await expect(page.getByText(/YIXIU 2\.0/)).toHaveCount(0);
   const downloadLink = page.getByRole("link", { name: /下载一休 App/ });
   await expect(downloadLink).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");
