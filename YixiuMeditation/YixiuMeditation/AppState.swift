@@ -49,6 +49,7 @@ final class AppState: ObservableObject {
     private let defaults = UserDefaults.standard
     private var timer: Timer?
     private var hasStartedPlayback = false
+    private var enforcedAccessLevel: YixiuAccessLevel?
 
     init() {
         if
@@ -76,7 +77,7 @@ final class AppState: ObservableObject {
         recentScenes = (defaults.stringArray(forKey: "recentScenes") ?? [])
             .compactMap(MeditationScene.init(rawValue:))
         let savedFocusDuration = defaults.integer(forKey: "focusDuration")
-        if [1, 3].contains(savedFocusDuration) {
+        if [1, 3, 5, 10].contains(savedFocusDuration) {
             focusDuration = savedFocusDuration
         }
         if defaults.object(forKey: "focusSoundEnabled") != nil {
@@ -163,6 +164,7 @@ final class AppState: ObservableObject {
     }
 
     func selectScene(_ newScene: MeditationScene, autoplay: Bool = true) {
+        guard canAccessScene(newScene) else { return }
         scene = newScene
         recordRecentScene(newScene)
         if isPlaying || autoplay {
@@ -194,6 +196,10 @@ final class AppState: ObservableObject {
 
     func selectDuration(_ minutes: Int) {
         guard [0, 15, 30, 60].contains(minutes) else { return }
+        if let enforcedAccessLevel,
+           !SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: enforcedAccessLevel) {
+            return
+        }
         duration = minutes
         if isPlaying {
             startTimer()
@@ -217,6 +223,15 @@ final class AppState: ObservableObject {
 
     func recordRecentScene(_ target: MeditationScene) {
         recentScenes = [target] + recentScenes.filter { $0 != target }.prefix(3)
+    }
+
+    func enforceAccessLevel(_ level: YixiuAccessLevel) {
+        enforcedAccessLevel = level
+    }
+
+    private func canAccessScene(_ target: MeditationScene) -> Bool {
+        guard let enforcedAccessLevel else { return true }
+        return SubscriptionAccessPolicy.canAccess(scene: target, level: enforcedAccessLevel)
     }
 
     private func startTimer() {

@@ -11,11 +11,15 @@ enum YixiuTheme {
     static let hairline = aqua.opacity(0.30)
 
     static func chineseDisplay(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .custom("Songti SC", size: size).weight(weight)
+        .custom("Noto Serif SC", size: size).weight(weight)
     }
 
     static func englishSerif(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .custom("Baskerville", size: size).weight(weight)
+        .custom("Noto Serif SC", size: size).weight(weight)
+    }
+
+    static func sans(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        .custom("Noto Sans SC", size: size).weight(weight)
     }
 }
 
@@ -40,6 +44,14 @@ extension View {
         background(
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(YixiuTheme.panel)
+                .overlay(
+                    LinearGradient(
+                        colors: [YixiuTheme.aqua.opacity(0.08), .clear],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                )
                 .overlay(
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .stroke(YixiuTheme.hairline, lineWidth: 0.8)

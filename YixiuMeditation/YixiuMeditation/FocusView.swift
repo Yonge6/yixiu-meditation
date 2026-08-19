@@ -2,10 +2,12 @@ import SwiftUI
 
 struct FocusView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var status: BreathingStatus = .idle
     @State private var elapsed = 0
     @State private var originalAudioWasPlaying = false
+    @State private var paywallOpen = false
 
     private var totalSeconds: Int { appState.focusDuration * 60 }
 
@@ -115,7 +117,7 @@ struct FocusView: View {
                     zh: "顺其自然；如有不适，请暂停。",
                     en: "Let it be easy. Pause if you feel uncomfortable."
                 ))
-                .font(.system(size: 11))
+                .font(YixiuTheme.sans(11))
                 .foregroundStyle(YixiuTheme.mist.opacity(0.58))
                 .padding(.top, 23)
 
@@ -150,24 +152,42 @@ struct FocusView: View {
             }
         }
         .sensoryFeedback(.selection, trigger: phase)
+        .sheet(isPresented: $paywallOpen) {
+            PlusPaywallView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(YixiuTheme.deepWater)
+        }
     }
 
     private var focusPreferences: some View {
-        HStack(spacing: 8) {
+        VStack(spacing: 9) {
             HStack(spacing: 3) {
-                ForEach([1, 3], id: \.self) { minutes in
+                ForEach([1, 3, 5, 10], id: \.self) { minutes in
                     Button {
                         guard status == .idle || status == .complete else { return }
+                        guard subscriptionStore.canUseFocus(minutes) else {
+                            paywallOpen = true
+                            return
+                        }
                         appState.focusDuration = minutes
                         elapsed = 0
                     } label: {
                         Text("\(minutes) \(appState.language == .zh ? "分钟" : "MIN")")
                             .font(.system(size: 10, weight: .medium))
                             .foregroundStyle(appState.focusDuration == minutes ? YixiuTheme.deepWater : YixiuTheme.mist)
-                            .frame(width: 58, height: 34)
+                            .frame(width: 53, height: 34)
                             .background(
                                 Capsule().fill(appState.focusDuration == minutes ? YixiuTheme.aquaStrong : .clear)
                             )
+                            .overlay(alignment: .topTrailing) {
+                                if !subscriptionStore.canUseFocus(minutes) {
+                                    Image(systemName: "lock.fill")
+                                        .font(.system(size: 6, weight: .semibold))
+                                        .foregroundStyle(YixiuTheme.aqua)
+                                        .padding(5)
+                                }
+                            }
                     }
                     .buttonStyle(.plain)
                 }
@@ -177,8 +197,8 @@ struct FocusView: View {
             .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
 
             Button {
-                guard status == .idle || status == .complete else { return }
                 appState.focusSoundEnabled.toggle()
+                syncFocusSound()
             } label: {
                 Label(
                     appState.language.text(zh: "自然声", en: "Nature sound"),
@@ -187,7 +207,7 @@ struct FocusView: View {
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(appState.focusSoundEnabled ? YixiuTheme.aquaStrong : YixiuTheme.mist)
                 .padding(.horizontal, 12)
-                .frame(height: 40)
+                .frame(width: 220, height: 38)
                 .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
                 .overlay(
                     Capsule().stroke(
@@ -214,7 +234,7 @@ struct FocusView: View {
                         zh: "开始 \(appState.focusDuration) 分钟",
                         en: "Start \(appState.focusDuration) minute\(appState.focusDuration == 1 ? "" : "s")"
                      ))
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(YixiuTheme.sans(15, weight: .semibold))
                     .foregroundStyle(YixiuTheme.deepWater)
                     .frame(width: 220, height: 52)
                     .background(Capsule().fill(YixiuTheme.aquaStrong))
@@ -247,7 +267,7 @@ struct FocusView: View {
                         .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
                 }
             }
-            .font(.system(size: 13, weight: .medium))
+            .font(YixiuTheme.sans(13, weight: .medium))
             .foregroundStyle(YixiuTheme.moon)
             .buttonStyle(.plain)
         }
@@ -258,6 +278,10 @@ struct FocusView: View {
     }
 
     private func beginSession() {
+        guard subscriptionStore.canUseFocus(appState.focusDuration) else {
+            paywallOpen = true
+            return
+        }
         originalAudioWasPlaying = appState.isPlaying
         if appState.focusSoundEnabled {
             if !appState.isPlaying { appState.play() }
@@ -272,6 +296,16 @@ struct FocusView: View {
         restoreOriginalPlayback()
         elapsed = 0
         status = .idle
+    }
+
+    private func syncFocusSound() {
+        guard status == .running || status == .paused else { return }
+
+        if appState.focusSoundEnabled, !appState.isPlaying {
+            appState.play()
+        } else if !appState.focusSoundEnabled, appState.isPlaying {
+            appState.pause()
+        }
     }
 
     private func restoreOriginalPlayback() {

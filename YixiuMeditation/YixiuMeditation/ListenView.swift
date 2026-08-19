@@ -2,9 +2,11 @@ import SwiftUI
 
 struct ListenView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var timerOpen = false
     @State private var libraryOpen = false
+    @State private var paywallOpen = false
     @State private var sceneDragOffset: CGFloat = 0
     @State private var sceneSwipeProgress: CGFloat = 0
     @State private var sceneSwipeSettling = false
@@ -53,7 +55,7 @@ struct ListenView: View {
                     .position(x: geometry.size.width / 2, y: geometry.size.height * 0.84)
 
                 Text(language.text(zh: "上滑浏览全部声音", en: "SWIPE UP FOR ALL SOUNDS"))
-                    .font(.system(size: 9, weight: .medium))
+                    .font(YixiuTheme.sans(9, weight: .medium))
                     .tracking(1.2)
                     .foregroundStyle(YixiuTheme.mist.opacity(0.62))
                     .position(x: geometry.size.width / 2, y: geometry.size.height - 108)
@@ -61,7 +63,7 @@ struct ListenView: View {
 
                 if let audioError = appState.audioError {
                     Text(audioError)
-                        .font(.system(size: 12))
+                        .font(YixiuTheme.sans(12))
                         .foregroundStyle(YixiuTheme.moon)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 18)
@@ -81,6 +83,12 @@ struct ListenView: View {
         .ignoresSafeArea()
         .sheet(isPresented: $libraryOpen) {
             SoundLibraryView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(YixiuTheme.deepWater)
+        }
+        .sheet(isPresented: $paywallOpen) {
+            PlusPaywallView()
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
@@ -201,6 +209,15 @@ struct ListenView: View {
                     return
                 }
 
+                guard let target = scene(in: direction), subscriptionStore.canAccess(target) else {
+                    withAnimation(.spring(response: 0.34, dampingFraction: 0.82)) {
+                        sceneDragOffset = 0
+                        sceneSwipeProgress = 0
+                    }
+                    paywallOpen = true
+                    return
+                }
+
                 sceneSwipeSettling = true
                 withAnimation(.timingCurve(0.22, 1, 0.36, 1, duration: 0.26)) {
                     sceneDragOffset = direction == 1 ? -width * 0.72 : width * 0.72
@@ -220,6 +237,22 @@ struct ListenView: View {
             }
     }
 
+    private func scene(in direction: Int) -> MeditationScene? {
+        guard let currentIndex = MeditationScene.allCases.firstIndex(of: appState.scene) else { return nil }
+        let targetIndex = currentIndex + direction
+        guard MeditationScene.allCases.indices.contains(targetIndex) else { return nil }
+        return MeditationScene.allCases[targetIndex]
+    }
+
+    private func moveScene(_ direction: Int) {
+        guard let target = scene(in: direction) else { return }
+        guard subscriptionStore.canAccess(target) else {
+            paywallOpen = true
+            return
+        }
+        appState.moveScene(direction)
+    }
+
     private var header: some View {
         HStack {
             Button {
@@ -230,7 +263,7 @@ struct ListenView: View {
                         .font(YixiuTheme.chineseDisplay(25))
                         .tracking(2)
                     Text(language == .zh ? "YIXIU" : "一休")
-                        .font(.system(size: 11, weight: .regular))
+                        .font(YixiuTheme.sans(11, weight: .regular))
                         .tracking(4)
                 }
                 .foregroundStyle(YixiuTheme.moon)
@@ -303,13 +336,19 @@ struct ListenView: View {
             } label: {
                 Image(systemName: appState.favorites.contains(appState.scene) ? "heart.fill" : "heart")
                     .foregroundStyle(appState.favorites.contains(appState.scene) ? YixiuTheme.aquaStrong : YixiuTheme.moon)
+                    .frame(width: 44, height: 44)
+                    .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.34)))
+                    .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
             }
             .accessibilityLabel(language.text(zh: "收藏", en: "Favorite"))
 
             Spacer()
 
-            Button { appState.moveScene(-1) } label: {
+            Button { moveScene(-1) } label: {
                 Image(systemName: "backward.end")
+                    .frame(width: 44, height: 44)
+                    .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.34)))
+                    .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
             }
             .disabled(!appState.canMoveScene(-1))
             .opacity(appState.canMoveScene(-1) ? 1 : 0.28)
@@ -321,18 +360,22 @@ struct ListenView: View {
                 appState.togglePlayback()
             } label: {
                 Image(systemName: appState.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 31, weight: .regular))
+                    .font(.system(size: 29, weight: .medium))
                     .frame(width: 82, height: 82)
                     .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.62)))
                     .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.84), lineWidth: 1))
+                    .overlay(Circle().inset(by: 6).stroke(YixiuTheme.aquaStrong.opacity(0.1), lineWidth: 1))
                     .shadow(color: YixiuTheme.aqua.opacity(0.18), radius: 24)
             }
             .accessibilityLabel(appState.isPlaying ? language.text(zh: "暂停", en: "Pause") : language.text(zh: "播放", en: "Play"))
 
             Spacer()
 
-            Button { appState.moveScene(1) } label: {
+            Button { moveScene(1) } label: {
                 Image(systemName: "forward.end")
+                    .frame(width: 44, height: 44)
+                    .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.34)))
+                    .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
             }
             .disabled(!appState.canMoveScene(1))
             .opacity(appState.canMoveScene(1) ? 1 : 0.28)
@@ -346,10 +389,13 @@ struct ListenView: View {
                 }
             } label: {
                 Image(systemName: "timer")
+                    .frame(width: 44, height: 44)
+                    .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.34)))
+                    .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
             }
             .accessibilityLabel(language.text(zh: "定时", en: "Timer"))
         }
-        .font(.system(size: 24, weight: .light))
+        .font(.system(size: 20, weight: .light))
         .foregroundStyle(YixiuTheme.moon)
         .padding(.horizontal, 28)
         .frame(maxWidth: .infinity)
@@ -387,14 +433,19 @@ struct ListenView: View {
         HStack(spacing: 7) {
             ForEach([15, 30, 60, 0], id: \.self) { minutes in
                 Button {
+                    guard subscriptionStore.canUseTimer(minutes) else {
+                        timerOpen = false
+                        paywallOpen = true
+                        return
+                    }
                     appState.selectDuration(minutes)
                     timerOpen = false
                 } label: {
                     VStack(spacing: 3) {
                         Text(minutes == 0 ? "∞" : "\(minutes)")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(YixiuTheme.sans(17, weight: .medium))
                         Text(minutes == 0 ? language.text(zh: "不限时", en: "UNLIMITED") : language.text(zh: "分钟", en: "MIN"))
-                            .font(.system(size: 7))
+                            .font(YixiuTheme.sans(7))
                             .tracking(0.5)
                     }
                     .foregroundStyle(appState.duration == minutes ? YixiuTheme.deepWater : YixiuTheme.mist)
@@ -404,6 +455,14 @@ struct ListenView: View {
                         RoundedRectangle(cornerRadius: 13)
                             .fill(appState.duration == minutes ? YixiuTheme.aquaStrong : .clear)
                     )
+                    .overlay(alignment: .topTrailing) {
+                        if !subscriptionStore.canUseTimer(minutes) {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 7, weight: .semibold))
+                                .foregroundStyle(YixiuTheme.aqua)
+                                .padding(7)
+                        }
+                    }
                 }
                 .buttonStyle(.plain)
             }
@@ -427,7 +486,7 @@ struct ListenView: View {
                 appState.resetCompletedSession()
             } label: {
                 Text(language.text(zh: "收下", en: "Keep it"))
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(YixiuTheme.sans(14, weight: .semibold))
                     .foregroundStyle(YixiuTheme.deepWater)
                     .frame(width: 150, height: 44)
                     .background(Capsule().fill(YixiuTheme.aquaStrong))
@@ -440,8 +499,10 @@ struct ListenView: View {
 
 struct SoundLibraryView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.dismiss) private var dismiss
     @State private var selectedCategory: SceneCategory = .all
+    @State private var paywallOpen = false
 
     private var language: AppLanguage { appState.language }
     private var filteredScenes: [MeditationScene] {
@@ -495,11 +556,21 @@ struct SoundLibraryView: View {
                 }
             }
         }
+        .sheet(isPresented: $paywallOpen) {
+            PlusPaywallView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(YixiuTheme.deepWater)
+        }
     }
 
     private func sceneCard(_ scene: MeditationScene) -> some View {
         ZStack(alignment: .topTrailing) {
             Button {
+                guard subscriptionStore.canAccess(scene) else {
+                    paywallOpen = true
+                    return
+                }
                 appState.selectScene(scene)
                 dismiss()
             } label: {
@@ -524,7 +595,7 @@ struct SoundLibraryView: View {
                                 .font(YixiuTheme.englishSerif(8))
                                 .tracking(1)
                             Text(language.text(zh: scene.useZh, en: scene.useEn))
-                                .font(.system(size: 9))
+                                .font(YixiuTheme.sans(9))
                                 .foregroundStyle(YixiuTheme.aqua)
                                 .padding(.top, 6)
                         }
@@ -536,8 +607,8 @@ struct SoundLibraryView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(language.text(
-                zh: "切换到\(scene.zhName)",
-                en: "Switch to \(scene.enName)"
+                zh: subscriptionStore.canAccess(scene) ? "切换到\(scene.zhName)" : "\(scene.zhName)，一休 Plus",
+                en: subscriptionStore.canAccess(scene) ? "Switch to \(scene.enName)" : "\(scene.enName), Yixiu Plus"
             ))
 
             Button {
@@ -561,5 +632,17 @@ struct SoundLibraryView: View {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .stroke(appState.scene == scene ? YixiuTheme.aqua : YixiuTheme.hairline, lineWidth: 0.8)
         )
+        .overlay(alignment: .topLeading) {
+            if !subscriptionStore.canAccess(scene) {
+                Label("PLUS", systemImage: "lock.fill")
+                    .font(YixiuTheme.sans(8, weight: .semibold))
+                    .tracking(0.8)
+                    .foregroundStyle(YixiuTheme.deepWater)
+                    .padding(.horizontal, 9)
+                    .frame(height: 26)
+                    .background(Capsule().fill(YixiuTheme.aquaStrong))
+                    .padding(9)
+            }
+        }
     }
 }

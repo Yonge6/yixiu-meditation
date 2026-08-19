@@ -11,10 +11,13 @@ private enum MePage: Equatable {
 
 struct MeView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.requestReview) private var requestReview
+    @Environment(\.openURL) private var openURL
     @State private var page: MePage = .home
     @State private var libraryOpen = false
     @State private var videoChannelOpen = false
+    @State private var paywallOpen = false
     @GestureState private var detailBackOffset: CGFloat = 0
 
     private var language: AppLanguage { appState.language }
@@ -48,6 +51,12 @@ struct MeView: View {
         .sheet(isPresented: $videoChannelOpen) {
             VideoChannelSheet(language: language)
                 .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(YixiuTheme.deepWater)
+        }
+        .sheet(isPresented: $paywallOpen) {
+            PlusPaywallView()
+                .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
         }
@@ -87,6 +96,9 @@ struct MeView: View {
 
                 soundSpaceCard
                     .padding(.top, 20)
+
+                membershipCard
+                    .padding(.top, 12)
 
                 if !appState.recentScenes.isEmpty {
                     recentScenesCard
@@ -148,14 +160,14 @@ struct MeView: View {
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
                 Text(language.text(zh: "正在聆听 · 共 14 种真实自然声", en: "Now listening · 14 real nature sounds"))
-                    .font(.system(size: 11))
+                    .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
                 Button {
                     libraryOpen = true
                 } label: {
                     Label(language.text(zh: "浏览全部声音", en: "Browse all sounds"), systemImage: "water.waves")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(YixiuTheme.sans(13, weight: .semibold))
                         .foregroundStyle(YixiuTheme.deepWater)
                         .padding(.horizontal, 16)
                         .frame(height: 38)
@@ -175,6 +187,98 @@ struct MeView: View {
         .shadow(color: .black.opacity(0.2), radius: 18, y: 10)
     }
 
+    private var membershipCard: some View {
+        Button {
+            if subscriptionStore.hasPlus {
+                openURL(URL(string: "https://apps.apple.com/account/subscriptions")!)
+            } else {
+                paywallOpen = true
+            }
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(YixiuTheme.aqua.opacity(0.10))
+                    Circle()
+                        .stroke(YixiuTheme.aqua.opacity(0.42), lineWidth: 0.8)
+                    Image(systemName: subscriptionStore.hasPlus ? "drop.fill" : "drop")
+                        .font(.system(size: 18, weight: .light))
+                        .foregroundStyle(YixiuTheme.aquaStrong)
+                }
+                .frame(width: 46, height: 46)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 8) {
+                        Text(membershipTitle)
+                            .font(YixiuTheme.chineseDisplay(18))
+                        Text(membershipBadge)
+                            .font(YixiuTheme.sans(8, weight: .semibold))
+                            .tracking(0.8)
+                            .foregroundStyle(subscriptionStore.hasPlus ? YixiuTheme.deepWater : YixiuTheme.aquaStrong)
+                            .padding(.horizontal, 8)
+                            .frame(height: 21)
+                            .background(
+                                Capsule().fill(subscriptionStore.hasPlus ? YixiuTheme.aquaStrong : YixiuTheme.aqua.opacity(0.10))
+                            )
+                    }
+                    Text(membershipSubtitle)
+                        .font(YixiuTheme.sans(11))
+                        .foregroundStyle(YixiuTheme.mist)
+                        .lineLimit(2)
+                }
+
+                Spacer(minLength: 5)
+
+                Image(systemName: subscriptionStore.hasPlus ? "arrow.up.right" : "chevron.right")
+                    .font(YixiuTheme.sans(12, weight: .light))
+                    .foregroundStyle(YixiuTheme.mist)
+            }
+            .foregroundStyle(YixiuTheme.moon)
+            .padding(.horizontal, 17)
+            .frame(minHeight: 80)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .yixiuPanel()
+        .accessibilityLabel("\(membershipTitle)，\(membershipSubtitle)")
+    }
+
+    private var membershipTitle: String {
+        switch subscriptionStore.accessLevel {
+        case .plus: language.text(zh: "一休 Plus", en: "Yixiu Plus")
+        case .legacy: language.text(zh: "老用户权益", en: "Legacy Access")
+        case .free: language.text(zh: "一休 · 免费版", en: "Yixiu · Free")
+        }
+    }
+
+    private var membershipBadge: String {
+        switch subscriptionStore.accessLevel {
+        case .plus: language.text(zh: "已订阅", en: "ACTIVE")
+        case .legacy: language.text(zh: "已保留", en: "KEPT")
+        case .free: "PLUS"
+        }
+    }
+
+    private var membershipSubtitle: String {
+        switch subscriptionStore.accessLevel {
+        case .plus:
+            language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
+        case .legacy:
+            language.text(zh: "当前 14 种声音与原有功能继续保留", en: "Your 14 sounds and existing features remain")
+        case .free:
+            language.text(zh: "5 种自然声免费聆听，升级支持持续创作", en: "Five free sounds. Upgrade to support new work")
+        }
+    }
+
+    private func openScene(_ scene: MeditationScene, autoplay: Bool = true) {
+        guard subscriptionStore.canAccess(scene) else {
+            paywallOpen = true
+            return
+        }
+        appState.selectScene(scene, autoplay: autoplay)
+        appState.activeTab = .listen
+    }
+
     private var favoritesCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
@@ -182,7 +286,7 @@ struct MeView: View {
                     Text(language.text(zh: "我的收藏", en: "Favorites"))
                         .font(YixiuTheme.chineseDisplay(18))
                     Text(language.text(zh: "常听的水声", en: "Your returning waters"))
-                        .font(.system(size: 11))
+                        .font(YixiuTheme.sans(11))
                         .foregroundStyle(YixiuTheme.mist)
                 }
                 Spacer()
@@ -195,7 +299,7 @@ struct MeView: View {
                     zh: "在声音页点亮心形，常听的自然声会留在这里。",
                     en: "Tap the heart while listening and your favorite sounds will stay here."
                 ))
-                .font(.system(size: 13))
+                .font(YixiuTheme.sans(13))
                 .foregroundStyle(YixiuTheme.mist.opacity(0.66))
                 .lineSpacing(5)
             } else {
@@ -203,8 +307,7 @@ struct MeView: View {
                     HStack(spacing: 9) {
                         ForEach(appState.favorites) { scene in
                             Button {
-                                appState.selectScene(scene, autoplay: false)
-                                appState.activeTab = .listen
+                                openScene(scene, autoplay: false)
                             } label: {
                                 ZStack(alignment: .bottomLeading) {
                                     Image(scene.assetName)
@@ -252,8 +355,7 @@ struct MeView: View {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 9) {
                 ForEach(appState.recentScenes) { scene in
                     Button {
-                        appState.selectScene(scene)
-                        appState.activeTab = .listen
+                        openScene(scene)
                     } label: {
                         ZStack(alignment: .bottomLeading) {
                             Image(scene.assetName)
@@ -306,19 +408,23 @@ struct MeView: View {
                     .font(YixiuTheme.chineseDisplay(18))
                 Spacer()
                 Text(appState.durationLabel)
-                    .font(.system(size: 12))
+                    .font(YixiuTheme.sans(12))
                     .foregroundStyle(YixiuTheme.aqua)
             }
 
             HStack(spacing: 7) {
                 ForEach([15, 30, 60, 0], id: \.self) { minutes in
                     Button {
+                        guard subscriptionStore.canUseTimer(minutes) else {
+                            paywallOpen = true
+                            return
+                        }
                         appState.selectDuration(minutes)
                     } label: {
                         Text(minutes == 0
                             ? language.text(zh: "不限时", en: "∞")
                             : "\(minutes) \(language == .zh ? "分钟" : "MIN")")
-                            .font(.system(size: 11, weight: .medium))
+                            .font(YixiuTheme.sans(11, weight: .medium))
                             .foregroundStyle(appState.duration == minutes ? YixiuTheme.deepWater : YixiuTheme.mist)
                             .frame(maxWidth: .infinity)
                             .frame(height: 40)
@@ -330,6 +436,14 @@ struct MeView: View {
                                 RoundedRectangle(cornerRadius: 13)
                                     .stroke(appState.duration == minutes ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
                             )
+                            .overlay(alignment: .topTrailing) {
+                                if !subscriptionStore.canUseTimer(minutes) {
+                                    Image(systemName: "lock.fill")
+                                        .font(.system(size: 6, weight: .semibold))
+                                        .foregroundStyle(YixiuTheme.aqua)
+                                        .padding(5)
+                                }
+                            }
                     }
                     .buttonStyle(.plain)
                 }
@@ -345,7 +459,7 @@ struct MeView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(language.text(zh: "界面语言", en: "Language"))
                     Text(language.text(zh: "中英双语随时切换", en: "Switch between Chinese and English"))
-                        .font(.system(size: 10))
+                        .font(YixiuTheme.sans(10))
                         .foregroundStyle(YixiuTheme.mist)
                 }
                 Spacer()
@@ -372,7 +486,7 @@ struct MeView: View {
                 isOn: $appState.backgroundPlayback
             )
         }
-        .font(.system(size: 14))
+        .font(YixiuTheme.sans(14))
         .padding(.horizontal, 17)
         .yixiuPanel()
     }
@@ -412,7 +526,7 @@ struct MeView: View {
             } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "star")
-                        .font(.system(size: 16, weight: .light))
+                        .font(YixiuTheme.sans(16, weight: .light))
                         .foregroundStyle(YixiuTheme.aqua)
                         .frame(width: 36, height: 36)
                         .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
@@ -420,13 +534,13 @@ struct MeView: View {
                         Text(language.text(zh: "给一休评分", en: "Rate Yixiu"))
                             .font(YixiuTheme.chineseDisplay(16))
                         Text(language.text(zh: "在 App Store 分享你的感受", en: "Share your experience on the App Store"))
-                            .font(.system(size: 11))
+                            .font(YixiuTheme.sans(11))
                             .foregroundStyle(YixiuTheme.mist)
                             .lineLimit(1)
                     }
                     Spacer()
                     Image(systemName: "star.fill")
-                        .font(.system(size: 12, weight: .light))
+                        .font(YixiuTheme.sans(12, weight: .light))
                         .foregroundStyle(YixiuTheme.mist)
                 }
                 .foregroundStyle(YixiuTheme.moon)
@@ -443,6 +557,14 @@ struct MeView: View {
         VStack(spacing: 0) {
             workLink(
                 index: language.text(zh: "一", en: "01"),
+                title: "WonderElian",
+                tagline: language.text(zh: "让复杂的想法变得清晰、好看而有人情味", en: "Make complex ideas clear, beautiful, and human"),
+                description: language.text(zh: "永歌 Elian 的个人创作空间，记录设计、AI、产品与成为自己的探索。", en: "An independent creative world connecting visual culture, wellbeing, and real life."),
+                url: "https://wonderelian.com/"
+            )
+            Divider().overlay(YixiuTheme.hairline)
+            workLink(
+                index: language.text(zh: "二", en: "02"),
                 title: language.text(zh: "虾子曰", en: "Xiazi Says"),
                 tagline: language.text(zh: "昨日世界", en: "Yesterday's World"),
                 description: language.text(zh: "每天用全球热点与双语海报，看清复杂世界。", en: "Global stories and bilingual posters make the world easier to see."),
@@ -450,7 +572,7 @@ struct MeView: View {
             )
             Divider().overlay(YixiuTheme.hairline)
             workLink(
-                index: language.text(zh: "二", en: "02"),
+                index: language.text(zh: "三", en: "03"),
                 title: language.text(zh: "不二 认识自己", en: "Not Two · Know Yourself"),
                 tagline: language.text(zh: "人生使用说明书", en: "A User Manual for Life"),
                 description: language.text(zh: "看见自己的能量结构，理解真实而独特的自己。", en: "See your energy design and understand your authentic, individual self."),
@@ -458,7 +580,7 @@ struct MeView: View {
             )
             Divider().overlay(YixiuTheme.hairline)
             workLink(
-                index: language.text(zh: "三", en: "03"),
+                index: language.text(zh: "四", en: "04"),
                 title: language.text(zh: "三慢问道", en: "Wendao"),
                 tagline: language.text(zh: "道德经", en: "Tao Te Ching"),
                 description: language.text(zh: "读懂经典，也在慢下来时读懂自己。", en: "Read the classic slowly—and yourself with it."),
@@ -466,7 +588,7 @@ struct MeView: View {
             )
             Divider().overlay(YixiuTheme.hairline)
             workLink(
-                index: language.text(zh: "四", en: "04"),
+                index: language.text(zh: "五", en: "05"),
                 title: language.text(zh: "艺术风格图鉴", en: "Style Atlas"),
                 tagline: language.text(zh: "学习看懂一种美", en: "Learn to see a style"),
                 description: language.text(zh: "沿着艺术与设计风格的脉络，找到自己的观看方式。", en: "Follow art and design lineages to find your own way of looking."),
@@ -486,7 +608,7 @@ struct MeView: View {
                     }
                 } label: {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .medium))
+                        .font(YixiuTheme.sans(18, weight: .medium))
                         .foregroundStyle(YixiuTheme.moon)
                         .frame(width: 48, height: 48)
                         .background(Circle().fill(YixiuTheme.aqua.opacity(0.08)))
@@ -576,14 +698,14 @@ struct MeView: View {
                     zh: "鸟语、雨声、河流、海浪、瀑布、远雷与山风均使用对应的自然环境录音，不以合成噪音替代具名场景。",
                     en: "Birds, rain, rivers, waves, waterfalls, thunder and wind use matching field recordings rather than generic generated noise."
                 ))
-                .font(.system(size: 14))
+                .font(YixiuTheme.sans(14))
                 .lineSpacing(7)
                 .foregroundStyle(YixiuTheme.mist)
                 Text(language.text(
                     zh: "录音素材按 Mixkit Sound Effects Free License 使用。",
                     en: "Recordings are used under the Mixkit Sound Effects Free License."
                 ))
-                .font(.system(size: 14))
+                .font(YixiuTheme.sans(14))
                 .lineSpacing(7)
                 .foregroundStyle(YixiuTheme.mist)
 
@@ -612,7 +734,7 @@ struct MeView: View {
                 zh: "如果声音无法播放、画面显示异常，或你希望加入新的自然声，请告诉我们设备、系统版本与声音名称。",
                 en: "If audio cannot play, a scene looks wrong, or you would like a new sound, tell us your device, system version and the sound name."
             ))
-            .font(.system(size: 14))
+            .font(YixiuTheme.sans(14))
             .lineSpacing(7)
             .foregroundStyle(YixiuTheme.mist)
 
@@ -634,17 +756,17 @@ struct MeView: View {
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "qrcode")
-                            .font(.system(size: 15, weight: .light))
+                            .font(YixiuTheme.sans(15, weight: .light))
                             .foregroundStyle(YixiuTheme.aqua)
                             .frame(width: 34)
                         Text(language.text(zh: "视频号", en: "WeChat Channels"))
                             .font(YixiuTheme.chineseDisplay(14))
                         Spacer()
                         Text(language.text(zh: "扫码关注", en: "View QR code"))
-                            .font(.system(size: 10))
+                            .font(YixiuTheme.sans(10))
                             .foregroundStyle(YixiuTheme.mist)
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 10, weight: .light))
+                            .font(YixiuTheme.sans(10, weight: .light))
                             .foregroundStyle(YixiuTheme.mist)
                     }
                     .foregroundStyle(YixiuTheme.moon)
@@ -680,7 +802,7 @@ struct MeView: View {
             appState.language = option
         } label: {
             Text(title)
-                .font(.system(size: 12, weight: .medium))
+                .font(YixiuTheme.sans(12, weight: .medium))
                 .foregroundStyle(appState.language == option ? YixiuTheme.deepWater : YixiuTheme.mist)
                 .frame(width: 44, height: 32)
                 .background(Capsule().fill(appState.language == option ? YixiuTheme.aquaStrong : .clear))
@@ -693,7 +815,7 @@ struct MeView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                 Text(subtitle)
-                    .font(.system(size: 10))
+                    .font(YixiuTheme.sans(10))
                     .foregroundStyle(YixiuTheme.mist)
             }
             Spacer()
@@ -712,7 +834,7 @@ struct MeView: View {
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .light))
+                    .font(YixiuTheme.sans(16, weight: .light))
                     .foregroundStyle(YixiuTheme.aqua)
                     .frame(width: 36, height: 36)
                     .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
@@ -720,13 +842,13 @@ struct MeView: View {
                     Text(title)
                         .font(YixiuTheme.chineseDisplay(16))
                     Text(subtitle)
-                        .font(.system(size: 11))
+                        .font(YixiuTheme.sans(11))
                         .foregroundStyle(YixiuTheme.mist)
                         .lineLimit(1)
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .light))
+                    .font(YixiuTheme.sans(12, weight: .light))
                     .foregroundStyle(YixiuTheme.mist)
             }
             .foregroundStyle(YixiuTheme.moon)
@@ -748,18 +870,18 @@ struct MeView: View {
                         Text(title)
                             .font(YixiuTheme.chineseDisplay(16))
                         Text(tagline)
-                            .font(.system(size: 10))
+                            .font(YixiuTheme.sans(10))
                             .foregroundStyle(YixiuTheme.aqua)
                     }
                     Text(description)
-                        .font(.system(size: 11))
+                        .font(YixiuTheme.sans(11))
                         .lineSpacing(3)
                         .foregroundStyle(YixiuTheme.mist)
                         .multilineTextAlignment(.leading)
                 }
                 Spacer(minLength: 4)
                 Image(systemName: "arrow.up.right")
-                    .font(.system(size: 11, weight: .light))
+                    .font(YixiuTheme.sans(11, weight: .light))
                     .foregroundStyle(YixiuTheme.mist)
             }
             .foregroundStyle(YixiuTheme.moon)
@@ -773,17 +895,17 @@ struct MeView: View {
         Link(destination: URL(string: url)!) {
             HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.system(size: 15, weight: .light))
+                    .font(YixiuTheme.sans(15, weight: .light))
                     .foregroundStyle(YixiuTheme.aqua)
                     .frame(width: 34)
                 Text(title)
                     .font(YixiuTheme.chineseDisplay(14))
                 Spacer()
                 Text(value)
-                    .font(.system(size: 10))
+                    .font(YixiuTheme.sans(10))
                     .foregroundStyle(YixiuTheme.mist)
                 Image(systemName: "arrow.up.right")
-                    .font(.system(size: 10, weight: .light))
+                    .font(YixiuTheme.sans(10, weight: .light))
                     .foregroundStyle(YixiuTheme.mist)
             }
             .foregroundStyle(YixiuTheme.moon)
@@ -795,7 +917,7 @@ struct MeView: View {
 
     private func actionLinkLabel(_ title: String, icon: String) -> some View {
         Label(title, systemImage: icon)
-            .font(.system(size: 13, weight: .semibold))
+            .font(YixiuTheme.sans(13, weight: .semibold))
             .foregroundStyle(YixiuTheme.deepWater)
             .padding(.horizontal, 18)
             .frame(height: 48)
@@ -888,7 +1010,7 @@ private struct AboutYixiuView: View {
                 zh: "我们用真实自然声、定时聆听与水之呼吸，陪你在工作、阅读、睡眠或情绪起伏时先停一停，照顾身体，听见自己，再继续前行。",
                 en: "Through real nature sounds, timed listening and water breathing, we help you pause, care for the body, hear yourself and continue—through work, reading, sleep and emotional change."
             ))
-            .font(.system(size: 13))
+            .font(YixiuTheme.sans(13))
             .lineSpacing(7)
             .foregroundStyle(YixiuTheme.mist)
             .padding(.top, 16)
@@ -910,7 +1032,7 @@ private struct AboutYixiuView: View {
                     zh: "真正的成长，不是把自己改造成某个标准答案，而是在变化中越来越诚实地看见自己，越来越从容地选择自己的活法。",
                     en: "Growth is not the work of turning yourself into a standard answer. It is learning to see yourself more honestly through change, and to choose your way of living with greater ease."
                 ))
-                .font(.system(size: 12))
+                .font(YixiuTheme.sans(12))
                 .lineSpacing(7)
                 .foregroundStyle(YixiuTheme.mist)
                 .padding(.top, 12)
@@ -921,7 +1043,7 @@ private struct AboutYixiuView: View {
                         let item = entry.element
                         VStack(alignment: .leading, spacing: 7) {
                             Text(String(format: "%02d", index + 1))
-                                .font(.system(size: 9))
+                                .font(YixiuTheme.sans(9))
                                 .foregroundStyle(YixiuTheme.aqua)
                             Text(item)
                                 .font(YixiuTheme.chineseDisplay(11))
@@ -950,7 +1072,7 @@ private struct AboutYixiuView: View {
                                 .font(YixiuTheme.chineseDisplay(14))
                                 .foregroundStyle(YixiuTheme.aqua)
                             Text(principle.1)
-                                .font(.system(size: 10))
+                                .font(YixiuTheme.sans(10))
                                 .lineSpacing(4)
                                 .foregroundStyle(YixiuTheme.mist)
                         }
@@ -976,7 +1098,7 @@ private struct AboutYixiuView: View {
                     zh: "我们愿陪伴彼此走过低谷与高峰，探索身心健康的工作与生活方式；真实面对自己与世界，善待自己、他人与生命，并在创造和欣赏中活出生命之美。",
                     en: "We hope to accompany one another through valleys and peaks, exploring healthier ways to work and live: facing self and world truthfully, treating life with kindness, and creating and appreciating beauty."
                 ))
-                .font(.system(size: 11))
+                .font(YixiuTheme.sans(11))
                 .lineSpacing(6)
                 .foregroundStyle(YixiuTheme.mist)
                 .padding(.top, 16)
@@ -1010,7 +1132,7 @@ private struct MeArticle: View {
                 .foregroundStyle(YixiuTheme.moon)
             ForEach(paragraphs, id: \.self) { paragraph in
                 Text(paragraph)
-                    .font(.system(size: 14))
+                    .font(YixiuTheme.sans(14))
                     .lineSpacing(7)
                     .foregroundStyle(YixiuTheme.mist)
             }

@@ -18,6 +18,10 @@
 		A20000000000000000000009 /* MeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000009 /* MeView.swift */; };
 		A2000000000000000000000A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000A /* Assets.xcassets */; };
 		A2000000000000000000000B /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000D /* Audio */; };
+		A2000000000000000000000C /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000E /* Fonts */; };
+		A2000000000000000000000D /* SubscriptionAccessPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000F /* SubscriptionAccessPolicy.swift */; };
+		A2000000000000000000000E /* SubscriptionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000010 /* SubscriptionStore.swift */; };
+		A2000000000000000000000F /* PlusPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* PlusPaywallView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +38,11 @@
 		A1000000000000000000000B /* YixiuMeditation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YixiuMeditation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1000000000000000000000C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1000000000000000000000D /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
+		A1000000000000000000000E /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
+		A1000000000000000000000F /* SubscriptionAccessPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionAccessPolicy.swift; sourceTree = "<group>"; };
+		A10000000000000000000010 /* SubscriptionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStore.swift; sourceTree = "<group>"; };
+		A10000000000000000000011 /* PlusPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlusPaywallView.swift; sourceTree = "<group>"; };
+		A10000000000000000000012 /* YixiuPlus.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = YixiuPlus.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,8 +76,13 @@
 				A10000000000000000000007 /* ListenView.swift */,
 				A10000000000000000000008 /* FocusView.swift */,
 				A10000000000000000000009 /* MeView.swift */,
+				A1000000000000000000000F /* SubscriptionAccessPolicy.swift */,
+				A10000000000000000000010 /* SubscriptionStore.swift */,
+				A10000000000000000000011 /* PlusPaywallView.swift */,
+				A10000000000000000000012 /* YixiuPlus.storekit */,
 				A1000000000000000000000A /* Assets.xcassets */,
 				A1000000000000000000000D /* Audio */,
+				A1000000000000000000000E /* Fonts */,
 				A1000000000000000000000C /* Info.plist */,
 			);
 			path = YixiuMeditation;
@@ -143,6 +157,7 @@
 			files = (
 				A2000000000000000000000A /* Assets.xcassets in Resources */,
 				A2000000000000000000000B /* Audio in Resources */,
+				A2000000000000000000000C /* Fonts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +177,9 @@
 				A20000000000000000000007 /* ListenView.swift in Sources */,
 				A20000000000000000000008 /* FocusView.swift in Sources */,
 				A20000000000000000000009 /* MeView.swift in Sources */,
+				A2000000000000000000000D /* SubscriptionAccessPolicy.swift in Sources */,
+				A2000000000000000000000E /* SubscriptionStore.swift in Sources */,
+				A2000000000000000000000F /* PlusPaywallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,7 +293,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -292,7 +310,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -309,7 +327,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -326,7 +344,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
