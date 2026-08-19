@@ -128,7 +128,7 @@ struct PlusPaywallView: View {
             planCard(
                 .yearly,
                 badge: subscriptionStore.annualTrialEligible
-                    ? language.text(zh: "推荐 · 7 天免费试用", en: "BEST VALUE · 7 DAYS FREE")
+                    ? language.text(zh: "7 天免费", en: "7 DAYS FREE")
                     : language.text(zh: "推荐", en: "BEST VALUE")
             )
             planCard(.monthly, badge: nil)
