@@ -16,9 +16,9 @@ struct PlusPaywallView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 22) {
                     hero
-                    benefits
                     planPicker
                     purchaseButton
+                    benefits
                     legacyNote
                     footer
                 }
@@ -125,50 +125,55 @@ struct PlusPaywallView: View {
 
     private var planPicker: some View {
         VStack(spacing: 10) {
-            planCard(
-                .yearly,
-                badge: subscriptionStore.annualTrialEligible
-                    ? language.text(zh: "7 天免费", en: "7 DAYS FREE")
-                    : language.text(zh: "推荐", en: "BEST VALUE")
-            )
-            planCard(.monthly, badge: nil)
+            planCard(.yearly)
+            planCard(.monthly)
         }
     }
 
-    private func planCard(_ plan: YixiuPlusPlan, badge: String?) -> some View {
+    private func planCard(_ plan: YixiuPlusPlan) -> some View {
         Button {
             selectedPlan = plan
         } label: {
-            HStack(spacing: 13) {
-                Image(systemName: selectedPlan == plan ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 20, weight: .light))
-                    .foregroundStyle(selectedPlan == plan ? YixiuTheme.aquaStrong : YixiuTheme.mist)
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 9) {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    HStack(spacing: 10) {
+                        Image(systemName: selectedPlan == plan ? "checkmark.circle.fill" : "circle")
+                            .font(.system(size: 20, weight: .light))
+                            .foregroundStyle(selectedPlan == plan ? YixiuTheme.aquaStrong : YixiuTheme.mist)
                         Text(plan == .yearly
                              ? language.text(zh: "连续包年", en: "Annual")
                              : language.text(zh: "连续包月", en: "Monthly"))
-                            .font(YixiuTheme.chineseDisplay(17))
-                        if let badge {
-                            Text(badge)
-                                .font(YixiuTheme.sans(8, weight: .semibold))
-                                .foregroundStyle(YixiuTheme.deepWater)
-                                .padding(.horizontal, 7)
-                                .frame(height: 20)
-                                .background(Capsule().fill(YixiuTheme.aquaStrong))
-                        }
+                            .font(YixiuTheme.sans(14, weight: .medium))
+                            .foregroundStyle(YixiuTheme.moon)
                     }
-                    Text(planSubtitle(plan))
-                        .font(YixiuTheme.sans(10))
+                    Spacer()
+                    if plan == .yearly && subscriptionStore.annualTrialEligible {
+                        Text(language.text(zh: "含 7 天试用", en: "7-day trial"))
+                            .font(YixiuTheme.sans(9, weight: .medium))
+                            .foregroundStyle(YixiuTheme.aqua)
+                    }
+                }
+
+                HStack(alignment: .firstTextBaseline, spacing: 7) {
+                    Text(price(for: plan))
+                        .font(YixiuTheme.englishSerif(28, weight: .semibold))
+                        .monospacedDigit()
+                    Text(plan == .yearly
+                         ? language.text(zh: "/ 年", en: "/ year")
+                         : language.text(zh: "/ 月", en: "/ month"))
+                        .font(YixiuTheme.sans(13, weight: .medium))
                         .foregroundStyle(YixiuTheme.mist)
                 }
-                Spacer()
-                Text(subscriptionStore.product(for: plan)?.displayPrice ?? "—")
-                    .font(YixiuTheme.englishSerif(19, weight: .semibold))
-                    .foregroundStyle(YixiuTheme.moon)
+                .foregroundStyle(YixiuTheme.moon)
+
+                Text(planSubtitle(plan))
+                    .font(YixiuTheme.sans(11))
+                    .foregroundStyle(YixiuTheme.mist)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, 16)
-            .frame(minHeight: 70)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, minHeight: 108, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 19, style: .continuous)
                     .fill(YixiuTheme.deepWaterSoft.opacity(selectedPlan == plan ? 0.88 : 0.56))
@@ -184,11 +189,24 @@ struct PlusPaywallView: View {
     private func planSubtitle(_ plan: YixiuPlusPlan) -> String {
         if plan == .yearly {
             if subscriptionStore.annualTrialEligible {
-                return language.text(zh: "试用结束后按年续订，可随时取消", en: "Renews yearly after trial. Cancel anytime.")
+                return language.text(
+                    zh: "7 天免费试用，之后每年 \(price(for: plan)) 自动续订，可随时取消。",
+                    en: "7-day free trial, then \(price(for: plan)) per year. Renews automatically until canceled."
+                )
             }
-            return language.text(zh: "按年续订，可随时取消", en: "Renews yearly. Cancel anytime.")
+            return language.text(
+                zh: "每年 \(price(for: plan)) 自动续订，可随时取消。",
+                en: "\(price(for: plan)) per year. Renews automatically until canceled."
+            )
         }
-        return language.text(zh: "按月续订，可随时取消", en: "Renews monthly. Cancel anytime.")
+        return language.text(
+            zh: "每月 \(price(for: plan)) 自动续订，可随时取消。",
+            en: "\(price(for: plan)) per month. Renews automatically until canceled."
+        )
+    }
+
+    private func price(for plan: YixiuPlusPlan) -> String {
+        subscriptionStore.product(for: plan)?.displayPrice ?? language.text(zh: "所示价格", en: "the displayed price")
     }
 
     private var purchaseButton: some View {
@@ -202,9 +220,7 @@ struct PlusPaywallView: View {
                     if subscriptionStore.isBusy {
                         ProgressView().tint(YixiuTheme.deepWater)
                     }
-                    Text(subscriptionStore.annualTrialEligible && selectedPlan == .yearly
-                         ? language.text(zh: "开始 7 天免费试用", en: "Start 7-Day Free Trial")
-                         : language.text(zh: "开始一休 Plus", en: "Start Yixiu Plus"))
+                    Text(language.text(zh: "继续", en: "Continue"))
                 }
                 .font(YixiuTheme.sans(15, weight: .semibold))
                 .foregroundStyle(YixiuTheme.deepWater)
@@ -215,6 +231,13 @@ struct PlusPaywallView: View {
             }
             .buttonStyle(.plain)
             .disabled(subscriptionStore.isBusy || subscriptionStore.product(for: selectedPlan) == nil)
+
+            Text(purchaseDisclosure)
+                .font(YixiuTheme.sans(11, weight: .medium))
+                .foregroundStyle(YixiuTheme.moon.opacity(0.92))
+                .multilineTextAlignment(.center)
+                .lineSpacing(3)
+                .fixedSize(horizontal: false, vertical: true)
 
             if subscriptionStore.productsUnavailable {
                 Button {
@@ -232,6 +255,24 @@ struct PlusPaywallView: View {
                     .multilineTextAlignment(.center)
             }
         }
+    }
+
+    private var purchaseDisclosure: String {
+        if selectedPlan == .yearly && subscriptionStore.annualTrialEligible {
+            return language.text(
+                zh: "7 天免费试用，之后每年 \(price(for: .yearly)) 自动续订，取消前持续有效。",
+                en: "7-day free trial, then \(price(for: .yearly)) per year. Automatically renews until canceled."
+            )
+        }
+        return selectedPlan == .yearly
+            ? language.text(
+                zh: "每年 \(price(for: .yearly)) 自动续订，取消前持续有效。",
+                en: "\(price(for: .yearly)) per year. Automatically renews until canceled."
+            )
+            : language.text(
+                zh: "每月 \(price(for: .monthly)) 自动续订，取消前持续有效。",
+                en: "\(price(for: .monthly)) per month. Automatically renews until canceled."
+            )
     }
 
     private var legacyNote: some View {
