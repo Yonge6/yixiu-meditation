@@ -459,6 +459,12 @@ function sceneShareUrl(sceneId: SceneId, language: Language) {
   return url.toString();
 }
 
+function recordGrowthEvent(event: string, parameters: Record<string, string | number | boolean> = {}) {
+  window.dispatchEvent(new CustomEvent("yixiu:analytics", {
+    detail: { event, ...parameters },
+  }));
+}
+
 function linkedScene() {
   const sceneId = new URLSearchParams(window.location.search).get("scene");
   return sceneId && sceneOrder.includes(sceneId as SceneId) ? sceneId as SceneId : null;
@@ -559,11 +565,12 @@ export default function Prototype() {
         setIsPlaying(false);
         setWisdomIndex((index) => (index + 1) % wisdoms.length);
         setWisdomOpen(true);
+        recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
         return 0;
       });
     }, 1000);
     return () => window.clearInterval(interval);
-  }, [duration, isPlaying]);
+  }, [active.id, duration, isPlaying]);
 
   useEffect(() => {
     if (breathingStatus !== "running") return;
@@ -572,6 +579,7 @@ export default function Prototype() {
         if (current >= breathingTotalSeconds - 1) {
           setBreathingStatus("complete");
           setIsPlaying(breathingOriginalPlaybackRef.current);
+          recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
           window.clearInterval(interval);
           return breathingTotalSeconds;
         }
@@ -579,7 +587,7 @@ export default function Prototype() {
       });
     }, 1000);
     return () => window.clearInterval(interval);
-  }, [breathingStatus, breathingTotalSeconds]);
+  }, [breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
@@ -665,13 +673,15 @@ export default function Prototype() {
       ? `此刻，我在一休聆听「${active.zh}」。真实自己，流动人生。`
       : `I am listening to ${active.en} in Yixiu. True to yourself, flow with life.`;
     const url = sceneShareUrl(active.id, language);
+    const nativeShare = Reflect.get(navigator, "share") as Navigator["share"] | undefined;
 
     try {
-      if (navigator.share) {
-        await navigator.share({ title, text, url });
+      if (nativeShare) {
+        await nativeShare.call(navigator, { title, text, url });
       } else {
         await navigator.clipboard.writeText(url);
       }
+      recordGrowthEvent("yixiu_scene_share", { shared_scene: active.id, share_method: nativeShare ? "system" : "clipboard" });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       console.error("Unable to share the current Yixiu scene", error);
@@ -875,6 +885,7 @@ export default function Prototype() {
     setIsPlaying(focusSoundEnabled);
     setBreathingElapsed(0);
     setBreathingStatus("running");
+    recordGrowthEvent("yixiu_focus_start", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
   };
 
   const resetBreathing = () => {
@@ -949,6 +960,8 @@ export default function Prototype() {
           className="brand-button"
           type="button"
           aria-label={language === "zh" ? "切换到英文" : "Switch to Chinese"}
+          data-analytics-event="yixiu_language_change"
+          data-analytics-value={language === "zh" ? "en" : "zh"}
           onClick={() => setLanguage((current) => current === "zh" ? "en" : "zh")}
         >
           <span>{language === "zh" ? "一休" : "YIXIU"}</span>
@@ -1065,7 +1078,7 @@ export default function Prototype() {
                       const scene = scenes[sceneId];
                       return (
                         <article key={sceneId} className={active.id === sceneId ? "is-active" : ""}>
-                          <button className="scene-select" type="button" onClick={() => {
+                          <button className="scene-select" type="button" data-scene-id={sceneId} onClick={() => {
                             setActiveScene(sceneId);
                             setActiveTab("sounds");
                             setIsPlaying(true);
@@ -1185,7 +1198,7 @@ export default function Prototype() {
             <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "上一种声音" : "Previous sound"} disabled={!previousScene} onClick={() => moveScene(-1)}>
               <TrackPreviousIcon />
             </button>
-            <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} onClick={() => setIsPlaying((current) => {
+            <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} data-scene-id={active.id} onClick={() => setIsPlaying((current) => {
               if (!current) recordRecentScene(active.id);
               return !current;
             })}>
@@ -1350,8 +1363,8 @@ export default function Prototype() {
                   <div className="setting-row">
                     <span><strong>{language === "zh" ? "界面语言" : "Language"}</strong><small>{language === "zh" ? "中英双语随时切换" : "Chinese and English"}</small></span>
                     <div className="language-switch compact">
-                      <button type="button" className={language === "zh" ? "is-active" : ""} onClick={() => setLanguage("zh")}>中</button>
-                      <button type="button" className={language === "en" ? "is-active" : ""} onClick={() => setLanguage("en")}>EN</button>
+                      <button type="button" className={language === "zh" ? "is-active" : ""} data-analytics-event="yixiu_language_change" data-analytics-value="zh" onClick={() => setLanguage("zh")}>中</button>
+                      <button type="button" className={language === "en" ? "is-active" : ""} data-analytics-event="yixiu_language_change" data-analytics-value="en" onClick={() => setLanguage("en")}>EN</button>
                     </div>
                   </div>
                   <div className="setting-row">
@@ -1364,7 +1377,7 @@ export default function Prototype() {
                   </div>
                 </section>
 
-                <a className="me-app-download" href="https://apps.apple.com/app/id1461182261" target="_blank" rel="noreferrer" onClick={() => setDownloadFeedback(true)}>
+                <a className="me-app-download" href="https://apps.apple.com/app/id1461182261" target="_blank" rel="noreferrer" data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={() => setDownloadFeedback(true)}>
                   <span>
                     <small>YIXIU FOR IPHONE</small>
                     <strong>{language === "zh" ? "下载一休 App" : "Download Yixiu"}</strong>
@@ -1455,9 +1468,9 @@ export default function Prototype() {
       ) : null}
 
       <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
-        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><span className="nav-icon"><WaterWavesIcon /></span><span className="nav-label">{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
-        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-icon"><span className="nav-focus-orbit" /></span><span className="nav-label">{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
-        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} onClick={() => { setActiveTab("me"); setMeView("home"); }}><span className="nav-icon"><PersonIcon /></span><span className="nav-label">{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
+        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="sounds" onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><span className="nav-icon"><WaterWavesIcon /></span><span className="nav-label">{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
+        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="focus" onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-icon"><span className="nav-focus-orbit" /></span><span className="nav-label">{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
+        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="me" onClick={() => { setActiveTab("me"); setMeView("home"); }}><span className="nav-icon"><PersonIcon /></span><span className="nav-label">{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
       </nav>
 
       {libraryOpen ? (
@@ -1476,7 +1489,7 @@ export default function Prototype() {
             <div className="scene-grid">
               {filteredSceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
+                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" data-scene-id={scene.id} aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
               })}
             </div>
           </section>

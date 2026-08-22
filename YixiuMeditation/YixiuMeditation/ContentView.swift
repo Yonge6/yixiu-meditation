@@ -1,7 +1,9 @@
+import StoreKit
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var appState: AppState
+    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         GeometryReader { rootGeometry in
@@ -24,6 +26,11 @@ struct ContentView: View {
         }
         .background(YixiuTheme.deepWater)
         .preferredColorScheme(.dark)
+        .onChange(of: appState.reviewRequestToken) { _, token in
+            guard token > 0 else { return }
+            requestReview()
+            appState.markReviewRequestHandled()
+        }
     }
 }
 

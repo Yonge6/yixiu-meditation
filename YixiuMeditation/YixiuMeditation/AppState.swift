@@ -44,6 +44,7 @@ final class AppState: ObservableObject {
     @Published var activeTab: RootTab = .listen
     @Published var audioError: String?
     @Published var sessionCompleted = false
+    @Published private(set) var reviewRequestToken = 0
 
     private let audio = AmbientAudioEngine()
     private let defaults = UserDefaults.standard
@@ -51,7 +52,18 @@ final class AppState: ObservableObject {
     private var hasStartedPlayback = false
     private var enforcedAccessLevel: YixiuAccessLevel?
 
+    private enum EngagementKey {
+        static let firstLaunchDate = "yixiu.engagement.firstLaunchDate"
+        static let activeDays = "yixiu.engagement.activeDays"
+        static let playbackStarts = "yixiu.engagement.playbackStarts"
+        static let completedSessions = "yixiu.engagement.completedSessions"
+        static let completedFocusSessions = "yixiu.engagement.completedFocusSessions"
+        static let promptedVersion = "yixiu.engagement.reviewPromptedVersion"
+    }
+
     init() {
+        recordLaunch()
+
         if
             let savedLanguage = defaults.string(forKey: "language"),
             let restoredLanguage = AppLanguage(rawValue: savedLanguage)
@@ -142,6 +154,7 @@ final class AppState: ObservableObject {
             audioError = nil
             sessionCompleted = false
             hasStartedPlayback = true
+            increment(EngagementKey.playbackStarts)
             recordRecentScene(scene)
             isPlaying = true
             startTimer()
@@ -174,6 +187,7 @@ final class AppState: ObservableObject {
                 isPlaying = true
                 startTimer()
                 hasStartedPlayback = true
+                increment(EngagementKey.playbackStarts)
                 syncNowPlaying()
             } catch {
                 pause()
@@ -229,6 +243,20 @@ final class AppState: ObservableObject {
         enforcedAccessLevel = level
     }
 
+    func recordCompletedSession(isFocus: Bool = false) {
+        increment(EngagementKey.completedSessions)
+        if isFocus {
+            increment(EngagementKey.completedFocusSessions)
+        }
+
+        guard shouldOfferReview else { return }
+        reviewRequestToken += 1
+    }
+
+    func markReviewRequestHandled() {
+        defaults.set(appVersion, forKey: EngagementKey.promptedVersion)
+    }
+
     private func canAccessScene(_ target: MeditationScene) -> Bool {
         guard let enforcedAccessLevel else { return true }
         return SubscriptionAccessPolicy.canAccess(scene: target, level: enforcedAccessLevel)
@@ -249,6 +277,7 @@ final class AppState: ObservableObject {
                 } else {
                     self.remainingSeconds = 0
                     self.pause()
+                    self.recordCompletedSession()
                     self.sessionCompleted = true
                 }
             }
@@ -266,5 +295,35 @@ final class AppState: ObservableObject {
             canMovePrevious: canMoveScene(-1),
             canMoveNext: canMoveScene(1)
         )
+    }
+
+    private var appVersion: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"
+    }
+
+    private var shouldOfferReview: Bool {
+        let completedSessions = defaults.integer(forKey: EngagementKey.completedSessions)
+        let activeDays = defaults.stringArray(forKey: EngagementKey.activeDays)?.count ?? 0
+        let promptedVersion = defaults.string(forKey: EngagementKey.promptedVersion)
+        return completedSessions >= 3 && activeDays >= 2 && promptedVersion != appVersion
+    }
+
+    private func increment(_ key: String) {
+        defaults.set(defaults.integer(forKey: key) + 1, forKey: key)
+    }
+
+    private func recordLaunch() {
+        if defaults.object(forKey: EngagementKey.firstLaunchDate) == nil {
+            defaults.set(Date(), forKey: EngagementKey.firstLaunchDate)
+        }
+
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate]
+        let today = formatter.string(from: Date())
+        var activeDays = defaults.stringArray(forKey: EngagementKey.activeDays) ?? []
+        if !activeDays.contains(today) {
+            activeDays.append(today)
+            defaults.set(Array(activeDays.suffix(90)), forKey: EngagementKey.activeDays)
+        }
     }
 }

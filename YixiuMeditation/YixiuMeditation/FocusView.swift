@@ -141,6 +141,7 @@ struct FocusView: View {
                 if elapsed >= totalSeconds {
                     status = .complete
                     restoreOriginalPlayback()
+                    appState.recordCompletedSession(isFocus: true)
                     return
                 }
             }
