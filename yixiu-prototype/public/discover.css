@@ -1,0 +1,97 @@
+:root {
+  color-scheme: dark;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  background: #031c24;
+  color: #f3f5ef;
+}
+
+* { box-sizing: border-box; }
+
+html { background: #031c24; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #031c24;
+}
+
+a { color: inherit; }
+
+.intent-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: #031c24;
+}
+
+.intent-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .68;
+  filter: saturate(.82) contrast(1.02);
+}
+
+.intent-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2, 18, 25, .22), rgba(2, 20, 27, .78) 56%, #031c24 96%);
+  pointer-events: none;
+}
+
+.intent-shell {
+  width: min(100%, 1120px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 28px clamp(22px, 6vw, 76px) 64px;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: space-between;
+  gap: 72px;
+}
+
+.intent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.intent-brand { font-size: 17px; text-decoration: none; }
+.intent-header span { color: #b0dfe0; font: 500 11px/1.2 system-ui, sans-serif; }
+
+.intent-hero { max-width: 780px; padding-top: 8vh; }
+.intent-kicker { color: #a4e4e4; font: 600 12px/1.4 system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase; }
+.intent-hero h1 { margin: 18px 0; max-width: 720px; font-size: clamp(48px, 8vw, 92px); font-weight: 400; line-height: .98; letter-spacing: -.035em; }
+.intent-lede { max-width: 610px; margin: 0; color: rgba(243,245,239,.78); font: 400 clamp(17px, 2.2vw, 22px)/1.55 system-ui, sans-serif; }
+
+.intent-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.intent-button { min-height: 52px; padding: 0 24px; border: 1px solid rgba(159,225,225,.48); border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; font: 600 14px/1 system-ui, sans-serif; text-decoration: none; background: rgba(4,35,44,.5); backdrop-filter: blur(12px); }
+.intent-button.primary { color: #03232b; background: #a6e8e8; border-color: #a6e8e8; }
+.intent-button:active { transform: scale(.98); }
+
+.intent-proof { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid rgba(151,218,219,.27); border-radius: 24px; background: rgba(151,218,219,.24); }
+.intent-proof article { min-height: 176px; padding: 24px; background: rgba(3,30,38,.78); backdrop-filter: blur(14px); }
+.intent-proof small { color: #9ddddd; font: 600 10px/1.4 system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+.intent-proof h2 { margin: 12px 0 8px; font-size: 23px; font-weight: 400; }
+.intent-proof p { margin: 0; color: rgba(243,245,239,.66); font: 400 14px/1.55 system-ui, sans-serif; }
+
+.intent-footer { display: flex; justify-content: space-between; gap: 20px; color: rgba(220,239,235,.5); font: 500 11px/1.5 system-ui, sans-serif; }
+.intent-footer a { text-decoration: none; }
+
+@media (max-width: 720px) {
+  .intent-shell { padding-top: max(22px, env(safe-area-inset-top)); gap: 48px; }
+  .intent-header span { display: none; }
+  .intent-hero { padding-top: 5vh; }
+  .intent-hero h1 { font-size: clamp(46px, 15vw, 66px); }
+  .intent-actions { display: grid; }
+  .intent-button { width: 100%; }
+  .intent-proof { grid-template-columns: 1fr; }
+  .intent-proof article { min-height: 0; }
+  .intent-footer { flex-direction: column; }
+}

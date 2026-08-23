@@ -456,6 +456,10 @@ function sceneShareUrl(sceneId: SceneId, language: Language) {
   const url = new URL(publicYixiuUrl);
   url.searchParams.set("scene", sceneId);
   url.searchParams.set("lang", language);
+  url.searchParams.set("utm_source", "share");
+  url.searchParams.set("utm_medium", "referral");
+  url.searchParams.set("utm_campaign", "scene_share");
+  url.searchParams.set("utm_content", `${sceneId}_${language}`);
   return url.toString();
 }
 
@@ -475,8 +479,12 @@ function linkedLanguage() {
   return language === "zh" || language === "en" ? language : null;
 }
 
+function preferredLanguage(): Language {
+  return navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+}
+
 export default function Prototype() {
-  const [language, setLanguage] = useStoredState<Language>("yixiu.language", "zh", linkedLanguage());
+  const [language, setLanguage] = useStoredState<Language>("yixiu.language", preferredLanguage(), linkedLanguage());
   const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene());
   const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30);
   const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", []);
