@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/?lang=zh");
   await page.evaluate(() => localStorage.clear());
   await page.reload();
 });
@@ -45,7 +45,7 @@ test("opens shared scene links and shares the current scene URL", async ({ page 
 
   const payload = await page.evaluate(() => (window as Window & { __yixiuShare?: ShareData }).__yixiuShare);
   expect(payload?.title).toContain("Morning Birds");
-  expect(payload?.url).toBe("https://yixiu.wonderelian.com/?scene=birds&lang=en");
+  expect(payload?.url).toBe("https://yixiu.wonderelian.com/?scene=birds&lang=en&utm_source=share&utm_medium=referral&utm_campaign=scene_share&utm_content=birds_en");
 });
 
 test("animates the scene gently only while sound is playing", async ({ page }) => {
@@ -320,7 +320,7 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   await expect(workLinks.nth(3)).toContainText("道德经");
   await expect(page.getByText(/YIXIU 2\.0/)).toHaveCount(0);
   const downloadLink = page.getByRole("link", { name: /下载一休 App/ });
-  await expect(downloadLink).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");
+  await expect(downloadLink).toHaveAttribute("href", /ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   await downloadLink.evaluate((element) => {
     element.addEventListener("click", (event) => event.preventDefault(), { once: true });
   });
@@ -343,6 +343,14 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   await page.getByRole("button", { name: "返回" }).click();
   await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();
   await expect(page.getByRole("button", { name: "打开菜单" })).toHaveCount(0);
+});
+
+test("keeps an attributable App Store action on the player first screen", async ({ page }) => {
+  const downloadLink = page.getByRole("link", { name: "在 App Store 下载一休" });
+  await expect(downloadLink).toBeVisible();
+  await expect(downloadLink).toHaveAttribute("href", /ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
+  await expect(downloadLink).toHaveAttribute("data-analytics-event", "yixiu_download_click");
+  await expect(downloadLink).toHaveAttribute("data-analytics-placement", "player_header");
 });
 
 test("shows the WonderElian WeChat Channels QR code in Contact", async ({ page }) => {
