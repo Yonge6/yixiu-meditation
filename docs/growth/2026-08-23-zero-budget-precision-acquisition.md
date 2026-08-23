@@ -1,8 +1,10 @@
 # Yixiu zero-budget precision acquisition
 
-Date: 2026-08-23  
-Primary market: United States, then other English-speaking markets  
-North-star outcome: attributable first-time iPhone downloads  
+Date: 2026-08-23
+
+Primary market: United States, then other English-speaking markets
+
+North-star outcome: attributable first-time iPhone downloads
 
 ## Positioning
 
