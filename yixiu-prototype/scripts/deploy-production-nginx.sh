@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+archive_url="${1:?archive URL is required}"
+archive_sha256="${2:?archive SHA-256 is required}"
+release_id="${3:?release id is required}"
+
+case "$release_id" in
+  *[!A-Za-z0-9._-]*)
+    echo "invalid release id" >&2
+    exit 2
+    ;;
+esac
+
+deploy_target="/srv/wonderelian/yixiu.wonderelian.com"
+deploy_stage="/srv/wonderelian/.yixiu-${release_id}"
+deploy_backup="/srv/wonderelian/backups/yixiu-${release_id}"
+archive_path="$deploy_stage/site.tar.gz"
+site_path="$deploy_stage/site"
+
+test -d "$deploy_target"
+test ! -e "$deploy_stage"
+test ! -e "$deploy_backup"
+
+mkdir -p "$site_path" "$deploy_backup"
+trap 'rm -rf "$deploy_stage"' EXIT
+
+curl --proto-default https \
+  --retry 3 \
+  --retry-all-errors \
+  --connect-timeout 15 \
+  --max-time 180 \
+  -fL "$archive_url" \
+  -o "$archive_path"
+
+printf '%s  %s\n' "$archive_sha256" "$archive_path" | sha256sum -c -
+
+if tar -tzf "$archive_path" | grep -Eq '(^/|(^|/)\.\.(/|$))'; then
+  echo "unsafe archive path" >&2
+  exit 3
+fi
+
+tar -xzf "$archive_path" -C "$site_path"
+
+test -f "$site_path/index.html"
+test -f "$site_path/sleep-sounds/index.html"
+test -f "$site_path/focus-sounds/index.html"
+test -f "$site_path/one-minute-reset/index.html"
+test -f "$site_path/analytics.js"
+test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
+grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
+grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
+grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
+
+cp -a "$deploy_target/." "$deploy_backup/"
+rsync -a "$site_path/" "$deploy_target/"
+
+rollback() {
+  rsync -a "$deploy_backup/" "$deploy_target/"
+  nginx -t
+  nginx -s reload
+  echo "ROLLED_BACK" >&2
+}
+
+if ! nginx -t; then
+  rollback
+  exit 4
+fi
+
+if ! nginx -s reload; then
+  rollback
+  exit 5
+fi
+
+grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" >/dev/null
+curl --compressed -fsS -H 'Host: yixiu.wonderelian.com' http://127.0.0.1/ \
+  | grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' >/dev/null
+
+echo "DEPLOY_OK_YIXIU_${release_id}"
