@@ -8,6 +8,12 @@
   const query = new URLSearchParams(window.location.search);
   const campaignKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
 
+  function pageLanguage() {
+    const explicit = query.get("lang");
+    if (explicit) return explicit;
+    return document.documentElement.lang.toLowerCase().startsWith("zh") ? "zh" : "en";
+  }
+
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
   window.gtag("js", new Date());
@@ -30,7 +36,7 @@
     return {
       site_id: "site-yixiu",
       surface: "h5",
-      language: app?.dataset.language || query.get("lang") || "zh",
+      language: app?.dataset.language || pageLanguage(),
       scene: app?.dataset.scene || query.get("scene") || "ocean",
       active_tab: app?.dataset.tab || "sounds",
       page_path: window.location.pathname,
@@ -48,7 +54,7 @@
 
   send("yixiu_landing_view", {
     landing_scene: query.get("scene") || "ocean",
-    landing_language: query.get("lang") || "zh",
+    landing_language: pageLanguage(),
     referrer_host: document.referrer ? new URL(document.referrer).hostname : "direct",
   });
 
