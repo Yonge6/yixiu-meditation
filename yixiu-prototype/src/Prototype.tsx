@@ -292,6 +292,7 @@ const durations: DurationOption[] = [15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3];
 const sceneCategories: SceneCategory[] = ["all", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
+const sleepAppStoreUrl = "https://apps.apple.com/us/app/一休冥想-白噪音与静心/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752";
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
   sceneOrder.map((sceneId) => [sceneId, `/assets/yixiu/thumbs/${sceneId}.jpg`]),
@@ -976,6 +977,17 @@ export default function Prototype() {
           <small>{language === "zh" ? "YIXIU" : "一休"}</small>
         </button>
         <div className="header-actions">
+          <a
+            className="header-download-link"
+            href={sleepAppStoreUrl}
+            target="_blank"
+            rel="noreferrer"
+            data-analytics-event="yixiu_download_click"
+            data-analytics-placement="player_header"
+            aria-label={language === "zh" ? "在 App Store 下载一休" : "Download Yixiu on the App Store"}
+          >
+            {language === "zh" ? "下载" : "GET APP"}
+          </a>
           <button
             className="header-share-button"
             type="button"
@@ -1385,7 +1397,7 @@ export default function Prototype() {
                   </div>
                 </section>
 
-                <a className="me-app-download" href="https://apps.apple.com/app/id1461182261" target="_blank" rel="noreferrer" data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={() => setDownloadFeedback(true)}>
+                <a className="me-app-download" href={sleepAppStoreUrl} target="_blank" rel="noreferrer" data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={() => setDownloadFeedback(true)}>
                   <span>
                     <small>YIXIU FOR IPHONE</small>
                     <strong>{language === "zh" ? "下载一休 App" : "Download Yixiu"}</strong>
