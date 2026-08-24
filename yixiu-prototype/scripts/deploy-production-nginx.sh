@@ -48,6 +48,7 @@ test -f "$site_path/sleep-sounds/index.html"
 test -f "$site_path/focus-sounds/index.html"
 test -f "$site_path/ocean-waves-for-focus/index.html"
 test -f "$site_path/mountain-stream-sounds-for-focus/index.html"
+test -f "$site_path/waterfall-sounds-for-noise-masking/index.html"
 test -f "$site_path/river-sounds-for-studying/index.html"
 test -f "$site_path/best-nature-sounds-for-studying/index.html"
 test -f "$site_path/guides/index.html"
@@ -65,6 +66,7 @@ grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/ind
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/guides/index.html" >/dev/null
@@ -73,6 +75,7 @@ grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/river-sounds-for-studying/index.html" >/dev/null
@@ -84,6 +87,7 @@ grep -F 'data-audio-preview=' "$site_path/one-minute-reset/index.html" >/dev/nul
 grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/ocean-waves-for-focus/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/' "$site_path/sitemap.xml" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/river-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/best-nature-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/guides/' "$site_path/sitemap.xml" >/dev/null
