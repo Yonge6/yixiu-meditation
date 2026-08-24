@@ -90,6 +90,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
   const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
   const schema = JSON.parse(schemaSource);
+  const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
   const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
   const video = schema["@graph"].find((entry) => entry["@type"] === "VideoObject");
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
@@ -103,6 +104,15 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(video.duration, "PT15M");
   assert.match(video.contentUrl, /8LJoPKN3CO4$/);
   assert.match(html, /youtube-nocookie\.com\/embed\/8LJoPKN3CO4/);
+  assert.equal(image.width, 941);
+  assert.equal(image.height, 1672);
+  assert.equal(image.representativeOfPage, true);
+  assert.equal(software.image["@id"], image["@id"]);
+  assert.match(html, /property="og:image:width" content="941"/);
+  assert.match(html, /property="og:image:height" content="1672"/);
+  assert.match(html, /property="og:image:alt" content="Rain falling beyond a quiet window at night"/);
+  assert.match(html, /name="twitter:image" content="https:\/\/yixiu\.wonderelian\.com\/assets\/yixiu\/window-rain\.png"/);
+  assert.match(html, /name="twitter:image:alt" content="Rain falling beyond a quiet window at night"/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
