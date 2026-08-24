@@ -7,8 +7,11 @@ Yixiu is a quiet, bilingual iPhone experience for sleep, focused work and one-mi
 ## Try Yixiu
 
 - [Open the web experience](https://yixiu.wonderelian.com/?utm_source=github&utm_medium=organic_referral&utm_campaign=product_trust&utm_content=repository_readme)
+- [Browse all nature sound guides](https://yixiu.wonderelian.com/guides/?utm_source=github&utm_medium=organic_referral&utm_campaign=nature_sound_guides&utm_content=repository_readme)
 - [Rain sounds for sleep](https://yixiu.wonderelian.com/sleep-sounds/?utm_source=github&utm_medium=organic_referral&utm_campaign=sleep_sounds&utm_content=repository_readme)
 - [Nature sounds for focus](https://yixiu.wonderelian.com/focus-sounds/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
+- [Play mountain stream sounds for focus](https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
+- [Use waterfall sounds for noise masking](https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
 - [Compare river, rain and ocean sounds for studying](https://yixiu.wonderelian.com/best-nature-sounds-for-studying/?utm_source=github&utm_medium=organic_referral&utm_campaign=study_sounds&utm_content=repository_readme)
 - [Play river sounds for studying](https://yixiu.wonderelian.com/river-sounds-for-studying/?utm_source=github&utm_medium=organic_referral&utm_campaign=study_sounds&utm_content=repository_readme)
 - [Take a one-minute reset](https://yixiu.wonderelian.com/one-minute-reset/?utm_source=github&utm_medium=organic_referral&utm_campaign=one_minute_reset&utm_content=repository_readme)
