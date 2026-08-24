@@ -50,6 +50,7 @@ test -f "$site_path/ocean-waves-for-focus/index.html"
 test -f "$site_path/mountain-stream-sounds-for-focus/index.html"
 test -f "$site_path/river-sounds-for-studying/index.html"
 test -f "$site_path/best-nature-sounds-for-studying/index.html"
+test -f "$site_path/guides/index.html"
 test -f "$site_path/one-minute-reset/index.html"
 test -f "$site_path/robots.txt"
 test -f "$site_path/sitemap.xml"
@@ -66,6 +67,7 @@ grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/ocean-waves-for-
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
+grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/guides/index.html" >/dev/null
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
@@ -77,12 +79,14 @@ grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/river-sounds-for-st
 grep -F 'data-analytics-placement="study_comparison_river"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_rain"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_ocean"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
+grep -F 'data-analytics-placement="guides_river_preview"' "$site_path/guides/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/ocean-waves-for-focus/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/river-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/best-nature-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/guides/' "$site_path/sitemap.xml" >/dev/null
 
 cp -a "$deploy_target/." "$deploy_backup/"
 rsync -a "$site_path/" "$deploy_target/"
