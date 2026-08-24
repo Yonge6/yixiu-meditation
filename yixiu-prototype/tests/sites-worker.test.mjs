@@ -225,6 +225,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(robots, /Sitemap: https:\/\/yixiu\.wonderelian\.com\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\//);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/waterfall-sounds-for-noise-masking\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
@@ -301,21 +302,55 @@ test("guides hub organizes every English intent page and exposes a real preview 
   assert.match(title, /^Nature Sound Guides/);
   assert.equal(h1Count, 1);
   assert.equal(collection.mainEntity["@id"], itemList["@id"]);
-  assert.equal(itemList.itemListElement.length, 7);
+  assert.equal(itemList.itemListElement.length, 8);
   assert.equal(faq.mainEntity.length, 3);
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
-  for (const route of ["sleep-sounds", "focus-sounds", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "one-minute-reset"]) {
+  for (const route of ["sleep-sounds", "focus-sounds", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset"]) {
     assert.match(html, new RegExp(`href="/${route}/"`));
   }
   assert.doesNotMatch(html, /aggregateRating|reviewCount|guarantee/i);
 });
 
 test("every English intent page links back to the guides hub", async () => {
-  for (const route of ["sleep-sounds", "focus-sounds", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "one-minute-reset"]) {
+  for (const route of ["sleep-sounds", "focus-sounds", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset"]) {
     const html = await readFile(new URL(`../public/${route}/index.html`, import.meta.url), "utf8");
     assert.match(html, /href="\/guides\/">Guides<\/a>/);
   }
+});
+
+test("waterfall masking page serves a real recording and keeps every claim, schema and download path aligned", async () => {
+  const html = await readFile(new URL("../public/waterfall-sounds-for-noise-masking/index.html", import.meta.url), "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1].replace("&amp;", "&");
+  const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
+  const h1Count = [...html.matchAll(/<h1\b/g)].length;
+  const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
+
+  assert.ok(title.length >= 50 && title.length <= 60);
+  assert.match(title, /^Waterfall Sounds for Noise Masking/);
+  assert.ok(description.length >= 150 && description.length <= 160);
+  assert.equal(h1Count, 1);
+  assert.equal(faqQuestions.length, 4);
+  assert.equal(faq.mainEntity.length, faqQuestions.length);
+  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.equal(image.width, 941);
+  assert.equal(image.height, 1672);
+  assert.equal(image.representativeOfPage, true);
+  assert.match(image.contentUrl, /forest-falls\.webp$/);
+  assert.equal(software.image["@id"], image["@id"]);
+  assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/forest-waterfall\.m4a"/);
+  assert.match(html, /data-analytics-placement="waterfall_masking_after_preview"/);
+  assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
+  assert.match(html, /It does not remove sound or replace hearing protection/);
+  assert.match(html, /href="\/focus-sounds\/"/);
+  assert.match(html, /href="\/mountain-stream-sounds-for-focus\/"/);
+  assert.match(html, /href="\/guides\/">Guides<\/a>/);
 });
 
 test("keeps the Google Search Console verification file exact", async () => {
