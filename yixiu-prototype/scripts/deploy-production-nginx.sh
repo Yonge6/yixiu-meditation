@@ -67,6 +67,7 @@ grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/ocean-waves-for-focus/' "$site_path/sitemap.xml" >/dev/null
