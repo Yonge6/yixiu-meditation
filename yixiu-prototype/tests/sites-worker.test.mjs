@@ -91,6 +91,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
   const schema = JSON.parse(schemaSource);
   const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const video = schema["@graph"].find((entry) => entry["@type"] === "VideoObject");
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
@@ -99,6 +100,9 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(faqQuestions.length, 4);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.equal(video.duration, "PT15M");
+  assert.match(video.contentUrl, /8LJoPKN3CO4$/);
+  assert.match(html, /youtube-nocookie\.com\/embed\/8LJoPKN3CO4/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
@@ -169,6 +173,7 @@ test("robots and sitemap expose the crawlable ocean focus route", async () => {
 
   assert.match(robots, /Sitemap: https:\/\/yixiu\.wonderelian\.com\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\//);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-24<\/lastmod>/);
 });
 
 test("keeps the Google Search Console verification file exact", async () => {
