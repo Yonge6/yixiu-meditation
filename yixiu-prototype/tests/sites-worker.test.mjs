@@ -67,6 +67,22 @@ test("emits the files required by Sites packaging", async () => {
   await access(new URL("../dist/.openai/hosting.json", import.meta.url));
 });
 
+test("root page exposes truthful software application structured data", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const website = schema["@graph"].find((entry) => entry["@type"] === "WebSite");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+
+  assert.equal(website.url, "https://yixiu.wonderelian.com/");
+  assert.equal(software.name, "Yixiu: White Noise & Sleep");
+  assert.equal(software.operatingSystem, "iOS");
+  assert.equal(software.offers.price, "0");
+  assert.match(software.downloadUrl, /id1461182261$/);
+  assert.ok(software.featureList.includes("14 nature soundscapes"));
+  assert.doesNotMatch(schemaSource, /aggregateRating|reviewCount/);
+});
+
 test("sleep intent page keeps its search promise, visible FAQ, and conversion path aligned", async () => {
   const html = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
@@ -75,6 +91,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
   const schema = JSON.parse(schemaSource);
   const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const video = schema["@graph"].find((entry) => entry["@type"] === "VideoObject");
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
@@ -83,8 +100,14 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(faqQuestions.length, 4);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.equal(video.duration, "PT15M");
+  assert.match(video.contentUrl, /8LJoPKN3CO4$/);
+  assert.match(html, /youtube-nocookie\.com\/embed\/8LJoPKN3CO4/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
+  assert.match(html, /data-analytics-placement="sleep_after_preview"/);
+  assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/focus-sounds\/"/);
   assert.match(html, /href="\/one-minute-reset\/"/);
 });
@@ -107,7 +130,20 @@ test("focus intent page answers the query and keeps its App Store path aligned",
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
+  assert.match(html, /data-analytics-placement="focus_after_preview"/);
+  assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/ocean-waves-for-focus\/"/);
+});
+
+test("reset intent page offers a real one-tap preview before its matched App Store path", async () => {
+  const html = await readFile(new URL("../public/one-minute-reset/index.html", import.meta.url), "utf8");
+
+  assert.match(html, /src="\/discover\.js"/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/sunrise-river\.m4a"/);
+  assert.match(html, /data-analytics-placement="reset_after_preview"/);
+  assert.match(html, /ppid=6c015245-76ff-4266-8837-5a0ffc289b9c/);
+  assert.doesNotMatch(html, /utm_source=google/);
 });
 
 test("ocean focus page aligns visible video, structured data, and attributed download CTA", async () => {
@@ -125,6 +161,8 @@ test("ocean focus page aligns visible video, structured data, and attributed dow
   assert.equal(video.duration, "PT10M");
   assert.match(video.contentUrl, /2nJUyIr9EOY$/);
   assert.match(html, /youtube-nocookie\.com\/embed\/2nJUyIr9EOY/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/ocean-waves\.m4a"/);
+  assert.match(html, /data-analytics-placement="ocean_focus_after_preview"/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-analytics-placement="ocean_focus_landing"/);
 });
@@ -135,6 +173,7 @@ test("robots and sitemap expose the crawlable ocean focus route", async () => {
 
   assert.match(robots, /Sitemap: https:\/\/yixiu\.wonderelian\.com\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\//);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-24<\/lastmod>/);
 });
 
 test("keeps the Google Search Console verification file exact", async () => {
@@ -147,4 +186,13 @@ test("keeps the Google Search Console verification file exact", async () => {
     verification.trim(),
     "google-site-verification: google56101fb62f40fa0c.html",
   );
+});
+
+test("keeps the public IndexNow key file exact", async () => {
+  const key = await readFile(
+    new URL("../public/0d28a7f9686f4a45871ea685d741dc75.txt", import.meta.url),
+    "utf8",
+  );
+
+  assert.equal(key.trim(), "0d28a7f9686f4a45871ea685d741dc75");
 });

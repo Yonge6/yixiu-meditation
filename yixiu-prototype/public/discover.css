@@ -71,9 +71,16 @@ a { color: inherit; }
 .intent-lede { max-width: 610px; margin: 0; color: rgba(243,245,239,.78); font: 400 clamp(17px, 2.2vw, 22px)/1.55 system-ui, sans-serif; }
 
 .intent-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-.intent-button { min-height: 52px; padding: 0 24px; border: 1px solid rgba(159,225,225,.48); border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; font: 600 14px/1 system-ui, sans-serif; text-decoration: none; background: rgba(4,35,44,.5); backdrop-filter: blur(12px); }
+.intent-button { min-height: 52px; padding: 0 24px; border: 1px solid rgba(159,225,225,.48); border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; color: inherit; font: 600 14px/1 system-ui, sans-serif; text-decoration: none; background: rgba(4,35,44,.5); backdrop-filter: blur(12px); cursor: pointer; }
 .intent-button.primary { color: #03232b; background: #a6e8e8; border-color: #a6e8e8; }
+.intent-button.app-store { background: rgba(3,30,38,.72); border-color: rgba(228,244,240,.42); }
 .intent-button:active { transform: scale(.98); }
+.intent-preview-icon { width: 22px; height: 22px; display: inline-grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 9px; line-height: 1; }
+.intent-button.is-playing .intent-preview-icon::before { content: "Ⅱ"; font-size: 10px; letter-spacing: -2px; transform: translateX(-1px); }
+.intent-button:not(.is-playing) .intent-preview-icon::before { content: "▶"; transform: translateX(1px); }
+.intent-trustline { margin: 14px 0 0; color: rgba(235,247,244,.68); font: 500 12px/1.5 system-ui, sans-serif; letter-spacing: .02em; }
+.intent-after-play { max-width: 610px; margin-top: 16px; padding: 15px 18px; border: 1px solid rgba(159,225,225,.28); border-radius: 16px; background: rgba(3,30,38,.66); color: rgba(243,245,239,.78); font: 500 13px/1.55 system-ui, sans-serif; backdrop-filter: blur(12px); }
+.intent-after-play a { color: #a6e8e8; font-weight: 700; text-decoration: none; }
 
 .intent-proof { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid rgba(151,218,219,.27); border-radius: 24px; background: rgba(151,218,219,.24); }
 .intent-proof article { min-height: 176px; padding: 24px; background: rgba(3,30,38,.78); backdrop-filter: blur(14px); }
@@ -191,6 +198,7 @@ a { color: inherit; }
   .intent-hero h1 { font-size: clamp(46px, 15vw, 66px); }
   .intent-actions { display: grid; }
   .intent-button { width: 100%; }
+  .intent-trustline { text-align: center; }
   .intent-proof { grid-template-columns: 1fr; }
   .intent-proof article { min-height: 0; }
   .intent-guide,
