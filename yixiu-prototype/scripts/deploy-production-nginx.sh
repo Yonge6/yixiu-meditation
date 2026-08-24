@@ -91,7 +91,9 @@ fi
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
-curl --compressed -fsS -H 'Host: yixiu.wonderelian.com' http://127.0.0.1/ \
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/ \
   | grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' >/dev/null
 
 echo "DEPLOY_OK_YIXIU_${release_id}"
