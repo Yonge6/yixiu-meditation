@@ -144,6 +144,7 @@ test("focus intent page answers the query and keeps its App Store path aligned",
   assert.match(html, /data-analytics-placement="focus_after_preview"/);
   assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/ocean-waves-for-focus\/"/);
+  assert.match(html, /href="\/mountain-stream-sounds-for-focus\/"/);
 });
 
 test("reset intent page offers a real one-tap preview before its matched App Store path", async () => {
@@ -175,14 +176,51 @@ test("ocean focus page aligns visible video, structured data, and attributed dow
   assert.match(html, /data-analytics-placement="ocean_focus_after_preview"/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-analytics-placement="ocean_focus_landing"/);
+  assert.match(html, /href="\/mountain-stream-sounds-for-focus\/"/);
 });
 
-test("robots and sitemap expose the crawlable ocean focus route", async () => {
+test("mountain stream focus page keeps its search promise, real preview, and schema aligned", async () => {
+  const html = await readFile(new URL("../public/mountain-stream-sounds-for-focus/index.html", import.meta.url), "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
+  const h1Count = [...html.matchAll(/<h1\b/g)].length;
+  const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
+
+  assert.ok(title.length >= 50 && title.length <= 60);
+  assert.match(title, /^Mountain Stream Sounds for Focus/);
+  assert.ok(description.length >= 150 && description.length <= 160);
+  assert.equal(h1Count, 1);
+  assert.equal(faqQuestions.length, 4);
+  assert.equal(faq.mainEntity.length, faqQuestions.length);
+  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.equal(image.width, 941);
+  assert.equal(image.height, 1672);
+  assert.equal(image.representativeOfPage, true);
+  assert.equal(software.image["@id"], image["@id"]);
+  assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
+  assert.match(html, /data-analytics-placement="mountain_stream_focus_after_preview"/);
+  assert.match(html, /property="og:image:width" content="941"/);
+  assert.match(html, /property="og:image:height" content="1672"/);
+  assert.match(html, /name="twitter:image" content="https:\/\/yixiu\.wonderelian\.com\/assets\/yixiu\/spring-creek\.png"/);
+  assert.doesNotMatch(html, /VideoObject|aggregateRating|reviewCount/);
+  assert.match(html, /href="\/focus-sounds\/"/);
+  assert.match(html, /href="\/ocean-waves-for-focus\/"/);
+  assert.match(html, /href="\/sleep-sounds\/"/);
+});
+
+test("robots and sitemap expose the crawlable focus routes", async () => {
   const robots = await readFile(new URL("../public/robots.txt", import.meta.url), "utf8");
   const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
 
   assert.match(robots, /Sitemap: https:\/\/yixiu\.wonderelian\.com\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\//);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-24<\/lastmod>/);
 });
 
