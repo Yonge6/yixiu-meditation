@@ -81,6 +81,84 @@ a { color: inherit; }
 .intent-proof h2 { margin: 12px 0 8px; font-size: 23px; font-weight: 400; }
 .intent-proof p { margin: 0; color: rgba(243,245,239,.66); font: 400 14px/1.55 system-ui, sans-serif; }
 
+.intent-guide,
+.intent-faq {
+  display: grid;
+  grid-template-columns: minmax(240px, .78fr) minmax(0, 1.22fr);
+  gap: clamp(30px, 6vw, 76px);
+  padding: clamp(30px, 5vw, 56px);
+  border: 1px solid rgba(151,218,219,.27);
+  border-radius: 28px;
+  background: rgba(3,30,38,.76);
+  backdrop-filter: blur(16px);
+}
+
+.intent-section-heading small {
+  color: #9ddddd;
+  font: 600 10px/1.4 system-ui, sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.intent-section-heading h2 {
+  margin: 14px 0 12px;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.025em;
+}
+
+.intent-section-heading p {
+  margin: 0;
+  color: rgba(243,245,239,.65);
+  font: 400 15px/1.65 system-ui, sans-serif;
+}
+
+.intent-steps {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.intent-steps li {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 16px;
+  padding: 20px 0;
+  border-top: 1px solid rgba(151,218,219,.18);
+}
+
+.intent-steps li:first-child { padding-top: 0; border-top: 0; }
+.intent-steps li:last-child { padding-bottom: 0; }
+.intent-steps span { color: #9ddddd; font: 600 11px/1.5 system-ui, sans-serif; letter-spacing: .12em; }
+.intent-steps h3 { margin: 0 0 6px; font-size: 20px; font-weight: 400; }
+.intent-steps p { margin: 0; color: rgba(243,245,239,.65); font: 400 14px/1.6 system-ui, sans-serif; }
+
+.intent-faq-list { border-top: 1px solid rgba(151,218,219,.18); }
+.intent-faq details { border-bottom: 1px solid rgba(151,218,219,.18); }
+.intent-faq summary { padding: 19px 38px 19px 0; position: relative; cursor: pointer; list-style: none; font-size: 19px; line-height: 1.35; }
+.intent-faq summary::-webkit-details-marker { display: none; }
+.intent-faq summary::after { content: "+"; position: absolute; top: 18px; right: 2px; color: #9ddddd; font: 400 24px/1 system-ui, sans-serif; }
+.intent-faq details[open] summary::after { content: "−"; }
+.intent-faq details p { margin: -4px 36px 20px 0; color: rgba(243,245,239,.66); font: 400 14px/1.65 system-ui, sans-serif; }
+
+.intent-related {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid rgba(151,218,219,.22);
+  border-bottom: 1px solid rgba(151,218,219,.22);
+  font: 500 13px/1.4 system-ui, sans-serif;
+}
+
+.intent-related span { margin-right: auto; color: rgba(220,239,235,.56); }
+.intent-related a { min-height: 42px; padding: 0 17px; border: 1px solid rgba(159,225,225,.32); border-radius: 999px; display: inline-flex; align-items: center; text-decoration: none; }
+
 .intent-footer { display: flex; justify-content: space-between; gap: 20px; color: rgba(220,239,235,.5); font: 500 11px/1.5 system-ui, sans-serif; }
 .intent-footer a { text-decoration: none; }
 
@@ -93,5 +171,11 @@ a { color: inherit; }
   .intent-button { width: 100%; }
   .intent-proof { grid-template-columns: 1fr; }
   .intent-proof article { min-height: 0; }
+  .intent-guide,
+  .intent-faq { grid-template-columns: 1fr; padding: 26px 22px; gap: 30px; border-radius: 22px; }
+  .intent-section-heading h2 { font-size: 34px; }
+  .intent-related { align-items: stretch; }
+  .intent-related span { flex-basis: 100%; margin: 0 0 2px; }
+  .intent-related a { flex: 1 1 100%; justify-content: center; }
   .intent-footer { flex-direction: column; }
 }
