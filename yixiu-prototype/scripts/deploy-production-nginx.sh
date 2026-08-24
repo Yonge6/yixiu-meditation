@@ -52,7 +52,10 @@ test -f "$site_path/robots.txt"
 test -f "$site_path/sitemap.xml"
 test -f "$site_path/analytics.js"
 test -f "$site_path/discover.js"
+test -f "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt"
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
+grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
+grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
@@ -86,6 +89,8 @@ if ! nginx -s reload; then
 fi
 
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" >/dev/null
+grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
+grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 curl --compressed -fsS -H 'Host: yixiu.wonderelian.com' http://127.0.0.1/ \
   | grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' >/dev/null
 

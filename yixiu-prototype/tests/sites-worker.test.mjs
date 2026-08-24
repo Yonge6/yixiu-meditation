@@ -67,6 +67,22 @@ test("emits the files required by Sites packaging", async () => {
   await access(new URL("../dist/.openai/hosting.json", import.meta.url));
 });
 
+test("root page exposes truthful software application structured data", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const website = schema["@graph"].find((entry) => entry["@type"] === "WebSite");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+
+  assert.equal(website.url, "https://yixiu.wonderelian.com/");
+  assert.equal(software.name, "Yixiu: White Noise & Sleep");
+  assert.equal(software.operatingSystem, "iOS");
+  assert.equal(software.offers.price, "0");
+  assert.match(software.downloadUrl, /id1461182261$/);
+  assert.ok(software.featureList.includes("14 nature soundscapes"));
+  assert.doesNotMatch(schemaSource, /aggregateRating|reviewCount/);
+});
+
 test("sleep intent page keeps its search promise, visible FAQ, and conversion path aligned", async () => {
   const html = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
@@ -165,4 +181,13 @@ test("keeps the Google Search Console verification file exact", async () => {
     verification.trim(),
     "google-site-verification: google56101fb62f40fa0c.html",
   );
+});
+
+test("keeps the public IndexNow key file exact", async () => {
+  const key = await readFile(
+    new URL("../public/0d28a7f9686f4a45871ea685d741dc75.txt", import.meta.url),
+    "utf8",
+  );
+
+  assert.equal(key.trim(), "0d28a7f9686f4a45871ea685d741dc75");
 });
