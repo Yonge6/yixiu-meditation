@@ -85,6 +85,9 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
+  assert.match(html, /data-analytics-placement="sleep_after_preview"/);
+  assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/focus-sounds\/"/);
   assert.match(html, /href="\/one-minute-reset\/"/);
 });
@@ -107,7 +110,20 @@ test("focus intent page answers the query and keeps its App Store path aligned",
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
+  assert.match(html, /data-analytics-placement="focus_after_preview"/);
+  assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/ocean-waves-for-focus\/"/);
+});
+
+test("reset intent page offers a real one-tap preview before its matched App Store path", async () => {
+  const html = await readFile(new URL("../public/one-minute-reset/index.html", import.meta.url), "utf8");
+
+  assert.match(html, /src="\/discover\.js"/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/sunrise-river\.m4a"/);
+  assert.match(html, /data-analytics-placement="reset_after_preview"/);
+  assert.match(html, /ppid=6c015245-76ff-4266-8837-5a0ffc289b9c/);
+  assert.doesNotMatch(html, /utm_source=google/);
 });
 
 test("ocean focus page aligns visible video, structured data, and attributed download CTA", async () => {
@@ -125,6 +141,8 @@ test("ocean focus page aligns visible video, structured data, and attributed dow
   assert.equal(video.duration, "PT10M");
   assert.match(video.contentUrl, /2nJUyIr9EOY$/);
   assert.match(html, /youtube-nocookie\.com\/embed\/2nJUyIr9EOY/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/ocean-waves\.m4a"/);
+  assert.match(html, /data-analytics-placement="ocean_focus_after_preview"/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-analytics-placement="ocean_focus_landing"/);
 });

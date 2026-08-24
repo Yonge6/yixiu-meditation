@@ -51,12 +51,17 @@ test -f "$site_path/one-minute-reset/index.html"
 test -f "$site_path/robots.txt"
 test -f "$site_path/sitemap.xml"
 test -f "$site_path/analytics.js"
+test -f "$site_path/discover.js"
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
+grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
+grep -F 'data-audio-preview=' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
+grep -F 'data-audio-preview=' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/ocean-waves-for-focus/' "$site_path/sitemap.xml" >/dev/null
 
