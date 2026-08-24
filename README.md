@@ -9,8 +9,10 @@ Yixiu is a quiet, bilingual iPhone experience for sleep, focused work and one-mi
 - [Open the web experience](https://yixiu.wonderelian.com/?utm_source=github&utm_medium=organic_referral&utm_campaign=product_trust&utm_content=repository_readme)
 - [Rain sounds for sleep](https://yixiu.wonderelian.com/sleep-sounds/?utm_source=github&utm_medium=organic_referral&utm_campaign=sleep_sounds&utm_content=repository_readme)
 - [Nature sounds for focus](https://yixiu.wonderelian.com/focus-sounds/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
+- [Compare river, rain and ocean sounds for studying](https://yixiu.wonderelian.com/best-nature-sounds-for-studying/?utm_source=github&utm_medium=organic_referral&utm_campaign=study_sounds&utm_content=repository_readme)
+- [Play river sounds for studying](https://yixiu.wonderelian.com/river-sounds-for-studying/?utm_source=github&utm_medium=organic_referral&utm_campaign=study_sounds&utm_content=repository_readme)
 - [Take a one-minute reset](https://yixiu.wonderelian.com/one-minute-reset/?utm_source=github&utm_medium=organic_referral&utm_campaign=one_minute_reset&utm_content=repository_readme)
-- [Download Yixiu on the US App Store](https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261)
+- [Download Yixiu on the US App Store](https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759)
 
 ## What is inside
 
