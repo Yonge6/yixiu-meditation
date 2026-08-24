@@ -225,7 +225,34 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(robots, /Sitemap: https:\/\/yixiu\.wonderelian\.com\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\//);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-24<\/lastmod>/);
+});
+
+test("river study page keeps its student intent, real preview, and Focus download path aligned", async () => {
+  const html = await readFile(new URL("../public/river-sounds-for-studying/index.html", import.meta.url), "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const h1Count = [...html.matchAll(/<h1\b/g)].length;
+  const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const video = schema["@graph"].find((entry) => entry["@type"] === "VideoObject");
+  const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
+
+  assert.ok(title.length >= 50 && title.length <= 60);
+  assert.match(title, /^River Sounds for Studying/);
+  assert.equal(h1Count, 1);
+  assert.equal(faqQuestions.length, 4);
+  assert.equal(faq.mainEntity.length, faqQuestions.length);
+  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.equal(video.duration, "PT15M");
+  assert.match(video.contentUrl, /lfDiI0TAq1c$/);
+  assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
+  assert.match(html, /data-analytics-placement="river_study_after_preview"/);
+  assert.match(html, /youtube-nocookie\.com\/embed\/lfDiI0TAq1c/);
+  assert.doesNotMatch(html, /aggregateRating|reviewCount/);
 });
 
 test("keeps the Google Search Console verification file exact", async () => {
