@@ -227,6 +227,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-24<\/lastmod>/);
 });
 
@@ -283,6 +284,38 @@ test("study-sound comparison page exposes three real previews and a truthful com
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/ocean-waves\.m4a"/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|guarantee/i);
+});
+
+test("guides hub organizes every English intent page and exposes a real preview and truthful collection schema", async () => {
+  const html = await readFile(new URL("../public/guides/index.html", import.meta.url), "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const h1Count = [...html.matchAll(/<h1\b/g)].length;
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const collection = schema["@graph"].find((entry) => entry["@type"] === "CollectionPage");
+  const itemList = schema["@graph"].find((entry) => entry["@type"] === "ItemList");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
+
+  assert.ok(title.length >= 50 && title.length <= 60);
+  assert.match(title, /^Nature Sound Guides/);
+  assert.equal(h1Count, 1);
+  assert.equal(collection.mainEntity["@id"], itemList["@id"]);
+  assert.equal(itemList.itemListElement.length, 7);
+  assert.equal(faq.mainEntity.length, 3);
+  assert.match(software.downloadUrl, /id1461182261$/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
+  for (const route of ["sleep-sounds", "focus-sounds", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "one-minute-reset"]) {
+    assert.match(html, new RegExp(`href="/${route}/"`));
+  }
+  assert.doesNotMatch(html, /aggregateRating|reviewCount|guarantee/i);
+});
+
+test("every English intent page links back to the guides hub", async () => {
+  for (const route of ["sleep-sounds", "focus-sounds", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "one-minute-reset"]) {
+    const html = await readFile(new URL(`../public/${route}/index.html`, import.meta.url), "utf8");
+    assert.match(html, /href="\/guides\/">Guides<\/a>/);
+  }
 });
 
 test("keeps the Google Search Console verification file exact", async () => {
