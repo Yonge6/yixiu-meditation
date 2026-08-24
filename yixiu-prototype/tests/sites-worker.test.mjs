@@ -206,3 +206,14 @@ test("keeps the public IndexNow key file exact", async () => {
 
   assert.equal(key.trim(), "0d28a7f9686f4a45871ea685d741dc75");
 });
+
+test("production deploy acceptance checks the HTTPS origin instead of its redirect", async () => {
+  const script = await readFile(
+    new URL("../scripts/deploy-production-nginx.sh", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(script, /--resolve 'yixiu\.wonderelian\.com:443:127\.0\.0\.1'/);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\//);
+  assert.doesNotMatch(script, /-H 'Host: yixiu\.wonderelian\.com' http:\/\/127\.0\.0\.1\//);
+});
