@@ -88,3 +88,15 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.match(html, /href="\/focus-sounds\/"/);
   assert.match(html, /href="\/one-minute-reset\/"/);
 });
+
+test("keeps the Google Search Console verification file exact", async () => {
+  const verification = await readFile(
+    new URL("../public/google56101fb62f40fa0c.html", import.meta.url),
+    "utf8",
+  );
+
+  assert.equal(
+    verification.trim(),
+    "google-site-verification: google56101fb62f40fa0c.html",
+  );
+});
