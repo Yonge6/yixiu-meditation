@@ -199,8 +199,8 @@ test("mountain stream focus page keeps its search promise, real preview, and sch
   assert.equal(faqQuestions.length, 4);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
-  assert.equal(image.width, 941);
-  assert.equal(image.height, 1672);
+  assert.equal(image.width, 1280);
+  assert.equal(image.height, 720);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
   assert.equal(video.duration, "PT15M");
@@ -209,9 +209,10 @@ test("mountain stream focus page keeps its search promise, real preview, and sch
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
   assert.match(html, /data-analytics-placement="mountain_stream_focus_after_preview"/);
-  assert.match(html, /property="og:image:width" content="941"/);
-  assert.match(html, /property="og:image:height" content="1672"/);
-  assert.match(html, /name="twitter:image" content="https:\/\/yixiu\.wonderelian\.com\/assets\/yixiu\/spring-creek\.png"/);
+  assert.match(html, /property="og:image:width" content="1280"/);
+  assert.match(html, /property="og:image:height" content="720"/);
+  assert.match(html, /name="twitter:image" content="https:\/\/yixiu\.wonderelian\.com\/assets\/yixiu\/mountain-stream-focus-share\.jpg"/);
+  assert.equal(video.thumbnailUrl, image.contentUrl);
   assert.doesNotMatch(html, /aggregateRating|reviewCount/);
   assert.match(html, /href="\/focus-sounds\/"/);
   assert.match(html, /href="\/ocean-waves-for-focus\/"/);
