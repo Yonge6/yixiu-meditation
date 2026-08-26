@@ -31,3 +31,18 @@ This is an early signal, not proof of meaningful search traffic. It was used onl
 - Pinterest Analytics was unavailable because WonderElian is currently a personal account. Impressions, saves, and outbound clicks therefore remain `null`; the account was not converted without explicit authorization.
 
 No new Pin was created, no other product was edited, and no cross-product referral was added.
+
+## Search distribution follow-up
+
+The existing production page was checked before resubmission:
+
+- `https://yixiu.wonderelian.com/focus-sounds/`: HTTP 200.
+- Canonical: `https://yixiu.wonderelian.com/focus-sounds/`.
+- Production title: `Nature Sounds for Focus & Deep Work | Yixiu`.
+- `robots.txt` allows crawling and points to the production sitemap.
+- `sitemap.xml` contains the exact focus page URL.
+- The production IndexNow key file returned HTTP 200 with the expected public key.
+
+Google Search Console URL Inspection reported `URL is on Google` / `Page is indexed`. A fresh indexing request was then accepted with `Indexing requested` and the URL was added to Google's priority crawl queue.
+
+The exact focus page URL was also submitted to the official IndexNow endpoint with the production key and returned HTTP 200. No URL from another product or domain was submitted.
