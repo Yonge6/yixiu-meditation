@@ -279,7 +279,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/morning-bird-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/forest-sounds-for-focus\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-27<\/lastmod>/);
 });
 
 test("river study page keeps its student intent, real preview, and Focus download path aligned", async () => {
@@ -616,6 +616,7 @@ test("wind sleep page serves real mountain wind and keeps its no-music bedtime p
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/mountain-wind\.m4a"/);
   assert.match(html, /data-analytics-placement="wind_sleep_after_preview"/);
   assert.match(html, /href="\/sleep-sounds\/"/);
+  assert.match(html, /href="\/ocean-waves-for-sleeping\/"/);
   assert.match(html, /href="\/thunderstorm-sounds-for-sleep\/"/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
