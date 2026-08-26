@@ -34,6 +34,7 @@ test("focus landing starts a real one-tap preview and reveals the matched downlo
 test("all search landings expose a preview, trust message and matched iPhone path", async ({ page }) => {
   for (const item of [
     { path: "/sleep-sounds/index.html", preview: "Play Window Rain", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
+    { path: "/underwater-white-noise-for-sleep/index.html", preview: "Play Underwater White Noise", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/one-minute-reset/index.html", preview: "Play Morning Water", ppid: "6c015245-76ff-4266-8837-5a0ffc289b9c" },
     { path: "/ocean-waves-for-focus/index.html", preview: "Play Ocean Waves", ppid: "7890afd3-dd12-4215-a5c5-17f4ebc28759" },
   ]) {
@@ -45,6 +46,25 @@ test("all search landings expose a preview, trust message and matched iPhone pat
     );
     await expect(page.locator(".intent-trustline")).toBeVisible();
   }
+});
+
+test("underwater white noise preview reveals its matched download action without mobile overflow", async ({ page }) => {
+  await page.goto("/underwater-white-noise-for-sleep/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
+
+  const preview = page.locator('button[data-analytics-placement="underwater_white_noise_preview"]');
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAccessibleName("Play Underwater White Noise");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Underwater White Noise")).toBeVisible();
+  const afterPreview = page.locator("[data-after-preview]");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu for iPhone." })).toHaveAttribute(
+    "href",
+    /ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/,
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
 test("successful native sharing creates an attributed referral after preview", async ({ page }) => {
