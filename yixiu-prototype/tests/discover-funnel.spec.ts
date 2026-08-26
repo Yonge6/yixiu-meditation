@@ -35,6 +35,7 @@ test("all search landings expose a preview, trust message and matched iPhone pat
   for (const item of [
     { path: "/sleep-sounds/index.html", preview: "Play Window Rain", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/underwater-white-noise-for-sleep/index.html", preview: "Play Underwater White Noise", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
+    { path: "/ocean-waves-for-sleeping/index.html", preview: "Play Ocean Waves", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/one-minute-reset/index.html", preview: "Play Morning Water", ppid: "6c015245-76ff-4266-8837-5a0ffc289b9c" },
     { path: "/ocean-waves-for-focus/index.html", preview: "Play Ocean Waves", ppid: "7890afd3-dd12-4215-a5c5-17f4ebc28759" },
   ]) {
@@ -46,6 +47,34 @@ test("all search landings expose a preview, trust message and matched iPhone pat
     );
     await expect(page.locator(".intent-trustline")).toBeVisible();
   }
+});
+
+test("ocean sleep preview reveals sharing and its matched download path without mobile overflow", async ({ page }) => {
+  await page.goto("/ocean-waves-for-sleeping/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
+
+  const preview = page.locator('button[data-analytics-placement="ocean_sleep_preview"]');
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAccessibleName("Play Ocean Waves");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Ocean Waves")).toBeVisible();
+  const afterPreview = page.locator("[data-after-preview]");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu for iPhone." })).toHaveAttribute(
+    "href",
+    /ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/,
+  );
+  const pinterest = page.getByRole("link", { name: "Save this sound to Pinterest" });
+  await expect(pinterest).toBeVisible();
+  const pinterestIntent = new URL(await pinterest.getAttribute("href") || "");
+  expect(pinterestIntent.searchParams.get("url")).toBe(
+    "https://yixiu.wonderelian.com/ocean-waves-for-sleeping/?utm_source=pinterest&utm_medium=organic_share&utm_campaign=scene_share&utm_content=ocean_sleep_pinterest",
+  );
+  expect(pinterestIntent.searchParams.get("media")).toBe(
+    "https://yixiu.wonderelian.com/assets/yixiu/night-tide.png",
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
 test("underwater white noise preview reveals its matched download action without mobile overflow", async ({ page }) => {
