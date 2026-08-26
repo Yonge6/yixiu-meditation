@@ -1,0 +1,9 @@
+# Yixiu intent-page share loop design
+
+The immediate growth constraint is qualified traffic, not App availability. App Store Connect now proves 10 first-time downloads in the 90-day period ending 2026-08-24, while the latest complete H5 day remains far below 100 UV. Publishing another same-day post or another near-duplicate search page would add volume without creating a repeatable acquisition mechanism. The selected change turns a behavior already occurring on the intent pages—starting a real sound preview—into an optional referral action.
+
+Every English intent page already loads `discover.js`, contains one canonical URL, and reveals a contextual block after playback begins. The script will add a small `Share this sound` button inside that revealed block. It will preserve the existing primary preview and App Store actions, so download conversion remains the first-screen priority. The shared URL is the page canonical with stable attribution: `utm_source=share`, `utm_medium=referral`, `utm_campaign=scene_share`, and a page-specific `utm_content` value derived from the existing preview placement. Existing query strings are not copied, preventing test or paid attribution from leaking into user shares.
+
+On devices with Web Share support, the button opens the native share sheet. On other devices, it copies the attributed URL. A cancelled share is not success. Only a resolved native share or successful clipboard write emits `yixiu_share`; an unavailable clipboard produces a visible retry-safe error without fabricating an event. Button feedback is temporary and returns to the original label.
+
+Verification covers native share, copy fallback, cancellation, attribution, analytics dispatch, mobile overflow, and the existing preview-to-download flow. The feature touches only Yixiu's shared discovery script, its discovery stylesheet, and focused tests.
