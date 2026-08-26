@@ -13,6 +13,7 @@ Yixiu is a quiet, bilingual iPhone experience for sleep, focused work and one-mi
 - [Play distant thunderstorm sounds for sleep](https://yixiu.wonderelian.com/thunderstorm-sounds-for-sleep/?utm_source=github&utm_medium=organic_referral&utm_campaign=sleep_sounds&utm_content=repository_readme)
 - [Nature sounds for focus](https://yixiu.wonderelian.com/focus-sounds/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
 - [Play morning bird sounds for focus](https://yixiu.wonderelian.com/morning-bird-sounds-for-focus/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
+- [Play forest sounds for focus](https://yixiu.wonderelian.com/forest-sounds-for-focus/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
 - [Play mountain wind sounds for sleeping](https://yixiu.wonderelian.com/wind-sounds-for-sleeping/?utm_source=github&utm_medium=organic_referral&utm_campaign=sleep_sounds&utm_content=repository_readme)
 - [Play mountain stream sounds for focus](https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
 - [Use waterfall sounds for noise masking](https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/?utm_source=github&utm_medium=organic_referral&utm_campaign=focus_sounds&utm_content=repository_readme)
