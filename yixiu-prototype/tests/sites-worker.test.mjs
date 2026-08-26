@@ -234,6 +234,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-reading\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/morning-bird-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
 });
 
 test("river study page keeps its student intent, real preview, and Focus download path aligned", async () => {
@@ -343,18 +344,18 @@ test("guides hub organizes every English intent page and exposes a real preview 
   assert.match(title, /^Nature Sound Guides/);
   assert.equal(h1Count, 1);
   assert.equal(collection.mainEntity["@id"], itemList["@id"]);
-  assert.equal(itemList.itemListElement.length, 11);
+  assert.equal(itemList.itemListElement.length, 12);
   assert.equal(faq.mainEntity.length, 3);
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
-  for (const route of ["sleep-sounds", "thunderstorm-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "rain-sounds-for-reading", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset"]) {
+  for (const route of ["sleep-sounds", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "focus-sounds", "morning-bird-sounds-for-focus", "rain-sounds-for-reading", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset"]) {
     assert.match(html, new RegExp(`href="/${route}/"`));
   }
   assert.doesNotMatch(html, /aggregateRating|reviewCount|guarantee/i);
 });
 
 test("every English intent page links back to the guides hub", async () => {
-  for (const route of ["sleep-sounds", "thunderstorm-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "rain-sounds-for-reading", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset"]) {
+  for (const route of ["sleep-sounds", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "focus-sounds", "morning-bird-sounds-for-focus", "rain-sounds-for-reading", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset"]) {
     const html = await readFile(new URL(`../public/${route}/index.html`, import.meta.url), "utf8");
     assert.match(html, /href="\/guides\/">Guides<\/a>/);
   }
@@ -460,6 +461,41 @@ test("morning birds focus page serves real birdsong and keeps its bright focus p
   assert.match(html, /data-analytics-placement="morning_birds_focus_after_preview"/);
   assert.match(html, /href="\/river-sounds-for-studying\/"/);
   assert.match(html, /href="\/rain-sounds-for-reading\/"/);
+  assert.match(html, /href="\/guides\/">Guides<\/a>/);
+  assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
+});
+
+test("wind sleep page serves real mountain wind and keeps its no-music bedtime promise aligned", async () => {
+  const html = await readFile(new URL("../public/wind-sounds-for-sleeping/index.html", import.meta.url), "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
+  const h1Count = [...html.matchAll(/<h1\b/g)].length;
+  const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const webpage = schema["@graph"].find((entry) => entry["@type"] === "WebPage");
+  const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
+
+  assert.ok(title.length >= 50 && title.length <= 60);
+  assert.match(title, /^Wind Sounds for Sleeping/);
+  assert.ok(description.length >= 150 && description.length <= 160);
+  assert.equal(h1Count, 1);
+  assert.equal(faqQuestions.length, 4);
+  assert.equal(faq.mainEntity.length, faqQuestions.length);
+  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.match(webpage.url, /wind-sounds-for-sleeping\/$/);
+  assert.equal(image.width, 941);
+  assert.equal(image.height, 1672);
+  assert.equal(image.representativeOfPage, true);
+  assert.equal(software.image["@id"], image["@id"]);
+  assert.match(image.contentUrl, /snow-wind\.png$/);
+  assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/mountain-wind\.m4a"/);
+  assert.match(html, /data-analytics-placement="wind_sleep_after_preview"/);
+  assert.match(html, /href="\/sleep-sounds\/"/);
+  assert.match(html, /href="\/thunderstorm-sounds-for-sleep\/"/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
 });
