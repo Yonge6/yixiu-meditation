@@ -126,6 +126,47 @@ test("clipboard fallback records a share only after the link is copied", async (
   }));
 });
 
+test("Pinterest intent uses the public image and an attributed canonical destination", async ({ page }) => {
+  await page.goto("/wind-sounds-for-sleeping/index.html", { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => {
+    const state = window as typeof window & { __shareEvents?: Array<Record<string, unknown>> };
+    state.__shareEvents = [];
+    window.addEventListener("yixiu:analytics", ((event: CustomEvent) => {
+      state.__shareEvents?.push(event.detail);
+    }) as EventListener);
+    document.addEventListener("click", (event) => {
+      if ((event.target as Element | null)?.closest?.(".intent-pinterest")) event.preventDefault();
+    }, true);
+  });
+
+  const pinterest = page.getByRole("link", { name: "Save this sound to Pinterest" });
+  await expect(pinterest).toBeHidden();
+  await page.getByRole("button", { name: "Play Mountain Wind" }).click();
+  await expect(pinterest).toBeVisible();
+
+  const href = await pinterest.getAttribute("href");
+  const intent = new URL(href || "");
+  expect(`${intent.origin}${intent.pathname}`).toBe("https://www.pinterest.com/pin/create/button/");
+  expect(intent.searchParams.get("url")).toBe(
+    "https://yixiu.wonderelian.com/wind-sounds-for-sleeping/?utm_source=pinterest&utm_medium=organic_share&utm_campaign=scene_share&utm_content=wind_sleep_pinterest",
+  );
+  expect(intent.searchParams.get("media")).toBe(
+    "https://yixiu.wonderelian.com/assets/yixiu/snow-wind.png",
+  );
+  expect(intent.searchParams.get("description")).toContain("Wind Sounds for Sleeping");
+
+  await pinterest.click();
+  const shareEvents = await page.evaluate(() => (
+    (window as typeof window & { __shareEvents?: Array<Record<string, unknown>> }).__shareEvents
+  ));
+  expect(shareEvents).toContainEqual(expect.objectContaining({
+    event: "yixiu_share",
+    share_method: "pinterest_intent",
+    placement: "wind_sleep_pinterest",
+  }));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("cancelling the native share sheet does not record a share", async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(navigator, "share", {

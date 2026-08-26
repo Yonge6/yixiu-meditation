@@ -14,6 +14,7 @@
 
   const afterPreview = document.querySelector("[data-after-preview]");
   const shareButton = afterPreview ? document.createElement("button") : null;
+  const pinterestLink = afterPreview ? document.createElement("a") : null;
   let shareFeedbackTimer = null;
 
   function sharePlacement() {
@@ -30,6 +31,40 @@
     url.searchParams.set("utm_campaign", "scene_share");
     url.searchParams.set("utm_content", placement);
     return url.toString();
+  }
+
+  function pinterestPlacement() {
+    return sharePlacement().replace(/_share$/, "_pinterest");
+  }
+
+  function pinterestDestination(placement) {
+    const canonical = document.querySelector('link[rel="canonical"]')?.href;
+    const url = new URL(canonical || window.location.href);
+    url.search = "";
+    url.hash = "";
+    url.searchParams.set("utm_source", "pinterest");
+    url.searchParams.set("utm_medium", "organic_share");
+    url.searchParams.set("utm_campaign", "scene_share");
+    url.searchParams.set("utm_content", placement);
+    return url.toString();
+  }
+
+  function pinterestCreateUrl(placement) {
+    const url = new URL("https://www.pinterest.com/pin/create/button/");
+    const title = document.querySelector('meta[property="og:title"]')?.content
+      || document.querySelector("h1")?.textContent?.trim()
+      || document.title;
+    const description = document.querySelector('meta[name="description"]')?.content || "Listen with Yixiu.";
+    const image = document.querySelector('meta[property="og:image"]')?.content;
+    url.searchParams.set("url", pinterestDestination(placement));
+    if (image) url.searchParams.set("media", image);
+    url.searchParams.set("description", `${title}\n\n${description}`);
+    return url.toString();
+  }
+
+  function updatePinterestLink() {
+    if (!pinterestLink) return;
+    pinterestLink.href = pinterestCreateUrl(pinterestPlacement());
   }
 
   function setShareFeedback(label) {
@@ -82,6 +117,26 @@
     });
   }
 
+  if (pinterestLink) {
+    pinterestLink.className = "intent-pinterest";
+    pinterestLink.textContent = "Save to Pinterest";
+    pinterestLink.target = "_blank";
+    pinterestLink.rel = "noopener noreferrer";
+    pinterestLink.setAttribute("aria-label", "Save this sound to Pinterest");
+    updatePinterestLink();
+    afterPreview.appendChild(pinterestLink);
+
+    pinterestLink.addEventListener("click", () => {
+      const placement = pinterestPlacement();
+      pinterestLink.href = pinterestCreateUrl(placement);
+      report("yixiu_share", {
+        share_method: "pinterest_intent",
+        shared_url: pinterestDestination(placement),
+        placement,
+      });
+    });
+  }
+
   function updateButton(button, playing) {
     button.setAttribute("aria-pressed", String(playing));
     button.classList.toggle("is-playing", playing);
@@ -113,6 +168,7 @@
       try {
         await audio.play();
         updateButton(button, true);
+        updatePinterestLink();
         document.querySelector("[data-after-preview]")?.removeAttribute("hidden");
         report("yixiu_playback_start", {
           selected_scene: button.dataset.scene,

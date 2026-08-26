@@ -81,8 +81,11 @@ a { color: inherit; }
 .intent-trustline { margin: 14px 0 0; color: rgba(235,247,244,.68); font: 500 12px/1.5 system-ui, sans-serif; letter-spacing: .02em; }
 .intent-after-play { max-width: 610px; margin-top: 16px; padding: 15px 18px; border: 1px solid rgba(159,225,225,.28); border-radius: 16px; background: rgba(3,30,38,.66); color: rgba(243,245,239,.78); font: 500 13px/1.55 system-ui, sans-serif; backdrop-filter: blur(12px); }
 .intent-after-play a { color: #a6e8e8; font-weight: 700; text-decoration: none; }
-.intent-share { min-height: 44px; margin: 8px 0 0 10px; padding: 0 15px; border: 1px solid rgba(159,225,225,.34); border-radius: 999px; color: #a6e8e8; background: rgba(3,30,38,.54); font: 650 12px/1 system-ui, sans-serif; cursor: pointer; }
+.intent-share,
+.intent-pinterest { min-height: 44px; margin: 8px 0 0 10px; padding: 0 15px; border: 1px solid rgba(159,225,225,.34); border-radius: 999px; color: #a6e8e8; background: rgba(3,30,38,.54); font: 650 12px/1 system-ui, sans-serif; cursor: pointer; }
+.intent-pinterest { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .intent-share:active { transform: scale(.98); }
+.intent-pinterest:active { transform: scale(.98); }
 .intent-share:disabled { opacity: .68; cursor: wait; }
 
 .intent-proof { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid rgba(151,218,219,.27); border-radius: 24px; background: rgba(151,218,219,.24); }
@@ -241,7 +244,8 @@ a { color: inherit; }
   .intent-actions { display: grid; }
   .intent-button { width: 100%; }
   .intent-trustline { text-align: center; }
-  .intent-share { width: 100%; margin: 12px 0 0; }
+  .intent-share,
+  .intent-pinterest { width: 100%; margin: 12px 0 0; }
   .intent-proof { grid-template-columns: 1fr; }
   .intent-proof article { min-height: 0; }
   .intent-guide,
