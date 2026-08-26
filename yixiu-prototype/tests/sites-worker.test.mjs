@@ -86,6 +86,7 @@ test("root page exposes truthful software application structured data", async ()
 test("sleep intent page keeps its search promise, visible FAQ, and conversion path aligned", async () => {
   const html = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
   const h1Count = [...html.matchAll(/<h1\b/g)].length;
   const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
   const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
@@ -96,7 +97,8 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
-  assert.match(title, /^Rain Sounds for Sleep/);
+  assert.match(title, /^Rain Sounds for Sleeping/);
+  assert.match(description, /real rain sounds for sleeping/i);
   assert.equal(h1Count, 1);
   assert.equal(faqQuestions.length, 4);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
@@ -116,6 +118,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
+  assert.match(html, /Real window rain/);
   assert.match(html, /data-analytics-placement="sleep_after_preview"/);
   assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/focus-sounds\/"/);
@@ -268,7 +271,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-24<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-reading\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/morning-bird-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);

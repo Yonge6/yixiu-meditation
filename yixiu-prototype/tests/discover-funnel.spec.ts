@@ -49,6 +49,32 @@ test("all search landings expose a preview, trust message and matched iPhone pat
   }
 });
 
+test("rain sleep preview reveals its matched download and attributed Pinterest path without mobile overflow", async ({ page }) => {
+  await page.goto("/sleep-sounds/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
+
+  const preview = page.locator('button[data-analytics-placement="sleep_landing_preview"]');
+  await expect(preview).toHaveAccessibleName("Play Window Rain");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Window Rain")).toBeVisible();
+  const afterPreview = page.locator("[data-after-preview]");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("link", { name: "Get Yixiu for iPhone." })).toHaveAttribute(
+    "href",
+    /ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/,
+  );
+  const pinterest = page.getByRole("link", { name: "Save this sound to Pinterest" });
+  const pinterestIntent = new URL(await pinterest.getAttribute("href") || "");
+  expect(pinterestIntent.searchParams.get("url")).toBe(
+    "https://yixiu.wonderelian.com/sleep-sounds/?utm_source=pinterest&utm_medium=organic_share&utm_campaign=scene_share&utm_content=sleep_landing_pinterest",
+  );
+  expect(pinterestIntent.searchParams.get("media")).toBe(
+    "https://yixiu.wonderelian.com/assets/yixiu/window-rain.png",
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("ocean sleep preview reveals sharing and its matched download path without mobile overflow", async ({ page }) => {
   await page.goto("/ocean-waves-for-sleeping/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
 
