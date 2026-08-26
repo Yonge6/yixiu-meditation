@@ -10,6 +10,11 @@ Verification:
 - Pinterest oEmbed returned title `Waterfall Sounds for Noise Masking — Real Water, No Music` and author `WonderElian`.
 - Published under `Yixiu: Nature Sounds & Sleep` with AI-modified disclosure enabled, AI-person disclosure disabled and similar-product recommendations disabled.
 - Output SHA-256: `81f1bc0419225467ce9061b8aa98ebfb3979b2d8ea0ed44b46dfc5337183a01f`.
+- The public board reached 24 Pins after publication. Its description was updated in place to add the distinct `noise masking`, `waterfalls`, `ocean waves` and `thunder` topics without creating another post.
+
+Public board description:
+
+`Real nature sounds for sleep, focus, studying and noise masking. Explore rain, ocean waves, streams, waterfalls, birds, thunder and mountain wind from Yixiu — plus one-minute breathing resets. No account. No ads.`
 
 ## Purpose
 
