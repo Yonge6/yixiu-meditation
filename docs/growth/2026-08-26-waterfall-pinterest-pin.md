@@ -50,3 +50,11 @@ Alt text:
 Board:
 
 `Yixiu: Nature Sounds & Sleep`
+
+## Search distribution verification
+
+- Google Search Console URL Inspection reported that the exact production waterfall URL is on Google and the page is indexed.
+- The production sitemap was read successfully by Google on 2026-08-26 and reported 15 discovered pages.
+- Because Google already reported the waterfall page as indexed, no duplicate Google indexing request was sent.
+- The exact production waterfall URL was submitted once to the official IndexNow endpoint with the public Yixiu key and returned HTTP 200.
+- No URL from another product or domain was submitted.
