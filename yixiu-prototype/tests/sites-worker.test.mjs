@@ -83,6 +83,42 @@ test("root page exposes truthful software application structured data", async ()
   assert.doesNotMatch(schemaSource, /aggregateRating|reviewCount/);
 });
 
+test("all H5 App Store actions use the shared Apple campaign attribution", async () => {
+  const pagePaths = [
+    "../index.html",
+    "../public/guides/index.html",
+    "../public/sleep-sounds/index.html",
+    "../public/thunderstorm-sounds-for-sleep/index.html",
+    "../public/rain-sounds-for-reading/index.html",
+    "../public/focus-sounds/index.html",
+    "../public/morning-bird-sounds-for-focus/index.html",
+    "../public/forest-sounds-for-focus/index.html",
+    "../public/wind-sounds-for-sleeping/index.html",
+    "../public/underwater-white-noise-for-sleep/index.html",
+    "../public/ocean-waves-for-sleeping/index.html",
+    "../public/ocean-waves-for-focus/index.html",
+    "../public/mountain-stream-sounds-for-focus/index.html",
+    "../public/waterfall-sounds-for-noise-masking/index.html",
+    "../public/river-sounds-for-studying/index.html",
+    "../public/best-nature-sounds-for-studying/index.html",
+    "../public/one-minute-reset/index.html",
+  ];
+
+  for (const pagePath of pagePaths) {
+    const html = await readFile(new URL(pagePath, import.meta.url), "utf8");
+    const appStoreHrefs = [...html.matchAll(/href="(https:\/\/apps\.apple\.com\/[^"]*id1461182261[^"]*)"/g)]
+      .map((match) => match[1].replaceAll("&amp;", "&"));
+
+    assert.ok(appStoreHrefs.length > 0, `${pagePath} should expose an App Store action`);
+    for (const href of appStoreHrefs) {
+      const url = new URL(href);
+      assert.equal(url.searchParams.get("pt"), "120014121", pagePath);
+      assert.equal(url.searchParams.get("ct"), "yixiu_h5_20260827", pagePath);
+      assert.equal(url.searchParams.get("mt"), "8", pagePath);
+    }
+  }
+});
+
 test("sleep intent page keeps its search promise, visible FAQ, and conversion path aligned", async () => {
   const html = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];

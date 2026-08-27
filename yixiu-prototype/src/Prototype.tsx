@@ -292,7 +292,7 @@ const durations: DurationOption[] = [15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3];
 const sceneCategories: SceneCategory[] = ["all", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
-const sleepAppStoreUrl = "https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752";
+const sleepAppStoreUrl = "https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
   sceneOrder.map((sceneId) => [sceneId, `/assets/yixiu/thumbs/${sceneId}.jpg`]),
