@@ -11,6 +11,19 @@
 
 The page answers the query before the first action, plays Yixiu's existing licensed underwater white-noise recording, offers a 15/30/60-minute browser timer, and avoids universal focus, memory, ADHD, treatment, rating or performance claims. It links only to other Yixiu listening paths; no other product or site was modified.
 
+## Pinterest distribution
+
+- Public Pin: `https://www.pinterest.com/pin/1147643917690291596/`
+- Account: `WonderElian` (`/wondereilan/`)
+- Board: `Yixiu: Nature Sounds & Sleep`
+- Title: `White Noise for Studying — Free 15/30/60 Min Timer`
+- Destination: `https://yixiu.wonderelian.com/white-noise-for-studying/?utm_source=pinterest&utm_medium=organic_share&utm_campaign=focus_sounds&utm_content=white_noise_studying_pin_01`
+- Alt text: `Deep blue underwater Yixiu poster reading White Noise for Studying, No Music, No Talking, and Free 15, 30, or 60 Minute Timer.`
+- Asset: `docs/growth/assets/white-noise-studying-pin-01.png`, 1000 × 1500 PNG
+- Asset SHA-256: `082470cb9cefd8ae416c291480d794d5b985b1148245bf42d430f4ba6a488606`
+
+Pinterest displayed `Your Pin has been published!` and linked to the public Pin above. The public page exposes the exact account, board, title, description and attributed `Visit site` destination; both URLs returned HTTP 200 without relying on a draft state. Similar-product recommendations were disabled so the Pin remains focused on Yixiu.
+
 ## Search discovery
 
 - Guides now exposes a dedicated White Noise for Studying card and a 17-item aligned `ItemList`.
@@ -43,4 +56,3 @@ Local build, server and public hashes matched for the landing page, Guides, site
 - Production browser: the preview changed to its playing state, the 30-minute timer advanced to `29:58 remaining`, the post-preview download action appeared, and the real audio request returned HTTP 206 with `audio/mp4`.
 
 The latest verified completed Beijing natural day remains 2026-08-27 with 14 GA4 active users, 20 page views and 15 sessions. This is below the 100-UV gate. Apple official data already proves 10 first-time downloads through 2026-08-26; trials, paid conversions, subscriptions, in-app purchases and revenue remain `null` where Apple showed insufficient data. The overall growth goal is therefore still active.
-
