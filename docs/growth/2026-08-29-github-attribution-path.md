@@ -36,11 +36,11 @@ The dedicated Apple campaign token is `yixiu_github_20260829`. It creates a futu
 - Apple's official US iTunes Lookup API returned one result for app ID `1461182261`: `Yixiu: White Noise & Sleep`, bundle ID `com.health.yixiu`, with the matching official US App Store product URL and current version release date `2026-08-26T21:12:30Z`.
 - From the current China network, following the US campaign URL was region-routed to `https://apps.apple.com/cn/iphone/today`. Therefore this evidence confirms the official app identity and URL structure, but does not claim a direct US product-page HTTP acceptance from this environment.
 
-The public README source and rendered repository page must be read back after the branch is merged before this README change is considered published.
+After merge, the GitHub API's public `main` README readback exposed the exact dark-screen H5 UTM and both English and Chinese `yixiu_github_20260829` App Store links. The public repository page and `raw.githubusercontent.com` README both returned HTTP 200. The README change is therefore verified as published.
 
 ## Measurement boundary
 
-The official GA4 Data API snapshot before publication still reported 3 active users, 4 views and 6 sessions for exact hostname `yixiu.wonderelian.com` on the incomplete Beijing natural day 2026-08-29. There was no GitHub source row, so no H5 user or session is attributed to this path yet.
+The official GA4 Data API snapshot after publication still reported 3 active users, 4 views and 6 sessions for exact hostname `yixiu.wonderelian.com` on the incomplete Beijing natural day 2026-08-29. There was no GitHub source row, so no H5 user or session is attributed to this path yet.
 
 The latest completed-day evidence remains conflicting: the 2026-08-28 GA4 hostname UI table showed 40 active users, 55 views and 47 sessions, while the exact-hostname GA4 Data API showed 26 active users, 35 views and 33 sessions. Both remain below the 100-UV gate.
 
