@@ -22,6 +22,17 @@ The public Pin returned HTTP 200 and its visible `Visit site` action resolved to
 
 The public Pin returned HTTP 200. The public Yixiu board reported 30 Pins and an exact accessible-name lookup for the title above resolved to `/pin/1147643917690288380/`. Only the Yixiu board was used; no other product board or site was modified.
 
+### Rain video Pin
+
+- Pinterest Pin: `https://www.pinterest.com/pin/1147643917690289056/`
+- Title: `Rain on Window for Sleep — No Music, No Talking`
+- Pin destination: `https://yixiu.wonderelian.com/sleep-sounds/?utm_source=pinterest&utm_medium=organic_video&utm_campaign=sleep_sounds&utm_content=rain_window_sleep_video_pin_07`
+- Description: `Press play for 20 seconds of real rain on a dark window—no music and no talking. Listen free online, set a 15, 30 or 60-minute timer, then continue in Yixiu for iPhone with background playback. Visual created with generative AI; audio is Yixiu's real Light Rain recording.`
+- Alt text: `A vertical Yixiu video showing rain on a dark window at night, with text reading Rain Sounds for Sleep, No Music, No Talking.`
+- Source asset SHA-256: `f15323c8e66ca58a5bfd44828432231e29ccea94f37df78de0ec5877d1fb81ff`
+
+The 20-second video Pin and its attributed destination both returned HTTP 200. Its public page exposed the exact title, destination, `WonderElian` account, `Yixiu: Nature Sounds & Sleep` board and `AI modified` marker. The public board increased from 30 to 31 Pins and an exact accessible-name lookup resolved the title above to `/pin/1147643917690289056/`. A readable `RAIN SOUNDS FOR SLEEP` frame was selected instead of the video's initial black frame. No AI-person marker was used because the video contains no person.
+
 ## Release evidence
 
 - PR: `https://github.com/Yonge6/yixiu-meditation/pull/44`
