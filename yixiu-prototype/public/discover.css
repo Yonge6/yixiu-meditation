@@ -234,7 +234,7 @@ a { color: inherit; }
 
 .intent-steps li:first-child { padding-top: 0; border-top: 0; }
 .intent-steps li:last-child { padding-bottom: 0; }
-.intent-steps span { color: #9ddddd; font: 600 11px/1.5 system-ui, sans-serif; letter-spacing: .12em; }
+.intent-steps > li > span { color: #9ddddd; font: 600 11px/1.5 system-ui, sans-serif; letter-spacing: .12em; }
 .intent-steps h3 { margin: 0 0 6px; font-size: 20px; font-weight: 400; }
 .intent-steps p { margin: 0; color: rgba(243,245,239,.65); font: 400 14px/1.6 system-ui, sans-serif; }
 
