@@ -137,12 +137,13 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   const video = schema["@graph"].find((entry) => entry["@type"] === "VideoObject");
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
+  assert.equal(title, "Rain Sounds for Sleeping — Dark Screen, No Ads | Yixiu");
   assert.ok(title.length >= 50 && title.length <= 60);
-  assert.match(title, /^Rain Sounds for Sleeping/);
   assert.ok(description.length >= 150 && description.length <= 160);
   assert.match(description, /real rain sounds for sleeping/i);
+  assert.match(description, /dark screen/i);
   assert.equal(h1Count, 1);
-  assert.equal(faqQuestions.length, 4);
+  assert.equal(faqQuestions.length, 5);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
   assert.equal(video.duration, "PT15M");
@@ -155,8 +156,8 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(software.image["@id"], image["@id"]);
   assert.equal(software.softwareVersion, "1.4");
   assert.ok(hero.size < 100_000);
-  assert.match(html, /href="\/discover\.css\?v=20260828-sleep-timer"/);
-  assert.match(html, /src="\/discover\.js\?v=20260828-sleep-timer"/);
+  assert.match(html, /href="\/discover\.css\?v=20260829-rain-dark-screen"/);
+  assert.match(html, /src="\/discover\.js\?v=20260829-rain-dark-screen"/);
   assert.match(html, /<source srcset="\/assets\/yixiu\/window-rain\.webp" type="image\/webp"/);
   assert.match(html, /data-preview-timer/);
   assert.match(html, /data-preview-minutes="15"/);
@@ -170,6 +171,12 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
+  assert.match(html, /<h1>Rain sounds for sleeping with a dark screen\.<\/h1>/);
+  assert.match(html, /data-dark-screen-toggle[^>]*disabled/);
+  assert.match(html, /data-analytics-placement="sleep_landing_dark_screen"/);
+  assert.match(html, /data-dark-screen-overlay[^>]*hidden/);
+  assert.match(html, /The web dark-screen mode dims this page while it stays open\./);
+  assert.match(html, /To keep rain playing after you physically lock your iPhone, use Yixiu's background playback\./);
   assert.match(html, /Real window rain/);
   assert.match(html, /data-analytics-placement="sleep_after_preview"/);
   assert.doesNotMatch(html, /utm_source=google/);

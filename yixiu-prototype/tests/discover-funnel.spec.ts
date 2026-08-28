@@ -209,6 +209,60 @@ test("rain sleep preview reveals its matched download and attributed Pinterest p
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("rain sleep dark screen keeps real rain and the timer running until the listener returns", async ({ page }) => {
+  await page.clock.install();
+  await page.addInitScript(() => {
+    const scope = window as Window & { __yixiuEvents?: string[] };
+    scope.__yixiuEvents = [];
+    window.addEventListener("yixiu:analytics", (event) => {
+      scope.__yixiuEvents?.push((event as CustomEvent).detail.event);
+    });
+  });
+  await page.goto("/sleep-sounds/index.html?utm_source=search&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  const preview = page.locator('button[data-analytics-placement="sleep_landing_preview"]');
+  const darkScreenToggle = page.getByRole("button", { name: "Darken Screen" });
+  const darkScreenOverlay = page.getByRole("button", { name: "Dark screen is on. Tap to return." });
+  const timerStatus = page.locator("[data-preview-timer-status]");
+
+  await expect(darkScreenToggle).toBeDisabled();
+  await preview.click();
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(darkScreenToggle).toBeEnabled();
+  await page.clock.runFor(1_000);
+  await expect(timerStatus).toHaveText("29:59 remaining");
+
+  await darkScreenToggle.click();
+  await expect(darkScreenOverlay).toBeVisible();
+  await expect(darkScreenOverlay).toBeFocused();
+  await expect(darkScreenOverlay).toHaveCSS("background-color", "rgb(0, 0, 0)");
+  const overlayBounds = await darkScreenOverlay.boundingBox();
+  expect(overlayBounds).toEqual({ x: 0, y: 0, width: 390, height: 844 });
+  await page.clock.runFor(1_000);
+  await expect(timerStatus).toHaveText("29:58 remaining");
+  await darkScreenOverlay.click();
+
+  await expect(darkScreenOverlay).toBeHidden();
+  await expect(darkScreenToggle).toBeFocused();
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+
+  await darkScreenToggle.click();
+  await expect(darkScreenOverlay).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(darkScreenOverlay).toBeHidden();
+  await expect(darkScreenToggle).toBeFocused();
+  expect(await page.evaluate(() => (window as Window & { __yixiuEvents?: string[] }).__yixiuEvents)).toEqual([
+    "yixiu_playback_start",
+    "yixiu_dark_screen_start",
+    "yixiu_dark_screen_end",
+    "yixiu_dark_screen_start",
+    "yixiu_dark_screen_end",
+  ]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("rain sleep preview timer selects a duration and stops playback at zero", async ({ page }) => {
   await page.clock.install();
   await page.goto("/sleep-sounds/index.html", { waitUntil: "domcontentloaded" });
