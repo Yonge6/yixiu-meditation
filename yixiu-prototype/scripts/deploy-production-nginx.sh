@@ -110,6 +110,10 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/ocean-waves.m4a"' "$site_path/o
 grep -F 'data-audio-preview=' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F '<title>Waterfall Sounds for Sleep &amp; Noise Masking | Yixiu</title>' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F 'data-preview-timer' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-waterfall-search' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-waterfall-search' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'loading="eager"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
@@ -183,6 +187,10 @@ grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/ocean-waves-for-
 grep -F '/discover.css?v=20260829-video-watch' "$deploy_target/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F '/discover.css?v=20260829-video-watch' "$deploy_target/river-sounds-for-studying/index.html" >/dev/null
 grep -F '/discover.css?v=20260829-video-watch' "$deploy_target/ocean-waves-for-focus/index.html" >/dev/null
+grep -F '<title>Waterfall Sounds for Sleep &amp; Noise Masking | Yixiu</title>' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F 'data-preview-timer' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-waterfall-search' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-waterfall-search' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.png"
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.jpg"
 grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg' "$deploy_target/wind-sounds-for-sleeping/index.html" >/dev/null
@@ -222,5 +230,13 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ocean-waves-for-focus/ \
   | grep -F 'class="intent-hero intent-watch-hero"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/ \
+  | grep -F '<title>Waterfall Sounds for Sleep &amp; Noise Masking | Yixiu</title>' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/ \
+  | grep -F 'data-preview-timer' >/dev/null
 
 echo "DEPLOY_OK_YIXIU_${release_id}"
