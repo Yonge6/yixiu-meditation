@@ -264,6 +264,10 @@ test("ocean focus page aligns visible video, structured data, and attributed dow
   assert.equal(video.uploadDate, "2026-08-24T10:50:56+00:00");
   assert.match(video.contentUrl, /2nJUyIr9EOY$/);
   assert.match(html, /youtube-nocookie\.com\/embed\/2nJUyIr9EOY/);
+  assert.equal([...html.matchAll(/<iframe[^>]+youtube-nocookie\.com\/embed\/2nJUyIr9EOY/g)].length, 1);
+  assert.match(html, /<section class="intent-hero intent-watch-hero"/);
+  assert.match(html, /<iframe[^>]+loading="eager"/);
+  assert.equal(schema["@graph"].find((entry) => entry["@type"] === "WebPage").mainEntity["@id"], video["@id"]);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/ocean-waves\.m4a"/);
   assert.match(html, /data-analytics-placement="ocean_focus_after_preview"/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
@@ -337,6 +341,10 @@ test("mountain stream focus page keeps its search promise, real preview, and sch
   assert.equal(video.uploadDate, "2026-08-24T16:54:29+00:00");
   assert.match(video.contentUrl, /lfDiI0TAq1c$/);
   assert.match(html, /youtube-nocookie\.com\/embed\/lfDiI0TAq1c/);
+  assert.equal([...html.matchAll(/<iframe[^>]+youtube-nocookie\.com\/embed\/lfDiI0TAq1c/g)].length, 1);
+  assert.match(html, /<section class="intent-hero intent-watch-hero"/);
+  assert.match(html, /<iframe[^>]+loading="eager"/);
+  assert.equal(schema["@graph"].find((entry) => entry["@type"] === "WebPage").mainEntity["@id"], video["@id"]);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
   assert.match(html, /data-analytics-placement="mountain_stream_focus_after_preview"/);
@@ -355,10 +363,10 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
 
   assert.match(robots, /Sitemap: https:\/\/yixiu\.wonderelian\.com\/sitemap\.xml/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/waterfall-sounds-for-noise-masking\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
@@ -391,6 +399,10 @@ test("river study page keeps its student intent, real preview, and Focus downloa
   assert.equal(video.duration, "PT15M");
   assert.equal(video.uploadDate, "2026-08-24T16:54:29+00:00");
   assert.match(video.contentUrl, /lfDiI0TAq1c$/);
+  assert.equal([...html.matchAll(/<iframe[^>]+youtube-nocookie\.com\/embed\/lfDiI0TAq1c/g)].length, 1);
+  assert.match(html, /<section class="intent-hero intent-watch-hero"/);
+  assert.match(html, /<iframe[^>]+loading="eager"/);
+  assert.equal(schema["@graph"].find((entry) => entry["@type"] === "WebPage").mainEntity["@id"], video["@id"]);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
   assert.match(html, /data-analytics-placement="river_study_after_preview"/);
