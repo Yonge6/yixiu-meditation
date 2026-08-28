@@ -25,8 +25,8 @@ Title:
 Video order:
 
 1. `iMG8YanRAnA` — Wind Sounds for Sleeping — Mountain Air, No Music
-2. `8LJoPKN3CO4` — Rain Sounds for Sleep — 15 Minutes, No Talking, No Music
-3. `qhiCegeDFUQ` — Rain on Window for Sleep — No Music, No Talking
+2. `qhiCegeDFUQ` — Rain on Window for Sleep — No Music, No Talking
+3. `8LJoPKN3CO4` — Rain Sounds for Sleep — 15 Minutes, No Talking, No Music
 4. `w6ofxBlm1MU` — Rain on a Window for Sleep — No Talking, Gentle Timer
 
 Description:
@@ -51,10 +51,10 @@ Title:
 
 Video order:
 
-1. `lfDiI0TAq1c` — Mountain Stream Sounds for Focus — 15 Minutes, No Music, No Talking
-2. `2nJUyIr9EOY` — Ocean Waves for Deep Focus — 10 Minutes, No Talking
-3. `oZFW__xNWJI` — Ocean Waves for Focus — No Music, No Talking
-4. `GHAYLQENv18` — earlier Ocean Waves for Focus Short
+1. `oZFW__xNWJI` — Ocean Waves for Focus — No Music, No Talking
+2. `lfDiI0TAq1c` — Mountain Stream Sounds for Focus — 15 Minutes, No Music, No Talking
+3. `GHAYLQENv18` — earlier Ocean Waves for Focus Short
+4. `2nJUyIr9EOY` — Ocean Waves for Deep Focus — 10 Minutes, No Talking
 
 Description:
 
@@ -74,6 +74,7 @@ Description:
 
 - Both playlists must be public and owned by WonderElian.
 - Only the eight named Yixiu videos may be added; Style Atlas and all other products are excluded.
+- Both playlists use YouTube's visible `Published date (newest)` ordering; the lists above record the resulting public order.
 - If creation defaults to podcast mode or exposes a podcast conversion, keep the playlists as ordinary playlists.
 - Require permanent playlist URLs, exact titles, descriptions, four-item ordering and visibility from authenticated public DOM readback.
 - Require public HTTP 200 and oEmbed/list-page evidence where available.
