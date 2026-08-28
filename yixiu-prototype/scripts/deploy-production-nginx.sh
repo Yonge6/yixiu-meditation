@@ -113,13 +113,16 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_p
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'loading="eager"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-video-watch' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'loading="eager"' "$site_path/river-sounds-for-studying/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-video-watch' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/2nJUyIr9EOY' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'loading="eager"' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-video-watch' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/white-noise-for-studying/index.html" >/dev/null
@@ -177,6 +180,9 @@ grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/ra
 grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/ocean-waves-for-focus/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-video-watch' "$deploy_target/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-video-watch' "$deploy_target/river-sounds-for-studying/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-video-watch' "$deploy_target/ocean-waves-for-focus/index.html" >/dev/null
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.png"
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.jpg"
 grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg' "$deploy_target/wind-sounds-for-sleeping/index.html" >/dev/null

@@ -19,6 +19,7 @@ Google's Video SEO documentation says a watch page's main purpose is to show one
 - Connected each `WebPage.mainEntity` to a stable `VideoObject.@id`.
 - Updated the three sitemap `lastmod` values to 2026-08-29.
 - Added deploy guards for the watch hero on the three production pages.
+- Versioned the shared stylesheet as `/discover.css?v=20260829-video-watch` after public Chrome proved that the unversioned URL could retain the old cached layout.
 
 No other product or external channel was changed. No new video was uploaded.
 
