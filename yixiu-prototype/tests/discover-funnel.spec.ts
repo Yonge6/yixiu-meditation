@@ -395,7 +395,7 @@ test("Pinterest intent uses the public image and an attributed canonical destina
     "https://yixiu.wonderelian.com/wind-sounds-for-sleeping/?utm_source=pinterest&utm_medium=organic_share&utm_campaign=scene_share&utm_content=wind_sleep_pinterest",
   );
   expect(intent.searchParams.get("media")).toBe(
-    "https://yixiu.wonderelian.com/assets/yixiu/snow-wind.png",
+    "https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg",
   );
   expect(intent.searchParams.get("description")).toContain("Wind Sounds for Sleeping");
 
