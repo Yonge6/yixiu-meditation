@@ -185,6 +185,40 @@ test("rain sleep preview timer selects a duration and stops playback at zero", a
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("waterfall search landing plays real audio, advances its timer and keeps the Focus download path", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/waterfall-sounds-for-noise-masking/index.html?utm_source=search&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/",
+  );
+  await expect(page.locator("h1")).toHaveText("Waterfall sounds for sleep, focus and noise masking.");
+
+  const timer = page.locator("[data-preview-timer]");
+  await expect(timer).toBeVisible();
+  await timer.getByRole("button", { name: "15 minutes" }).click();
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("15:00 remaining");
+
+  const preview = page.locator('button[data-analytics-placement="waterfall_masking_preview"]');
+  await expect(preview).toHaveAccessibleName("Play Waterfall Sounds");
+  await expect(preview).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/forest-waterfall.m4a");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Waterfall Sounds")).toBeVisible();
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
+  await expect(page.locator("[data-after-preview]")).toBeVisible();
+  await expect(page.locator('[data-analytics-placement="waterfall_masking_after_preview"]')).toHaveAttribute(
+    "href",
+    /ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("iPhone lock-screen guide plays rain, advances its timer and reveals the attributed Sleep path", async ({ page }) => {
   await page.clock.install();
   await page.goto("/rain-sounds-when-iphone-locked/index.html?utm_source=search&utm_medium=organic", {

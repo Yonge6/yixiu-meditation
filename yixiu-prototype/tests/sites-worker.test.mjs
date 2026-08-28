@@ -367,11 +367,11 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(robots, /Sitemap: https:\/\/yixiu\.wonderelian\.com\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/waterfall-sounds-for-noise-masking\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/waterfall-sounds-for-noise-masking\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-when-iphone-locked\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-reading\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
@@ -608,10 +608,10 @@ test("waterfall masking page serves a real recording and keeps every claim, sche
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
-  assert.match(title, /^Waterfall Sounds for Noise Masking/);
+  assert.match(title, /^Waterfall Sounds for Sleep & Noise Masking/);
   assert.ok(description.length >= 150 && description.length <= 160);
   assert.equal(h1Count, 1);
-  assert.equal(faqQuestions.length, 4);
+  assert.equal(faqQuestions.length, 5);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
   assert.equal(image.width, 941);
@@ -621,12 +621,20 @@ test("waterfall masking page serves a real recording and keeps every claim, sche
   assert.equal(software.image["@id"], image["@id"]);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/forest-waterfall\.m4a"/);
+  assert.match(html, /data-play-label="Play Waterfall Sounds"/);
+  assert.match(html, /data-preview-timer-status/);
+  assert.match(html, /Free online preview/);
   assert.match(html, /data-analytics-placement="waterfall_masking_after_preview"/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
   assert.match(html, /It does not remove sound or replace hearing protection/);
   assert.match(html, /href="\/focus-sounds\/"/);
   assert.match(html, /href="\/mountain-stream-sounds-for-focus\/"/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
+
+  const sleepHtml = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
+  const guidesHtml = await readFile(new URL("../public/guides/index.html", import.meta.url), "utf8");
+  assert.match(sleepHtml, /href="\/waterfall-sounds-for-noise-masking\/">Waterfall sounds for sleep and noise masking<\/a>/);
+  assert.match(guidesHtml, /Sleep, focus or masking/);
 });
 
 test("thunderstorm sleep page serves distant thunder and keeps every claim, schema and download path aligned", async () => {
