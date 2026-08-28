@@ -33,6 +33,17 @@ The public Pin returned HTTP 200. The public Yixiu board reported 30 Pins and an
 
 The 20-second video Pin and its attributed destination both returned HTTP 200. Its public page exposed the exact title, destination, `WonderElian` account, `Yixiu: Nature Sounds & Sleep` board and `AI modified` marker. The public board increased from 30 to 31 Pins and an exact accessible-name lookup resolved the title above to `/pin/1147643917690289056/`. A readable `RAIN SOUNDS FOR SLEEP` frame was selected instead of the video's initial black frame. No AI-person marker was used because the video contains no person.
 
+## Rain Instagram Reel
+
+- Public Reel: `https://www.instagram.com/wonderelian/reel/DckkNoIwNmo/`
+- Account: `WonderElian` (`@wonderelian`)
+- Destination in caption: `https://yixiu.wonderelian.com/sleep-sounds/?utm_source=instagram&utm_medium=organic_reel&utm_campaign=sleep_sounds&utm_content=rain_window_sleep_reel_04`
+- Lead: `Let the rain stay outside.`
+- Alt text: `Rain falling across a dark window at night with Yixiu text introducing real rain sounds for sleep, no music and no talking.`
+- Source asset SHA-256: `f15323c8e66ca58a5bfd44828432231e29ccea94f37df78de0ec5877d1fb81ff`
+
+Instagram displayed `Reels 已分享` before the public profile increased from 19 to 20 posts. The profile exposed the new Reel ID at the first grid position. The public Reel and attributed Yixiu destination both returned HTTP 200; the public Reel page exposed author `wonderelian`, `AI 内容`, `原创音频`, the expected caption and Yixiu-only hashtags. No collaborator, location or other product was added. The desktop profile grid currently uses the video's initial black frame, and no verified post-publication cover control was available, so the published Reel was left intact rather than risking deletion or duplication.
+
 ## Release evidence
 
 - PR: `https://github.com/Yonge6/yixiu-meditation/pull/44`
