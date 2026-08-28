@@ -49,6 +49,7 @@ test -f "$site_path/rain-sounds-when-iphone-locked/index.html"
 test -f "$site_path/focus-sounds/index.html"
 test -f "$site_path/forest-sounds-for-focus/index.html"
 test -f "$site_path/forest-sounds-for-sleep/index.html"
+test -f "$site_path/wind-sounds-for-sleeping/index.html"
 test -f "$site_path/underwater-white-noise-for-sleep/index.html"
 test -f "$site_path/ocean-waves-for-sleeping/index.html"
 test -f "$site_path/ocean-waves-for-focus/index.html"
@@ -69,6 +70,7 @@ test -f "$site_path/assets/yixiu/window-rain.webp"
 test -f "$site_path/assets/yixiu/sunny-valley.webp"
 test -f "$site_path/assets/yixiu/underwater-echo.webp"
 test -f "$site_path/assets/yixiu/snow-wind-pinterest-2x3.png"
+grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.png' "$site_path/wind-sounds-for-sleeping/index.html" >/dev/null
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
@@ -165,6 +167,7 @@ grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_targe
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.png"
+grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.png' "$deploy_target/wind-sounds-for-sleeping/index.html" >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ \
@@ -185,5 +188,9 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/ \
   | grep -F 'data-analytics-placement="rain_lock_screen_preview"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/wind-sounds-for-sleeping/ \
+  | grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.png' >/dev/null
 
 echo "DEPLOY_OK_YIXIU_${release_id}"
