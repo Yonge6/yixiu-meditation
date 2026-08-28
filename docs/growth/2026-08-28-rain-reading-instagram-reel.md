@@ -51,4 +51,8 @@ Submitted alt text:
 
 Immediately after the release, the logged-in Google Analytics UI for property `549913650` answered hostname-filtered queries for the partial 2026-08-28 Beijing day with 23 active users, 32 views, and 29 sessions. The earlier official partial readback was 16 active users, 21 views, and 19 sessions. This change predates or overlaps several same-day Yixiu acquisition actions and is not attributed to this Reel alone.
 
-The 2026-08-28 values are partial-day data and cannot satisfy the completed-natural-day 100-UV gate. The latest verified completed day remains 2026-08-27 at 14 active users, 20 page views, and 15 sessions. Apple official data already proves first-time downloads; trial, payment, subscription, in-app purchase, and revenue outcomes remain `null` where Apple did not provide data. The overall growth goal remains active.
+At approximately 23:24 Asia/Shanghai, Instagram's logged-in public Reels grid displayed 1 view for this Reel. That is a platform view count, not an H5 visit, App Store page view, or App download.
+
+Shortly after 2026-08-29 00:00 Asia/Shanghai, the same grid displayed 5 views for this Reel. The first completed-date GA4 readback for 2026-08-28 returned 26 active users, 35 views and 32 sessions for the exact Yixiu hostname. Those values are not attributed to this Reel and remain below the 100-UV gate.
+
+The earlier 2026-08-28 values in this document are partial-day checkpoints and are superseded for gate assessment by the completed-date readback above. Apple official data already proves first-time downloads; trial, payment, subscription, in-app purchase, and revenue outcomes remain `null` where Apple did not provide data. The overall growth goal remains active.
