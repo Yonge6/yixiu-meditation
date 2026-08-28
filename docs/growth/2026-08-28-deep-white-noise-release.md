@@ -10,6 +10,18 @@
 
 The public Pin returned HTTP 200 and its visible `Visit site` action resolved to the attributed Yixiu URL above. No other product board or site was modified.
 
+## Rain timer Pinterest distribution
+
+- Pinterest Pin: `https://www.pinterest.com/pin/1147643917690288380/`
+- Title: `Rain Sounds for Sleeping — Free 15/30/60 Min Timer`
+- Pinterest account: `WonderElian` (`/wondereilan/`)
+- Pinterest board: `Yixiu: Nature Sounds & Sleep`
+- Pin destination: `https://yixiu.wonderelian.com/sleep-sounds/?utm_source=pinterest&utm_medium=organic_share&utm_campaign=scene_share&utm_content=sleep_landing_pinterest`
+- Description: `Play real rain sounds for sleeping with no music or talking. Set a free 15, 30 or 60-minute browser timer, listen instantly with no account or ads, then continue in Yixiu for iPhone with background playback.`
+- Alt text: `Rain falling beyond a dark window for Yixiu's free online sleep timer.`
+
+The public Pin returned HTTP 200. The public Yixiu board reported 30 Pins and an exact accessible-name lookup for the title above resolved to `/pin/1147643917690288380/`. Only the Yixiu board was used; no other product board or site was modified.
+
 ## Release evidence
 
 - PR: `https://github.com/Yonge6/yixiu-meditation/pull/44`
