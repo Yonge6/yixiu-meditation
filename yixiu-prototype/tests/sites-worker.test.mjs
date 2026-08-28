@@ -850,7 +850,7 @@ test("wind sleep page serves real mountain wind and keeps its no-music bedtime p
   assert.equal(image.height, 1500);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
-  assert.match(image.contentUrl, /snow-wind-pinterest-2x3\.png$/);
+  assert.match(image.contentUrl, /snow-wind-pinterest-2x3\.jpg$/);
   assert.equal(software.softwareVersion, "1.4");
   assert.equal(video.uploadDate, "2026-08-26");
   assert.equal(video.duration, "PT21S");
