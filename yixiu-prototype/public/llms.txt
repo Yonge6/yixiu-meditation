@@ -1,0 +1,43 @@
+# Yixiu
+
+> Free nature sounds and white noise for sleep, focus, studying, meditation, and quiet resets.
+
+Yixiu is a bilingual nature-sound experience for the web and iPhone. The web sessions use real licensed nature recordings with no music, talking, account, or ads. The iPhone app adds a larger sound library and 15, 30, or 60-minute timers.
+
+- [Yixiu on the web](https://yixiu.wonderelian.com/): Explore and play the complete bilingual H5 sound library.
+- [Yixiu on the App Store](https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261): Official iPhone app listing.
+- [Nature sound guides](https://yixiu.wonderelian.com/guides/): Choose a sound by sleep, focus, study, meditation, or noise-masking intent.
+
+## Sleep
+
+- [Rain sounds for sleeping](https://yixiu.wonderelian.com/sleep-sounds/): A free Window Rain preview with a 15, 30, or 60-minute web timer.
+- [Rain sounds while iPhone is locked](https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/): A practical guide to continuing Yixiu audio with the screen locked.
+- [Thunderstorm sounds for sleep](https://yixiu.wonderelian.com/thunderstorm-sounds-for-sleep/): Distant thunder with no music or narration.
+- [Forest sounds for sleep](https://yixiu.wonderelian.com/forest-sounds-for-sleep/): Forest wind with a browser timer.
+- [Mountain wind sounds for sleeping](https://yixiu.wonderelian.com/wind-sounds-for-sleeping/): A real mountain-wind recording and free preview timer.
+- [Underwater white noise for sleep](https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/): A steady deep-water ambience with no music.
+- [Ocean waves for sleeping](https://yixiu.wonderelian.com/ocean-waves-for-sleeping/): Night ocean waves for a quiet bedtime background.
+- [Waterfall sounds for sleep and noise masking](https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/): A continuous forest-waterfall recording with a web timer.
+
+## Focus and Study
+
+- [Nature sounds for focus](https://yixiu.wonderelian.com/focus-sounds/): A free river-flow session for work or study.
+- [Morning bird sounds for focus](https://yixiu.wonderelian.com/morning-bird-sounds-for-focus/): Morning birds with no music or talking.
+- [Forest sounds for focus](https://yixiu.wonderelian.com/forest-sounds-for-focus/): Forest wind for a quiet work block.
+- [Ocean waves for focus](https://yixiu.wonderelian.com/ocean-waves-for-focus/): Ocean-wave audio for reading, writing, or focused work.
+- [Mountain stream sounds for focus](https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/): A stream recording with a free browser timer.
+- [River sounds for studying](https://yixiu.wonderelian.com/river-sounds-for-studying/): River ambience with no music or talking.
+- [Rain sounds for studying](https://yixiu.wonderelian.com/rain-sounds-for-studying/): Light rain with a 15, 30, or 60-minute timer.
+- [White noise for studying](https://yixiu.wonderelian.com/white-noise-for-studying/): Underwater white noise for a defined study block.
+- [Rain sounds for reading](https://yixiu.wonderelian.com/rain-sounds-for-reading/): Light rain behind books, articles, or documents.
+- [Best nature sounds for studying](https://yixiu.wonderelian.com/best-nature-sounds-for-studying/): Compare river, rain, and ocean previews by listening rather than rankings.
+
+## Meditation and Reset
+
+- [Nature sounds for meditation](https://yixiu.wonderelian.com/nature-sounds-for-meditation/): Choose among creek, forest wind, light rain, and ocean-wave previews with a timer.
+- [One-minute breathing reset](https://yixiu.wonderelian.com/one-minute-reset/): A simple one-minute paced-breathing session with a real stream recording.
+
+## Optional
+
+- [Privacy](https://yixiu.wonderelian.com/privacy.html): Yixiu privacy information.
+- [XML sitemap](https://yixiu.wonderelian.com/sitemap.xml): Canonical public URL inventory.
