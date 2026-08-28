@@ -990,6 +990,10 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/audio\/light-rain\.m4a/);
   assert.match(script, /data-analytics-placement=\"rain_studying_preview\"/);
   assert.match(script, /data-analytics-placement=\"white_noise_studying_preview\"/);
+  assert.match(script, /nature-sounds-for-meditation\/index\.html/);
+  assert.match(script, /assets\/yixiu\/spring-creek\.webp/);
+  assert.match(script, /assets\/yixiu\/audio\/sunrise-river\.m4a/);
+  assert.match(script, /data-analytics-placement=\"meditation_landing_timer\"/);
   assert.match(script, /Waterfall Sounds for Sleep &amp; Noise Masking/);
   assert.match(script, /discover\.css\?v=20260829-waterfall-search/);
   assert.match(script, /discover\.js\?v=20260829-waterfall-search/);
