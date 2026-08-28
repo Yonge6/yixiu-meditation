@@ -54,6 +54,7 @@ test -f "$site_path/mountain-stream-sounds-for-focus/index.html"
 test -f "$site_path/waterfall-sounds-for-noise-masking/index.html"
 test -f "$site_path/river-sounds-for-studying/index.html"
 test -f "$site_path/rain-sounds-for-studying/index.html"
+test -f "$site_path/white-noise-for-studying/index.html"
 test -f "$site_path/best-nature-sounds-for-studying/index.html"
 test -f "$site_path/guides/index.html"
 test -f "$site_path/one-minute-reset/index.html"
@@ -99,6 +100,10 @@ grep -F 'data-audio-preview=' "$site_path/river-sounds-for-studying/index.html" 
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-for-studying/index.html" >/dev/null
+grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/white-noise-for-studying/index.html" >/dev/null
+grep -F 'data-audio-preview="/assets/yixiu/audio/underwater-white-noise.m4a"' "$site_path/white-noise-for-studying/index.html" >/dev/null
+grep -F 'data-preview-timer' "$site_path/white-noise-for-studying/index.html" >/dev/null
+grep -F '/discover.js?v=20260828-white-noise-study' "$site_path/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_river"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_rain"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_ocean"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
@@ -113,6 +118,7 @@ grep -F 'https://yixiu.wonderelian.com/ocean-waves-for-sleeping/' "$site_path/si
 grep -F 'https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/river-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/rain-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/white-noise-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/best-nature-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/guides/' "$site_path/sitemap.xml" >/dev/null
 
@@ -141,6 +147,7 @@ grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$deploy_target/index.h
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-sounds-for-studying/index.html" >/dev/null
+grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ \
@@ -149,5 +156,9 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-for-studying/ \
   | grep -F 'data-analytics-placement="rain_studying_preview"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/white-noise-for-studying/ \
+  | grep -F 'data-analytics-placement="white_noise_studying_preview"' >/dev/null
 
 echo "DEPLOY_OK_YIXIU_${release_id}"
