@@ -12,11 +12,11 @@
 
 GA's hostname-filtered answer cards reported the partial 2026-08-28 Beijing day as:
 
-- Active users: 23
-- Views: 32
-- Sessions: 29
+- Active users: 25
+- Views: 33
+- Sessions: 30
 
-These are partial-day values. They are higher than the earlier same-day official readback of 16 active users, 21 views, and 19 sessions, but they cannot satisfy a completed-natural-day gate and are not attributed to one acquisition action.
+These are partial-day values read at approximately 23:15 Asia/Shanghai. They are higher than the earlier same-day official readbacks of 16 active users, 21 views, and 19 sessions and then 23 active users, 32 views, and 29 sessions. They cannot satisfy a completed-natural-day gate and are not attributed to one acquisition action.
 
 ## Completed seven-day landing-page readback
 
