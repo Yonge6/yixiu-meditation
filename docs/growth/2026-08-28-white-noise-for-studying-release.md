@@ -24,6 +24,16 @@ The page answers the query before the first action, plays Yixiu's existing licen
 
 Pinterest displayed `Your Pin has been published!` and linked to the public Pin above. The public page exposes the exact account, board, title, description and attributed `Visit site` destination; both URLs returned HTTP 200 without relying on a draft state. Similar-product recommendations were disabled so the Pin remains focused on Yixiu.
 
+## Instagram distribution
+
+- Public post: `https://www.instagram.com/p/DcktCGqmRYG/`
+- Account: `WonderElian` (`@wonderelian`)
+- Destination in caption: `https://yixiu.wonderelian.com/white-noise-for-studying/?utm_source=instagram&utm_medium=organic_post&utm_campaign=focus_sounds&utm_content=white_noise_studying_post_01`
+- Asset: `docs/growth/assets/white-noise-studying-instagram-01.png`, 1080 × 1350 PNG
+- Asset SHA-256: `022cec02115c9e542c99a0fa5feadefa8f1d3c7846dd52691ac9418be3080484`
+
+Instagram displayed `帖子已分享` and the public profile increased to 21 posts. The public post exposes the exact `@wonderelian` account, caption lead, attributed landing-page URL and Yixiu hashtags. The post and destination both returned HTTP 200. No collaborator, location, cross-post or other product was added.
+
 ## Search discovery
 
 - Guides now exposes a dedicated White Noise for Studying card and a 17-item aligned `ItemList`.
