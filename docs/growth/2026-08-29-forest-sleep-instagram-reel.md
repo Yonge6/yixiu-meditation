@@ -31,3 +31,21 @@ No Facebook cross-post, location, collaborator, product tag, paid promotion, leg
 ## Measurement boundary
 
 Publication and a working attributed path do not prove a click, H5 visit or new App download. The latest accepted completed-day GA4 result for exact hostname `yixiu.wonderelian.com` remains 40 active users, below the 100-UV gate. Apple official data already proves 10 first-time downloads and 4 redownloads. Trial starts, paid conversions, subscriptions, in-app purchases, revenue and a scalar `yixiu_download_click` result remain `null` where authoritative data is unavailable.
+
+## Pinterest direct-click companion
+
+The Instagram-specific Reel correctly ends with `LINK IN BIO`. Before Pinterest publication, a dedicated companion video was rendered with `TAP VISIT SITE` instead so the creative matched Pinterest's direct destination behavior.
+
+- Public Pin: `https://www.pinterest.com/pin/1147643917690332592/`
+- Account: WonderElian (`https://www.pinterest.com/wondereilan/`)
+- Board: `Yixiu: Nature Sounds & Sleep` (37 Pins after publication)
+- Title: `Forest Sounds for Sleep — Real Wind, No Music`
+- Video: `yixiu-forest-sounds-sleep-pinterest-video-pin-02.mp4`
+- Video SHA-256: `6d69d4879f0604d09dae0da173a37e7aa688a9ae37a50b81100496758697a7e0`
+- Destination: `https://yixiu.wonderelian.com/forest-sounds-for-sleep/?utm_source=pinterest&utm_medium=organic_video_pin&utm_campaign=sleep_sounds&utm_content=forest_sleep_video_pin_02`
+- AI-modified disclosure: enabled and visible on the public Pin
+- Similar-product shopping recommendations: disabled before publication
+
+The public Pin exposed the exact title, full description, 20-second video, WonderElian author, `AI modified` label and direct attributed destination. The Pin, Pinterest oEmbed and destination each returned HTTP 200; oEmbed returned the exact title and `author_name: WonderElian`. Unauthenticated Pin HTML exposed the supplied alt text.
+
+The first unsubmitted Pinterest draft used the Instagram `LINK IN BIO` video. After the corrected `TAP VISIT SITE` Pin was publicly verified, that one unpublished draft was deleted; Pinterest identified the deletion as irreversible. No public content was deleted.
