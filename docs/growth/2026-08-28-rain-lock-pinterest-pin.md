@@ -35,4 +35,6 @@
 
 ## Measurement boundary
 
-The official GA4 Data API readback immediately before publishing showed the partial 2026-08-28 Beijing day at 16 active users, 21 page views and 19 sessions for `yixiu.wonderelian.com`. The new lock-screen page had no independent landing-page row yet. This public Pin is a new attributable acquisition attempt; it does not prove a visit or App Store download. The completed-day H5 gate remains below 100 UV, while Apple official data already proves 10 first-time downloads through 2026-08-26. Unknown trial, payment, subscription, IAP and revenue metrics remain `null`.
+The official GA4 Data API readback immediately before publishing showed the partial 2026-08-28 Beijing day at 16 active users, 21 page views and 19 sessions for `yixiu.wonderelian.com`. A second official readback after publishing remained at 16 active users, 21 page views and 19 sessions. It showed no landing-page row for the new lock-screen page and no Pinterest-attributed landing session. Aggregate events were 19 `yixiu_landing_view` events from 14 users and 7 `yixiu_playback_start` events from 4 users; there was no `yixiu_download_click` or `yixiu_share` row.
+
+This public Pin is a new attributable acquisition attempt; it does not yet prove a visit or App Store download. The completed-day H5 gate remains below 100 UV, while Apple official data already proves 10 first-time downloads through 2026-08-26. Unknown trial, payment, subscription, IAP and revenue metrics remain `null`.
