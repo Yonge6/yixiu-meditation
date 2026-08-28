@@ -61,6 +61,7 @@ test -f "$site_path/sitemap.xml"
 test -f "$site_path/analytics.js"
 test -f "$site_path/discover.js"
 test -f "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt"
+test -f "$site_path/assets/yixiu/window-rain.webp"
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
@@ -79,6 +80,9 @@ grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/best-nature-soun
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/guides/index.html" >/dev/null
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-preview-timer' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.css?v=20260828-sleep-timer' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.js?v=20260828-sleep-timer' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path/forest-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/underwater-white-noise.m4a"' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
