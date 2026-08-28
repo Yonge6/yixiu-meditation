@@ -39,6 +39,7 @@ test("all search landings expose a preview, trust message and matched iPhone pat
     { path: "/ocean-waves-for-sleeping/index.html", preview: "Play Ocean Waves", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/forest-sounds-for-sleep/index.html", preview: "Play Forest Sounds", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/one-minute-reset/index.html", preview: "Play Morning Water", ppid: "6c015245-76ff-4266-8837-5a0ffc289b9c" },
+    { path: "/nature-sounds-for-meditation/index.html", preview: "Play Spring Creek", ppid: "6c015245-76ff-4266-8837-5a0ffc289b9c" },
     { path: "/ocean-waves-for-focus/index.html", preview: "Play Audio Only", ppid: "7890afd3-dd12-4215-a5c5-17f4ebc28759" },
   ]) {
     await page.goto(item.path, { waitUntil: "domcontentloaded" });
@@ -49,6 +50,52 @@ test("all search landings expose a preview, trust message and matched iPhone pat
     );
     await expect(page.locator(".intent-trustline")).toBeVisible();
   }
+});
+
+test("meditation landing switches real nature sounds and advances its attributed timer", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/nature-sounds-for-meditation/index.html?utm_source=search&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://yixiu.wonderelian.com/nature-sounds-for-meditation/",
+  );
+  await expect(page.locator("h1")).toHaveText("Nature sounds for meditation, free online.");
+
+  const timer = page.locator("[data-preview-timer]");
+  await expect(timer).toHaveAttribute("data-analytics-placement", "meditation_landing_timer");
+  await expect(timer.getByRole("button", { name: "15 minutes" })).toHaveAttribute("aria-pressed", "true");
+
+  const spring = page.locator('button[data-analytics-placement="meditation_spring_preview"]');
+  await expect(spring).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/sunrise-river.m4a");
+  await spring.click();
+  await expect(spring).toHaveAttribute("aria-pressed", "true");
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
+
+  const ocean = page.locator('button[data-analytics-placement="meditation_ocean_preview"]');
+  await expect(ocean).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/ocean-waves.m4a");
+  await ocean.click();
+  await expect(spring).toHaveAttribute("aria-pressed", "false");
+  await expect(ocean).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("[data-after-preview]")).toBeVisible();
+  await expect(page.locator('[data-analytics-placement="meditation_after_preview"]')).toHaveAttribute(
+    "href",
+    /ppid=6c015245-76ff-4266-8837-5a0ffc289b9c&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
+
+  const previewFiles = await page.locator("[data-audio-preview]").evaluateAll((elements) => (
+    [...new Set(elements.map((element) => element.getAttribute("data-audio-preview")))]
+  ));
+  expect(previewFiles).toEqual([
+    "/assets/yixiu/audio/sunrise-river.m4a",
+    "/assets/yixiu/audio/forest-breeze.m4a",
+    "/assets/yixiu/audio/light-rain.m4a",
+    "/assets/yixiu/audio/ocean-waves.m4a",
+  ]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
 test("video search landings keep one eager player prominent in the mobile first screen", async ({ page }) => {

@@ -8,6 +8,7 @@
   const timerRoot = document.querySelector("[data-preview-timer]");
   const timerButtons = timerRoot ? [...timerRoot.querySelectorAll("[data-preview-minutes]")] : [];
   const timerStatus = timerRoot?.querySelector("[data-preview-timer-status]");
+  const timerPlacement = timerRoot?.dataset.analyticsPlacement || "sleep_landing_timer";
   let selectedMinutes = Number(timerButtons.find((button) => button.getAttribute("aria-pressed") === "true")?.dataset.previewMinutes || 0);
   let timerRemainingSeconds = selectedMinutes * 60;
   let timerInterval = null;
@@ -48,7 +49,7 @@
     if (timerStatus) timerStatus.textContent = "Timer complete";
     report("yixiu_preview_timer_complete", {
       duration_minutes: selectedMinutes,
-      placement: "sleep_landing_timer",
+      placement: timerPlacement,
     });
   }
 
@@ -73,7 +74,7 @@
       resetPreviewTimer();
       report("yixiu_preview_timer_select", {
         duration_minutes: selectedMinutes,
-        placement: "sleep_landing_timer",
+        placement: timerPlacement,
       });
     });
   }
