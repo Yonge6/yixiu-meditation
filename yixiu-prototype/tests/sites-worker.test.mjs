@@ -1017,6 +1017,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /ocean-waves-for-sleeping\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/ocean-waves\.m4a/);
   assert.match(script, /rain-sounds-for-studying\/index\.html/);
+  assert.match(script, /study-sounds-comparison-pinterest\.jpg/);
   assert.match(script, /white-noise-for-studying\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/light-rain\.m4a/);
   assert.match(script, /data-analytics-placement=\"rain_studying_preview\"/);

@@ -74,6 +74,7 @@ test -f "$site_path/assets/yixiu/underwater-echo.webp"
 test -f "$site_path/assets/yixiu/snow-wind-pinterest-2x3.png"
 test -f "$site_path/assets/yixiu/snow-wind-pinterest-2x3.jpg"
 test -f "$site_path/assets/yixiu/spring-creek.webp"
+test -f "$site_path/assets/yixiu/study-sounds-comparison-pinterest.jpg"
 test -f "$site_path/assets/yixiu/audio/sunrise-river.m4a"
 grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg' "$site_path/wind-sounds-for-sleeping/index.html" >/dev/null
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
@@ -140,6 +141,8 @@ grep -F '/discover.js?v=20260828-white-noise-study' "$site_path/white-noise-for-
 grep -F 'data-analytics-placement="study_comparison_river"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_rain"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_ocean"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
+grep -F '/assets/yixiu/study-sounds-comparison-pinterest.jpg' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/rain-sounds-for-studying/' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="guides_river_preview"' "$site_path/guides/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/nature-sounds-for-meditation/index.html" >/dev/null
@@ -198,6 +201,8 @@ grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_targe
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
+grep -F '/assets/yixiu/study-sounds-comparison-pinterest.jpg' "$deploy_target/best-nature-sounds-for-studying/index.html" >/dev/null
+test -f "$deploy_target/assets/yixiu/study-sounds-comparison-pinterest.jpg"
 grep -F 'data-audio-preview="/assets/yixiu/audio/sunrise-river.m4a"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/river-sounds-for-studying/index.html" >/dev/null
@@ -240,6 +245,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/nature-sounds-for-meditation/ \
   | grep -F 'data-analytics-placement="meditation_landing_timer"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/best-nature-sounds-for-studying/ \
+  | grep -F '/assets/yixiu/study-sounds-comparison-pinterest.jpg' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/wind-sounds-for-sleeping/ \
