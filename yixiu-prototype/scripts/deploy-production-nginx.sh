@@ -62,6 +62,7 @@ test -f "$site_path/analytics.js"
 test -f "$site_path/discover.js"
 test -f "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt"
 test -f "$site_path/assets/yixiu/window-rain.webp"
+test -f "$site_path/assets/yixiu/underwater-echo.webp"
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
@@ -86,6 +87,8 @@ grep -F '/discover.js?v=20260828-sleep-timer' "$site_path/sleep-sounds/index.htm
 grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path/forest-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/underwater-white-noise.m4a"' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F 'data-preview-timer' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F '/discover.js?v=20260828-white-noise-timer' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/ocean-waves.m4a"' "$site_path/ocean-waves-for-sleeping/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null

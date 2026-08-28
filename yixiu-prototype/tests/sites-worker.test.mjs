@@ -525,6 +525,7 @@ test("thunderstorm sleep page serves distant thunder and keeps every claim, sche
 
 test("underwater white noise sleep page serves the real recording and matched Sleep download path", async () => {
   const html = await readFile(new URL("../public/underwater-white-noise-for-sleep/index.html", import.meta.url), "utf8");
+  const hero = await stat(new URL("../public/assets/yixiu/underwater-echo.webp", import.meta.url));
   const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
@@ -538,7 +539,7 @@ test("underwater white noise sleep page serves the real recording and matched Sl
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
-  assert.match(title, /^Underwater White Noise for Sleep/);
+  assert.match(title, /^Deep White Noise for Sleeping/);
   assert.ok(description.length >= 150 && description.length <= 160);
   assert.equal(h1Count, 1);
   assert.equal(faqQuestions.length, 4);
@@ -549,7 +550,16 @@ test("underwater white noise sleep page serves the real recording and matched Sl
   assert.equal(image.height, 1672);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
+  assert.equal(software.softwareVersion, "1.4");
+  assert.ok(hero.size < 100_000);
   assert.match(image.contentUrl, /underwater-echo\.png$/);
+  assert.match(html, /href="\/discover\.css\?v=20260828-white-noise-timer"/);
+  assert.match(html, /src="\/discover\.js\?v=20260828-white-noise-timer"/);
+  assert.match(html, /<source srcset="\/assets\/yixiu\/underwater-echo\.webp" type="image\/webp"/);
+  assert.match(html, /data-preview-timer/);
+  assert.match(html, /data-preview-minutes="15"/);
+  assert.match(html, /data-preview-minutes="30"/);
+  assert.match(html, /data-preview-minutes="60"/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /rel="canonical" href="https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\/"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/underwater-white-noise\.m4a"/);
@@ -558,7 +568,7 @@ test("underwater white noise sleep page serves the real recording and matched Sl
   assert.match(html, /href="\/thunderstorm-sounds-for-sleep\/"/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
 });
 
 test("morning birds focus page serves real birdsong and keeps its bright focus promise aligned", async () => {
