@@ -750,5 +750,8 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/audio\/underwater-white-noise\.m4a/);
   assert.match(script, /ocean-waves-for-sleeping\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/ocean-waves\.m4a/);
+  assert.match(script, /rain-sounds-for-studying\/index\.html/);
+  assert.match(script, /assets\/yixiu\/audio\/light-rain\.m4a/);
+  assert.match(script, /data-analytics-placement=\"rain_studying_preview\"/);
   assert.doesNotMatch(script, /-H 'Host: yixiu\.wonderelian\.com' http:\/\/127\.0\.0\.1\//);
 });
