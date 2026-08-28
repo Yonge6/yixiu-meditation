@@ -77,6 +77,42 @@ test("rain study landing starts real rain and reveals the attributed iPhone path
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("white noise study landing plays the real scene, advances its timer and reveals the Focus download path", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/white-noise-for-studying/index.html?utm_source=search&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://yixiu.wonderelian.com/white-noise-for-studying/",
+  );
+  await expect(page.locator("h1")).toHaveCount(1);
+
+  const timer = page.locator("[data-preview-timer]");
+  await expect(timer).toBeVisible();
+  await timer.getByRole("button", { name: "15 minutes" }).click();
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("15:00 remaining");
+
+  const preview = page.locator('button[data-analytics-placement="white_noise_studying_preview"]');
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAccessibleName("Play Study White Noise");
+  await expect(preview).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/underwater-white-noise.m4a");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Study White Noise")).toBeVisible();
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
+  const afterPreview = page.locator("[data-after-preview]");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu for iPhone." })).toHaveAttribute(
+    "href",
+    /ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("rain sleep preview reveals its matched download and attributed Pinterest path without mobile overflow", async ({ page }) => {
   await page.goto("/sleep-sounds/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
 
