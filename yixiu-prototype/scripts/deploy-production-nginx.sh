@@ -98,8 +98,11 @@ grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$s
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/sleep-sounds/index.html" >/dev/null
-grep -F '/discover.css?v=20260828-sleep-timer' "$site_path/sleep-sounds/index.html" >/dev/null
-grep -F '/discover.js?v=20260828-sleep-timer' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-rain-dark-screen' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-rain-dark-screen' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-dark-screen-toggle' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-dark-screen-overlay' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
@@ -200,6 +203,10 @@ grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-rain-dark-screen' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-rain-dark-screen' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'data-dark-screen-overlay' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F '/assets/yixiu/study-sounds-comparison-pinterest.jpg' "$deploy_target/best-nature-sounds-for-studying/index.html" >/dev/null
 test -f "$deploy_target/assets/yixiu/study-sounds-comparison-pinterest.jpg"
@@ -237,6 +244,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/forest-sounds-for-sleep/ \
   | grep -F 'data-analytics-placement="forest_sleep_preview"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/sleep-sounds/ \
+  | grep -F 'data-analytics-placement="sleep_landing_dark_screen"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/ \
