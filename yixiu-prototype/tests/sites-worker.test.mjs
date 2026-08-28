@@ -370,7 +370,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/mountain-stream-sounds-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/waterfall-sounds-for-noise-masking\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-when-iphone-locked\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
@@ -417,6 +417,7 @@ test("river study page keeps its student intent, real preview, and Focus downloa
 
 test("study-sound comparison page exposes three real previews and a truthful comparison schema", async () => {
   const html = await readFile(new URL("../public/best-nature-sounds-for-studying/index.html", import.meta.url), "utf8");
+  const comparisonImage = await readFile(new URL("../public/assets/yixiu/study-sounds-comparison-pinterest.jpg", import.meta.url));
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   const h1Count = [...html.matchAll(/<h1\b/g)].length;
   const previewCount = [...html.matchAll(/data-audio-preview=/g)].length;
@@ -424,6 +425,7 @@ test("study-sound comparison page exposes three real previews and a truthful com
   const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
   const schema = JSON.parse(schemaSource);
   const article = schema["@graph"].find((entry) => entry["@type"] === "Article");
+  const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
   const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
   const itemList = schema["@graph"].find((entry) => entry["@type"] === "ItemList");
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
@@ -437,7 +439,16 @@ test("study-sound comparison page exposes three real previews and a truthful com
   assert.equal(faq.mainEntity.length, faqQuestions.length);
   assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
   assert.equal(article.author.name, "WonderElian");
+  assert.equal(article.dateModified, "2026-08-29");
+  assert.equal(article.image["@id"], image["@id"]);
+  assert.equal(image.width, 1000);
+  assert.equal(image.height, 1500);
+  assert.match(image.contentUrl, /study-sounds-comparison-pinterest\.jpg$/);
+  assert.match(itemList.itemListElement[1].url, /rain-sounds-for-studying\/$/);
+  assert.ok(comparisonImage.byteLength < 300_000);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
+  assert.match(html, /src="\/assets\/yixiu\/study-sounds-comparison-pinterest\.jpg" width="1000" height="1500" loading="lazy"/);
+  assert.match(html, /alt="Yixiu study sound guide comparing river for reading and writing, rain for noisy shared rooms, and ocean for repetitive practice"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/ocean-waves\.m4a"/);
@@ -1006,6 +1017,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /ocean-waves-for-sleeping\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/ocean-waves\.m4a/);
   assert.match(script, /rain-sounds-for-studying\/index\.html/);
+  assert.match(script, /study-sounds-comparison-pinterest\.jpg/);
   assert.match(script, /white-noise-for-studying\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/light-rain\.m4a/);
   assert.match(script, /data-analytics-placement=\"rain_studying_preview\"/);

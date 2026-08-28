@@ -115,6 +115,63 @@ a { color: inherit; }
 .intent-proof h2 { margin: 12px 0 8px; font-size: 23px; font-weight: 400; }
 .intent-proof p { margin: 0; color: rgba(243,245,239,.66); font: 400 14px/1.55 system-ui, sans-serif; }
 
+.intent-comparison-visual {
+  margin: 0;
+  padding: clamp(24px, 4vw, 44px);
+  display: grid;
+  grid-template-columns: minmax(240px, .82fr) minmax(0, 1.18fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 64px);
+  border: 1px solid rgba(151,218,219,.27);
+  border-radius: 28px;
+  background: rgba(3,30,38,.76);
+  backdrop-filter: blur(16px);
+}
+
+.intent-comparison-visual img {
+  display: block;
+  width: min(100%, 420px);
+  height: auto;
+  margin-inline: auto;
+  border: 1px solid rgba(151,218,219,.22);
+  border-radius: 22px;
+  box-shadow: 0 28px 70px rgba(0,0,0,.28);
+}
+
+.intent-comparison-visual figcaption small {
+  color: #9ddddd;
+  font: 600 10px/1.4 system-ui, sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.intent-comparison-visual h2 {
+  margin: 14px 0 12px;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.025em;
+}
+
+.intent-comparison-visual p {
+  margin: 0;
+  color: rgba(243,245,239,.67);
+  font: 400 15px/1.65 system-ui, sans-serif;
+}
+
+.intent-comparison-visual a {
+  min-height: 46px;
+  margin-top: 24px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(159,225,225,.34);
+  border-radius: 999px;
+  color: #a6e8e8;
+  font: 650 12px/1 system-ui, sans-serif;
+  text-decoration: none;
+}
+
 .intent-guide,
 .intent-faq,
 .intent-media {
@@ -277,6 +334,10 @@ a { color: inherit; }
   .intent-pinterest { width: 100%; margin: 12px 0 0; }
   .intent-proof { grid-template-columns: 1fr; }
   .intent-proof article { min-height: 0; }
+  .intent-comparison-visual { grid-template-columns: 1fr; padding: 22px; gap: 28px; border-radius: 22px; }
+  .intent-comparison-visual img { width: min(100%, 360px); border-radius: 18px; }
+  .intent-comparison-visual h2 { font-size: 34px; }
+  .intent-comparison-visual a { width: 100%; justify-content: center; }
   .intent-guide,
   .intent-faq,
   .intent-media { grid-template-columns: 1fr; padding: 26px 22px; gap: 30px; border-radius: 22px; }
