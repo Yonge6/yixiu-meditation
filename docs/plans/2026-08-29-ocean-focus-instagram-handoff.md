@@ -1,9 +1,10 @@
 # Ocean Focus Instagram Reel Handoff — 2026-08-29
 
-## Current state
+## Completed state
 
-- Status: prepared in the logged-in desktop Instagram composer; not published and not scheduled.
+- Status: published and externally verified on 2026-08-28.
 - Account: WonderElian (`@wonderelian`)
+- Public Reel: https://www.instagram.com/wonderelian/reel/DclqWNIs6Az/
 - Source: `/Users/yongyuan/Documents/ChatGPT/运营推广/assets/yixiu-ocean-focus-short-2026-08-25/yixiu-ocean-waves-focus-short-06.mp4`
 - Format: 1080 x 1920, H.264/AAC, 20 seconds
 - SHA-256: `b32dde8caab5cdbc7f13c18bcb3624fce2e45eb4dc795f9097de1635c7853584`
@@ -35,6 +36,6 @@ The official GA4 hostname-filtered readback for 2026-08-21 through 2026-08-27 sh
 
 ## Scheduling boundary
 
-The Instagram website composer did not expose a scheduling control. Meta Business Suite offered an Instagram login path that explicitly required agreeing to Meta terms and might create a Business Manager. That legal/account-state step was not accepted. The Reel was therefore left unpublished in the open desktop composer rather than posted immediately after another Yixiu Reel or represented as scheduled.
+The Instagram website composer did not expose a scheduling control. Meta Business Suite offered an Instagram login path that explicitly required agreeing to Meta terms and might create a Business Manager. That legal/account-state step was not accepted. The Reel was published directly from the desktop Instagram composer at `2026-08-28 23:15 Asia/Shanghai`, equivalent to `2026-08-28 08:15 America/Los_Angeles`, within the intended US-morning window.
 
-Preferred publication window: `2026-08-29 00:15 Asia/Shanghai`, equivalent to `2026-08-28 09:15 America/Los_Angeles`. Before publishing, confirm the composer still contains the exact caption, AI disclosure, alt text, and enabled audio; after publishing, require the permanent public Reel URL, correct `wonderelian` author, exact caption, AI/original-audio labels, HTTP 200, oEmbed readback, and destination HTTP 200.
+Before publication, the composer was rechecked for the exact caption, accessibility text, enabled AI disclosure, and enabled Share action. The public Reel DOM shows author `wonderelian`, the exact caption, `AI 内容`, and the Instagram-attributed audio label `Ocean Minds • Sea Waves and Ocean Horizon Ambience, Pt.4`. The profile count increased from 24 to 25. The Reel and attributed destination returned HTTP 200, and Instagram oEmbed returned the exact caption and `author_name: wonderelian`. Instagram did not label the public audio as `Original audio`, so no such claim is made.
