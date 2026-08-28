@@ -36,6 +36,7 @@ test("all search landings expose a preview, trust message and matched iPhone pat
     { path: "/sleep-sounds/index.html", preview: "Play Window Rain", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/underwater-white-noise-for-sleep/index.html", preview: "Play Underwater White Noise", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/ocean-waves-for-sleeping/index.html", preview: "Play Ocean Waves", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
+    { path: "/forest-sounds-for-sleep/index.html", preview: "Play Forest Sounds", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/one-minute-reset/index.html", preview: "Play Morning Water", ppid: "6c015245-76ff-4266-8837-5a0ffc289b9c" },
     { path: "/ocean-waves-for-focus/index.html", preview: "Play Ocean Waves", ppid: "7890afd3-dd12-4215-a5c5-17f4ebc28759" },
   ]) {
@@ -207,6 +208,40 @@ test("underwater white noise preview reveals its matched download action without
 
   await expect(preview).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("Pause Underwater White Noise")).toBeVisible();
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
+  const afterPreview = page.locator("[data-after-preview]");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu for iPhone." })).toHaveAttribute(
+    "href",
+    /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("forest sleep preview plays the real scene, advances its timer and reveals the matched download action", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/forest-sounds-for-sleep/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://yixiu.wonderelian.com/forest-sounds-for-sleep/",
+  );
+  await expect(page.locator("h1")).toHaveCount(1);
+
+  const timer = page.locator("[data-preview-timer]");
+  await expect(timer).toBeVisible();
+  await timer.getByRole("button", { name: "15 minutes" }).click();
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("15:00 remaining");
+
+  const preview = page.locator('button[data-analytics-placement="forest_sleep_preview"]');
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAccessibleName("Play Forest Sounds");
+  await expect(preview).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/forest-breeze.m4a");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Forest Sounds")).toBeVisible();
   await page.clock.runFor(1_000);
   await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
   const afterPreview = page.locator("[data-after-preview]");
