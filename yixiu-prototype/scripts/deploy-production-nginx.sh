@@ -63,6 +63,7 @@ test -f "$site_path/guides/index.html"
 test -f "$site_path/one-minute-reset/index.html"
 test -f "$site_path/nature-sounds-for-meditation/index.html"
 test -f "$site_path/robots.txt"
+test -f "$site_path/llms.txt"
 test -f "$site_path/sitemap.xml"
 test -f "$site_path/analytics.js"
 test -f "$site_path/discover.js"
@@ -148,6 +149,9 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/na
 grep -F 'data-audio-preview="/assets/yixiu/audio/ocean-waves.m4a"' "$site_path/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$site_path/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.txt" >/dev/null
+grep -Fx '# Yixiu' "$site_path/llms.txt" >/dev/null
+grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/llms.txt" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/nature-sounds-for-meditation/' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/ocean-waves-for-focus/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/forest-sounds-for-focus/' "$site_path/sitemap.xml" >/dev/null
@@ -187,6 +191,8 @@ grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" 
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$deploy_target/index.html" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
+grep -Fx '# Yixiu' "$deploy_target/llms.txt" >/dev/null
+grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$deploy_target/llms.txt" >/dev/null
 grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
@@ -210,6 +216,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ \
   | grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/llms.txt \
+  | grep -Fx '# Yixiu' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-for-studying/ \

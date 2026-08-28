@@ -969,6 +969,26 @@ test("keeps the public IndexNow key file exact", async () => {
   assert.equal(key.trim(), "0d28a7f9686f4a45871ea685d741dc75");
 });
 
+test("llms.txt exposes the existing Yixiu collection without unrelated products or outcome claims", async () => {
+  const llms = await readFile(new URL("../public/llms.txt", import.meta.url), "utf8");
+  const links = [...llms.matchAll(/\[[^\]]+\]\((https:\/\/[^)]+)\)/g)].map((match) => match[1]);
+  const yixiuLinks = links.filter((url) => url.startsWith("https://yixiu.wonderelian.com/"));
+
+  assert.match(llms, /^# Yixiu\n\n> Free nature sounds and white noise/m);
+  assert.match(llms, /^## Sleep$/m);
+  assert.match(llms, /^## Focus and Study$/m);
+  assert.match(llms, /^## Meditation and Reset$/m);
+  assert.match(llms, /^## Optional$/m);
+  assert.match(llms, /https:\/\/apps\.apple\.com\/us\/app\/yixiu-white-noise-sleep\/id1461182261/);
+  assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/guides\//);
+  assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/nature-sounds-for-meditation\//);
+  assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/one-minute-reset\//);
+  assert.ok(yixiuLinks.length >= 22);
+  assert.equal(new Set(links).size, links.length);
+  assert.ok(links.every((url) => url.startsWith("https://yixiu.wonderelian.com/") || url.startsWith("https://apps.apple.com/")));
+  assert.doesNotMatch(llms, /maker\.|onelaser\.|wendao\.|style atlas|aggregateRating|reviewCount|cure|treat|guarantee|insomnia/i);
+});
+
 test("production deploy acceptance checks the HTTPS origin instead of its redirect", async () => {
   const script = await readFile(
     new URL("../scripts/deploy-production-nginx.sh", import.meta.url),
@@ -994,6 +1014,9 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/spring-creek\.webp/);
   assert.match(script, /assets\/yixiu\/audio\/sunrise-river\.m4a/);
   assert.match(script, /data-analytics-placement=\"meditation_landing_timer\"/);
+  assert.match(script, /site_path\/llms\.txt/);
+  assert.match(script, /deploy_target\/llms\.txt/);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/llms\.txt/);
   assert.match(script, /Waterfall Sounds for Sleep &amp; Noise Masking/);
   assert.match(script, /discover\.css\?v=20260829-waterfall-search/);
   assert.match(script, /discover\.js\?v=20260829-waterfall-search/);
