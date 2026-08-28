@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Rain Sounds for Sleeping — Real Rain, No Music | Yixiu</title>
-    <meta name="description" content="Play real rain sounds for sleeping with no music or talking. Listen free online, then continue on iPhone with a gentle timer and background playback." />
+    <meta name="description" content="Play real rain sounds for sleeping with no music or talking. Listen free online, then continue on iPhone with a gentle timer and quiet background playback." />
     <meta name="apple-itunes-app" content="app-id=1461182261" />
     <link rel="canonical" href="https://yixiu.wonderelian.com/sleep-sounds/" />
     <link rel="stylesheet" href="/discover.css" />
@@ -45,7 +45,7 @@
             "name": "Yixiu: White Noise & Sleep",
             "operatingSystem": "iOS 17.0 or later",
             "applicationCategory": "HealthApplication",
-            "softwareVersion": "1.3",
+            "softwareVersion": "1.4",
             "description": "Real rain sounds for sleeping with no music or talking, plus a timer, background playback, no account and no ads.",
             "url": "https://yixiu.wonderelian.com/sleep-sounds/",
             "image": {"@id": "https://yixiu.wonderelian.com/sleep-sounds/#social-image"},
@@ -93,7 +93,10 @@
   </head>
   <body>
     <main class="intent-page">
-      <img class="intent-backdrop" src="/assets/yixiu/window-rain.png" alt="Rain falling beyond a quiet window at night" />
+      <picture>
+        <source srcset="/assets/yixiu/window-rain.webp" type="image/webp" />
+        <img class="intent-backdrop" src="/assets/yixiu/window-rain.png" width="941" height="1672" fetchpriority="high" decoding="async" alt="Rain falling beyond a quiet window at night" />
+      </picture>
       <div class="intent-shell">
         <header class="intent-header"><a class="intent-brand" href="/?lang=en">Yixiu</a><span>True to yourself. Flow with life.</span></header>
         <section class="intent-hero">
@@ -103,6 +106,14 @@
           <div class="intent-actions">
             <button class="intent-button primary" type="button" data-audio-preview="/assets/yixiu/audio/light-rain.m4a" data-scene="window" data-play-label="Play Window Rain" data-pause-label="Pause Window Rain" data-analytics-placement="sleep_landing_preview" aria-pressed="false"><span class="intent-preview-icon" aria-hidden="true"></span><span data-preview-label>Play Window Rain</span></button>
             <a class="intent-button app-store" href="https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&amp;pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8" data-analytics-event="yixiu_download_click" data-analytics-placement="sleep_landing">Get Yixiu for iPhone</a>
+          </div>
+          <div class="intent-timer" data-preview-timer>
+            <div class="intent-timer-heading"><span>Sleep preview timer</span><strong data-preview-timer-status aria-live="polite">30:00 remaining</strong></div>
+            <div class="intent-timer-options" role="group" aria-label="Preview timer">
+              <button type="button" aria-label="15 minutes" aria-pressed="false" data-preview-minutes="15">15 min</button>
+              <button type="button" aria-label="30 minutes" aria-pressed="true" data-preview-minutes="30">30 min</button>
+              <button type="button" aria-label="60 minutes" aria-pressed="false" data-preview-minutes="60">60 min</button>
+            </div>
           </div>
           <p class="intent-trustline">Free download · No account · No ads · Plays with the screen locked</p>
           <div class="intent-after-play" data-after-preview hidden>Ready to take the rain to bed? <a href="https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&amp;pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8" data-analytics-event="yixiu_download_click" data-analytics-placement="sleep_after_preview">Get Yixiu for iPhone.</a></div>

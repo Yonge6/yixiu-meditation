@@ -5,11 +5,77 @@
   if (!previewButtons.length) return;
 
   let active = null;
+  const timerRoot = document.querySelector("[data-preview-timer]");
+  const timerButtons = timerRoot ? [...timerRoot.querySelectorAll("[data-preview-minutes]")] : [];
+  const timerStatus = timerRoot?.querySelector("[data-preview-timer-status]");
+  let selectedMinutes = Number(timerButtons.find((button) => button.getAttribute("aria-pressed") === "true")?.dataset.previewMinutes || 0);
+  let timerRemainingSeconds = selectedMinutes * 60;
+  let timerInterval = null;
+  let timerDeadline = null;
 
   function report(event, parameters) {
     window.dispatchEvent(new CustomEvent("yixiu:analytics", {
       detail: { event, ...parameters },
     }));
+  }
+
+  function formatTimer(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainder = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")} remaining`;
+  }
+
+  function clearPreviewTimer() {
+    window.clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  function resetPreviewTimer() {
+    clearPreviewTimer();
+    timerDeadline = null;
+    timerRemainingSeconds = selectedMinutes * 60;
+    if (timerStatus && selectedMinutes) timerStatus.textContent = formatTimer(timerRemainingSeconds);
+  }
+
+  function completePreviewTimer() {
+    clearPreviewTimer();
+    timerDeadline = null;
+    if (active) {
+      active.audio.pause();
+      updateButton(active.button, false);
+      active = null;
+    }
+    if (timerStatus) timerStatus.textContent = "Timer complete";
+    report("yixiu_preview_timer_complete", {
+      duration_minutes: selectedMinutes,
+      placement: "sleep_landing_timer",
+    });
+  }
+
+  function startPreviewTimer() {
+    if (!selectedMinutes) return;
+    resetPreviewTimer();
+    timerDeadline = Date.now() + timerRemainingSeconds * 1000;
+    timerInterval = window.setInterval(() => {
+      timerRemainingSeconds = Math.max(0, Math.ceil((timerDeadline - Date.now()) / 1000));
+      if (timerRemainingSeconds <= 0) {
+        completePreviewTimer();
+        return;
+      }
+      if (timerStatus) timerStatus.textContent = formatTimer(timerRemainingSeconds);
+    }, 1000);
+  }
+
+  for (const timerButton of timerButtons) {
+    timerButton.addEventListener("click", () => {
+      selectedMinutes = Number(timerButton.dataset.previewMinutes);
+      for (const button of timerButtons) button.setAttribute("aria-pressed", String(button === timerButton));
+      resetPreviewTimer();
+      report("yixiu_preview_timer_select", {
+        duration_minutes: selectedMinutes,
+        placement: "sleep_landing_timer",
+      });
+    });
   }
 
   const afterPreview = document.querySelector("[data-after-preview]");
@@ -149,6 +215,7 @@
     active.audio.pause();
     updateButton(active.button, false);
     active = null;
+    resetPreviewTimer();
   }
 
   for (const button of previewButtons) {
@@ -168,6 +235,7 @@
       try {
         await audio.play();
         updateButton(button, true);
+        startPreviewTimer();
         updatePinterestLink();
         document.querySelector("[data-after-preview]")?.removeAttribute("hidden");
         report("yixiu_playback_start", {

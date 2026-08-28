@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, stat } from "node:fs/promises";
 import test from "node:test";
 import worker from "../worker/index.js";
 
@@ -121,6 +121,7 @@ test("all H5 App Store actions use the shared Apple campaign attribution", async
 
 test("sleep intent page keeps its search promise, visible FAQ, and conversion path aligned", async () => {
   const html = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
+  const hero = await stat(new URL("../public/assets/yixiu/window-rain.webp", import.meta.url));
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
   const h1Count = [...html.matchAll(/<h1\b/g)].length;
@@ -134,6 +135,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
 
   assert.ok(title.length >= 50 && title.length <= 60);
   assert.match(title, /^Rain Sounds for Sleeping/);
+  assert.ok(description.length >= 150 && description.length <= 160);
   assert.match(description, /real rain sounds for sleeping/i);
   assert.equal(h1Count, 1);
   assert.equal(faqQuestions.length, 4);
@@ -147,6 +149,13 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(image.height, 1672);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
+  assert.equal(software.softwareVersion, "1.4");
+  assert.ok(hero.size < 100_000);
+  assert.match(html, /<source srcset="\/assets\/yixiu\/window-rain\.webp" type="image\/webp"/);
+  assert.match(html, /data-preview-timer/);
+  assert.match(html, /data-preview-minutes="15"/);
+  assert.match(html, /data-preview-minutes="30"/);
+  assert.match(html, /data-preview-minutes="60"/);
   assert.match(html, /property="og:image:width" content="941"/);
   assert.match(html, /property="og:image:height" content="1672"/);
   assert.match(html, /property="og:image:alt" content="Rain falling beyond a quiet window at night"/);

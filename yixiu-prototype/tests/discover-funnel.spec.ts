@@ -75,6 +75,29 @@ test("rain sleep preview reveals its matched download and attributed Pinterest p
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("rain sleep preview timer selects a duration and stops playback at zero", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/sleep-sounds/index.html", { waitUntil: "domcontentloaded" });
+
+  const timer = page.locator("[data-preview-timer]");
+  await expect(timer).toBeVisible();
+  await expect(timer.getByRole("button", { name: "30 minutes" })).toHaveAttribute("aria-pressed", "true");
+
+  await timer.getByRole("button", { name: "15 minutes" }).click();
+  await expect(timer.getByRole("button", { name: "15 minutes" })).toHaveAttribute("aria-pressed", "true");
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("15:00 remaining");
+
+  const preview = page.locator('button[data-analytics-placement="sleep_landing_preview"]');
+  await expect(preview).toHaveAccessibleName("Play Window Rain");
+  await preview.click();
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await page.clock.runFor(15 * 60 * 1000);
+
+  await expect(preview).toHaveAttribute("aria-pressed", "false");
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("Timer complete");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("ocean sleep preview reveals sharing and its matched download path without mobile overflow", async ({ page }) => {
   await page.goto("/ocean-waves-for-sleeping/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
 

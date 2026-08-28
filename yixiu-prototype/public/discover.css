@@ -78,6 +78,13 @@ a { color: inherit; }
 .intent-preview-icon { width: 22px; height: 22px; display: inline-grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 9px; line-height: 1; }
 .intent-button.is-playing .intent-preview-icon::before { content: "Ⅱ"; font-size: 10px; letter-spacing: -2px; transform: translateX(-1px); }
 .intent-button:not(.is-playing) .intent-preview-icon::before { content: "▶"; transform: translateX(1px); }
+.intent-timer { max-width: 610px; margin-top: 16px; padding: 14px 16px; border: 1px solid rgba(159,225,225,.25); border-radius: 16px; background: rgba(3,30,38,.56); backdrop-filter: blur(12px); }
+.intent-timer-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; color: rgba(235,247,244,.68); font: 600 11px/1.4 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.intent-timer-heading strong { color: #a6e8e8; font-weight: 650; letter-spacing: .02em; text-transform: none; }
+.intent-timer-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 11px; }
+.intent-timer-options button { min-height: 44px; border: 1px solid rgba(159,225,225,.3); border-radius: 999px; color: rgba(243,245,239,.72); background: rgba(2,24,32,.48); font: 650 12px/1 system-ui, sans-serif; cursor: pointer; }
+.intent-timer-options button[aria-pressed="true"] { color: #03232b; border-color: #a6e8e8; background: #a6e8e8; }
+.intent-timer-options button:active { transform: scale(.98); }
 .intent-trustline { margin: 14px 0 0; color: rgba(235,247,244,.68); font: 500 12px/1.5 system-ui, sans-serif; letter-spacing: .02em; }
 .intent-after-play { max-width: 610px; margin-top: 16px; padding: 15px 18px; border: 1px solid rgba(159,225,225,.28); border-radius: 16px; background: rgba(3,30,38,.66); color: rgba(243,245,239,.78); font: 500 13px/1.55 system-ui, sans-serif; backdrop-filter: blur(12px); }
 .intent-after-play a { color: #a6e8e8; font-weight: 700; text-decoration: none; }
