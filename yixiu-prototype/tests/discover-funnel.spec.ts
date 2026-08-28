@@ -39,7 +39,7 @@ test("all search landings expose a preview, trust message and matched iPhone pat
     { path: "/ocean-waves-for-sleeping/index.html", preview: "Play Ocean Waves", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/forest-sounds-for-sleep/index.html", preview: "Play Forest Sounds", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/one-minute-reset/index.html", preview: "Play Morning Water", ppid: "6c015245-76ff-4266-8837-5a0ffc289b9c" },
-    { path: "/ocean-waves-for-focus/index.html", preview: "Play Ocean Waves", ppid: "7890afd3-dd12-4215-a5c5-17f4ebc28759" },
+    { path: "/ocean-waves-for-focus/index.html", preview: "Play Audio Only", ppid: "7890afd3-dd12-4215-a5c5-17f4ebc28759" },
   ]) {
     await page.goto(item.path, { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("button", { name: item.preview })).toBeVisible();
@@ -48,6 +48,27 @@ test("all search landings expose a preview, trust message and matched iPhone pat
       new RegExp(`ppid=${item.ppid}&pt=120014121&ct=yixiu_h5_20260827&mt=8$`),
     );
     await expect(page.locator(".intent-trustline")).toBeVisible();
+  }
+});
+
+test("video search landings keep one eager player prominent in the mobile first screen", async ({ page }) => {
+  for (const path of [
+    "/mountain-stream-sounds-for-focus/index.html",
+    "/river-sounds-for-studying/index.html",
+    "/ocean-waves-for-focus/index.html",
+  ]) {
+    await page.goto(path, { waitUntil: "domcontentloaded" });
+
+    const player = page.locator(".intent-watch-player .intent-video");
+    await expect(player).toBeVisible();
+    await expect(player.locator('iframe[loading="eager"]')).toHaveCount(1);
+    await expect(page.locator("iframe")).toHaveCount(1);
+
+    const bounds = await player.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds.y).toBeGreaterThanOrEqual(0);
+    expect(bounds.y).toBeLessThan(844);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }
 });
 
@@ -429,7 +450,7 @@ test("cancelling the native share sheet does not record a share", async ({ page 
     }) as EventListener);
   });
 
-  await page.getByRole("button", { name: "Play Ocean Waves" }).click();
+  await page.getByRole("button", { name: "Play Audio Only" }).click();
   const share = page.locator(".intent-share");
   await share.click();
 

@@ -111,8 +111,15 @@ grep -F 'data-audio-preview=' "$site_path/ocean-waves-for-focus/index.html" >/de
 grep -F 'data-audio-preview=' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F 'class="intent-hero intent-watch-hero"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F 'loading="eager"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/river-sounds-for-studying/index.html" >/dev/null
+grep -F 'class="intent-hero intent-watch-hero"' "$site_path/river-sounds-for-studying/index.html" >/dev/null
+grep -F 'loading="eager"' "$site_path/river-sounds-for-studying/index.html" >/dev/null
+grep -F 'youtube-nocookie.com/embed/2nJUyIr9EOY' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
+grep -F 'class="intent-hero intent-watch-hero"' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
+grep -F 'loading="eager"' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/white-noise-for-studying/index.html" >/dev/null
@@ -167,6 +174,9 @@ grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
+grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/mountain-stream-sounds-for-focus/index.html" >/dev/null
+grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/river-sounds-for-studying/index.html" >/dev/null
+grep -F 'class="intent-hero intent-watch-hero"' "$deploy_target/ocean-waves-for-focus/index.html" >/dev/null
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.png"
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.jpg"
 grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg' "$deploy_target/wind-sounds-for-sleeping/index.html" >/dev/null
@@ -194,5 +204,17 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/wind-sounds-for-sleeping/ \
   | grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/ \
+  | grep -F 'class="intent-hero intent-watch-hero"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/river-sounds-for-studying/ \
+  | grep -F 'class="intent-hero intent-watch-hero"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/ocean-waves-for-focus/ \
+  | grep -F 'class="intent-hero intent-watch-hero"' >/dev/null
 
 echo "DEPLOY_OK_YIXIU_${release_id}"
