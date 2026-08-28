@@ -367,7 +367,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/morning-bird-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/forest-sounds-for-focus\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-27<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-studying\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
 });
 
@@ -825,6 +825,7 @@ test("forest sleep page serves real forest ambience, timer, and an aligned Sleep
 
 test("wind sleep page serves real mountain wind and keeps its no-music bedtime promise aligned", async () => {
   const html = await readFile(new URL("../public/wind-sounds-for-sleeping/index.html", import.meta.url), "utf8");
+  const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
   const h1Count = [...html.matchAll(/<h1\b/g)].length;
@@ -834,6 +835,7 @@ test("wind sleep page serves real mountain wind and keeps its no-music bedtime p
   const webpage = schema["@graph"].find((entry) => entry["@type"] === "WebPage");
   const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
   const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const video = schema["@graph"].find((entry) => entry["@type"] === "VideoObject");
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
@@ -849,6 +851,13 @@ test("wind sleep page serves real mountain wind and keeps its no-music bedtime p
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
   assert.match(image.contentUrl, /snow-wind\.png$/);
+  assert.equal(software.softwareVersion, "1.4");
+  assert.equal(video.uploadDate, "2026-08-26");
+  assert.equal(video.duration, "PT21S");
+  assert.match(video.thumbnailUrl, /iMG8YanRAnA\/maxresdefault\.jpg$/);
+  assert.match(video.contentUrl, /iMG8YanRAnA$/);
+  assert.match(html, /youtube-nocookie\.com\/embed\/iMG8YanRAnA/);
+  assert.match(html, /class="intent-video intent-video-short"/);
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/mountain-wind\.m4a"/);
   assert.match(html, /data-analytics-placement="wind_sleep_after_preview"/);
@@ -856,6 +865,7 @@ test("wind sleep page serves real mountain wind and keeps its no-music bedtime p
   assert.match(html, /href="\/ocean-waves-for-sleeping\/"/);
   assert.match(html, /href="\/thunderstorm-sounds-for-sleep\/"/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
 });
 
