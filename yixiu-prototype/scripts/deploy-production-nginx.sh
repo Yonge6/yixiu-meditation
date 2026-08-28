@@ -68,6 +68,7 @@ test -f "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt"
 test -f "$site_path/assets/yixiu/window-rain.webp"
 test -f "$site_path/assets/yixiu/sunny-valley.webp"
 test -f "$site_path/assets/yixiu/underwater-echo.webp"
+test -f "$site_path/assets/yixiu/snow-wind-pinterest-2x3.png"
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
@@ -163,6 +164,7 @@ grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
+test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.png"
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ \
