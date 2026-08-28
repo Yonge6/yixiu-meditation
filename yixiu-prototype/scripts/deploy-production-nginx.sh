@@ -45,6 +45,7 @@ tar -xzf "$archive_path" -C "$site_path"
 
 test -f "$site_path/index.html"
 test -f "$site_path/sleep-sounds/index.html"
+test -f "$site_path/rain-sounds-when-iphone-locked/index.html"
 test -f "$site_path/focus-sounds/index.html"
 test -f "$site_path/forest-sounds-for-focus/index.html"
 test -f "$site_path/forest-sounds-for-sleep/index.html"
@@ -73,6 +74,7 @@ grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$site_path/index.html" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/forest-sounds-for-focus/index.html" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/forest-sounds-for-sleep/index.html" >/dev/null
@@ -89,6 +91,10 @@ grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F '/discover.css?v=20260828-sleep-timer' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F '/discover.js?v=20260828-sleep-timer' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
+grep -F 'data-preview-timer' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
+grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
+grep -F 'https://support.apple.com/en-sg/guide/iphone/iphb2cfa052c/ios' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path/forest-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path/forest-sounds-for-sleep/index.html" >/dev/null
@@ -127,6 +133,7 @@ grep -F 'https://yixiu.wonderelian.com/rain-sounds-for-studying/' "$site_path/si
 grep -F 'https://yixiu.wonderelian.com/white-noise-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/best-nature-sounds-for-studying/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/guides/' "$site_path/sitemap.xml" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/' "$site_path/sitemap.xml" >/dev/null
 
 cp -a "$deploy_target/." "$deploy_backup/"
 rsync -a "$site_path/" "$deploy_target/"
@@ -155,6 +162,7 @@ grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871e
 grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
+grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ \
@@ -171,5 +179,9 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/forest-sounds-for-sleep/ \
   | grep -F 'data-analytics-placement="forest_sleep_preview"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/ \
+  | grep -F 'data-analytics-placement="rain_lock_screen_preview"' >/dev/null
 
 echo "DEPLOY_OK_YIXIU_${release_id}"

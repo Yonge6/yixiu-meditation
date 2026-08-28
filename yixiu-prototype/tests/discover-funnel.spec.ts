@@ -34,6 +34,7 @@ test("focus landing starts a real one-tap preview and reveals the matched downlo
 test("all search landings expose a preview, trust message and matched iPhone path", async ({ page }) => {
   for (const item of [
     { path: "/sleep-sounds/index.html", preview: "Play Window Rain", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
+    { path: "/rain-sounds-when-iphone-locked/index.html", preview: "Play Rain for Lock Screen", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/underwater-white-noise-for-sleep/index.html", preview: "Play Underwater White Noise", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/ocean-waves-for-sleeping/index.html", preview: "Play Ocean Waves", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/forest-sounds-for-sleep/index.html", preview: "Play Forest Sounds", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
@@ -160,6 +161,43 @@ test("rain sleep preview timer selects a duration and stops playback at zero", a
 
   await expect(preview).toHaveAttribute("aria-pressed", "false");
   await expect(timer.locator("[data-preview-timer-status]")).toHaveText("Timer complete");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("iPhone lock-screen guide plays rain, advances its timer and reveals the attributed Sleep path", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/rain-sounds-when-iphone-locked/index.html?utm_source=search&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/",
+  );
+  await expect(page.locator("h1")).toHaveCount(1);
+  await expect(page.getByRole("link", { name: "Apple's Background Sounds guide" })).toHaveAttribute(
+    "href",
+    "https://support.apple.com/en-sg/guide/iphone/iphb2cfa052c/ios",
+  );
+
+  const timer = page.locator("[data-preview-timer]");
+  await timer.getByRole("button", { name: "15 minutes" }).click();
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("15:00 remaining");
+
+  const preview = page.locator('button[data-analytics-placement="rain_lock_screen_preview"]');
+  await expect(preview).toHaveAccessibleName("Play Rain for Lock Screen");
+  await expect(preview).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/light-rain.m4a");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Rain for Lock Screen")).toBeVisible();
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
+  await expect(page.locator("[data-after-preview]")).toBeVisible();
+  await expect(page.locator('[data-analytics-placement="rain_lock_screen_after_preview"]')).toHaveAttribute(
+    "href",
+    /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
