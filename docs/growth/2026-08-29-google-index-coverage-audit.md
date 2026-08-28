@@ -18,6 +18,16 @@ The HTTPS enhancement row reported `网页采用 HTTPS 协议` for both URLs. Be
 
 Independent public readback returned HTTP 200 for both exact URLs and found a self-referencing canonical URL on each page.
 
+## Updated study comparison recrawl
+
+Search Console also reported `网址已收录到 Google`, `网页已编入索引` and valid HTTPS for:
+
+- `https://yixiu.wonderelian.com/best-nature-sounds-for-studying/`
+
+Unlike the two unchanged sleep pages, this URL had received a production content update earlier on 2026-08-29: a visible River/Rain/Ocean comparison figure was added and the Rain structured-data link was corrected. A single `请求编入索引` action was therefore submitted for the changed page. After testing the live URL, Search Console returned `已请求编入索引` and stated that the URL had been added to the priority crawl queue. This is a recrawl receipt only; it does not prove that Google has processed the new version.
+
+The public study page returned HTTP 200, exposed the updated River/Rain/Ocean comparison and retained a self-referencing canonical URL. No duplicate request was sent for either unchanged sleep page.
+
 ## Sitemap and coverage state
 
 Search Console reported the submitted `/sitemap.xml` as:
