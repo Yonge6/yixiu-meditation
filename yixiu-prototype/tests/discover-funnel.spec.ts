@@ -127,7 +127,14 @@ test("ocean sleep preview reveals sharing and its matched download path without 
 });
 
 test("underwater white noise preview reveals its matched download action without mobile overflow", async ({ page }) => {
+  await page.clock.install();
   await page.goto("/underwater-white-noise-for-sleep/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
+
+  const timer = page.locator("[data-preview-timer]");
+  await expect(timer).toBeVisible();
+  await timer.getByRole("button", { name: "15 minutes" }).click();
+  await expect(timer.getByRole("button", { name: "15 minutes" })).toHaveAttribute("aria-pressed", "true");
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("15:00 remaining");
 
   const preview = page.locator('button[data-analytics-placement="underwater_white_noise_preview"]');
   await expect(preview).toBeVisible();
@@ -136,6 +143,8 @@ test("underwater white noise preview reveals its matched download action without
 
   await expect(preview).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("Pause Underwater White Noise")).toBeVisible();
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
   const afterPreview = page.locator("[data-after-preview]");
   await expect(afterPreview).toBeVisible();
   await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu for iPhone." })).toHaveAttribute(

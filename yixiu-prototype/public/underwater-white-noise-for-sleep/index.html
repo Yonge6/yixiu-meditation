@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Underwater White Noise for Sleep — Deep Ocean | Yixiu</title>
-    <meta name="description" content="Play underwater white noise for sleep with a deep ocean texture—no music or talking. Listen free, then continue on iPhone with a timer and background playback." />
+    <title>Deep White Noise for Sleeping — Underwater, No Music | Yixiu</title>
+    <meta name="description" content="Play deep white noise for sleeping with a steady underwater texture, no music or talking. Listen free online, then continue on iPhone with a gentle timer." />
     <meta name="apple-itunes-app" content="app-id=1461182261" />
     <link rel="canonical" href="https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/" />
-    <link rel="stylesheet" href="/discover.css" />
-    <meta property="og:title" content="Underwater White Noise for Sleep — Deep Ocean" />
+    <link rel="stylesheet" href="/discover.css?v=20260828-white-noise-timer" />
+    <meta property="og:title" content="Deep White Noise for Sleeping — Underwater, No Music" />
     <meta property="og:description" content="A deep, steady underwater texture for bedtime. No music and no talking." />
     <meta property="og:image" content="https://yixiu.wonderelian.com/assets/yixiu/underwater-echo.png" />
     <meta property="og:image:type" content="image/png" />
@@ -20,12 +20,12 @@
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Yixiu" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Underwater White Noise for Sleep — Deep Ocean" />
+    <meta name="twitter:title" content="Deep White Noise for Sleeping — Underwater, No Music" />
     <meta name="twitter:description" content="A deep, steady underwater texture for bedtime. No music and no talking." />
     <meta name="twitter:image" content="https://yixiu.wonderelian.com/assets/yixiu/underwater-echo.png" />
     <meta name="twitter:image:alt" content="Blue light filtering through deep ocean water" />
     <script src="/analytics.js" defer></script>
-    <script src="/discover.js" defer></script>
+    <script src="/discover.js?v=20260828-white-noise-timer" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -33,7 +33,7 @@
           {
             "@type": "WebPage",
             "@id": "https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/#webpage",
-            "name": "Underwater White Noise for Sleep — Deep Ocean",
+            "name": "Deep White Noise for Sleeping — Underwater, No Music",
             "url": "https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/",
             "description": "A free preview of Yixiu's deep underwater white-noise texture for bedtime, without music or talking.",
             "primaryImageOfPage": {"@id": "https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/#image"}
@@ -53,7 +53,7 @@
             "name": "Yixiu: White Noise & Sleep",
             "operatingSystem": "iOS 17.0 or later",
             "applicationCategory": "LifestyleApplication",
-            "softwareVersion": "1.3",
+            "softwareVersion": "1.4",
             "description": "Nature sounds and steady ambient textures for sleep, focus and quiet pauses, with timers, favorites, background playback, no account and no ads.",
             "url": "https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/",
             "image": {"@id": "https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/#image"},
@@ -91,24 +91,35 @@
   </head>
   <body>
     <main class="intent-page">
-      <img class="intent-backdrop" src="/assets/yixiu/underwater-echo.png" alt="Blue light filtering through deep ocean water" width="941" height="1672" fetchpriority="high" />
+      <picture>
+        <source srcset="/assets/yixiu/underwater-echo.webp" type="image/webp" />
+        <img class="intent-backdrop" src="/assets/yixiu/underwater-echo.png" alt="Blue light filtering through deep ocean water" width="941" height="1672" fetchpriority="high" decoding="async" />
+      </picture>
       <div class="intent-shell">
         <header class="intent-header"><a class="intent-brand" href="/?scene=underwater&amp;lang=en">Yixiu</a><span>True to yourself. Flow with life.</span></header>
         <section class="intent-hero">
-          <div class="intent-kicker">Deep ocean texture · no music · no talking</div>
-          <h1>Underwater white noise for sleep, without music.</h1>
-          <p class="intent-lede">Press play when rain feels too detailed and silence makes every small sound stand out. Yixiu's underwater scene is low, steady and easy to preview before you decide whether it belongs in tonight's room.</p>
+          <div class="intent-kicker">Deep white noise · no music · no talking</div>
+          <h1>Deep white noise for sleeping, free online.</h1>
+          <p class="intent-lede">Press play for Yixiu's low, steady underwater texture when rain feels too detailed and silence makes every small sound stand out. Choose 15, 30 or 60 minutes without leaving the page.</p>
           <div class="intent-actions">
             <button class="intent-button primary" type="button" data-audio-preview="/assets/yixiu/audio/underwater-white-noise.m4a" data-scene="underwater" data-play-label="Play Underwater White Noise" data-pause-label="Pause Underwater White Noise" data-analytics-placement="underwater_white_noise_preview" aria-pressed="false"><span class="intent-preview-icon" aria-hidden="true"></span><span data-preview-label>Play Underwater White Noise</span></button>
             <a class="intent-button app-store" href="https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&amp;pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8" data-analytics-event="yixiu_download_click" data-analytics-placement="underwater_white_noise_landing">Get Yixiu for iPhone</a>
+          </div>
+          <div class="intent-timer" data-preview-timer>
+            <div class="intent-timer-heading"><span>Sleep preview timer</span><strong data-preview-timer-status aria-live="polite">30:00 remaining</strong></div>
+            <div class="intent-timer-options" role="group" aria-label="Preview timer">
+              <button type="button" aria-label="15 minutes" aria-pressed="false" data-preview-minutes="15">15 min</button>
+              <button type="button" aria-label="30 minutes" aria-pressed="true" data-preview-minutes="30">30 min</button>
+              <button type="button" aria-label="60 minutes" aria-pressed="false" data-preview-minutes="60">60 min</button>
+            </div>
           </div>
           <p class="intent-trustline">Free download · No account · No ads · Background playback</p>
           <div class="intent-after-play" data-after-preview hidden>Want the sound to continue after the screen goes dark? <a href="https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&amp;pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8" data-analytics-event="yixiu_download_click" data-analytics-placement="underwater_white_noise_after_preview">Continue in Yixiu for iPhone.</a></div>
         </section>
         <section class="intent-proof">
+          <article><small>Choose one ending</small><h2>15, 30 or 60 minutes</h2><p>Set a listening length on this page before the sound starts, then let the timer stop it without another decision.</p></article>
           <article><small>Hear it first</small><h2>One real Yixiu scene</h2><p>The free preview uses the same first-party underwater white-noise audio available in Yixiu rather than a silent illustration or music bed.</p></article>
           <article><small>Keep it in the background</small><h2>No music or talking</h2><p>There are no lyrics, melodies, stories or spoken prompts waiting for your attention.</p></article>
-          <article><small>Continue on iPhone</small><h2>Timer and background play</h2><p>Choose 15, 30 or 60 minutes, then let the scene continue while the screen is locked.</p></article>
         </section>
         <section class="intent-guide" aria-labelledby="underwater-setup-title">
           <div class="intent-section-heading">
