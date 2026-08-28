@@ -51,4 +51,8 @@ Submitted alt text:
 
 The latest hostname-filtered GA4 readback before publication reported the partial 2026-08-28 Beijing day at 25 active users, 33 views, and 30 sessions. That partial-day value predates or overlaps several same-day Yixiu acquisition actions and is not attributed to this Reel.
 
+At approximately 23:24 Asia/Shanghai, Instagram's logged-in public Reels grid displayed 0 views for this Reel and 1 view for the Rain Reading Reel. The Ocean Reel was about nine minutes old, so this is an early platform receipt rather than a performance conclusion. Instagram views are not H5 visits or App downloads.
+
+Shortly after 2026-08-29 00:00 Asia/Shanghai, the same grid displayed 7 views for this Reel. The first completed-date GA4 readback for 2026-08-28 returned 26 active users, 35 views and 32 sessions for the exact Yixiu hostname. Those values are not attributed to this Reel and remain below the 100-UV gate.
+
 The completed Beijing natural-day 100-UV gate remains unmet. Apple official data already proves first-time downloads; unavailable trial, payment, subscription, in-app purchase, and revenue values remain `null`.

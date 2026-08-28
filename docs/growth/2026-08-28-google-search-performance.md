@@ -36,6 +36,7 @@ Search Console reported `URL is on Google` for each of these Yixiu pages, so no 
 - `https://yixiu.wonderelian.com/thunderstorm-sounds-for-sleep/`
 - `https://yixiu.wonderelian.com/morning-bird-sounds-for-focus/`
 - `https://yixiu.wonderelian.com/forest-sounds-for-sleep/`
+- `https://yixiu.wonderelian.com/wind-sounds-for-sleeping/`
 
 The previously submitted `white-noise-for-studying` request remains a crawl-queue receipt only. This report does not prove ranking, clicks, H5 users, or App downloads.
 
