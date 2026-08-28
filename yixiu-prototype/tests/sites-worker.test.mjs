@@ -267,6 +267,7 @@ test("ocean focus page aligns visible video, structured data, and attributed dow
   assert.equal([...html.matchAll(/<iframe[^>]+youtube-nocookie\.com\/embed\/2nJUyIr9EOY/g)].length, 1);
   assert.match(html, /<section class="intent-hero intent-watch-hero"/);
   assert.match(html, /<iframe[^>]+loading="eager"/);
+  assert.match(html, /href="\/discover\.css\?v=20260829-video-watch"/);
   assert.equal(schema["@graph"].find((entry) => entry["@type"] === "WebPage").mainEntity["@id"], video["@id"]);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/ocean-waves\.m4a"/);
   assert.match(html, /data-analytics-placement="ocean_focus_after_preview"/);
@@ -344,6 +345,7 @@ test("mountain stream focus page keeps its search promise, real preview, and sch
   assert.equal([...html.matchAll(/<iframe[^>]+youtube-nocookie\.com\/embed\/lfDiI0TAq1c/g)].length, 1);
   assert.match(html, /<section class="intent-hero intent-watch-hero"/);
   assert.match(html, /<iframe[^>]+loading="eager"/);
+  assert.match(html, /href="\/discover\.css\?v=20260829-video-watch"/);
   assert.equal(schema["@graph"].find((entry) => entry["@type"] === "WebPage").mainEntity["@id"], video["@id"]);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
@@ -402,6 +404,7 @@ test("river study page keeps its student intent, real preview, and Focus downloa
   assert.equal([...html.matchAll(/<iframe[^>]+youtube-nocookie\.com\/embed\/lfDiI0TAq1c/g)].length, 1);
   assert.match(html, /<section class="intent-hero intent-watch-hero"/);
   assert.match(html, /<iframe[^>]+loading="eager"/);
+  assert.match(html, /href="\/discover\.css\?v=20260829-video-watch"/);
   assert.equal(schema["@graph"].find((entry) => entry["@type"] === "WebPage").mainEntity["@id"], video["@id"]);
   assert.match(software.downloadUrl, /id1461182261\?ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
