@@ -653,9 +653,12 @@ test("guides hub organizes every English intent page and exposes a real preview 
   assert.equal(h1Count, 1);
   assert.equal(collection.mainEntity["@id"], itemList["@id"]);
   assert.equal(itemList.itemListElement.length, 20);
+  assert.equal(itemList.itemListElement[0].name, "Rain Sounds With a Dark Screen");
   assert.equal(faq.mainEntity.length, 3);
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
+  assert.match(html, /<h3>Rain sounds with a dark screen<\/h3>/);
+  assert.match(html, /15-, 30- or 60-minute timer, then darken the open page/);
   for (const route of ["sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
     assert.match(html, new RegExp(`href="/${route}/"`));
   }
