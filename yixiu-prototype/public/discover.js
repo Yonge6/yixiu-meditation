@@ -9,10 +9,14 @@
   const timerButtons = timerRoot ? [...timerRoot.querySelectorAll("[data-preview-minutes]")] : [];
   const timerStatus = timerRoot?.querySelector("[data-preview-timer-status]");
   const timerPlacement = timerRoot?.dataset.analyticsPlacement || "sleep_landing_timer";
+  const darkScreenToggle = document.querySelector("[data-dark-screen-toggle]");
+  const darkScreenOverlay = document.querySelector("[data-dark-screen-overlay]");
+  const darkScreenStatus = darkScreenOverlay?.querySelector("[data-dark-screen-status]");
   let selectedMinutes = Number(timerButtons.find((button) => button.getAttribute("aria-pressed") === "true")?.dataset.previewMinutes || 0);
   let timerRemainingSeconds = selectedMinutes * 60;
   let timerInterval = null;
   let timerDeadline = null;
+  let darkScreenOpen = false;
 
   function report(event, parameters) {
     window.dispatchEvent(new CustomEvent("yixiu:analytics", {
@@ -46,12 +50,44 @@
       updateButton(active.button, false);
       active = null;
     }
+    if (darkScreenStatus) darkScreenStatus.textContent = "Timer complete";
     if (timerStatus) timerStatus.textContent = "Timer complete";
     report("yixiu_preview_timer_complete", {
       duration_minutes: selectedMinutes,
       placement: timerPlacement,
     });
   }
+
+  function openDarkScreen() {
+    if (!darkScreenToggle || !darkScreenOverlay || darkScreenToggle.disabled) return;
+    darkScreenOpen = true;
+    darkScreenOverlay.hidden = false;
+    darkScreenToggle.setAttribute("aria-pressed", "true");
+    if (darkScreenStatus) darkScreenStatus.textContent = "Window Rain is playing";
+    document.body.classList.add("is-dark-screen");
+    darkScreenOverlay.focus();
+    report("yixiu_dark_screen_start", {
+      placement: darkScreenToggle.dataset.analyticsPlacement,
+    });
+  }
+
+  function closeDarkScreen() {
+    if (!darkScreenOpen || !darkScreenToggle || !darkScreenOverlay) return;
+    darkScreenOpen = false;
+    darkScreenOverlay.hidden = true;
+    darkScreenToggle.setAttribute("aria-pressed", "false");
+    document.body.classList.remove("is-dark-screen");
+    report("yixiu_dark_screen_end", {
+      placement: darkScreenToggle.dataset.analyticsPlacement,
+    });
+    darkScreenToggle.focus();
+  }
+
+  darkScreenToggle?.addEventListener("click", openDarkScreen);
+  darkScreenOverlay?.addEventListener("click", closeDarkScreen);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeDarkScreen();
+  });
 
   function startPreviewTimer() {
     if (!selectedMinutes) return;
@@ -209,6 +245,7 @@
     button.classList.toggle("is-playing", playing);
     const label = button.querySelector("[data-preview-label]");
     if (label) label.textContent = playing ? button.dataset.pauseLabel : button.dataset.playLabel;
+    if (darkScreenToggle) darkScreenToggle.disabled = !playing;
   }
 
   function stopCurrent() {
@@ -253,7 +290,10 @@
       }
     });
 
-    audio.addEventListener("pause", () => updateButton(button, false));
+    audio.addEventListener("pause", () => {
+      updateButton(button, false);
+      if (darkScreenOpen && darkScreenStatus) darkScreenStatus.textContent = "Rain is paused";
+    });
   }
 
   window.addEventListener("pagehide", stopCurrent);
