@@ -49,6 +49,34 @@ test("all search landings expose a preview, trust message and matched iPhone pat
   }
 });
 
+test("rain study landing starts real rain and reveals the attributed iPhone path", async ({ page }) => {
+  await page.goto("/rain-sounds-for-studying/index.html?utm_source=search&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://yixiu.wonderelian.com/rain-sounds-for-studying/",
+  );
+  await expect(page.locator("h1")).toHaveCount(1);
+
+  const preview = page.locator('button[data-analytics-placement="rain_studying_preview"]');
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAccessibleName("Play Eaves Rain");
+  await expect(preview).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/light-rain.m4a");
+  await preview.click();
+
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Pause Eaves Rain")).toBeVisible();
+  const afterPreview = page.locator("[data-after-preview]");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu for iPhone." })).toHaveAttribute(
+    "href",
+    /ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("rain sleep preview reveals its matched download and attributed Pinterest path without mobile overflow", async ({ page }) => {
   await page.goto("/sleep-sounds/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
 
