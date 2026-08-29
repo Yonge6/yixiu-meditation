@@ -250,6 +250,11 @@ test("focus intent page answers the query and keeps its App Store path aligned",
   assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/ocean-waves-for-focus\/"/);
   assert.match(html, /href="\/mountain-stream-sounds-for-focus\/"/);
+  assert.match(html, /Watch a complete 15-minute mountain stream session/);
+  assert.match(html, /data-analytics-event="yixiu_focus_path_click"/);
+  assert.match(html, /data-analytics-placement="focus_landing_mountain_stream_path"/);
+  const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/focus-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
 });
 
 test("reset intent page offers a real one-tap preview before its matched App Store path", async () => {

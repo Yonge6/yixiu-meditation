@@ -31,6 +31,24 @@ test("focus landing starts a real one-tap preview and reveals the matched downlo
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("focus landing gives high-intent visitors an attributed path to the converting stream session", async ({ page }) => {
+  await page.goto("/focus-sounds/index.html", { waitUntil: "domcontentloaded" });
+
+  const streamPath = page.getByRole("link", { name: "Watch the 15-minute stream" });
+  await expect(streamPath).toBeVisible();
+  await expect(streamPath).toHaveAttribute("href", "/mountain-stream-sounds-for-focus/");
+  await expect(streamPath).toHaveAttribute("data-analytics-event", "yixiu_focus_path_click");
+  await expect(streamPath).toHaveAttribute(
+    "data-analytics-placement",
+    "focus_landing_mountain_stream_path",
+  );
+  await expect(page.locator('.intent-comparison-visual img')).toHaveAttribute(
+    "alt",
+    "A bright mountain stream flowing through a green spring valley",
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("all search landings expose a preview, trust message and matched iPhone path", async ({ page }) => {
   for (const item of [
     { path: "/sleep-sounds/index.html", preview: "Play Window Rain", download: "Keep rain playing on iPhone", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
