@@ -77,6 +77,7 @@ test("root page exposes truthful software application structured data", async ()
   assert.equal(website.url, "https://yixiu.wonderelian.com/");
   assert.equal(software.name, "Yixiu: White Noise & Sleep");
   assert.equal(software.operatingSystem, "iOS");
+  assert.equal(software.softwareVersion, "1.4");
   assert.equal(software.offers.price, "0");
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.ok(software.featureList.includes("14 nature soundscapes"));
@@ -117,6 +118,28 @@ test("every sitemap HTML page points agents to the covering llms.txt", async () 
     const declarations = [...html.matchAll(/<link rel="describedby" href="\/llms\.txt" type="text\/plain" \/>/g)];
 
     assert.equal(declarations.length, 1, `${url.pathname} should declare exactly one llms.txt description`);
+  }
+});
+
+test("every public Yixiu application schema matches the official App Store version", async () => {
+  const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+  const urls = [...sitemap.matchAll(/<loc>(https:\/\/yixiu\.wonderelian\.com\/[^<]*)<\/loc>/g)]
+    .map((match) => new URL(match[1]))
+    .filter((url) => url.pathname !== "/privacy.html");
+
+  assert.equal(urls.length, 23);
+  for (const url of urls) {
+    const pagePath = url.pathname === "/"
+      ? "../index.html"
+      : `../public${url.pathname}index.html`;
+    const html = await readFile(new URL(pagePath, import.meta.url), "utf8");
+    const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+    const schema = JSON.parse(schemaSource);
+    const graph = schema["@graph"] ?? [schema];
+    const software = graph.find((entry) => entry["@type"] === "SoftwareApplication");
+
+    assert.ok(software, `${url.pathname} should expose SoftwareApplication data`);
+    assert.equal(software.softwareVersion, "1.4", url.pathname);
   }
 });
 
@@ -455,7 +478,7 @@ test("ocean sleep page serves real waves and the matched Sleep download path", a
   assert.match(html, /href="\/ocean-waves-for-focus\/"/);
   assert.match(html, /href="\/sleep-sounds\/"/);
   assert.match(html, /href="\/wind-sounds-for-sleeping\/"/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-sleeping\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/ocean-waves-for-sleeping\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee|insomnia/i);
 });
 
@@ -519,12 +542,12 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-when-iphone-locked\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-reading\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/morning-bird-sounds-for-focus\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/forest-sounds-for-focus\/<\/loc><lastmod>2026-08-26<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-reading\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/morning-bird-sounds-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/forest-sounds-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-studying\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/nature-sounds-for-meditation\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
 });
 
