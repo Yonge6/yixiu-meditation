@@ -130,6 +130,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
   const h1Count = [...html.matchAll(/<h1\b/g)].length;
   const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const faqAnswers = [...html.matchAll(/<details(?:\s+open)?><summary>[^<]+<\/summary><p>([^<]+)<\/p><\/details>/g)].map((match) => match[1]);
   const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
   const schema = JSON.parse(schemaSource);
   const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
@@ -137,15 +138,16 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   const video = schema["@graph"].find((entry) => entry["@type"] === "VideoObject");
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
-  assert.equal(title, "Rain Sounds for Sleeping — Dark Screen, No Ads | Yixiu");
+  assert.equal(title, "Rain Sounds Black Screen for Sleep — Free, No Ads | Yixiu");
   assert.ok(title.length >= 50 && title.length <= 60);
   assert.ok(description.length >= 150 && description.length <= 160);
-  assert.match(description, /real rain sounds for sleeping/i);
-  assert.match(description, /dark screen/i);
+  assert.match(description, /^Play real rain sounds with a black screen/i);
+  assert.match(description, /free online/i);
   assert.equal(h1Count, 1);
   assert.equal(faqQuestions.length, 5);
+  assert.equal(faqAnswers.length, faqQuestions.length);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
-  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.ok(faq.mainEntity.every((entry, index) => entry.name === faqQuestions[index] && entry.acceptedAnswer.text === faqAnswers[index]));
   assert.equal(video.duration, "PT15M");
   assert.equal(video.uploadDate, "2026-08-24T15:08:09+00:00");
   assert.match(video.contentUrl, /8LJoPKN3CO4$/);
@@ -171,12 +173,15 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-analytics-event="yixiu_download_click"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
-  assert.match(html, /<h1>Rain sounds for sleeping with a dark screen\.<\/h1>/);
+  assert.match(html, /<h1>Rain sounds with a black screen for sleep\.<\/h1>/);
+  assert.match(html, /<p class="intent-lede">Play real rain sounds with a black screen/);
+  assert.match(html, /<summary>Are these black-screen rain sounds free and ad-free\?<\/summary>/);
   assert.match(html, /data-dark-screen-toggle[^>]*disabled/);
   assert.match(html, /data-analytics-placement="sleep_landing_dark_screen"/);
   assert.match(html, /data-dark-screen-overlay[^>]*hidden/);
-  assert.match(html, /The web dark-screen mode dims this page while it stays open\./);
-  assert.match(html, /To keep rain playing after you physically lock your iPhone, use Yixiu's background playback\./);
+  assert.match(html, />Black Screen<\/span><\/button>/);
+  assert.match(html, /The browser black-screen mode covers this open page while the rain and timer keep running\./);
+  assert.match(html, /For physical iPhone lock-screen playback, continue in Yixiu\./);
   assert.match(html, /Real window rain/);
   assert.match(html, /data-analytics-placement="sleep_after_preview"/);
   assert.doesNotMatch(html, /utm_source=google/);
@@ -653,12 +658,12 @@ test("guides hub organizes every English intent page and exposes a real preview 
   assert.equal(h1Count, 1);
   assert.equal(collection.mainEntity["@id"], itemList["@id"]);
   assert.equal(itemList.itemListElement.length, 20);
-  assert.equal(itemList.itemListElement[0].name, "Rain Sounds With a Dark Screen");
+  assert.equal(itemList.itemListElement[0].name, "Rain Sounds Black Screen");
   assert.equal(faq.mainEntity.length, 3);
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
-  assert.match(html, /<h3>Rain sounds with a dark screen<\/h3>/);
-  assert.match(html, /15-, 30- or 60-minute timer, then darken the open page/);
+  assert.match(html, /<h3>Rain sounds black screen<\/h3>/);
+  assert.match(html, /15-, 30- or 60-minute timer, then cover the open page with a black screen/);
   for (const route of ["sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
     assert.match(html, new RegExp(`href="/${route}/"`));
   }
