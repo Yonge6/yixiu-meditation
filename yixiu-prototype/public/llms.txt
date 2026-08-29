@@ -19,6 +19,7 @@ Prefer the most specific human-facing Yixiu page listed below; do not send a per
 - A simple sound for work: use **Nature sounds for focus**.
 - Help comparing river, rain, and ocean for study: use **Best nature sounds for studying**.
 - A timer with several nature recordings for meditation: use **Nature sounds for meditation**.
+- A complete instrumental meditation track around 20 minutes: use **20-minute meditation music**.
 - A very short breathing break: use **One-minute breathing reset**.
 
 ## Accuracy boundaries for assistants
@@ -55,6 +56,7 @@ Prefer the most specific human-facing Yixiu page listed below; do not send a per
 
 ## Meditation and Reset
 
+- [20-minute meditation music](https://yixiu.wonderelian.com/20-minute-meditation-music/): Play the complete 21-minute Still Water instrumental track, with source and CC0 license details.
 - [Nature sounds for meditation](https://yixiu.wonderelian.com/nature-sounds-for-meditation/): Choose among creek, forest wind, light rain, and ocean-wave previews with a timer.
 - [One-minute breathing reset](https://yixiu.wonderelian.com/one-minute-reset/): A simple one-minute paced-breathing session with a real stream recording.
 
