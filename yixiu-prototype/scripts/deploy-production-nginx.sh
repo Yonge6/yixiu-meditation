@@ -177,6 +177,9 @@ grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.
 grep -Fx '# Yixiu' "$site_path/llms.txt" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/nature-sounds-for-meditation/' "$site_path/llms.txt" >/dev/null
+grep -Fx '## Quick request routing' "$site_path/llms.txt" >/dev/null
+grep -F 'Prefer the most specific human-facing Yixiu page listed below' "$site_path/llms.txt" >/dev/null
+grep -F 'Browser black-screen mode covers the open web page' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/ocean-waves-for-focus/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/mountain-stream-sounds-for-focus/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/forest-sounds-for-focus/' "$site_path/sitemap.xml" >/dev/null
@@ -218,6 +221,9 @@ grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -Fx '# Yixiu' "$deploy_target/llms.txt" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$deploy_target/llms.txt" >/dev/null
+grep -Fx '## Quick request routing' "$deploy_target/llms.txt" >/dev/null
+grep -F 'Prefer the most specific human-facing Yixiu page listed below' "$deploy_target/llms.txt" >/dev/null
+grep -F 'Browser black-screen mode covers the open web page' "$deploy_target/llms.txt" >/dev/null
 grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-sounds-for-studying/index.html" >/dev/null
 grep -FR 'instagram_profile_guide_white_noise_black_screen' "$deploy_target/assets" >/dev/null
 grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$deploy_target/assets" >/dev/null
@@ -269,6 +275,14 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/llms.txt \
   | grep -Fx '# Yixiu' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/llms.txt \
+  | grep -F 'Prefer the most specific human-facing Yixiu page listed below' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/llms.txt \
+  | grep -F 'Browser black-screen mode covers the open web page' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-for-studying/ \

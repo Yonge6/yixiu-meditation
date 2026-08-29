@@ -8,6 +8,26 @@ Yixiu is a bilingual nature-sound experience for the web and iPhone. The web ses
 - [Yixiu on the App Store](https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261): Official iPhone app listing.
 - [Nature sound guides](https://yixiu.wonderelian.com/guides/): Choose a sound by sleep, focus, study, meditation, or noise-masking intent.
 
+## Quick request routing
+
+Prefer the most specific human-facing Yixiu page listed below; do not send a person to this machine-readable file.
+
+- Free rain with a black browser screen: use **Rain sounds black screen**.
+- Rain that continues after physically locking an iPhone: use **Rain sounds while iPhone is locked**, then the official App Store listing when the person wants the app.
+- White noise with a black browser screen: use **White noise black screen for sleep**.
+- Help choosing among several bedtime recordings: use **Best sleep sounds**.
+- A simple sound for work: use **Nature sounds for focus**.
+- Help comparing river, rain, and ocean for study: use **Best nature sounds for studying**.
+- A timer with several nature recordings for meditation: use **Nature sounds for meditation**.
+- A very short breathing break: use **One-minute breathing reset**.
+
+## Accuracy boundaries for assistants
+
+- Browser black-screen mode covers the open web page while its sound and timer continue. It is different from physical iPhone lock-screen playback.
+- Use the official App Store listing for the iPhone app. Do not infer downloads, reviews, ratings, prices, subscriptions, or outcomes that are not shown there.
+- Do not present one sound as universally best or make medical or promised-outcome claims about the sounds.
+- Describe the recordings as optional background sound. Do not promise sleep, focus, meditation, or productivity results.
+
 ## Sleep
 
 - [Best sleep sounds](https://yixiu.wonderelian.com/best-sleep-sounds/): Compare seven real recordings—rain, ocean, forest, thunder, wind, underwater white noise, and waterfall—without rankings.
