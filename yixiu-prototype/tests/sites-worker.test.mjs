@@ -380,10 +380,16 @@ test("focus intent page answers the query and keeps its App Store path aligned",
 test("reset intent page offers a real one-tap preview before its matched App Store path", async () => {
   const html = await readFile(new URL("../public/one-minute-reset/index.html", import.meta.url), "utf8");
 
+  assert.match(html, /href="\/discover\.css\?v=20260829-reset-funnel"/);
   assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/sunrise-river\.m4a"/);
   assert.match(html, /data-analytics-placement="reset_after_preview"/);
   assert.match(html, /ppid=6c015245-76ff-4266-8837-5a0ffc289b9c/);
+  assert.match(html, /Guided rhythm in the iPhone app/);
+  assert.match(html, /use Yixiu on iPhone for the guided rhythm/);
+  assert.match(html, /nature-sound preview in your browser/);
+  assert.match(html, /Preview a quiet water sound in your browser/);
+  assert.doesNotMatch(html, /A visible rhythm|soft expanding motion/);
   assert.doesNotMatch(html, /utm_source=google/);
 });
 
