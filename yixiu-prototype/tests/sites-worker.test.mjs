@@ -124,6 +124,39 @@ test("all H5 App Store actions use the shared Apple campaign attribution", async
   }
 });
 
+test("every after-preview page loads the global share-prompt script version", async () => {
+  const pagePaths = [
+    "../public/guides/index.html",
+    "../public/nature-sounds-for-meditation/index.html",
+    "../public/sleep-sounds/index.html",
+    "../public/rain-sounds-when-iphone-locked/index.html",
+    "../public/thunderstorm-sounds-for-sleep/index.html",
+    "../public/rain-sounds-for-reading/index.html",
+    "../public/white-noise-for-studying/index.html",
+    "../public/focus-sounds/index.html",
+    "../public/morning-bird-sounds-for-focus/index.html",
+    "../public/forest-sounds-for-focus/index.html",
+    "../public/forest-sounds-for-sleep/index.html",
+    "../public/wind-sounds-for-sleeping/index.html",
+    "../public/underwater-white-noise-for-sleep/index.html",
+    "../public/ocean-waves-for-sleeping/index.html",
+    "../public/ocean-waves-for-focus/index.html",
+    "../public/mountain-stream-sounds-for-focus/index.html",
+    "../public/waterfall-sounds-for-noise-masking/index.html",
+    "../public/river-sounds-for-studying/index.html",
+    "../public/rain-sounds-for-studying/index.html",
+    "../public/best-nature-sounds-for-studying/index.html",
+    "../public/best-sleep-sounds/index.html",
+    "../public/one-minute-reset/index.html",
+  ];
+
+  for (const pagePath of pagePaths) {
+    const html = await readFile(new URL(pagePath, import.meta.url), "utf8");
+    assert.match(html, /data-after-preview/);
+    assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/, pagePath);
+  }
+});
+
 test("sleep intent page keeps its search promise, visible FAQ, and conversion path aligned", async () => {
   const html = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
   const hero = await stat(new URL("../public/assets/yixiu/window-rain.webp", import.meta.url));
@@ -160,7 +193,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(software.softwareVersion, "1.4");
   assert.ok(hero.size < 100_000);
   assert.match(html, /href="\/discover\.css\?v=20260829-sleep-share"/);
-  assert.match(html, /src="\/discover\.js\?v=20260829-sleep-share"/);
+  assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/);
   assert.match(html, /<source srcset="\/assets\/yixiu\/window-rain\.webp" type="image\/webp"/);
   assert.match(html, /data-preview-timer/);
   assert.match(html, /data-preview-minutes="15"/);
@@ -262,7 +295,7 @@ test("focus intent page answers the query and keeps its App Store path aligned",
 test("reset intent page offers a real one-tap preview before its matched App Store path", async () => {
   const html = await readFile(new URL("../public/one-minute-reset/index.html", import.meta.url), "utf8");
 
-  assert.match(html, /src="\/discover\.js"/);
+  assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/sunrise-river\.m4a"/);
   assert.match(html, /data-analytics-placement="reset_after_preview"/);
   assert.match(html, /ppid=6c015245-76ff-4266-8837-5a0ffc289b9c/);
@@ -846,7 +879,7 @@ test("underwater white noise black screen page keeps its search promise, real re
   assert.ok(hero.size < 100_000);
   assert.match(image.contentUrl, /underwater-echo\.png$/);
   assert.match(html, /href="\/discover\.css\?v=20260829-white-noise-dark-screen"/);
-  assert.match(html, /src="\/discover\.js\?v=20260829-white-noise-dark-screen"/);
+  assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/);
   assert.match(html, /<source srcset="\/assets\/yixiu\/underwater-echo\.webp" type="image\/webp"/);
   assert.match(html, /data-preview-timer/);
   assert.match(html, /data-preview-minutes="15"/);
@@ -1107,18 +1140,21 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /underwater-white-noise-for-sleep\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/underwater-white-noise\.m4a/);
   assert.match(script, /White Noise Black Screen for Sleep/);
-  assert.match(script, /discover\.js\?v=20260829-white-noise-dark-screen/);
+  assert.match(script, /discover\.js\?v=20260829-global-share-prompt/);
   assert.match(script, /data-analytics-placement="underwater_white_noise_dark_screen"/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\//);
   assert.match(script, /Keep rain playing on iPhone/);
   assert.match(script, /data-ensure-visible="true"/);
   assert.match(script, /grep -F 'dataset\.ensureVisible'/);
   assert.match(script, /discover\.css\?v=20260829-sleep-share/);
-  assert.match(script, /discover\.js\?v=20260829-sleep-share/);
+  assert.match(script, /discover\.js\?v=20260829-global-share-prompt/);
   assert.match(script, /data-share-label="Send this rain to someone"/);
   assert.match(script, /Know someone who needs a quieter night\?/);
   assert.match(script, /grep -F 'shareDefaultLabel'/);
   assert.match(script, /grep -F '\.intent-share-copy'/);
+  assert.match(script, /Know someone who would enjoy this sound\?/);
+  assert.match(script, /Send this sound to someone/);
+  assert.match(script, /discover\.js\?v=20260829-global-share-prompt/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\//);
   assert.match(script, /best-sleep-sounds\/index\.html/);
   assert.match(script, /data-analytics-placement="best_sleep_sounds_after_preview"/);
@@ -1143,6 +1179,6 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/llms\.txt/);
   assert.match(script, /Waterfall Sounds for Sleep &amp; Noise Masking/);
   assert.match(script, /discover\.css\?v=20260829-waterfall-search/);
-  assert.match(script, /discover\.js\?v=20260829-waterfall-search/);
+  assert.match(script, /discover\.js\?v=20260829-global-share-prompt/);
   assert.doesNotMatch(script, /-H 'Host: yixiu\.wonderelian\.com' http:\/\/127\.0\.0\.1\//);
 });

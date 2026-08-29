@@ -654,6 +654,10 @@ test("clipboard fallback records a share only after the link is copied", async (
 
   await page.getByRole("button", { name: "Play Mountain Stream" }).click();
   const share = page.locator(".intent-share");
+  await expect(page.locator("[data-after-preview] .intent-share-copy")).toHaveText(
+    "Know someone who would enjoy this sound?",
+  );
+  await expect(share).toHaveAccessibleName("Send this sound to someone");
   await share.click();
 
   await expect(share).toHaveText("Link copied");
@@ -734,7 +738,7 @@ test("cancelling the native share sheet does not record a share", async ({ page 
   const share = page.locator(".intent-share");
   await share.click();
 
-  await expect(share).toHaveText("Share this sound");
+  await expect(share).toHaveText("Send this sound to someone");
   const shareEvents = await page.evaluate(() => (
     (window as typeof window & { __shareEvents?: Array<Record<string, unknown>> }).__shareEvents
   ));

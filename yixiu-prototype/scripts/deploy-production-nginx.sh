@@ -105,7 +105,7 @@ grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset
 grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F '/discover.css?v=20260829-sleep-share' "$site_path/sleep-sounds/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-sleep-share' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-global-share-prompt' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-toggle' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$site_path/sleep-sounds/index.html" >/dev/null
@@ -114,6 +114,9 @@ grep -F 'data-ensure-visible="true"' "$site_path/sleep-sounds/index.html" >/dev/
 grep -F 'data-share-label="Send this rain to someone"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'Know someone who needs a quieter night?' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'shareDefaultLabel' "$site_path/discover.js" >/dev/null
+grep -F 'Know someone who would enjoy this sound?' "$site_path/discover.js" >/dev/null
+grep -F 'Send this sound to someone' "$site_path/discover.js" >/dev/null
+test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 22
 grep -F '.intent-share-copy' "$site_path/discover.css" >/dev/null
 grep -F 'dataset.ensureVisible' "$site_path/discover.js" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
@@ -129,7 +132,7 @@ grep -F 'data-analytics-placement="forest_sleep_preview"' "$site_path/forest-sou
 grep -F 'data-audio-preview="/assets/yixiu/audio/underwater-white-noise.m4a"' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F '<title>White Noise Black Screen for Sleep — Free, No Ads | Yixiu</title>' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-white-noise-dark-screen' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-global-share-prompt' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="underwater_white_noise_dark_screen"' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'activeSceneLabel' "$site_path/discover.js" >/dev/null
@@ -140,7 +143,7 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_p
 grep -F '<title>Waterfall Sounds for Sleep &amp; Noise Masking | Yixiu</title>' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F '/discover.css?v=20260829-waterfall-search' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-waterfall-search' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-global-share-prompt' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'youtube-nocookie.com/embed/lfDiI0TAq1c' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'class="intent-hero intent-watch-hero"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
 grep -F 'loading="eager"' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
@@ -159,7 +162,7 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/ra
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/underwater-white-noise.m4a"' "$site_path/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/white-noise-for-studying/index.html" >/dev/null
-grep -F '/discover.js?v=20260828-white-noise-study' "$site_path/white-noise-for-studying/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-global-share-prompt' "$site_path/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_river"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_rain"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="study_comparison_ocean"' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
@@ -230,13 +233,13 @@ grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$deploy_target/assets" >
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F '<title>White Noise Black Screen for Sleep — Free, No Ads | Yixiu</title>' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-white-noise-dark-screen' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-global-share-prompt' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="underwater_white_noise_dark_screen"' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'activeSceneLabel' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F '/discover.css?v=20260829-sleep-share' "$deploy_target/sleep-sounds/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-sleep-share' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-global-share-prompt' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'Keep rain playing on iPhone' "$deploy_target/sleep-sounds/index.html" >/dev/null
@@ -244,6 +247,9 @@ grep -F 'data-ensure-visible="true"' "$deploy_target/sleep-sounds/index.html" >/
 grep -F 'data-share-label="Send this rain to someone"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'Know someone who needs a quieter night?' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'shareDefaultLabel' "$deploy_target/discover.js" >/dev/null
+grep -F 'Know someone who would enjoy this sound?' "$deploy_target/discover.js" >/dev/null
+grep -F 'Send this sound to someone' "$deploy_target/discover.js" >/dev/null
+test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 22
 grep -F '.intent-share-copy' "$deploy_target/discover.css" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-event="yixiu_focus_path_click"' "$deploy_target/focus-sounds/index.html" >/dev/null
@@ -263,7 +269,7 @@ grep -F '/discover.css?v=20260829-video-watch' "$deploy_target/ocean-waves-for-f
 grep -F '<title>Waterfall Sounds for Sleep &amp; Noise Masking | Yixiu</title>' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'data-preview-timer' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F '/discover.css?v=20260829-waterfall-search' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-waterfall-search' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-global-share-prompt' "$deploy_target/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.png"
 test -f "$deploy_target/assets/yixiu/snow-wind-pinterest-2x3.jpg"
 grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg' "$deploy_target/wind-sounds-for-sleeping/index.html" >/dev/null
@@ -323,6 +329,14 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/discover.js \
   | grep -F 'dataset.ensureVisible' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/discover.js \
+  | grep -F 'Know someone who would enjoy this sound?' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/discover.js \
+  | grep -F 'Send this sound to someone' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/ \

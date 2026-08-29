@@ -122,9 +122,12 @@
   }
 
   const afterPreview = document.querySelector("[data-after-preview]");
+  const sharePrompt = afterPreview && !afterPreview.querySelector(".intent-share-copy")
+    ? document.createElement("span")
+    : null;
   const shareButton = afterPreview ? document.createElement("button") : null;
   const pinterestLink = afterPreview ? document.createElement("a") : null;
-  const shareDefaultLabel = afterPreview?.dataset.shareLabel?.trim() || "Share this sound";
+  const shareDefaultLabel = afterPreview?.dataset.shareLabel?.trim() || "Send this sound to someone";
   let shareFeedbackTimer = null;
 
   function sharePlacement() {
@@ -184,6 +187,13 @@
     shareFeedbackTimer = window.setTimeout(() => {
       shareButton.textContent = shareDefaultLabel;
     }, 2400);
+  }
+
+  if (sharePrompt) {
+    sharePrompt.className = "intent-share-copy";
+    sharePrompt.textContent = afterPreview?.dataset.sharePrompt?.trim()
+      || "Know someone who would enjoy this sound?";
+    afterPreview.appendChild(sharePrompt);
   }
 
   if (shareButton) {
