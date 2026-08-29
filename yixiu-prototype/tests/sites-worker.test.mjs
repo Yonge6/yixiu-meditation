@@ -158,8 +158,8 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(software.image["@id"], image["@id"]);
   assert.equal(software.softwareVersion, "1.4");
   assert.ok(hero.size < 100_000);
-  assert.match(html, /href="\/discover\.css\?v=20260829-rain-dark-screen"/);
-  assert.match(html, /src="\/discover\.js\?v=20260829-rain-dark-screen"/);
+  assert.match(html, /href="\/discover\.css\?v=20260829-sleep-postplay"/);
+  assert.match(html, /src="\/discover\.js\?v=20260829-sleep-postplay"/);
   assert.match(html, /<source srcset="\/assets\/yixiu\/window-rain\.webp" type="image\/webp"/);
   assert.match(html, /data-preview-timer/);
   assert.match(html, /data-preview-minutes="15"/);
@@ -1052,6 +1052,8 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /Keep rain playing on iPhone/);
   assert.match(script, /data-ensure-visible="true"/);
   assert.match(script, /data\.ensureVisible/);
+  assert.match(script, /discover\.css\?v=20260829-sleep-postplay/);
+  assert.match(script, /discover\.js\?v=20260829-sleep-postplay/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\//);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/discover\.js/);
   assert.match(script, /ocean-waves-for-sleeping\/index\.html/);
