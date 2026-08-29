@@ -105,6 +105,7 @@ test("all H5 App Store actions use the shared Apple campaign attribution", async
     "../public/waterfall-sounds-for-noise-masking/index.html",
     "../public/river-sounds-for-studying/index.html",
     "../public/best-nature-sounds-for-studying/index.html",
+    "../public/best-sleep-sounds/index.html",
     "../public/one-minute-reset/index.html",
   ];
 
@@ -385,6 +386,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-when-iphone-locked\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-reading\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-25<\/lastmod>/);
@@ -465,6 +467,50 @@ test("study-sound comparison page exposes three real previews and a truthful com
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/light-rain\.m4a"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/ocean-waves\.m4a"/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|guarantee/i);
+});
+
+test("sleep-sound comparison page exposes seven real previews and an honest choice path", async () => {
+  const html = await readFile(new URL("../public/best-sleep-sounds/index.html", import.meta.url), "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
+  const h1Count = [...html.matchAll(/<h1\b/g)].length;
+  const previewAssets = [...html.matchAll(/data-audio-preview="([^"]+)"/g)].map((match) => match[1]);
+  const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const collection = schema["@graph"].find((entry) => entry["@type"] === "CollectionPage");
+  const itemList = schema["@graph"].find((entry) => entry["@type"] === "ItemList");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
+
+  assert.ok(title.length >= 50 && title.length <= 60);
+  assert.match(title, /^Best Sleep Sounds/);
+  assert.ok(description.length >= 150 && description.length <= 160);
+  assert.equal(h1Count, 1);
+  assert.equal(collection.mainEntity["@id"], itemList["@id"]);
+  assert.equal(itemList.itemListElement.length, 7);
+  assert.deepEqual(previewAssets, [
+    "/assets/yixiu/audio/light-rain.m4a",
+    "/assets/yixiu/audio/ocean-waves.m4a",
+    "/assets/yixiu/audio/forest-breeze.m4a",
+    "/assets/yixiu/audio/distant-thunder.m4a",
+    "/assets/yixiu/audio/mountain-wind.m4a",
+    "/assets/yixiu/audio/underwater-white-noise.m4a",
+    "/assets/yixiu/audio/forest-waterfall.m4a",
+  ]);
+  assert.equal(faqQuestions.length, 4);
+  assert.equal(faq.mainEntity.length, faqQuestions.length);
+  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
+  assert.match(html, /rel="canonical" href="https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\/"/);
+  assert.match(html, /There is no universal best sleep sound/);
+  assert.match(html, /data-preview-timer/);
+  assert.match(html, /data-analytics-placement="best_sleep_sounds_after_preview"/);
+  assert.match(html, /data-ensure-visible="true"/);
+  for (const route of ["sleep-sounds", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "waterfall-sounds-for-noise-masking"]) {
+    assert.match(html, new RegExp(`href="/${route}/"`));
+  }
+  assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee|insomnia|anxiety/i);
 });
 
 test("rain reading page answers a distinct reading intent with a real preview and compressed hero", async () => {
@@ -657,21 +703,21 @@ test("guides hub organizes every English intent page and exposes a real preview 
   assert.match(title, /^Nature Sound Guides/);
   assert.equal(h1Count, 1);
   assert.equal(collection.mainEntity["@id"], itemList["@id"]);
-  assert.equal(itemList.itemListElement.length, 20);
+  assert.equal(itemList.itemListElement.length, 21);
   assert.equal(itemList.itemListElement[0].name, "Rain Sounds Black Screen");
   assert.equal(faq.mainEntity.length, 3);
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
   assert.match(html, /<h3>Rain sounds black screen<\/h3>/);
   assert.match(html, /15-, 30- or 60-minute timer, then cover the open page with a black screen/);
-  for (const route of ["sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
+  for (const route of ["best-sleep-sounds", "sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
     assert.match(html, new RegExp(`href="/${route}/"`));
   }
   assert.doesNotMatch(html, /aggregateRating|reviewCount|guarantee/i);
 });
 
 test("every English intent page links back to the guides hub", async () => {
-  for (const route of ["sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
+  for (const route of ["best-sleep-sounds", "sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
     const html = await readFile(new URL(`../public/${route}/index.html`, import.meta.url), "utf8");
     assert.match(html, /href="\/guides\/">Guides<\/a>/);
   }
@@ -1023,6 +1069,7 @@ test("llms.txt exposes the existing Yixiu collection without unrelated products 
   assert.match(llms, /^## Optional$/m);
   assert.match(llms, /https:\/\/apps\.apple\.com\/us\/app\/yixiu-white-noise-sleep\/id1461182261/);
   assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/guides\//);
+  assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\//);
   assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/nature-sounds-for-meditation\//);
   assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/one-minute-reset\//);
   assert.ok(yixiuLinks.length >= 22);
@@ -1055,6 +1102,9 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /discover\.css\?v=20260829-sleep-postplay/);
   assert.match(script, /discover\.js\?v=20260829-sleep-postplay/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\//);
+  assert.match(script, /best-sleep-sounds\/index\.html/);
+  assert.match(script, /data-analytics-placement="best_sleep_sounds_after_preview"/);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\//);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/discover\.js/);
   assert.match(script, /ocean-waves-for-sleeping\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/ocean-waves\.m4a/);

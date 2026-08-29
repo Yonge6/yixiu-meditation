@@ -45,6 +45,7 @@ tar -xzf "$archive_path" -C "$site_path"
 
 test -f "$site_path/index.html"
 test -f "$site_path/sleep-sounds/index.html"
+test -f "$site_path/best-sleep-sounds/index.html"
 test -f "$site_path/rain-sounds-when-iphone-locked/index.html"
 test -f "$site_path/focus-sounds/index.html"
 test -f "$site_path/forest-sounds-for-focus/index.html"
@@ -85,6 +86,9 @@ grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$site_path/index.html" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/best-sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$site_path/best-sleep-sounds/index.html" >/dev/null
+grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_path/best-sleep-sounds/index.html" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/forest-sounds-for-focus/index.html" >/dev/null
@@ -225,6 +229,8 @@ grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$deploy_target/s
 grep -F 'data-dark-screen-overlay' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'Keep rain playing on iPhone' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
+grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'dataset.ensureVisible' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F '/assets/yixiu/study-sounds-comparison-pinterest.jpg' "$deploy_target/best-nature-sounds-for-studying/index.html" >/dev/null
@@ -279,6 +285,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/sleep-sounds/ \
   | grep -F 'Keep rain playing on iPhone' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/best-sleep-sounds/ \
+  | grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/discover.js \
