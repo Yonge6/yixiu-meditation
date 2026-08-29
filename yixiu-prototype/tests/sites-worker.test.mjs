@@ -1051,7 +1051,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\//);
   assert.match(script, /Keep rain playing on iPhone/);
   assert.match(script, /data-ensure-visible="true"/);
-  assert.match(script, /data\.ensureVisible/);
+  assert.match(script, /grep -F 'dataset\.ensureVisible'/);
   assert.match(script, /discover\.css\?v=20260829-sleep-postplay/);
   assert.match(script, /discover\.js\?v=20260829-sleep-postplay/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\//);
