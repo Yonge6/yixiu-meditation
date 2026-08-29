@@ -1110,6 +1110,8 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /best-sleep-sounds\/index\.html/);
   assert.match(script, /data-analytics-placement="best_sleep_sounds_after_preview"/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\//);
+  assert.equal((script.match(/data-analytics-placement="focus_landing_mountain_stream_path"/g) || []).length, 3);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/focus-sounds\//);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/discover\.js/);
   assert.match(script, /ocean-waves-for-sleeping\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/ocean-waves\.m4a/);
