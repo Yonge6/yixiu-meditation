@@ -754,14 +754,17 @@ test("thunderstorm sleep page serves distant thunder and keeps every claim, sche
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
 });
 
-test("underwater white noise sleep page serves the real recording and matched Sleep download path", async () => {
+test("underwater white noise black screen page keeps its search promise, real recording and Sleep download path aligned", async () => {
   const html = await readFile(new URL("../public/underwater-white-noise-for-sleep/index.html", import.meta.url), "utf8");
   const hero = await stat(new URL("../public/assets/yixiu/underwater-echo.webp", import.meta.url));
+  const guides = await readFile(new URL("../public/guides/index.html", import.meta.url), "utf8");
+  const llms = await readFile(new URL("../public/llms.txt", import.meta.url), "utf8");
   const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
   const h1Count = [...html.matchAll(/<h1\b/g)].length;
   const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const faqAnswers = [...html.matchAll(/<details(?:\s+open)?><summary>[^<]+<\/summary><p>([^<]+)<\/p><\/details>/g)].map((match) => match[1]);
   const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
   const schema = JSON.parse(schemaSource);
   const webpage = schema["@graph"].find((entry) => entry["@type"] === "WebPage");
@@ -770,13 +773,18 @@ test("underwater white noise sleep page serves the real recording and matched Sl
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
-  assert.match(title, /^Deep White Noise for Sleeping/);
+  assert.equal(title, "White Noise Black Screen for Sleep — Free, No Ads | Yixiu");
   assert.ok(description.length >= 150 && description.length <= 160);
+  assert.match(description, /underwater white noise with a black screen/i);
   assert.equal(h1Count, 1);
+  assert.match(html, /<h1>White noise with a black screen for sleep\.<\/h1>/);
   assert.equal(faqQuestions.length, 4);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
-  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.deepEqual(faq.mainEntity.map((entry) => entry.name), faqQuestions);
+  assert.deepEqual(faq.mainEntity.map((entry) => entry.acceptedAnswer.text), faqAnswers);
+  assert.equal(faqQuestions[0], "Are these black-screen white noise sounds free and ad-free?");
   assert.match(webpage.url, /underwater-white-noise-for-sleep\/$/);
+  assert.match(webpage.description, /black screen/i);
   assert.equal(image.width, 941);
   assert.equal(image.height, 1672);
   assert.equal(image.representativeOfPage, true);
@@ -784,8 +792,8 @@ test("underwater white noise sleep page serves the real recording and matched Sl
   assert.equal(software.softwareVersion, "1.4");
   assert.ok(hero.size < 100_000);
   assert.match(image.contentUrl, /underwater-echo\.png$/);
-  assert.match(html, /href="\/discover\.css\?v=20260828-white-noise-timer"/);
-  assert.match(html, /src="\/discover\.js\?v=20260828-white-noise-timer"/);
+  assert.match(html, /href="\/discover\.css\?v=20260829-white-noise-dark-screen"/);
+  assert.match(html, /src="\/discover\.js\?v=20260829-white-noise-dark-screen"/);
   assert.match(html, /<source srcset="\/assets\/yixiu\/underwater-echo\.webp" type="image\/webp"/);
   assert.match(html, /data-preview-timer/);
   assert.match(html, /data-preview-minutes="15"/);
@@ -794,12 +802,20 @@ test("underwater white noise sleep page serves the real recording and matched Sl
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /rel="canonical" href="https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\/"/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/underwater-white-noise\.m4a"/);
+  assert.match(html, /data-dark-screen-toggle[^>]*disabled/);
+  assert.match(html, /data-analytics-placement="underwater_white_noise_dark_screen"/);
+  assert.match(html, /data-dark-screen-overlay[^>]*hidden/);
+  assert.match(html, />Black Screen<\/span><\/button>/);
+  assert.match(html, /The browser black-screen mode covers this open page while the white noise and timer keep running\./);
+  assert.match(html, /For physical iPhone lock-screen playback, continue in Yixiu\./);
   assert.match(html, /data-analytics-placement="underwater_white_noise_after_preview"/);
   assert.match(html, /href="\/sleep-sounds\/"/);
   assert.match(html, /href="\/thunderstorm-sounds-for-sleep\/"/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee/i);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
+  assert.match(guides, /href="\/underwater-white-noise-for-sleep\/"[^>]*><small>Low, steady texture<\/small><h3>White noise black screen<\/h3>/);
+  assert.match(llms, /\[White noise black screen for sleep\]\(https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\/\)/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
 });
 
 test("morning birds focus page serves real birdsong and keeps its bright focus promise aligned", async () => {

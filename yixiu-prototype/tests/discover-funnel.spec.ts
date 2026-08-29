@@ -385,8 +385,15 @@ test("ocean sleep preview reveals sharing and its matched download path without 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
-test("underwater white noise preview reveals its matched download action without mobile overflow", async ({ page }) => {
+test("underwater white noise black screen keeps the real sound and timer running until the listener returns", async ({ page }) => {
   await page.clock.install();
+  await page.addInitScript(() => {
+    const scope = window as Window & { __yixiuEvents?: string[] };
+    scope.__yixiuEvents = [];
+    window.addEventListener("yixiu:analytics", (event) => {
+      scope.__yixiuEvents?.push((event as CustomEvent).detail.event);
+    });
+  });
   await page.goto("/underwater-white-noise-for-sleep/index.html?utm_source=search&utm_medium=organic", { waitUntil: "domcontentloaded" });
 
   const timer = page.locator("[data-preview-timer]");
@@ -396,19 +403,50 @@ test("underwater white noise preview reveals its matched download action without
   await expect(timer.locator("[data-preview-timer-status]")).toHaveText("15:00 remaining");
 
   const preview = page.locator('button[data-analytics-placement="underwater_white_noise_preview"]');
+  const darkScreenToggle = page.getByRole("button", { name: "Black Screen" });
+  const darkScreenOverlay = page.getByRole("button", { name: "Dark screen is on. Tap to return." });
   await expect(preview).toBeVisible();
   await expect(preview).toHaveAccessibleName("Play Underwater White Noise");
+  await expect(darkScreenToggle).toBeDisabled();
   await preview.click();
 
   await expect(preview).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("Pause Underwater White Noise")).toBeVisible();
+  await expect(darkScreenToggle).toBeEnabled();
   await page.clock.runFor(1_000);
   await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
+
+  await darkScreenToggle.click();
+  await expect(darkScreenOverlay).toBeVisible();
+  await expect(darkScreenOverlay).toBeFocused();
+  await expect(darkScreenOverlay).toHaveCSS("background-color", "rgb(0, 0, 0)");
+  await expect(darkScreenOverlay.getByText("Underwater White Noise is playing")).toBeVisible();
+  expect(await darkScreenOverlay.boundingBox()).toEqual({ x: 0, y: 0, width: 390, height: 844 });
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:58 remaining");
+  await darkScreenOverlay.click();
+  await expect(darkScreenOverlay).toBeHidden();
+  await expect(darkScreenToggle).toBeFocused();
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+
+  await darkScreenToggle.click();
+  await expect(darkScreenOverlay).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(darkScreenOverlay).toBeHidden();
+  await expect(darkScreenToggle).toBeFocused();
+
   const afterPreview = page.locator("[data-after-preview]");
   await expect(afterPreview).toBeVisible();
   await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu for iPhone." })).toHaveAttribute(
     "href",
     /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
+  expect(await page.evaluate(() => (window as Window & { __yixiuEvents?: string[] }).__yixiuEvents)).toEqual(
+    expect.arrayContaining([
+      "yixiu_playback_start",
+      "yixiu_dark_screen_start",
+      "yixiu_dark_screen_end",
+    ]),
   );
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
