@@ -98,6 +98,60 @@ test("meditation landing switches real nature sounds and advances its attributed
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("sleep comparison switches seven real recordings and reveals its matched iPhone path", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/best-sleep-sounds/index.html?utm_source=search&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://yixiu.wonderelian.com/best-sleep-sounds/",
+  );
+  await expect(page.locator("h1")).toHaveText("Which sleep sound feels easiest to leave alone?");
+
+  const previewFiles = await page.locator("[data-audio-preview]").evaluateAll((elements) => (
+    elements.map((element) => element.getAttribute("data-audio-preview"))
+  ));
+  expect(previewFiles).toEqual([
+    "/assets/yixiu/audio/light-rain.m4a",
+    "/assets/yixiu/audio/ocean-waves.m4a",
+    "/assets/yixiu/audio/forest-breeze.m4a",
+    "/assets/yixiu/audio/distant-thunder.m4a",
+    "/assets/yixiu/audio/mountain-wind.m4a",
+    "/assets/yixiu/audio/underwater-white-noise.m4a",
+    "/assets/yixiu/audio/forest-waterfall.m4a",
+  ]);
+
+  const timer = page.locator("[data-preview-timer]");
+  await timer.getByRole("button", { name: "15 minutes" }).click();
+  const rain = page.locator('button[data-analytics-placement="best_sleep_sounds_rain"]');
+  await rain.click();
+  await expect(rain).toHaveAttribute("aria-pressed", "true");
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("14:59 remaining");
+
+  const waterfall = page.locator('button[data-analytics-placement="best_sleep_sounds_waterfall"]');
+  await waterfall.click();
+  await expect(rain).toHaveAttribute("aria-pressed", "false");
+  await expect(waterfall).toHaveAttribute("aria-pressed", "true");
+
+  const afterPreview = page.getByRole("status");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu." })).toHaveAttribute(
+    "data-analytics-placement",
+    "best_sleep_sounds_after_preview",
+  );
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu." })).toHaveAttribute(
+    "href",
+    /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
+  );
+  const postPlayBounds = await afterPreview.boundingBox();
+  expect(postPlayBounds).not.toBeNull();
+  expect(postPlayBounds!.y + postPlayBounds!.height).toBeLessThanOrEqual(844);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("video search landings keep one eager player prominent in the mobile first screen", async ({ page }) => {
   for (const path of [
     "/mountain-stream-sounds-for-focus/index.html",
