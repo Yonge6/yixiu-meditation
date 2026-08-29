@@ -107,7 +107,7 @@ test("every sitemap HTML page points agents to the covering llms.txt", async () 
   const urls = [...sitemap.matchAll(/<loc>(https:\/\/yixiu\.wonderelian\.com\/[^<]*)<\/loc>/g)]
     .map((match) => new URL(match[1]));
 
-  assert.equal(urls.length, 24);
+  assert.equal(urls.length, 25);
   for (const url of urls) {
     const pagePath = url.pathname === "/"
       ? "../index.html"
@@ -127,7 +127,7 @@ test("every public Yixiu application schema matches the official App Store versi
     .map((match) => new URL(match[1]))
     .filter((url) => url.pathname !== "/privacy.html");
 
-  assert.equal(urls.length, 23);
+  assert.equal(urls.length, 24);
   for (const url of urls) {
     const pagePath = url.pathname === "/"
       ? "../index.html"
@@ -149,7 +149,7 @@ test("every shareable sitemap page exposes a complete large-image social card", 
     .map((match) => new URL(match[1]))
     .filter((url) => url.pathname !== "/privacy.html");
 
-  assert.equal(urls.length, 23);
+  assert.equal(urls.length, 24);
   for (const url of urls) {
     const pagePath = url.pathname === "/"
       ? "../index.html"
@@ -842,6 +842,55 @@ test("nature sounds meditation page serves four real recordings, a timer, and a 
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee|anxiety|insomnia/i);
 });
 
+test("20-minute meditation music page serves the complete Still Water track with source and attribution", async () => {
+  const html = await readFile(new URL("../public/20-minute-meditation-music/index.html", import.meta.url), "utf8");
+  const audioFile = await stat(new URL("../public/assets/yixiu/audio/meditation/still-water.m4a", import.meta.url));
+  const hero = await stat(new URL("../public/assets/yixiu/meditation/still-water.jpg", import.meta.url));
+  const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+  const llms = await readFile(new URL("../public/llms.txt", import.meta.url), "utf8");
+  const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+  const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1];
+  const faqQuestions = [...html.matchAll(/<details(?:\s+open)?><summary>([^<]+)<\/summary>/g)].map((match) => match[1]);
+  const schemaSource = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  const schema = JSON.parse(schemaSource);
+  const webpage = schema["@graph"].find((entry) => entry["@type"] === "WebPage");
+  const image = schema["@graph"].find((entry) => entry["@type"] === "ImageObject");
+  const audio = schema["@graph"].find((entry) => entry["@type"] === "AudioObject");
+  const software = schema["@graph"].find((entry) => entry["@type"] === "SoftwareApplication");
+  const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
+  const breadcrumb = schema["@graph"].find((entry) => entry["@type"] === "BreadcrumbList");
+
+  assert.ok(title.length >= 50 && title.length <= 60);
+  assert.match(title, /^20-Minute Meditation Music/);
+  assert.ok(description.length >= 150 && description.length <= 160);
+  assert.equal([...html.matchAll(/<h1\b/g)].length, 1);
+  assert.equal(faqQuestions.length, 4);
+  assert.equal(faq.mainEntity.length, faqQuestions.length);
+  assert.ok(faq.mainEntity.every((entry) => faqQuestions.includes(entry.name)));
+  assert.match(webpage.url, /20-minute-meditation-music\/$/);
+  assert.equal(webpage.mainEntity["@id"], audio["@id"]);
+  assert.equal(image.width, 1024);
+  assert.equal(image.height, 1536);
+  assert.equal(image.representativeOfPage, true);
+  assert.ok(hero.size > 100_000);
+  assert.ok(audioFile.size > 15_000_000);
+  assert.match(audio.contentUrl, /audio\/meditation\/still-water\.m4a$/);
+  assert.equal(audio.duration, "PT21M20S");
+  assert.equal(audio.byArtist.name, "HoliznaCC0");
+  assert.equal(audio.isAccessibleForFree, true);
+  assert.match(audio.license, /creativecommons\.org\/publicdomain\/zero\/1\.0/);
+  assert.equal(software.softwareVersion, "1.4");
+  assert.match(software.downloadUrl, /id1461182261\?pt=120014121&ct=yixiu_h5_still_water_20260830&mt=8$/);
+  assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/meditation\/still-water\.m4a"/);
+  assert.match(html, /data-analytics-placement="still_water_meditation_after_preview"/);
+  assert.equal(breadcrumb.itemListElement.length, 3);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/20-minute-meditation-music\/<\/loc><lastmod>2026-08-30<\/lastmod>/);
+  assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/20-minute-meditation-music\//);
+  assert.match(html, /href="\/nature-sounds-for-meditation\/"/);
+  assert.match(html, /href="\/guides\/">Guides<\/a>/);
+  assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee|anxiety|insomnia/i);
+});
+
 test("guides hub organizes every English intent page and exposes a real preview and truthful collection schema", async () => {
   const html = await readFile(new URL("../public/guides/index.html", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
@@ -857,21 +906,21 @@ test("guides hub organizes every English intent page and exposes a real preview 
   assert.match(title, /^Nature Sound Guides/);
   assert.equal(h1Count, 1);
   assert.equal(collection.mainEntity["@id"], itemList["@id"]);
-  assert.equal(itemList.itemListElement.length, 21);
+  assert.equal(itemList.itemListElement.length, 22);
   assert.equal(itemList.itemListElement[0].name, "Rain Sounds Black Screen");
   assert.equal(faq.mainEntity.length, 3);
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
   assert.match(html, /<h3>Rain sounds black screen<\/h3>/);
   assert.match(html, /15-, 30- or 60-minute timer, then cover the open page with a black screen/);
-  for (const route of ["best-sleep-sounds", "sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
+  for (const route of ["best-sleep-sounds", "sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation", "20-minute-meditation-music"]) {
     assert.match(html, new RegExp(`href="/${route}/"`));
   }
   assert.doesNotMatch(html, /aggregateRating|reviewCount|guarantee/i);
 });
 
 test("every English intent page links back to the guides hub", async () => {
-  for (const route of ["best-sleep-sounds", "sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation"]) {
+  for (const route of ["best-sleep-sounds", "sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation", "20-minute-meditation-music"]) {
     const html = await readFile(new URL(`../public/${route}/index.html`, import.meta.url), "utf8");
     assert.match(html, /href="\/guides\/">Guides<\/a>/);
   }
@@ -1291,6 +1340,10 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/spring-creek\.webp/);
   assert.match(script, /assets\/yixiu\/audio\/sunrise-river\.m4a/);
   assert.match(script, /data-analytics-placement=\"meditation_landing_timer\"/);
+  assert.match(script, /20-minute-meditation-music\/index\.html/);
+  assert.match(script, /assets\/yixiu\/audio\/meditation\/still-water\.m4a/);
+  assert.match(script, /ct=yixiu_h5_still_water_20260830/);
+  assert.match(script, /data-analytics-placement=\"still_water_meditation_after_preview\"/);
   assert.match(script, /site_path\/llms\.txt/);
   assert.match(script, /deploy_target\/llms\.txt/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/llms\.txt/);
