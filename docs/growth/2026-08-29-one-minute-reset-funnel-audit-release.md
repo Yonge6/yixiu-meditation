@@ -32,5 +32,18 @@ This audit used desktop Chrome against the live One-Minute Reset page and stayed
 - `evidence/2026-08-29-one-minute-reset-audit/02-production-post-play-before.jpg`
 - `evidence/2026-08-29-one-minute-reset-audit/03-local-post-play-fixed.jpg`
 - `evidence/2026-08-29-one-minute-reset-audit/04-before-after-comparison.jpg`
+- `evidence/2026-08-29-one-minute-reset-audit/05-production-post-play-fixed.jpg`
 
-Production acceptance still requires the merged revision to be deployed, then rechecked in a fresh desktop-Chrome state with source, server and public hashes equal. This repair improves the funnel but is not evidence of H5 users or App downloads.
+## Git and production acceptance
+
+- Pull request: `https://github.com/Yonge6/yixiu-meditation/pull/159`
+- Merge commit: `18a5b70097ebe8cc58722262bfd7f9887657c17a`
+- Release ID: `20260829-18a5b70-reset-funnel-2305`
+- Deploy result: `DEPLOY_OK_YIXIU_20260829-18a5b70-reset-funnel-2305`
+- Archive SHA-256: `b0a75939c92bdeb1d7a87e07a274a7e3a2bf9459ac708f23c620313f83ebc68f`
+- Rollback backup: `/srv/wonderelian/backups/yixiu-20260829-18a5b70-reset-funnel-2305`
+- Reset page source/server/public SHA-256: `fb82bc07d7c0e3ae08b8142842497c728d8c4364fc560a2a8625b75076d0f747`
+
+The server cloned and built the exact merge commit, verified the 51.4 MB archive, retained release artifacts inside the rollback backup, passed Nginx validation and completed the guarded deployment. A fresh desktop-Chrome page then loaded `/discover.css?v=20260829-reset-funnel`, played Morning Water and exposed the pressed Pause state plus separate styled share and Pinterest actions. `scrollWidth` equaled `innerWidth` at the audited 1824 px desktop viewport. The production screenshot confirms the truthful browser-versus-app copy and the repaired conversion panel.
+
+The public acceptance URL used an explicit QA marker and is not treated as acquisition. The App Store destination was inspected but not clicked. This repair improves the funnel but is not evidence of H5 users or App downloads, so the overall growth goal remains active.
