@@ -107,7 +107,7 @@ grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$site_path/sleep
 grep -F 'data-dark-screen-overlay' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'Keep rain playing on iPhone' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$site_path/sleep-sounds/index.html" >/dev/null
-grep -F 'data.ensureVisible' "$site_path/discover.js" >/dev/null
+grep -F 'dataset.ensureVisible' "$site_path/discover.js" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
@@ -225,7 +225,7 @@ grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$deploy_target/s
 grep -F 'data-dark-screen-overlay' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'Keep rain playing on iPhone' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$deploy_target/sleep-sounds/index.html" >/dev/null
-grep -F 'data.ensureVisible' "$deploy_target/discover.js" >/dev/null
+grep -F 'dataset.ensureVisible' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F '/assets/yixiu/study-sounds-comparison-pinterest.jpg' "$deploy_target/best-nature-sounds-for-studying/index.html" >/dev/null
 test -f "$deploy_target/assets/yixiu/study-sounds-comparison-pinterest.jpg"
@@ -282,7 +282,7 @@ curl --compressed -fsS \
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/discover.js \
-  | grep -F 'data.ensureVisible' >/dev/null
+  | grep -F 'dataset.ensureVisible' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/ \
