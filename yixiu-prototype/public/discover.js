@@ -281,7 +281,11 @@
         updateButton(button, true);
         startPreviewTimer();
         updatePinterestLink();
-        document.querySelector("[data-after-preview]")?.removeAttribute("hidden");
+        const revealedPanel = document.querySelector("[data-after-preview]");
+        revealedPanel?.removeAttribute("hidden");
+        if (revealedPanel?.dataset.ensureVisible === "true") {
+          revealedPanel.scrollIntoView({ block: "nearest" });
+        }
         report("yixiu_playback_start", {
           selected_scene: button.dataset.scene,
           placement: button.dataset.analyticsPlacement,
