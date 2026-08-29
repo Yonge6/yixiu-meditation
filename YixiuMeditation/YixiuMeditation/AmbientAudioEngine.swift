@@ -76,7 +76,7 @@ final class AmbientAudioEngine {
         guard let url = Bundle.main.url(
             forResource: scene.audioResource,
             withExtension: "m4a",
-            subdirectory: "Audio"
+            subdirectory: scene.audioSubdirectory
         ) else {
             throw AmbientAudioError.missingResource(scene.audioResource)
         }
@@ -136,7 +136,9 @@ final class AmbientAudioEngine {
         var info: [String: Any] = [
             MPMediaItemPropertyTitle: language.text(zh: scene.zhName, en: scene.enName),
             MPMediaItemPropertyArtist: "一休 · YIXIU",
-            MPMediaItemPropertyAlbumTitle: language.text(zh: "如水而行", en: "Be Water, My Friend."),
+            MPMediaItemPropertyAlbumTitle: scene.isMeditationMusic
+                ? language.text(zh: "冥想音乐", en: "Meditation Music")
+                : language.text(zh: "如水而行", en: "Be Water, My Friend."),
             MPNowPlayingInfoPropertyPlaybackRate: isPlaying ? 1.0 : 0.0,
             MPNowPlayingInfoPropertyDefaultPlaybackRate: 1.0
         ]

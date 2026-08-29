@@ -159,7 +159,7 @@ struct MeView: View {
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 共 14 种真实自然声", en: "Now listening · 14 real nature sounds"))
+                Text(language.text(zh: "正在聆听 · 14 种自然声 + 10 首冥想音乐", en: "Now listening · 14 nature sounds + 10 meditation tracks"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
@@ -264,9 +264,9 @@ struct MeView: View {
         case .plus:
             language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
         case .legacy:
-            language.text(zh: "当前 14 种声音与原有功能继续保留", en: "Your 14 sounds and existing features remain")
+            language.text(zh: "原有 14 种自然声继续保留，2 首冥想音乐免费", en: "Your 14 nature sounds remain, plus 2 free meditation tracks")
         case .free:
-            language.text(zh: "5 种自然声免费聆听，升级支持持续创作", en: "Five free sounds. Upgrade to support new work")
+            language.text(zh: "5 种自然声 + 2 首冥想音乐免费聆听", en: "5 nature sounds + 2 meditation tracks are free")
         }
     }
 
@@ -689,7 +689,7 @@ struct MeView: View {
             )
         case .sources:
             VStack(alignment: .leading, spacing: 18) {
-                Text(language.text(zh: "真实自然录音", en: "FIELD RECORDINGS"))
+                Text(language.text(zh: "声音与音乐授权", en: "AUDIO & MUSIC LICENSES"))
                     .yixiuSecondary(9)
                 Text(language.text(zh: "每个场景，都有相应的声音", en: "A fitting sound for every scene"))
                     .font(YixiuTheme.chineseDisplay(27))
@@ -708,6 +708,22 @@ struct MeView: View {
                 .font(YixiuTheme.sans(14))
                 .lineSpacing(7)
                 .foregroundStyle(YixiuTheme.mist)
+
+                Text(language.text(
+                    zh: "长篇冥想音乐由 HoliznaCC0 创作，按 CC0 1.0 使用；短篇音乐由 Yanni Ziangos（YannZ）创作，按 CC BY 4.0 使用。",
+                    en: "Long meditation music is by HoliznaCC0 under CC0 1.0. Short music is by Yanni Ziangos (YannZ) under CC BY 4.0."
+                ))
+                .font(YixiuTheme.sans(14))
+                .lineSpacing(7)
+                .foregroundStyle(YixiuTheme.mist)
+
+                Link(destination: URL(string: "https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation")!) {
+                    actionLinkLabel("Free Music Archive · HoliznaCC0", icon: "music.note")
+                }
+
+                Link(destination: URL(string: "https://opengameart.org/content/indie-meditations-free-music-pack")!) {
+                    actionLinkLabel("OpenGameArt · YannZ", icon: "music.note.list")
+                }
 
                 Link(destination: URL(string: "https://mixkit.co/license/")!) {
                     actionLinkLabel(

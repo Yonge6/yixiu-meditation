@@ -37,11 +37,21 @@ type SceneId =
   | "thunder"
   | "underwater"
   | "snow"
-  | "tide";
+  | "tide"
+  | "stillWater"
+  | "deepCurrent"
+  | "moonlitDrift"
+  | "quietOrbit"
+  | "dreamscape"
+  | "firstBreath"
+  | "openMeadow"
+  | "oasisRest"
+  | "sunlitShore"
+  | "oceanPassage";
 type DurationOption = 15 | 30 | 60 | 0;
 type FocusDuration = 1 | 3;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
-type SceneCategory = "all" | "sleep" | "focus" | "morning" | "relax";
+type SceneCategory = "all" | "nature" | "meditation" | "sleep" | "focus" | "morning" | "relax";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
 type DrawerView = "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
 type MeView = "home" | "about" | "privacy" | "sources" | "support";
@@ -61,6 +71,8 @@ type Scene = {
   useEn: string;
   image: string;
   audio: string;
+  kind?: "nature" | "meditation";
+  free?: boolean;
   playbackRate?: number;
   filter: BiquadFilterType;
   frequency: number;
@@ -270,6 +282,56 @@ const scenes: Record<SceneId, Scene> = {
     lfoRate: 0.07,
     lfoDepth: 0.02,
   },
+  stillWater: {
+    id: "stillWater", zh: "静水", en: "Still Water", useZh: "冥想 · 21 分钟", useEn: "Meditate · 21 min",
+    image: "/assets/yixiu/meditation/still-water.jpg", audio: "/assets/yixiu/audio/meditation/still-water.m4a", kind: "meditation", free: true,
+    filter: "lowpass", frequency: 520, level: 0.08,
+  },
+  deepCurrent: {
+    id: "deepCurrent", zh: "深流", en: "Deep Current", useZh: "冥想 · 20 分钟", useEn: "Meditate · 20 min",
+    image: "/assets/yixiu/meditation/deep-current.jpg", audio: "/assets/yixiu/audio/meditation/deep-current.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 470, level: 0.08,
+  },
+  moonlitDrift: {
+    id: "moonlitDrift", zh: "月下漂流", en: "Moonlit Drift", useZh: "冥想 · 20 分钟", useEn: "Meditate · 20 min",
+    image: "/assets/yixiu/meditation/moonlit-drift.jpg", audio: "/assets/yixiu/audio/meditation/moonlit-drift.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 480, level: 0.08,
+  },
+  quietOrbit: {
+    id: "quietOrbit", zh: "静默星轨", en: "Quiet Orbit", useZh: "冥想 · 21 分钟", useEn: "Meditate · 21 min",
+    image: "/assets/yixiu/meditation/quiet-orbit.jpg", audio: "/assets/yixiu/audio/meditation/quiet-orbit.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 450, level: 0.08,
+  },
+  dreamscape: {
+    id: "dreamscape", zh: "梦境水域", en: "Dreamscape", useZh: "冥想 · 22 分钟", useEn: "Meditate · 22 min",
+    image: "/assets/yixiu/meditation/dreamscape.jpg", audio: "/assets/yixiu/audio/meditation/dreamscape.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 430, level: 0.08,
+  },
+  firstBreath: {
+    id: "firstBreath", zh: "初息", en: "First Breath", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
+    image: "/assets/yixiu/meditation/first-breath.jpg", audio: "/assets/yixiu/audio/meditation/first-breath.m4a", kind: "meditation", free: true,
+    filter: "lowpass", frequency: 600, level: 0.08,
+  },
+  openMeadow: {
+    id: "openMeadow", zh: "原野舒展", en: "Open Meadow", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
+    image: "/assets/yixiu/meditation/open-meadow.jpg", audio: "/assets/yixiu/audio/meditation/open-meadow.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 620, level: 0.08,
+  },
+  oasisRest: {
+    id: "oasisRest", zh: "绿洲停歇", en: "Oasis Rest", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
+    image: "/assets/yixiu/meditation/oasis-rest.jpg", audio: "/assets/yixiu/audio/meditation/oasis-rest.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 580, level: 0.08,
+  },
+  sunlitShore: {
+    id: "sunlitShore", zh: "日光浅岸", en: "Sunlit Shore", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
+    image: "/assets/yixiu/meditation/sunlit-shore.jpg", audio: "/assets/yixiu/audio/meditation/sunlit-shore.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 640, level: 0.08,
+  },
+  oceanPassage: {
+    id: "oceanPassage", zh: "海上行旅", en: "Ocean Passage", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
+    image: "/assets/yixiu/meditation/ocean-passage.jpg", audio: "/assets/yixiu/audio/meditation/ocean-passage.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 560, level: 0.08,
+  },
 };
 
 const sceneOrder: SceneId[] = [
@@ -287,19 +349,33 @@ const sceneOrder: SceneId[] = [
   "underwater",
   "snow",
   "tide",
+  "stillWater",
+  "deepCurrent",
+  "moonlitDrift",
+  "quietOrbit",
+  "dreamscape",
+  "firstBreath",
+  "openMeadow",
+  "oasisRest",
+  "sunlitShore",
+  "oceanPassage",
 ];
 const durations: DurationOption[] = [15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3];
-const sceneCategories: SceneCategory[] = ["all", "sleep", "focus", "morning", "relax"];
+const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
+const musicPlusAppStoreUrl = "https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
+const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", "stillWater", "firstBreath"]);
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
-  sceneOrder.map((sceneId) => [sceneId, `/assets/yixiu/thumbs/${sceneId}.jpg`]),
+  sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].kind === "meditation" ? scenes[sceneId].image : `/assets/yixiu/thumbs/${sceneId}.jpg`]),
 ) as Record<SceneId, string>;
 
 const scenesByCategory: Record<SceneCategory, SceneId[]> = {
   all: sceneOrder,
+  nature: sceneOrder.filter((sceneId) => scenes[sceneId].kind !== "meditation"),
+  meditation: sceneOrder.filter((sceneId) => scenes[sceneId].kind === "meditation"),
   sleep: ["ocean", "rain", "window", "thunder", "snow", "tide"],
   focus: ["rain", "birds", "stream", "bamboo", "falls", "underwater", "snow"],
   morning: ["spring", "birds", "lake", "valley"],
@@ -309,6 +385,8 @@ const scenesByCategory: Record<SceneCategory, SceneId[]> = {
 function categoryLabel(category: SceneCategory, language: Language) {
   const labels: Record<SceneCategory, { zh: string; en: string }> = {
     all: { zh: "全部", en: "All" },
+    nature: { zh: "自然声", en: "Nature" },
+    meditation: { zh: "冥想音乐", en: "Meditation" },
     sleep: { zh: "睡眠", en: "Sleep" },
     focus: { zh: "专注", en: "Focus" },
     morning: { zh: "清晨", en: "Morning" },
@@ -455,7 +533,7 @@ function durationLabel(duration: DurationOption, language: Language) {
 
 function sceneShareUrl(sceneId: SceneId, language: Language) {
   const url = new URL(publicYixiuUrl);
-  url.searchParams.set("scene", sceneId);
+  url.searchParams.set(scenes[sceneId].kind === "meditation" ? "music" : "scene", sceneId);
   url.searchParams.set("lang", language);
   url.searchParams.set("utm_source", "share");
   url.searchParams.set("utm_medium", "referral");
@@ -471,7 +549,8 @@ function recordGrowthEvent(event: string, parameters: Record<string, string | nu
 }
 
 function linkedScene() {
-  const sceneId = new URLSearchParams(window.location.search).get("scene");
+  const query = new URLSearchParams(window.location.search);
+  const sceneId = query.get("music") ?? query.get("scene");
   return sceneId && sceneOrder.includes(sceneId as SceneId) ? sceneId as SceneId : null;
 }
 
@@ -523,6 +602,7 @@ export default function Prototype() {
   const [timerOpen, setTimerOpen] = useState(false);
   const [wisdomOpen, setWisdomOpen] = useState(false);
   const [videoChannelOpen, setVideoChannelOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [downloadFeedback, setDownloadFeedback] = useState(false);
   const [instagramGuideOpen, setInstagramGuideOpen] = useState(() => isInstagramProfileReferral());
   const [wisdomIndex, setWisdomIndex] = useState(0);
@@ -559,7 +639,8 @@ export default function Prototype() {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    url.searchParams.set("scene", active.id);
+    url.searchParams.delete(active.kind === "meditation" ? "scene" : "music");
+    url.searchParams.set(active.kind === "meditation" ? "music" : "scene", active.id);
     url.searchParams.set("lang", language);
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   }, [active.id, language]);
@@ -688,6 +769,12 @@ export default function Prototype() {
     const nextIndex = activeIndex + direction;
     if (nextIndex < 0 || nextIndex >= sceneOrder.length) return;
     const sceneId = sceneOrder[nextIndex];
+    if (!freeSceneIds.has(sceneId)) {
+      setIsPlaying(false);
+      setUpgradeOpen(true);
+      recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: sceneId, placement: "scene_navigation" });
+      return;
+    }
     setActiveScene(sceneId);
     recordRecentScene(sceneId);
   };
@@ -872,6 +959,13 @@ export default function Prototype() {
   };
 
   const selectScene = (sceneId: SceneId, play = true) => {
+    if (!freeSceneIds.has(sceneId)) {
+      setIsPlaying(false);
+      setLibraryOpen(false);
+      setUpgradeOpen(true);
+      recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: sceneId, placement: "sound_library" });
+      return;
+    }
     setActiveScene(sceneId);
     recordRecentScene(sceneId);
     setActiveTab("sounds");
@@ -891,7 +985,14 @@ export default function Prototype() {
     navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
 
     const actions: Array<[MediaSessionAction, MediaSessionActionHandler | null]> = [
-      ["play", () => { recordRecentScene(active.id); setIsPlaying(true); }],
+      ["play", () => {
+        if (!freeSceneIds.has(active.id)) {
+          setUpgradeOpen(true);
+          return;
+        }
+        recordRecentScene(active.id);
+        setIsPlaying(true);
+      }],
       ["pause", () => setIsPlaying(false)],
       ["previoustrack", previousScene ? () => moveScene(-1) : null],
       ["nexttrack", nextScene ? () => moveScene(1) : null],
@@ -1104,7 +1205,7 @@ export default function Prototype() {
               {drawerView === "home" ? (
                 <>
                   <section className="yixiu-drawer-hero">
-                    <small>{language === "zh" ? "十四种真实自然录音" : "FOURTEEN REAL NATURE SOUNDS"}</small>
+                    <small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small>
                     <h3>{language === "zh" ? "让声音带你回到此刻" : "Let sound return you to now"}</h3>
                     <p>{language === "zh" ? `正在聆听的场景：${active.zh}` : `Current scene: ${active.en}`}</p>
                     <button type="button" onClick={() => setDrawerView("library")}>
@@ -1171,11 +1272,9 @@ export default function Prototype() {
                       return (
                         <article key={sceneId} className={active.id === sceneId ? "is-active" : ""}>
                           <button className="scene-select" type="button" data-scene-id={sceneId} onClick={() => {
-                            setActiveScene(sceneId);
-                            setActiveTab("sounds");
-                            setIsPlaying(true);
-                            setDrawerView("home");
                             setMenuOpen(false);
+                            setDrawerView("home");
+                            selectScene(sceneId);
                           }}>
                             <img src={scene.image} data-image-scene={scene.id} alt="" />
                             <span className="scene-card-shade" />
@@ -1184,6 +1283,7 @@ export default function Prototype() {
                               <small>{language === "zh" ? scene.en : scene.zh}</small>
                               <em>{language === "zh" ? scene.useZh : scene.useEn}</em>
                             </span>
+                            <span className={`scene-access-badge ${freeSceneIds.has(sceneId) ? "is-free" : "is-plus"}`}>{freeSceneIds.has(sceneId) ? "FREE" : "PLUS"}</span>
                           </button>
                           <button className="scene-favorite" type="button" aria-label={`${language === "zh" ? "收藏" : "Favorite"} ${language === "zh" ? scene.zh : scene.en}`} aria-pressed={favorites.includes(sceneId)} onClick={() => toggleFavorite(sceneId)}>
                             {favorites.includes(sceneId) ? <HeartFilledIcon /> : <HeartIcon />}
@@ -1236,8 +1336,8 @@ export default function Prototype() {
                 <section className="yixiu-drawer-subview drawer-info">
                   <small>{drawerView === "philosophy" ? "BE WATER, MY FRIEND." : drawerView === "privacy" ? "PRIVACY" : drawerView === "sources" ? "FIELD RECORDINGS" : "SUPPORT"}</small>
                   <h3>{drawerView === "philosophy" ? (language === "zh" ? "真实自己，流动人生" : "True to yourself, flow with life") : drawerView === "privacy" ? (language === "zh" ? "安静，也包括不打扰你的数据" : "Quiet includes your data") : drawerView === "sources" ? (language === "zh" ? "每个场景，都有真实的声音" : "A real sound for every scene") : (language === "zh" ? "告诉我们你的感受" : "Tell us how it feels")}</h3>
-                  <p>{drawerView === "philosophy" ? (language === "zh" ? "向内认识自己，向外如水而行。认识、接纳、成为并活出自己。" : "Know yourself within, then move through the world like water.") : drawerView === "privacy" ? (language === "zh" ? "无需账号。收藏、语言和时长只保存在当前设备；不会读取位置、照片、通讯录或健康数据。" : "No account is required. Preferences stay on this device; location, photos, contacts, and health data are not accessed.") : drawerView === "sources" ? (language === "zh" ? "鸟语、雨声、河流、海浪、瀑布、远雷与山风均来自 Mixkit 自然环境录音，并按 Mixkit Sound Effects Free License 使用。" : "Birds, rain, rivers, waves, waterfalls, thunder, and wind use Mixkit nature recordings under the Mixkit Sound Effects Free License.") : (language === "zh" ? "如果声音无法播放、体验不顺或你希望加入新的自然声，请通过 wonderelian.com 联系我们。" : "For audio issues, rough edges, or new nature-sound requests, contact us through wonderelian.com.")}</p>
-                  {drawerView === "sources" ? <a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">{language === "zh" ? "查看 Mixkit 授权" : "View Mixkit license"}</a> : null}
+                  <p>{drawerView === "philosophy" ? (language === "zh" ? "向内认识自己，向外如水而行。认识、接纳、成为并活出自己。" : "Know yourself within, then move through the world like water.") : drawerView === "privacy" ? (language === "zh" ? "无需账号。收藏、语言和时长只保存在当前设备；不会读取位置、照片、通讯录或健康数据。" : "No account is required. Preferences stay on this device; location, photos, contacts, and health data are not accessed.") : drawerView === "sources" ? (language === "zh" ? "自然声按 Mixkit 授权使用。长篇冥想音乐来自 HoliznaCC0（CC0 1.0）；短篇音乐由 Yanni Ziangos / YannZ 创作（CC BY 4.0）。" : "Nature sounds use the Mixkit license. Long meditation music is by HoliznaCC0 (CC0 1.0); short music is by Yanni Ziangos / YannZ (CC BY 4.0).") : (language === "zh" ? "如果声音无法播放、体验不顺或你希望加入新的自然声，请通过 wonderelian.com 联系我们。" : "For audio issues, rough edges, or new nature-sound requests, contact us through wonderelian.com.")}</p>
+                  {drawerView === "sources" ? <><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a></> : null}
                   {drawerView === "support" ? <a href="https://wonderelian.com/" target="_blank" rel="noreferrer">wonderelian.com</a> : null}
                 </section>
               )}
@@ -1290,10 +1390,16 @@ export default function Prototype() {
             <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "上一种声音" : "Previous sound"} disabled={!previousScene} onClick={() => moveScene(-1)}>
               <TrackPreviousIcon />
             </button>
-            <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} data-scene-id={active.id} onClick={() => setIsPlaying((current) => {
-              if (!current) recordRecentScene(active.id);
-              return !current;
-            })}>
+            <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} data-scene-id={active.id} onClick={() => {
+              if (!freeSceneIds.has(active.id)) {
+                setIsPlaying(false);
+                setUpgradeOpen(true);
+                recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: active.id, placement: "player" });
+                return;
+              }
+              if (!isPlaying) recordRecentScene(active.id);
+              setIsPlaying((current) => !current);
+            }}>
               {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
             <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "下一种声音" : "Next sound"} disabled={!nextScene} onClick={() => moveScene(1)}>
@@ -1389,7 +1495,7 @@ export default function Prototype() {
                   <div className="me-sound-space-copy">
                     <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
                     <strong>{language === "zh" ? active.zh : active.en}</strong>
-                    <span>{language === "zh" ? "正在聆听 · 共 14 种真实自然声" : "Now listening · 14 real nature sounds"}</span>
+                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 10 首冥想音乐" : "Now listening · 14 nature sounds + 10 meditation tracks"}</span>
                     <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
                   </div>
                 </section>
@@ -1549,7 +1655,7 @@ export default function Prototype() {
                 ) : meView === "privacy" ? (
                   <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
                 ) : meView === "sources" ? (
-                  <article className="me-article"><small>{language === "zh" ? "真实自然录音" : "FIELD RECORDINGS"}</small><h2>{language === "zh" ? "每个场景，都有相应的声音" : "A fitting sound for every scene"}</h2><p>{language === "zh" ? "鸟语、雨声、河流、海浪、瀑布、远雷与山风均使用对应的自然环境录音，不以合成噪音替代具名场景。" : "Birds, rain, rivers, waves, waterfalls, thunder and wind use matching field recordings rather than generic generated noise."}</p><p>{language === "zh" ? "录音素材按 Mixkit Sound Effects Free License 使用。" : "Recordings are used under the Mixkit Sound Effects Free License."}</p><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">{language === "zh" ? "查看 Mixkit 授权" : "View Mixkit license"}</a></article>
+                  <article className="me-article"><small>{language === "zh" ? "声音与音乐授权" : "AUDIO & MUSIC LICENSES"}</small><h2>{language === "zh" ? "每一次聆听，都尊重原创" : "Every listen respects its source"}</h2><p>{language === "zh" ? "自然环境录音按 Mixkit Sound Effects Free License 使用。" : "Nature field recordings are used under the Mixkit Sound Effects Free License."}</p><p>{language === "zh" ? "长篇冥想音乐由 HoliznaCC0 创作，按 CC0 1.0 使用；短篇音乐由 Yanni Ziangos（YannZ）创作，按 CC BY 4.0 使用。" : "Long meditation music is by HoliznaCC0 under CC0 1.0. Short music is by Yanni Ziangos (YannZ) under CC BY 4.0."}</p><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a></article>
                 ) : (
                   <article className="me-article me-contact"><small>{language === "zh" ? "联系与反馈" : "CONTACT"}</small><h2>{language === "zh" ? "让一休更像你需要的样子" : "Help Yixiu become more useful to you"}</h2><p>{language === "zh" ? "如果声音无法播放、画面显示异常，或你希望加入新的自然声，请告诉我们设备、系统版本与声音名称。" : "If audio cannot play, a scene looks wrong, or you would like a new sound, tell us your device, system version and the sound name."}</p><div className="me-contact-list"><a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><span>WonderElian</span><strong>wonderelian.com</strong></a><a href="mailto:hustyy986@gmail.com?subject=Yixiu%20Feedback"><span>{language === "zh" ? "邮箱" : "Email"}</span><strong>hustyy986@gmail.com</strong></a><a href="https://xhslink.cn/m/3OF5qu7Peui" target="_blank" rel="noreferrer"><span>{language === "zh" ? "小红书" : "RED"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://v.douyin.com/d9L1thkye0Y/" target="_blank" rel="noreferrer"><span>{language === "zh" ? "抖音" : "Douyin"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://x.com/yongyuan1?s=11" target="_blank" rel="noreferrer"><span>X</span><strong>@yongyuan1</strong></a><a href="https://www.tiktok.com/@wonderelian" target="_blank" rel="noreferrer"><span>TikTok</span><strong>@wonderelian</strong></a><button type="button" onClick={() => setVideoChannelOpen(true)}><span>{language === "zh" ? "视频号" : "WeChat Channels"}</span><strong>{language === "zh" ? "查看二维码" : "View QR code"}</strong></button></div></article>
                 )}
@@ -1570,7 +1676,7 @@ export default function Prototype() {
           <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
           <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
             <div className="sheet-handle" />
-            <header><div><small>{language === "zh" ? "十四种真实自然录音" : "14 REAL NATURE SOUNDS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
+            <header><div><small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
             <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
               {sceneCategories.map((category) => (
                 <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
@@ -1581,7 +1687,7 @@ export default function Prototype() {
             <div className="scene-grid">
               {filteredSceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" data-scene-id={scene.id} aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
+                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" data-scene-id={scene.id} aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span><span className={`scene-access-badge ${freeSceneIds.has(scene.id) ? "is-free" : "is-plus"}`}>{freeSceneIds.has(scene.id) ? "FREE" : "PLUS"}</span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
               })}
             </div>
           </section>
@@ -1633,6 +1739,23 @@ export default function Prototype() {
             </>
           )}
         </section>
+      ) : null}
+
+      {upgradeOpen ? (
+        <div className="plus-upgrade-modal" role="dialog" aria-modal="true" aria-label={language === "zh" ? "升级一休 Plus" : "Upgrade to Yixiu Plus"}>
+          <button className="plus-upgrade-backdrop" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)} />
+          <section>
+            <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
+            <small>YIXIU PLUS</small>
+            <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
+            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
+            <a href={musicPlusAppStoreUrl} target="_blank" rel="noreferrer" data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={() => recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id })}>
+              {language === "zh" ? "在 App Store 查看一休 Plus" : "View Yixiu Plus on the App Store"}
+              <ExternalLinkIcon />
+            </a>
+            <em>{language === "zh" ? "H5 无需账号；会员权益由 App Store 安全管理。" : "No H5 account is required. Membership is managed securely by the App Store."}</em>
+          </section>
+        </div>
       ) : null}
 
       {videoChannelOpen ? (

@@ -267,7 +267,7 @@ test("opens the full sound library with an upward gesture", async ({ page }) => 
 
   const library = page.getByRole("dialog", { name: "声音库" });
   await expect(library).toBeVisible();
-  await expect(library.locator(".scene-grid article")).toHaveCount(14);
+  await expect(library.locator(".scene-grid article")).toHaveCount(24);
   await library.getByRole("button", { name: "完成" }).click();
   await expect(library).toBeHidden();
 });
@@ -443,12 +443,12 @@ test("loads a real morning-birds recording instead of generated noise", async ({
   expect((await request).url()).toContain("morning-birds.m4a");
 });
 
-test("lays out all fourteen sounds in an even two-column library", async ({ page }) => {
+test("lays out all twenty-four sounds and tracks in an even two-column library", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
 
   const cards = page.locator(".scene-grid article");
-  await expect(cards).toHaveCount(14);
+  await expect(cards).toHaveCount(24);
   await expect(page.getByText("春日花溪", { exact: true })).toBeVisible();
   await expect(page.getByText("晨林鸟语", { exact: true })).toBeVisible();
 
@@ -459,4 +459,62 @@ test("lays out all fourteen sounds in an even two-column library", async ({ page
   expect(Math.abs(firstRow[0].width - firstRow[1].width)).toBeLessThan(1);
   expect(Math.abs(firstRow[0].height - firstRow[1].height)).toBeLessThan(1);
   expect(Math.abs(firstRow[0].top - firstRow[1].top)).toBeLessThan(1);
+});
+
+test("enforces exactly five free nature sounds and two free meditation tracks", async ({ page }) => {
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "浏览全部声音" }).click();
+
+  const library = page.getByRole("dialog", { name: "声音库" });
+  await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(7);
+  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(17);
+
+  await library.getByRole("tab", { name: "自然声" }).click();
+  await expect(library.locator(".scene-grid article")).toHaveCount(14);
+  await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(5);
+
+  await library.getByRole("tab", { name: "冥想音乐" }).click();
+  await expect(library.locator(".scene-grid article")).toHaveCount(10);
+  await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(2);
+  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(8);
+});
+
+test("plays free meditation music and gates a Plus track", async ({ page }) => {
+  const freeRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/assets/yixiu/audio/meditation/still-water.m4a"));
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "浏览全部声音" }).click();
+  const library = page.getByRole("dialog", { name: "声音库" });
+  await library.getByRole("tab", { name: "冥想音乐" }).click();
+  await library.getByText("静水", { exact: true }).click();
+
+  await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "stillWater");
+  await expect(page).toHaveURL(/music=stillWater/);
+  expect((await freeRequest).url()).toContain("still-water.m4a");
+
+  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "浏览全部声音" }).click();
+  await page.getByRole("dialog", { name: "声音库" }).getByRole("tab", { name: "冥想音乐" }).click();
+  await page.getByRole("dialog", { name: "声音库" }).getByText("深流", { exact: true }).click();
+
+  const gate = page.getByRole("dialog", { name: "升级一休 Plus" });
+  await expect(gate).toBeVisible();
+  await expect(gate).toContainText("5 种自然声和 2 首冥想音乐");
+  await expect(gate.getByRole("link", { name: /在 App Store 查看一休 Plus/ })).toHaveAttribute("href", /ct=yixiu_h5_music_plus_20260830/);
+  await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "stillWater");
+});
+
+test("opens and shares a meditation music deep link", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async (payload: ShareData) => {
+        (window as Window & { __yixiuMusicShare?: ShareData }).__yixiuMusicShare = payload;
+      },
+    });
+  });
+  await page.goto("/?music=firstBreath&lang=en");
+  await expect(page.getByRole("heading", { name: "FIRST BREATH" })).toBeVisible();
+  await page.getByRole("button", { name: "Share First Breath" }).click();
+  const payload = await page.evaluate(() => (window as Window & { __yixiuMusicShare?: ShareData }).__yixiuMusicShare);
+  expect(payload?.url).toContain("?music=firstBreath&lang=en");
 });

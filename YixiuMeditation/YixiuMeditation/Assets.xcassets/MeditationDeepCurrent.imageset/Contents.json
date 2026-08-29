@@ -1,0 +1,13 @@
+{
+  "images" : [
+    {
+      "filename" : "deep-current.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
