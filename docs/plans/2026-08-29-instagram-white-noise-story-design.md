@@ -17,3 +17,7 @@ The Story should use the existing Reel rather than uploading another video. Its 
 ## Acceptance and evidence boundary
 
 Use desktop Chrome only. Publish only if Instagram's web interface exposes the existing Reel share flow, Story destination, and link sticker without requesting a phone. Acceptance requires the Story to be visible from the correct `wonderelian` account and the attributed H5 URL to return HTTP 200. A later GA4 report must expose the exact Story UTM content before any H5 visit is attributed. Story publication is not evidence of UV, App downloads, trials, subscriptions, payments, in-app purchases, or revenue; unavailable values remain `null`.
+
+## Feasibility result
+
+Desktop Chrome exposed only direct-message recipients from the Reel share control. The creation control exposed a standard Feed/Reel file uploader, not a Story destination or link sticker, and the home page exposed no Story creation control for the current account. No content was uploaded or published, and the phone was not used. The Story option is therefore rejected for this run rather than simulated with a duplicate Feed upload.
