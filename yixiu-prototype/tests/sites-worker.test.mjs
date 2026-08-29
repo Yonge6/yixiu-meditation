@@ -120,6 +120,54 @@ test("every sitemap HTML page points agents to the covering llms.txt", async () 
   }
 });
 
+test("every shareable sitemap page exposes a complete large-image social card", async () => {
+  const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+  const urls = [...sitemap.matchAll(/<loc>(https:\/\/yixiu\.wonderelian\.com\/[^<]*)<\/loc>/g)]
+    .map((match) => new URL(match[1]))
+    .filter((url) => url.pathname !== "/privacy.html");
+
+  assert.equal(urls.length, 23);
+  for (const url of urls) {
+    const pagePath = url.pathname === "/"
+      ? "../index.html"
+      : `../public${url.pathname}index.html`;
+    const html = await readFile(new URL(pagePath, import.meta.url), "utf8");
+    const image = html.match(/<meta property="og:image" content="([^"]+)" \/>/)?.[1];
+    const imageType = html.match(/<meta property="og:image:type" content="([^"]+)" \/>/)?.[1];
+    const imageWidth = html.match(/<meta property="og:image:width" content="([^"]+)" \/>/)?.[1];
+    const imageHeight = html.match(/<meta property="og:image:height" content="([^"]+)" \/>/)?.[1];
+    const imageAlt = html.match(/<meta property="og:image:alt" content="([^"]+)" \/>/)?.[1];
+    const twitterImage = html.match(/<meta name="twitter:image" content="([^"]+)" \/>/)?.[1];
+    const twitterImageAlt = html.match(/<meta name="twitter:image:alt" content="([^"]+)" \/>/)?.[1];
+
+    assert.match(html, /<meta name="twitter:card" content="summary_large_image" \/>/, url.pathname);
+    assert.ok(image, `${url.pathname} should declare an Open Graph image`);
+    assert.match(imageType || "", /^image\/(?:jpeg|png|webp)$/, url.pathname);
+    assert.ok(Number(imageWidth) > 0, `${url.pathname} should declare a positive image width`);
+    assert.ok(Number(imageHeight) > 0, `${url.pathname} should declare a positive image height`);
+    assert.ok(imageAlt, `${url.pathname} should declare Open Graph image alt text`);
+    assert.equal(twitterImage, image, `${url.pathname} should reuse the Open Graph image on Twitter`);
+    assert.equal(twitterImageAlt, imageAlt, `${url.pathname} should reuse the image alt text on Twitter`);
+
+    const imageUrl = new URL(image);
+    assert.equal(imageUrl.origin, "https://yixiu.wonderelian.com", url.pathname);
+    await access(new URL(`../public${imageUrl.pathname}`, import.meta.url));
+  }
+});
+
+test("sitemap marks the completed social-card pages as updated", async () => {
+  const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+
+  for (const path of ["", "focus-sounds/", "ocean-waves-for-focus/", "one-minute-reset/"]) {
+    const escapedPath = path.replaceAll("/", "\\/");
+    assert.match(
+      sitemap,
+      new RegExp(`https:\\/\\/yixiu\\.wonderelian\\.com\\/${escapedPath}<\\/loc><lastmod>2026-08-29<\\/lastmod>`),
+      path || "/",
+    );
+  }
+});
+
 test("all H5 App Store actions use the shared Apple campaign attribution", async () => {
   const pagePaths = [
     "../index.html",
