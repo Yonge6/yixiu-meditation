@@ -48,6 +48,36 @@ test("opens shared scene links and shares the current scene URL", async ({ page 
   expect(payload?.url).toBe("https://yixiu.wonderelian.com/?scene=birds&lang=en&utm_source=share&utm_medium=referral&utm_campaign=scene_share&utm_content=birds_en");
 });
 
+test("shows an attributed Instagram profile guide only for link-in-bio visitors", async ({ page }) => {
+  await page.goto("/?lang=en&utm_source=ig&utm_medium=social&utm_content=link_in_bio");
+
+  const guide = page.getByRole("region", { name: "Instagram profile guide" });
+  await expect(guide).toBeVisible();
+  await expect(guide.getByRole("heading", { name: "Find the sound you saw" })).toBeVisible();
+  await expect(guide.getByRole("link", { name: "Rain + dark screen" })).toHaveAttribute(
+    "href",
+    "/sleep-sounds/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_rain_dark_screen",
+  );
+  await expect(guide.getByRole("link", { name: "Forest sleep" })).toHaveAttribute(
+    "href",
+    "/forest-sounds-for-sleep/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_forest_sleep",
+  );
+  await expect(guide.getByRole("link", { name: "Ocean focus" })).toHaveAttribute(
+    "href",
+    "/ocean-waves-for-focus/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_ocean_focus",
+  );
+  await expect(guide.getByRole("link", { name: "1-minute reset" })).toHaveAttribute(
+    "href",
+    "/one-minute-reset/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_one_minute_reset",
+  );
+
+  await guide.getByRole("button", { name: "Dismiss Instagram guide" }).click();
+  await expect(guide).toBeHidden();
+
+  await page.goto("/?lang=en");
+  await expect(page.getByRole("region", { name: "Instagram profile guide" })).toHaveCount(0);
+});
+
 test("animates the scene gently only while sound is playing", async ({ page }) => {
   const app = page.locator(".yixiu-app");
   const backdrop = page.locator(".scene-current-backdrop");
