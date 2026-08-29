@@ -47,6 +47,7 @@ Expected: FAIL because the old generic labels and panel position do not meet the
 **Files:**
 - Modify: `yixiu-prototype/public/sleep-sounds/index.html`
 - Modify: `yixiu-prototype/public/discover.js`
+- Modify: `yixiu-prototype/public/discover.css`
 
 **Step 1: Update the sleep page markup**
 
@@ -75,6 +76,12 @@ if (revealedPanel?.dataset.ensureVisible === "true") {
 
 Do not change the behavior of other pages.
 
+Give the opted-in panel a 16px scroll margin so fractional mobile layout does not leave its bottom border clipped:
+
+```css
+.intent-after-play[data-ensure-visible="true"] { scroll-margin-block: 16px; }
+```
+
 **Step 3: Run the focused test**
 
 Run: `pnpm exec playwright test tests/discover-funnel.spec.ts --grep "rain sleep preview reveals"`
@@ -84,7 +91,7 @@ Expected: PASS.
 **Step 4: Commit the implementation**
 
 ```bash
-git add yixiu-prototype/tests/discover-funnel.spec.ts yixiu-prototype/public/sleep-sounds/index.html yixiu-prototype/public/discover.js
+git add yixiu-prototype/tests/discover-funnel.spec.ts yixiu-prototype/public/sleep-sounds/index.html yixiu-prototype/public/discover.js yixiu-prototype/public/discover.css
 git commit -m "feat: surface sleep App CTA after playback"
 ```
 

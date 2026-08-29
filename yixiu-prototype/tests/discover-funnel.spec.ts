@@ -33,7 +33,7 @@ test("focus landing starts a real one-tap preview and reveals the matched downlo
 
 test("all search landings expose a preview, trust message and matched iPhone path", async ({ page }) => {
   for (const item of [
-    { path: "/sleep-sounds/index.html", preview: "Play Window Rain", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
+    { path: "/sleep-sounds/index.html", preview: "Play Window Rain", download: "Keep rain playing on iPhone", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/rain-sounds-when-iphone-locked/index.html", preview: "Play Rain for Lock Screen", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/underwater-white-noise-for-sleep/index.html", preview: "Play Underwater White Noise", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/ocean-waves-for-sleeping/index.html", preview: "Play Ocean Waves", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
@@ -44,7 +44,7 @@ test("all search landings expose a preview, trust message and matched iPhone pat
   ]) {
     await page.goto(item.path, { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("button", { name: item.preview })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Get Yixiu for iPhone", exact: true })).toHaveAttribute(
+    await expect(page.getByRole("link", { name: item.download || "Get Yixiu for iPhone", exact: true })).toHaveAttribute(
       "href",
       new RegExp(`ppid=${item.ppid}&pt=120014121&ct=yixiu_h5_20260827&mt=8$`),
     );
@@ -188,16 +188,28 @@ test("rain sleep preview reveals its matched download and attributed Pinterest p
 
   const preview = page.locator('button[data-analytics-placement="sleep_landing_preview"]');
   await expect(preview).toHaveAccessibleName("Play Window Rain");
+  await expect(page.getByRole("link", { name: "Keep rain playing on iPhone" })).toHaveAttribute(
+    "data-analytics-placement",
+    "sleep_landing",
+  );
   await preview.click();
 
   await expect(preview).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("Pause Window Rain")).toBeVisible();
-  const afterPreview = page.locator("[data-after-preview]");
+  const afterPreview = page.getByRole("status");
   await expect(afterPreview).toBeVisible();
-  await expect(afterPreview.getByRole("link", { name: "Get Yixiu for iPhone." })).toHaveAttribute(
+  await expect(afterPreview).toContainText("Want to lock your iPhone without stopping the rain?");
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu." })).toHaveAttribute(
+    "data-analytics-placement",
+    "sleep_after_preview",
+  );
+  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu." })).toHaveAttribute(
     "href",
     /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
   );
+  const postPlayBounds = await afterPreview.boundingBox();
+  expect(postPlayBounds).not.toBeNull();
+  expect(postPlayBounds!.y + postPlayBounds!.height).toBeLessThanOrEqual(844);
   const pinterest = page.getByRole("link", { name: "Save this sound to Pinterest" });
   const pinterestIntent = new URL(await pinterest.getAttribute("href") || "");
   expect(pinterestIntent.searchParams.get("url")).toBe(
