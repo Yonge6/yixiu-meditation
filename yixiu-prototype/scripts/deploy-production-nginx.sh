@@ -77,10 +77,19 @@ test -f "$site_path/assets/yixiu/snow-wind-pinterest-2x3.jpg"
 test -f "$site_path/assets/yixiu/spring-creek.webp"
 test -f "$site_path/assets/yixiu/study-sounds-comparison-pinterest.jpg"
 test -f "$site_path/assets/yixiu/audio/sunrise-river.m4a"
+test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 10
+test "$(find "$site_path/assets/yixiu/meditation" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
+test -f "$site_path/assets/yixiu/audio/meditation/still-water.m4a"
+test -f "$site_path/assets/yixiu/audio/meditation/ocean-passage.m4a"
+test -f "$site_path/assets/yixiu/meditation/still-water.jpg"
+test -f "$site_path/assets/yixiu/meditation/ocean-passage.jpg"
 grep -F 'og:image" content="https://yixiu.wonderelian.com/assets/yixiu/snow-wind-pinterest-2x3.jpg' "$site_path/wind-sounds-for-sleeping/index.html" >/dev/null
 test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -print -quit)"
 grep -FR 'instagram_profile_guide_white_noise_black_screen' "$site_path/assets" >/dev/null
 grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$site_path/assets" >/dev/null
+grep -FR 'yixiu_h5_music_plus_20260830' "$site_path/assets" >/dev/null
+grep -FR 'still-water.m4a' "$site_path/assets" >/dev/null
+grep -FR '14 NATURE SOUNDS' "$site_path/assets" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
 test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 23
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$site_path/index.html" >/dev/null
@@ -238,6 +247,10 @@ grep -F 'Browser black-screen mode covers the open web page' "$deploy_target/llm
 grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-sounds-for-studying/index.html" >/dev/null
 grep -FR 'instagram_profile_guide_white_noise_black_screen' "$deploy_target/assets" >/dev/null
 grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$deploy_target/assets" >/dev/null
+grep -FR 'yixiu_h5_music_plus_20260830' "$deploy_target/assets" >/dev/null
+grep -FR 'still-water.m4a' "$deploy_target/assets" >/dev/null
+test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 10
+test "$(find "$deploy_target/assets/yixiu/meditation" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F '<title>White Noise Black Screen for Sleep — Free, No Ads | Yixiu</title>' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
@@ -306,6 +319,11 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/llms.txt \
   | grep -F 'Browser black-screen mode covers the open web page' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/assets/yixiu/audio/meditation/still-water.m4a \
+  --range 0-1023 \
+  -o /dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/rain-sounds-for-studying/ \
