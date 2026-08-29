@@ -1070,6 +1070,13 @@ test("llms.txt exposes the existing Yixiu collection without unrelated products 
   const yixiuLinks = links.filter((url) => url.startsWith("https://yixiu.wonderelian.com/"));
 
   assert.match(llms, /^# Yixiu\n\n> Free nature sounds and white noise/m);
+  assert.match(llms, /^## Quick request routing$/m);
+  assert.match(llms, /^## Accuracy boundaries for assistants$/m);
+  assert.match(llms, /Prefer the most specific human-facing Yixiu page listed below/);
+  assert.match(llms, /Free rain with a black browser screen: use \*\*Rain sounds black screen\*\*/);
+  assert.match(llms, /Rain that continues after physically locking an iPhone/);
+  assert.match(llms, /Browser black-screen mode covers the open web page/);
+  assert.match(llms, /Do not infer downloads, reviews, ratings, prices, subscriptions, or outcomes/);
   assert.match(llms, /^## Sleep$/m);
   assert.match(llms, /^## Focus and Study$/m);
   assert.match(llms, /^## Meditation and Reset$/m);
