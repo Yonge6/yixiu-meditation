@@ -1045,6 +1045,10 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /data-analytics-placement=\"forest_sleep_preview\"/);
   assert.match(script, /underwater-white-noise-for-sleep\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/underwater-white-noise\.m4a/);
+  assert.match(script, /White Noise Black Screen for Sleep/);
+  assert.match(script, /discover\.js\?v=20260829-white-noise-dark-screen/);
+  assert.match(script, /data-analytics-placement="underwater_white_noise_dark_screen"/);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\//);
   assert.match(script, /ocean-waves-for-sleeping\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/ocean-waves\.m4a/);
   assert.match(script, /rain-sounds-for-studying\/index\.html/);
