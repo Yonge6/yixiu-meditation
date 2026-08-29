@@ -271,6 +271,8 @@ test("rain sleep preview reveals its matched download and attributed Pinterest p
   const afterPreview = page.getByRole("status");
   await expect(afterPreview).toBeVisible();
   await expect(afterPreview).toContainText("Want to lock your iPhone without stopping the rain?");
+  await expect(afterPreview).toContainText("Know someone who needs a quieter night?");
+  await expect(afterPreview.getByRole("button", { name: "Send this rain to someone" })).toBeVisible();
   await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu." })).toHaveAttribute(
     "data-analytics-placement",
     "sleep_after_preview",
@@ -606,6 +608,27 @@ test("successful native sharing creates an attributed referral after preview", a
     placement: "wind_sleep_share",
   }));
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("sleep referral share restores its contextual label after copying", async ({ page }) => {
+  await page.clock.install();
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: async () => undefined },
+    });
+  });
+  await page.goto("/sleep-sounds/index.html", { waitUntil: "domcontentloaded" });
+
+  await page.getByRole("button", { name: "Play Window Rain" }).click();
+  const share = page.locator(".intent-share");
+  await expect(share).toHaveAccessibleName("Send this rain to someone");
+  await share.click();
+  await expect(share).toHaveText("Link copied");
+
+  await page.clock.runFor(2_400);
+  await expect(share).toHaveText("Send this rain to someone");
 });
 
 test("clipboard fallback records a share only after the link is copied", async ({ page }) => {

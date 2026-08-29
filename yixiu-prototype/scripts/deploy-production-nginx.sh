@@ -104,13 +104,17 @@ grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$s
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/sleep-sounds/index.html" >/dev/null
-grep -F '/discover.css?v=20260829-sleep-postplay' "$site_path/sleep-sounds/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-sleep-postplay' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-sleep-share' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-sleep-share' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-toggle' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'Keep rain playing on iPhone' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-share-label="Send this rain to someone"' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'Know someone who needs a quieter night?' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'shareDefaultLabel' "$site_path/discover.js" >/dev/null
+grep -F '.intent-share-copy' "$site_path/discover.css" >/dev/null
 grep -F 'dataset.ensureVisible' "$site_path/discover.js" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
@@ -225,12 +229,16 @@ grep -F 'data-analytics-placement="underwater_white_noise_dark_screen"' "$deploy
 grep -F 'data-dark-screen-overlay' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'activeSceneLabel' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
-grep -F '/discover.css?v=20260829-sleep-postplay' "$deploy_target/sleep-sounds/index.html" >/dev/null
-grep -F '/discover.js?v=20260829-sleep-postplay' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.css?v=20260829-sleep-share' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-sleep-share' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'Keep rain playing on iPhone' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'data-share-label="Send this rain to someone"' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'Know someone who needs a quieter night?' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'shareDefaultLabel' "$deploy_target/discover.js" >/dev/null
+grep -F '.intent-share-copy' "$deploy_target/discover.css" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-event="yixiu_focus_path_click"' "$deploy_target/focus-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' "$deploy_target/focus-sounds/index.html" >/dev/null

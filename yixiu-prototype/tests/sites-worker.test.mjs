@@ -159,8 +159,8 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(software.image["@id"], image["@id"]);
   assert.equal(software.softwareVersion, "1.4");
   assert.ok(hero.size < 100_000);
-  assert.match(html, /href="\/discover\.css\?v=20260829-sleep-postplay"/);
-  assert.match(html, /src="\/discover\.js\?v=20260829-sleep-postplay"/);
+  assert.match(html, /href="\/discover\.css\?v=20260829-sleep-share"/);
+  assert.match(html, /src="\/discover\.js\?v=20260829-sleep-share"/);
   assert.match(html, /<source srcset="\/assets\/yixiu\/window-rain\.webp" type="image\/webp"/);
   assert.match(html, /data-preview-timer/);
   assert.match(html, /data-preview-minutes="15"/);
@@ -185,6 +185,8 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.match(html, /For physical iPhone lock-screen playback, continue in Yixiu\./);
   assert.match(html, /Real window rain/);
   assert.match(html, /data-analytics-placement="sleep_after_preview"/);
+  assert.match(html, /data-share-label="Send this rain to someone"/);
+  assert.match(html, /Know someone who needs a quieter night\?/);
   assert.doesNotMatch(html, /utm_source=google/);
   assert.match(html, /href="\/focus-sounds\/"/);
   assert.match(html, /href="\/one-minute-reset\/"/);
@@ -1104,8 +1106,12 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /Keep rain playing on iPhone/);
   assert.match(script, /data-ensure-visible="true"/);
   assert.match(script, /grep -F 'dataset\.ensureVisible'/);
-  assert.match(script, /discover\.css\?v=20260829-sleep-postplay/);
-  assert.match(script, /discover\.js\?v=20260829-sleep-postplay/);
+  assert.match(script, /discover\.css\?v=20260829-sleep-share/);
+  assert.match(script, /discover\.js\?v=20260829-sleep-share/);
+  assert.match(script, /data-share-label="Send this rain to someone"/);
+  assert.match(script, /Know someone who needs a quieter night\?/);
+  assert.match(script, /grep -F 'shareDefaultLabel'/);
+  assert.match(script, /grep -F '\.intent-share-copy'/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\//);
   assert.match(script, /best-sleep-sounds\/index\.html/);
   assert.match(script, /data-analytics-placement="best_sleep_sounds_after_preview"/);
