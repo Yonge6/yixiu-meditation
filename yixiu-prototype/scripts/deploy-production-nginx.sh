@@ -113,7 +113,11 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$site_path/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/underwater-white-noise.m4a"' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
-grep -F '/discover.js?v=20260828-white-noise-timer' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F '<title>White Noise Black Screen for Sleep — Free, No Ads | Yixiu</title>' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-white-noise-dark-screen' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F 'data-analytics-placement="underwater_white_noise_dark_screen"' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F 'data-dark-screen-overlay' "$site_path/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F 'activeSceneLabel' "$site_path/discover.js" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/ocean-waves.m4a"' "$site_path/ocean-waves-for-sleeping/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/ocean-waves-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/mountain-stream-sounds-for-focus/index.html" >/dev/null
@@ -202,6 +206,11 @@ grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$d
 grep -F 'data-analytics-placement="rain_studying_preview"' "$deploy_target/rain-sounds-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
+grep -F '<title>White Noise Black Screen for Sleep — Free, No Ads | Yixiu</title>' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F '/discover.js?v=20260829-white-noise-dark-screen' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F 'data-analytics-placement="underwater_white_noise_dark_screen"' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F 'data-dark-screen-overlay' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
+grep -F 'activeSceneLabel' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$deploy_target/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F '/discover.css?v=20260829-rain-dark-screen' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F '/discover.js?v=20260829-rain-dark-screen' "$deploy_target/sleep-sounds/index.html" >/dev/null
@@ -244,6 +253,14 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/forest-sounds-for-sleep/ \
   | grep -F 'data-analytics-placement="forest_sleep_preview"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/ \
+  | grep -F '<title>White Noise Black Screen for Sleep — Free, No Ads | Yixiu</title>' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/underwater-white-noise-for-sleep/ \
+  | grep -F 'data-analytics-placement="underwater_white_noise_dark_screen"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/sleep-sounds/ \
