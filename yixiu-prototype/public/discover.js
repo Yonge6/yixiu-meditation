@@ -58,12 +58,18 @@
     });
   }
 
+  function activeSceneLabel() {
+    const playLabel = active?.button.dataset.playLabel?.trim();
+    if (!playLabel) return "Sound";
+    return playLabel.replace(/^Play\s+/i, "") || "Sound";
+  }
+
   function openDarkScreen() {
     if (!darkScreenToggle || !darkScreenOverlay || darkScreenToggle.disabled) return;
     darkScreenOpen = true;
     darkScreenOverlay.hidden = false;
     darkScreenToggle.setAttribute("aria-pressed", "true");
-    if (darkScreenStatus) darkScreenStatus.textContent = "Window Rain is playing";
+    if (darkScreenStatus) darkScreenStatus.textContent = `${activeSceneLabel()} is playing`;
     document.body.classList.add("is-dark-screen");
     darkScreenOverlay.focus();
     report("yixiu_dark_screen_start", {
@@ -292,7 +298,7 @@
 
     audio.addEventListener("pause", () => {
       updateButton(button, false);
-      if (darkScreenOpen && darkScreenStatus) darkScreenStatus.textContent = "Rain is paused";
+      if (darkScreenOpen && darkScreenStatus) darkScreenStatus.textContent = `${activeSceneLabel()} is paused`;
     });
   }
 
