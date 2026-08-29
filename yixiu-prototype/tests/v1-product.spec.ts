@@ -54,13 +54,22 @@ test("shows an attributed Instagram profile guide only for link-in-bio visitors"
   const guide = page.getByRole("region", { name: "Instagram profile guide" });
   await expect(guide).toBeVisible();
   await expect(guide.getByRole("heading", { name: "Find the sound you saw" })).toBeVisible();
+  await expect(guide.getByRole("link")).toHaveCount(6);
   await expect(guide.getByRole("link", { name: "Rain + dark screen" })).toHaveAttribute(
     "href",
     "/sleep-sounds/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_rain_dark_screen",
   );
+  await expect(guide.getByRole("link", { name: "White noise + black screen" })).toHaveAttribute(
+    "href",
+    "/underwater-white-noise-for-sleep/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_white_noise_black_screen",
+  );
   await expect(guide.getByRole("link", { name: "Forest sleep" })).toHaveAttribute(
     "href",
     "/forest-sounds-for-sleep/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_forest_sleep",
+  );
+  await expect(guide.getByRole("link", { name: "Mountain wind" })).toHaveAttribute(
+    "href",
+    "/wind-sounds-for-sleeping/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_mountain_wind_sleep",
   );
   await expect(guide.getByRole("link", { name: "Ocean focus" })).toHaveAttribute(
     "href",
@@ -70,6 +79,7 @@ test("shows an attributed Instagram profile guide only for link-in-bio visitors"
     "href",
     "/one-minute-reset/?utm_source=instagram&utm_medium=profile&utm_campaign=yixiu_profile&utm_content=instagram_bio_one_minute_reset",
   );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
 
   await guide.getByRole("button", { name: "Dismiss Instagram guide" }).click();
   await expect(guide).toBeHidden();

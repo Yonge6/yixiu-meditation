@@ -1043,10 +1043,20 @@ export default function Prototype() {
               data-analytics-placement="instagram_profile_guide_rain_dark_screen"
             >{language === "zh" ? "雨声 + 暗屏" : "Rain + dark screen"}</a>
             <a
+              href={instagramProfileDestination("/underwater-white-noise-for-sleep/", "white_noise_black_screen")}
+              data-analytics-event="yixiu_profile_path_click"
+              data-analytics-placement="instagram_profile_guide_white_noise_black_screen"
+            >{language === "zh" ? "白噪音 + 暗屏" : "White noise + black screen"}</a>
+            <a
               href={instagramProfileDestination("/forest-sounds-for-sleep/", "forest_sleep")}
               data-analytics-event="yixiu_profile_path_click"
               data-analytics-placement="instagram_profile_guide_forest_sleep"
             >{language === "zh" ? "森林助眠" : "Forest sleep"}</a>
+            <a
+              href={instagramProfileDestination("/wind-sounds-for-sleeping/", "mountain_wind_sleep")}
+              data-analytics-event="yixiu_profile_path_click"
+              data-analytics-placement="instagram_profile_guide_mountain_wind_sleep"
+            >{language === "zh" ? "山风助眠" : "Mountain wind"}</a>
             <a
               href={instagramProfileDestination("/ocean-waves-for-focus/", "ocean_focus")}
               data-analytics-event="yixiu_profile_path_click"
