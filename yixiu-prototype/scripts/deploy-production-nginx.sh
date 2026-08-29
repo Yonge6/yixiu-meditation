@@ -117,6 +117,8 @@ grep -F 'data-preview-timer' "$site_path/rain-sounds-when-iphone-locked/index.ht
 grep -F 'data-analytics-placement="rain_lock_screen_preview"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'https://support.apple.com/en-sg/guide/iphone/iphb2cfa052c/ios' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/focus-sounds/index.html" >/dev/null
+grep -F 'data-analytics-event="yixiu_focus_path_click"' "$site_path/focus-sounds/index.html" >/dev/null
+grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path/forest-sounds-for-focus/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$site_path/forest-sounds-for-sleep/index.html" >/dev/null
@@ -230,6 +232,8 @@ grep -F 'data-dark-screen-overlay' "$deploy_target/sleep-sounds/index.html" >/de
 grep -F 'Keep rain playing on iPhone' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-event="yixiu_focus_path_click"' "$deploy_target/focus-sounds/index.html" >/dev/null
+grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' "$deploy_target/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'dataset.ensureVisible' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
@@ -289,6 +293,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/best-sleep-sounds/ \
   | grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/focus-sounds/ \
+  | grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/discover.js \
