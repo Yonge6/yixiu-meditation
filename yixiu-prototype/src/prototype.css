@@ -2651,6 +2651,27 @@ img[data-image-scene="tide"] {
   font-style: normal;
 }
 
+.scene-access-badge {
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  left: 10px;
+  padding: 5px 8px;
+  border: 1px solid rgba(193, 230, 232, 0.38);
+  border-radius: 999px;
+  color: var(--deep-water);
+  background: var(--aqua-strong);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.scene-access-badge.is-plus {
+  color: var(--moon);
+  background: rgba(2, 22, 30, 0.72);
+  backdrop-filter: blur(8px);
+}
+
 .scene-card-play {
   position: absolute;
   right: 10px;
@@ -2691,6 +2712,42 @@ img[data-image-scene="tide"] {
   backdrop-filter: blur(22px);
   text-align: center;
 }
+
+.plus-upgrade-modal {
+  position: absolute;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  padding: 24px;
+  place-items: center;
+}
+
+.plus-upgrade-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgba(0, 10, 16, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.plus-upgrade-modal section {
+  position: relative;
+  width: min(100%, 360px);
+  padding: 34px 24px 26px;
+  border: 1px solid rgba(168, 226, 230, 0.26);
+  border-radius: 26px;
+  color: var(--moon);
+  background: linear-gradient(155deg, rgba(8, 48, 58, 0.98), rgba(2, 20, 29, 0.99));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.52);
+}
+
+.plus-upgrade-modal small { color: var(--aqua); font-size: 9px; letter-spacing: 0.22em; }
+.plus-upgrade-modal h2 { margin: 10px 0 13px; font-family: var(--serif); font-size: 26px; font-weight: 400; }
+.plus-upgrade-modal p { margin: 0; color: var(--mist); font-size: 13px; line-height: 1.8; }
+.plus-upgrade-modal a { display: flex; min-height: 48px; margin-top: 22px; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; color: var(--deep-water); background: var(--aqua-strong); font-size: 12px; font-weight: 600; text-decoration: none; }
+.plus-upgrade-modal em { display: block; margin-top: 14px; color: var(--mist); font-size: 9px; font-style: normal; line-height: 1.6; text-align: center; }
+.plus-upgrade-close { position: absolute; top: 12px; right: 12px; display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50% !important; color: var(--moon) !important; background: rgba(1, 18, 26, 0.5) !important; }
 
 .wisdom-panel small,
 .info-panel small {

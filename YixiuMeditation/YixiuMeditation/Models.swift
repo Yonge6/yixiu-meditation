@@ -30,6 +30,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case underwater
     case snow
     case tide
+    case stillWater
+    case deepCurrent
+    case moonlitDrift
+    case quietOrbit
+    case dreamscape
+    case firstBreath
+    case openMeadow
+    case oasisRest
+    case sunlitShore
+    case oceanPassage
 
     var id: String { rawValue }
 
@@ -49,6 +59,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .underwater: "水下回响"
         case .snow: "雪山风"
         case .tide: "夜潮"
+        case .stillWater: "静水"
+        case .deepCurrent: "深流"
+        case .moonlitDrift: "月下漂流"
+        case .quietOrbit: "静默星轨"
+        case .dreamscape: "梦境水域"
+        case .firstBreath: "初息"
+        case .openMeadow: "原野舒展"
+        case .oasisRest: "绿洲停歇"
+        case .sunlitShore: "日光浅岸"
+        case .oceanPassage: "海上行旅"
         }
     }
 
@@ -68,6 +88,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .underwater: "Underwater Echo"
         case .snow: "Snow Wind"
         case .tide: "Night Tide"
+        case .stillWater: "Still Water"
+        case .deepCurrent: "Deep Current"
+        case .moonlitDrift: "Moonlit Drift"
+        case .quietOrbit: "Quiet Orbit"
+        case .dreamscape: "Dreamscape"
+        case .firstBreath: "First Breath"
+        case .openMeadow: "Open Meadow"
+        case .oasisRest: "Oasis Rest"
+        case .sunlitShore: "Sunlit Shore"
+        case .oceanPassage: "Ocean Passage"
         }
     }
 
@@ -87,6 +117,12 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .underwater: "深度专注"
         case .snow: "安静 · 遮噪"
         case .tide: "深度睡眠"
+        case .stillWater: "冥想 · 21 分钟"
+        case .deepCurrent: "冥想 · 20 分钟"
+        case .moonlitDrift: "冥想 · 20 分钟"
+        case .quietOrbit: "冥想 · 21 分钟"
+        case .dreamscape: "冥想 · 22 分钟"
+        case .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage: "短时 · 88 秒"
         }
     }
 
@@ -106,6 +142,12 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .underwater: "Deep Focus"
         case .snow: "Quiet · Mask"
         case .tide: "Deep Sleep"
+        case .stillWater: "Meditate · 21 min"
+        case .deepCurrent: "Meditate · 20 min"
+        case .moonlitDrift: "Meditate · 20 min"
+        case .quietOrbit: "Meditate · 21 min"
+        case .dreamscape: "Meditate · 22 min"
+        case .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage: "Short · 88 sec"
         }
     }
 
@@ -125,6 +167,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .underwater: "UnderwaterEcho"
         case .snow: "SnowWind"
         case .tide: "NightTide"
+        case .stillWater: "MeditationStillWater"
+        case .deepCurrent: "MeditationDeepCurrent"
+        case .moonlitDrift: "MeditationMoonlitDrift"
+        case .quietOrbit: "MeditationQuietOrbit"
+        case .dreamscape: "MeditationDreamscape"
+        case .firstBreath: "MeditationFirstBreath"
+        case .openMeadow: "MeditationOpenMeadow"
+        case .oasisRest: "MeditationOasisRest"
+        case .sunlitShore: "MeditationSunlitShore"
+        case .oceanPassage: "MeditationOceanPassage"
         }
     }
 
@@ -140,7 +192,31 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .thunder: "distant-thunder"
         case .underwater: "underwater-white-noise"
         case .snow: "mountain-wind"
+        case .stillWater: "still-water"
+        case .deepCurrent: "deep-current"
+        case .moonlitDrift: "moonlit-drift"
+        case .quietOrbit: "quiet-orbit"
+        case .dreamscape: "dreamscape"
+        case .firstBreath: "first-breath"
+        case .openMeadow: "open-meadow"
+        case .oasisRest: "oasis-rest"
+        case .sunlitShore: "sunlit-shore"
+        case .oceanPassage: "ocean-passage"
         }
+    }
+
+    var isMeditationMusic: Bool {
+        switch self {
+        case .stillWater, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape,
+             .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage:
+            true
+        default:
+            false
+        }
+    }
+
+    var audioSubdirectory: String {
+        isMeditationMusic ? "Audio/Meditation" : "Audio"
     }
 
     var playbackRate: Float {
@@ -155,7 +231,8 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isBright: Bool {
         switch self {
-        case .ocean, .spring, .birds, .stream, .lake, .valley, .bamboo, .falls, .snow:
+        case .ocean, .spring, .birds, .stream, .lake, .valley, .bamboo, .falls, .snow,
+             .stillWater, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage:
             true
         default:
             false
@@ -164,7 +241,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isNight: Bool {
         switch self {
-        case .window, .thunder, .underwater, .tide:
+        case .window, .thunder, .underwater, .tide, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape:
             true
         default:
             false
@@ -175,6 +252,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         switch category {
         case .all:
             true
+        case .nature:
+            !isMeditationMusic
+        case .meditation:
+            isMeditationMusic
         case .sleep:
             [.ocean, .rain, .window, .thunder, .snow, .tide].contains(self)
         case .focus:
@@ -189,7 +270,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     func shareURL(language: AppLanguage) -> URL {
         var components = URLComponents(string: "https://yixiu.wonderelian.com/")!
         components.queryItems = [
-            URLQueryItem(name: "scene", value: rawValue),
+            URLQueryItem(name: isMeditationMusic ? "music" : "scene", value: rawValue),
             URLQueryItem(name: "lang", value: language.rawValue)
         ]
         return components.url!
@@ -212,6 +293,8 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
 enum SceneCategory: String, CaseIterable, Identifiable {
     case all
+    case nature
+    case meditation
     case sleep
     case focus
     case morning
@@ -222,6 +305,8 @@ enum SceneCategory: String, CaseIterable, Identifiable {
     func title(language: AppLanguage) -> String {
         switch self {
         case .all: language.text(zh: "全部", en: "All")
+        case .nature: language.text(zh: "自然声", en: "Nature")
+        case .meditation: language.text(zh: "冥想音乐", en: "Meditation")
         case .sleep: language.text(zh: "睡眠", en: "Sleep")
         case .focus: language.text(zh: "专注", en: "Focus")
         case .morning: language.text(zh: "清晨", en: "Morning")

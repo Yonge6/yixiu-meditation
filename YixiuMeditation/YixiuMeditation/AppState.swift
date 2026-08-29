@@ -145,6 +145,11 @@ final class AppState: ObservableObject {
     }
 
     func play() {
+        guard canAccessScene(scene) else {
+            audioError = language.text(zh: "升级一休 Plus 即可聆听这首音乐。", en: "Upgrade to Yixiu Plus to play this track.")
+            isPlaying = false
+            return
+        }
         if duration != 0, remainingSeconds == 0 {
             remainingSeconds = duration * 60
         }
@@ -241,6 +246,10 @@ final class AppState: ObservableObject {
 
     func enforceAccessLevel(_ level: YixiuAccessLevel) {
         enforcedAccessLevel = level
+        if !SubscriptionAccessPolicy.canAccess(scene: scene, level: level) {
+            pause()
+            scene = .ocean
+        }
     }
 
     func recordCompletedSession(isFocus: Bool = false) {

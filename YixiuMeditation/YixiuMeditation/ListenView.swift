@@ -642,6 +642,15 @@ struct SoundLibraryView: View {
                     .frame(height: 26)
                     .background(Capsule().fill(YixiuTheme.aquaStrong))
                     .padding(9)
+            } else if SubscriptionAccessPolicy.freeScenes.contains(scene) {
+                Text("FREE")
+                    .font(YixiuTheme.sans(8, weight: .semibold))
+                    .tracking(0.8)
+                    .foregroundStyle(YixiuTheme.deepWater)
+                    .padding(.horizontal, 9)
+                    .frame(height: 26)
+                    .background(Capsule().fill(YixiuTheme.aquaStrong))
+                    .padding(9)
             }
         }
     }

@@ -22,14 +22,23 @@ enum YixiuPlusPlan: String, CaseIterable, Identifiable {
 
 enum SubscriptionAccessPolicy {
     static let legacyCutoffVersion = "1.2"
-    static let freeScenes: Set<MeditationScene> = [.ocean, .rain, .spring, .birds, .stream]
+    static let freeNatureScenes: Set<MeditationScene> = [.ocean, .rain, .spring, .birds, .stream]
+    static let freeMeditationScenes: Set<MeditationScene> = [.stillWater, .firstBreath]
+    static let freeScenes = freeNatureScenes.union(freeMeditationScenes)
 
     static func isLegacyPurchase(originalAppVersion: String) -> Bool {
         compareVersions(originalAppVersion, legacyCutoffVersion) != .orderedDescending
     }
 
     static func canAccess(scene: MeditationScene, level: YixiuAccessLevel) -> Bool {
-        level != .free || freeScenes.contains(scene)
+        switch level {
+        case .free:
+            freeScenes.contains(scene)
+        case .legacy:
+            !scene.isMeditationMusic || freeMeditationScenes.contains(scene)
+        case .plus:
+            true
+        }
     }
 
     static func canUseTimer(minutes: Int, level: YixiuAccessLevel) -> Bool {

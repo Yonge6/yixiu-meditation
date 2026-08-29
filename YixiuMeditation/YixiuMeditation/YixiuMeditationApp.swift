@@ -12,6 +12,7 @@ struct YixiuMeditationApp: App {
                 .environmentObject(subscriptionStore)
                 .preferredColorScheme(.dark)
                 .task {
+                    appState.enforceAccessLevel(subscriptionStore.accessLevel)
                     await subscriptionStore.start()
                     appState.enforceAccessLevel(subscriptionStore.accessLevel)
                 }
