@@ -223,7 +223,7 @@ test("rain sleep dark screen keeps real rain and the timer running until the lis
   });
 
   const preview = page.locator('button[data-analytics-placement="sleep_landing_preview"]');
-  const darkScreenToggle = page.getByRole("button", { name: "Darken Screen" });
+  const darkScreenToggle = page.getByRole("button", { name: "Black Screen" });
   const darkScreenOverlay = page.getByRole("button", { name: "Dark screen is on. Tap to return." });
   const timerStatus = page.locator("[data-preview-timer-status]");
 
