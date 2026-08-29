@@ -89,8 +89,16 @@ Desktop Chrome production acceptance confirmed the exact six path labels and URL
 
 The first Instagram share attempt returned the explicit `无法分享帖子` failure and is not counted as a publication. The page-provided retry was used once; it returned `Reels 已分享`, the profile post count changed from 27 to 28, and the new Reel appeared first on the authenticated profile. The public Reel DOM exposed author `wonderelian`, the complete caption, the five hashtags, original audio and the AI-content label. The unauthenticated Reel HTML returned HTTP 200. Instagram's public oEmbed endpoint returned HTTP 200 with `author_name=wonderelian`, provider `Instagram`, the complete caption and matching Reel ID.
 
+## Instagram profile conversion alignment
+
+The public Reel tells viewers to use the link in bio and choose White Noise. The previous profile bio still led with Rain and Focus, so the next single-variable conversion change aligned the bio with the new intent while retaining the other main sound families:
+
+`White noise + black screen → tap Yixiu below, then choose White noise. Rain, wind, forest + focus. No account. No ads.`
+
+The first profile-save attempt returned `保存个人资料时出错` and visibly restored the prior copy; it is not counted as a successful edit. One fresh resubmission succeeded. The authenticated edit form then exposed the new 118-character value with a disabled Submit button and no error, and the public `@wonderelian` profile exposed the exact copy, the unchanged `yixiu.wonderelian.com` link, post count 28 and Reel `DcnlGY2J3b5`. The website field, AI Creator label and account-recommendation setting were not changed.
+
 ## Current measurement boundary
 
-The latest verified completed Beijing natural day from the exact-hostname Data API is 2026-08-28 with 26 active users, 41 page views and 33 sessions. The 2026-08-29 incomplete readback at 17:11 Asia/Shanghai remained 13 active users, 22 page views and 20 sessions. It already contained one active user from `instagram / organic_reel / sleep_sounds / forest_sleep_reel_05`, but no row yet for `underwater_white_noise_black_screen_reel_13`. This is an absence of attributed evidence immediately after publication, not a zero-outcome claim. Neither day reaches the 100-UV gate.
+The latest verified completed Beijing natural day from the exact-hostname Data API is 2026-08-28 with 26 active users, 41 page views and 33 sessions. The 2026-08-29 incomplete readback at 17:18 Asia/Shanghai remained 13 active users, 22 page views and 20 sessions. It already contained one active user from `instagram / organic_reel / sleep_sounds / forest_sleep_reel_05`, but no row yet for `underwater_white_noise_black_screen_reel_13` or event row for `yixiu_profile_path_click`. This is an absence of attributed evidence immediately after publication and bio alignment, not a zero-outcome claim. Neither day reaches the 100-UV gate.
 
 Apple official evidence already proves 10 first-time downloads and 4 redownloads through 2026-08-26. Trial starts, paid conversions, subscriptions, in-app purchases, revenue and campaign-specific downloads remain `null`.
