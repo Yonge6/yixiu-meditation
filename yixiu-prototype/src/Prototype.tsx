@@ -480,6 +480,23 @@ function linkedLanguage() {
   return language === "zh" || language === "en" ? language : null;
 }
 
+function isInstagramProfileReferral() {
+  const query = new URLSearchParams(window.location.search);
+  return query.get("utm_source") === "ig"
+    && query.get("utm_medium") === "social"
+    && query.get("utm_content") === "link_in_bio";
+}
+
+function instagramProfileDestination(path: string, content: string) {
+  const query = new URLSearchParams({
+    utm_source: "instagram",
+    utm_medium: "profile",
+    utm_campaign: "yixiu_profile",
+    utm_content: `instagram_bio_${content}`,
+  });
+  return `${path}?${query.toString()}`;
+}
+
 function preferredLanguage(): Language {
   return navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
 }
@@ -507,6 +524,7 @@ export default function Prototype() {
   const [wisdomOpen, setWisdomOpen] = useState(false);
   const [videoChannelOpen, setVideoChannelOpen] = useState(false);
   const [downloadFeedback, setDownloadFeedback] = useState(false);
+  const [instagramGuideOpen, setInstagramGuideOpen] = useState(() => isInstagramProfileReferral());
   const [wisdomIndex, setWisdomIndex] = useState(0);
   const [breathingStatus, setBreathingStatus] = useState<BreathingStatus>("idle");
   const [breathingElapsed, setBreathingElapsed] = useState(0);
@@ -998,6 +1016,50 @@ export default function Prototype() {
           </button>
         </div>
       </header> : null}
+
+      {activeTab === "sounds" && instagramGuideOpen ? (
+        <section
+          className="instagram-profile-guide"
+          role="region"
+          aria-label={language === "zh" ? "Instagram 主页导览" : "Instagram profile guide"}
+        >
+          <div className="instagram-profile-guide-heading">
+            <div>
+              <small>{language === "zh" ? "来自 INSTAGRAM" : "FROM INSTAGRAM"}</small>
+              <h2>{language === "zh" ? "找到你刚看到的声音" : "Find the sound you saw"}</h2>
+            </div>
+            <button
+              type="button"
+              aria-label={language === "zh" ? "关闭 Instagram 导览" : "Dismiss Instagram guide"}
+              onClick={() => setInstagramGuideOpen(false)}
+            >
+              <Cross2Icon />
+            </button>
+          </div>
+          <nav aria-label={language === "zh" ? "Instagram 声音入口" : "Instagram sound paths"}>
+            <a
+              href={instagramProfileDestination("/sleep-sounds/", "rain_dark_screen")}
+              data-analytics-event="yixiu_profile_path_click"
+              data-analytics-placement="instagram_profile_guide_rain_dark_screen"
+            >{language === "zh" ? "雨声 + 暗屏" : "Rain + dark screen"}</a>
+            <a
+              href={instagramProfileDestination("/forest-sounds-for-sleep/", "forest_sleep")}
+              data-analytics-event="yixiu_profile_path_click"
+              data-analytics-placement="instagram_profile_guide_forest_sleep"
+            >{language === "zh" ? "森林助眠" : "Forest sleep"}</a>
+            <a
+              href={instagramProfileDestination("/ocean-waves-for-focus/", "ocean_focus")}
+              data-analytics-event="yixiu_profile_path_click"
+              data-analytics-placement="instagram_profile_guide_ocean_focus"
+            >{language === "zh" ? "海浪专注" : "Ocean focus"}</a>
+            <a
+              href={instagramProfileDestination("/one-minute-reset/", "one_minute_reset")}
+              data-analytics-event="yixiu_profile_path_click"
+              data-analytics-placement="instagram_profile_guide_one_minute_reset"
+            >{language === "zh" ? "1 分钟重置" : "1-minute reset"}</a>
+          </nav>
+        </section>
+      ) : null}
 
       {menuOpen ? (
         <div className="yixiu-drawer-layer">
