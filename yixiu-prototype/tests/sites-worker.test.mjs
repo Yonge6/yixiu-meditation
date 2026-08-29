@@ -83,6 +83,43 @@ test("root page exposes truthful software application structured data", async ()
   assert.doesNotMatch(schemaSource, /aggregateRating|reviewCount/);
 });
 
+test("root page exposes a useful no-JavaScript Yixiu entry point", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const fallback = html.match(/<main class="html-fallback">([\s\S]*?)<\/main>/)?.[1];
+
+  assert.ok(fallback, "root should expose a semantic fallback before JavaScript runs");
+  assert.match(fallback, /<h1>Free nature sounds for sleep, focus and study<\/h1>/);
+  assert.match(fallback, /fourteen real nature-sound recordings/);
+  assert.match(fallback, /no music, no talking, no account and no ads/);
+  assert.match(fallback, /href="\/sleep-sounds\/"/);
+  assert.match(fallback, /href="\/focus-sounds\/"/);
+  assert.match(fallback, /href="\/best-sleep-sounds\/"/);
+  assert.match(fallback, /href="\/best-nature-sounds-for-studying\/"/);
+  assert.match(fallback, /href="\/nature-sounds-for-meditation\/"/);
+  assert.match(fallback, /href="\/guides\/"/);
+  assert.match(fallback, /id1461182261/);
+  assert.doesNotMatch(fallback, /maker\.|onelaser\.|wendao\.|style atlas|aggregateRating|reviewCount|cure|treat|guarantee|insomnia/i);
+});
+
+test("every sitemap HTML page points agents to the covering llms.txt", async () => {
+  const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+  const urls = [...sitemap.matchAll(/<loc>(https:\/\/yixiu\.wonderelian\.com\/[^<]*)<\/loc>/g)]
+    .map((match) => new URL(match[1]));
+
+  assert.equal(urls.length, 24);
+  for (const url of urls) {
+    const pagePath = url.pathname === "/"
+      ? "../index.html"
+      : url.pathname.endsWith(".html")
+        ? `../public${url.pathname}`
+        : `../public${url.pathname}index.html`;
+    const html = await readFile(new URL(pagePath, import.meta.url), "utf8");
+    const declarations = [...html.matchAll(/<link rel="describedby" href="\/llms\.txt" type="text\/plain" \/>/g)];
+
+    assert.equal(declarations.length, 1, `${url.pathname} should declare exactly one llms.txt description`);
+  }
+});
+
 test("all H5 App Store actions use the shared Apple campaign attribution", async () => {
   const pagePaths = [
     "../index.html",
@@ -1133,6 +1170,9 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
 
   assert.match(script, /--resolve 'yixiu\.wonderelian\.com:443:127\.0\.0\.1'/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\//);
+  assert.match(script, /Free nature sounds for sleep, focus and study/);
+  assert.match(script, /rel="describedby" href="\/llms\.txt" type="text\/plain"/);
+  assert.match(script, /OAI-SearchBot\/1\.0/);
   assert.match(script, /forest-sounds-for-focus\/index\.html/);
   assert.match(script, /forest-sounds-for-sleep\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/forest-breeze\.m4a/);

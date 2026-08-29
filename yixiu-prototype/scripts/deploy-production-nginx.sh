@@ -82,6 +82,9 @@ test -n "$(find "$site_path/assets" -maxdepth 1 -type f -name 'index-*.js' -prin
 grep -FR 'instagram_profile_guide_white_noise_black_screen' "$site_path/assets" >/dev/null
 grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$site_path/assets" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
+grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$site_path/index.html" >/dev/null
+grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$site_path/index.html" >/dev/null
+test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 24
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$site_path/index.html" >/dev/null
@@ -221,6 +224,9 @@ fi
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$deploy_target/index.html" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
+grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$deploy_target/index.html" >/dev/null
+grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$deploy_target/index.html" >/dev/null
+test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 24
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -Fx '# Yixiu' "$deploy_target/llms.txt" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$deploy_target/llms.txt" >/dev/null
@@ -277,6 +283,15 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ \
   | grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' >/dev/null
+curl --compressed -fsS \
+  -A 'OAI-SearchBot/1.0; +https://openai.com/searchbot' \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/ \
+  | grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/best-sleep-sounds/ \
+  | grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/llms.txt \
