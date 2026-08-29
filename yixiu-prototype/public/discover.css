@@ -107,6 +107,7 @@ a { color: inherit; }
 .intent-after-play { max-width: 610px; margin-top: 16px; padding: 15px 18px; border: 1px solid rgba(159,225,225,.28); border-radius: 16px; background: rgba(3,30,38,.66); color: rgba(243,245,239,.78); font: 500 13px/1.55 system-ui, sans-serif; backdrop-filter: blur(12px); }
 .intent-after-play[data-ensure-visible="true"] { scroll-margin-block: 16px; }
 .intent-after-play a { color: #a6e8e8; font-weight: 700; text-decoration: none; }
+.intent-share-copy { display: block; margin-top: 12px; color: rgba(243,245,239,.92); font-weight: 650; }
 .intent-share,
 .intent-pinterest { min-height: 44px; margin: 8px 0 0 10px; padding: 0 15px; border: 1px solid rgba(159,225,225,.34); border-radius: 999px; color: #a6e8e8; background: rgba(3,30,38,.54); font: 650 12px/1 system-ui, sans-serif; cursor: pointer; }
 .intent-pinterest { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }

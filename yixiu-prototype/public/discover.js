@@ -124,6 +124,7 @@
   const afterPreview = document.querySelector("[data-after-preview]");
   const shareButton = afterPreview ? document.createElement("button") : null;
   const pinterestLink = afterPreview ? document.createElement("a") : null;
+  const shareDefaultLabel = afterPreview?.dataset.shareLabel?.trim() || "Share this sound";
   let shareFeedbackTimer = null;
 
   function sharePlacement() {
@@ -181,14 +182,14 @@
     window.clearTimeout(shareFeedbackTimer);
     shareButton.textContent = label;
     shareFeedbackTimer = window.setTimeout(() => {
-      shareButton.textContent = "Share this sound";
+      shareButton.textContent = shareDefaultLabel;
     }, 2400);
   }
 
   if (shareButton) {
     shareButton.type = "button";
     shareButton.className = "intent-share";
-    shareButton.textContent = "Share this sound";
+    shareButton.textContent = shareDefaultLabel;
     shareButton.setAttribute("aria-live", "polite");
     afterPreview.appendChild(shareButton);
 
