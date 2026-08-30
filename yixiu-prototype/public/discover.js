@@ -122,11 +122,12 @@
   }
 
   const afterPreview = document.querySelector("[data-after-preview]");
-  const sharePrompt = afterPreview && !afterPreview.querySelector(".intent-share-copy")
+  const quietPassOwnsShare = afterPreview?.dataset.shareMode === "quiet-pass";
+  const sharePrompt = afterPreview && !quietPassOwnsShare && !afterPreview.querySelector(".intent-share-copy")
     ? document.createElement("span")
     : null;
-  const shareButton = afterPreview ? document.createElement("button") : null;
-  const pinterestLink = afterPreview ? document.createElement("a") : null;
+  const shareButton = afterPreview && !quietPassOwnsShare ? document.createElement("button") : null;
+  const pinterestLink = afterPreview && !quietPassOwnsShare ? document.createElement("a") : null;
   const shareDefaultLabel = afterPreview?.dataset.shareLabel?.trim() || "Send this sound to someone";
   let shareFeedbackTimer = null;
 
@@ -407,6 +408,16 @@
     audio.addEventListener("pause", () => {
       updateButton(button, false);
       if (darkScreenOpen && darkScreenStatus) darkScreenStatus.textContent = `${activeSceneLabel()} is paused`;
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      window.dispatchEvent(new CustomEvent("yixiu:playback-progress", {
+        detail: {
+          scene: button.dataset.scene,
+          currentTime: audio.currentTime,
+          duration: Number.isFinite(audio.duration) ? audio.duration : null,
+        },
+      }));
     });
   }
 

@@ -945,6 +945,64 @@ test("1-minute meditation music page serves the complete First Breath track with
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee|anxiety|insomnia/i);
 });
 
+test("quiet pass exposes two anonymous scene-specific gift pages without changing membership", async () => {
+  const cases = [
+    {
+      route: "first-breath",
+      canonical: "https://yixiu.wonderelian.com/gift/first-breath/",
+      title: "Someone Sent You First Breath — A Quiet Minute | Yixiu",
+      image: "/assets/yixiu/meditation/first-breath.jpg",
+      audio: "/assets/yixiu/audio/meditation/first-breath.m4a",
+      source: "/1-minute-meditation-music/",
+      content: "first_breath_gift",
+    },
+    {
+      route: "still-water",
+      canonical: "https://yixiu.wonderelian.com/gift/still-water/",
+      title: "Someone Sent You Still Water — A Quiet Moment | Yixiu",
+      image: "/assets/yixiu/meditation/still-water.jpg",
+      audio: "/assets/yixiu/audio/meditation/still-water.m4a",
+      source: "/20-minute-meditation-music/",
+      content: "still_water_gift",
+    },
+  ];
+
+  const controller = await readFile(new URL("../public/quiet-pass.js", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../public/quiet-pass.css", import.meta.url), "utf8");
+  assert.match(controller, /crypto\.getRandomValues/);
+  assert.match(controller, /gift_qualified_60s/);
+  assert.match(controller, /yixiu:playback-progress/);
+  assert.match(styles, /prefers-reduced-motion/);
+
+  for (const entry of cases) {
+    const html = await readFile(new URL(`../public/gift/${entry.route}/index.html`, import.meta.url), "utf8");
+    assert.match(html, new RegExp(`<title>${entry.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}<\\/title>`));
+    assert.match(html, new RegExp(`rel="canonical" href="${entry.canonical.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`));
+    assert.match(html, /<meta name="robots" content="noindex,follow" \/>/);
+    assert.match(html, new RegExp(`property="og:image" content="https://yixiu\\.wonderelian\\.com${entry.image.replaceAll("/", "\\/")}"`));
+    assert.match(html, new RegExp(`data-quiet-pass-audio="${entry.audio.replaceAll("/", "\\/")}"`));
+    assert.match(html, new RegExp(`href="${entry.source.replaceAll("/", "\\/")}"`));
+    assert.match(html, /data-language-toggle/);
+    assert.match(html, /Someone sent you a quiet moment/);
+    assert.match(html, /有人送来一段安静/);
+    assert.match(html, /No account\. No notifications\./);
+    assert.match(html, /src="\/quiet-pass\.js\?v=20260830-quiet-pass"/);
+    assert.match(html, /href="\/quiet-pass\.css\?v=20260830-quiet-pass"/);
+    assert.match(html, /ct=yixiu_quiet_pass_20260830/);
+    assert.match(html, new RegExp(`data-quiet-pass-content="${entry.content}"`));
+    assert.doesNotMatch(html, /register|sign up|unlock|reward|membership|member|free month/i);
+  }
+
+  const firstBreath = await readFile(new URL("../public/1-minute-meditation-music/index.html", import.meta.url), "utf8");
+  const stillWater = await readFile(new URL("../public/20-minute-meditation-music/index.html", import.meta.url), "utf8");
+  assert.match(firstBreath, /data-quiet-pass-origin="first-breath"/);
+  assert.match(firstBreath, /data-quiet-pass-threshold="60"/);
+  assert.match(stillWater, /data-quiet-pass-origin="still-water"/);
+  assert.match(stillWater, /data-quiet-pass-threshold="180"/);
+  assert.match(firstBreath, /src="\/quiet-pass\.js\?v=20260830-quiet-pass"/);
+  assert.match(stillWater, /src="\/quiet-pass\.js\?v=20260830-quiet-pass"/);
+});
+
 test("guides hub organizes every English intent page and exposes a real preview and truthful collection schema", async () => {
   const html = await readFile(new URL("../public/guides/index.html", import.meta.url), "utf8");
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
@@ -1419,8 +1477,9 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /ct=yixiu_h5_first_breath_20260830/);
   assert.match(script, /data-analytics-placement=\"first_breath_meditation_after_preview\"/);
   assert.equal((script.match(/softwareVersion[^\n]+1\\\.4[^\n]+-eq 25/g) ?? []).length, 2);
-  assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+-eq 26/g) ?? []).length, 2);
-  assert.equal((script.match(/global-share-prompt[^\n]+-eq 23/g) ?? []).length, 2);
+  assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+-eq 28/g) ?? []).length, 2);
+  assert.equal((script.match(/global-share-prompt[^\n]+-eq 21/g) ?? []).length, 2);
+  assert.equal((script.match(/quiet-pass-progress[^\n]+-eq 2/g) ?? []).length, 2);
   assert.match(script, /meditation-duration-choice-pinterest\.jpg/);
   assert.match(script, /data-share-placement=\"guides_duration_share\"/);
   assert.match(script, /data-pinterest-placement=\"guides_duration_pinterest\"/);
@@ -1428,6 +1487,16 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/audio\/meditation\/still-water\.m4a/);
   assert.match(script, /ct=yixiu_h5_still_water_20260830/);
   assert.match(script, /data-analytics-placement=\"still_water_meditation_after_preview\"/);
+  assert.match(script, /gift\/first-breath\/index\.html/);
+  assert.match(script, /gift\/still-water\/index\.html/);
+  assert.match(script, /Someone Sent You First Breath/);
+  assert.match(script, /Someone Sent You Still Water/);
+  assert.match(script, /data-quiet-pass-origin=\"first-breath\"/);
+  assert.match(script, /data-quiet-pass-threshold=\"180\"/);
+  assert.match(script, /ct=yixiu_quiet_pass_20260830/);
+  assert.match(script, /gift_qualified_60s/);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/gift\/first-breath\//);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/gift\/still-water\//);
   assert.match(script, /site_path\/llms\.txt/);
   assert.match(script, /deploy_target\/llms\.txt/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/llms\.txt/);
