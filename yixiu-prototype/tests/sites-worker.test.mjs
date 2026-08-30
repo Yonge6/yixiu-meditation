@@ -1396,6 +1396,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /data-analytics-placement=\"first_breath_meditation_after_preview\"/);
   assert.equal((script.match(/softwareVersion[^\n]+1\\\.4[^\n]+-eq 25/g) ?? []).length, 2);
   assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+-eq 26/g) ?? []).length, 2);
+  assert.equal((script.match(/global-share-prompt[^\n]+-eq 24/g) ?? []).length, 2);
   assert.match(script, /20-minute-meditation-music\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/meditation\/still-water\.m4a/);
   assert.match(script, /ct=yixiu_h5_still_water_20260830/);

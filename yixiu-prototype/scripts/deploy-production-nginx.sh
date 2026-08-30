@@ -131,7 +131,7 @@ grep -F 'Know someone who needs a quieter night?' "$site_path/sleep-sounds/index
 grep -F 'shareDefaultLabel' "$site_path/discover.js" >/dev/null
 grep -F 'Know someone who would enjoy this sound?' "$site_path/discover.js" >/dev/null
 grep -F 'Send this sound to someone' "$site_path/discover.js" >/dev/null
-test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 23
+test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 24
 grep -F '.intent-share-copy' "$site_path/discover.css" >/dev/null
 grep -F 'dataset.ensureVisible' "$site_path/discover.js" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
