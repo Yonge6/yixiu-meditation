@@ -261,7 +261,11 @@ test("every after-preview page loads the global share-prompt script version", as
   for (const pagePath of pagePaths) {
     const html = await readFile(new URL(pagePath, import.meta.url), "utf8");
     assert.match(html, /data-after-preview/);
-    assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/, pagePath);
+    if (pagePath.endsWith("/guides/index.html")) {
+      assert.match(html, /src="\/discover\.js\?v=20260830-duration-share"/, pagePath);
+    } else {
+      assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/, pagePath);
+    }
   }
 });
 
@@ -968,6 +972,11 @@ test("guides hub organizes every English intent page and exposes a real preview 
   assert.match(html, /data-analytics-placement="guides_duration_still_water"/);
   assert.match(html, /ct=yixiu_h5_20260827/);
   assert.match(html, /data-analytics-placement="guides_duration_choice"/);
+  assert.match(html, /assets\/yixiu\/meditation-duration-choice-pinterest\.jpg/);
+  assert.match(html, /property="og:image:width" content="1000"/);
+  assert.match(html, /property="og:image:height" content="1500"/);
+  assert.match(html, /data-share-placement="guides_duration_share"/);
+  assert.match(html, /data-pinterest-placement="guides_duration_pinterest"/);
   assert.match(html, /Both complete tracks play free on the web with no account, ads or spoken guidance/);
   assert.equal(faq.mainEntity[3].name, "Should I choose one minute or 20 minutes of meditation music?");
   assert.match(faq.mainEntity[3].acceptedAnswer.text, /Both play free online without an account, ads or spoken guidance/);
@@ -1399,6 +1408,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/audio\/sunrise-river\.m4a/);
   assert.match(script, /data-analytics-placement=\"meditation_landing_timer\"/);
   assert.match(script, /discover\.css\?v=20260830-duration-choice/);
+  assert.match(script, /discover\.js\?v=20260830-duration-share/);
   assert.match(script, /duration-choice-title/);
   assert.equal((script.match(/data-analytics-placement=\"guides_duration_first_breath\"/g) || []).length, 2);
   assert.equal((script.match(/data-analytics-placement=\"guides_duration_still_water\"/g) || []).length, 2);
@@ -1410,7 +1420,10 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /data-analytics-placement=\"first_breath_meditation_after_preview\"/);
   assert.equal((script.match(/softwareVersion[^\n]+1\\\.4[^\n]+-eq 25/g) ?? []).length, 2);
   assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+-eq 26/g) ?? []).length, 2);
-  assert.equal((script.match(/global-share-prompt[^\n]+-eq 24/g) ?? []).length, 2);
+  assert.equal((script.match(/global-share-prompt[^\n]+-eq 23/g) ?? []).length, 2);
+  assert.match(script, /meditation-duration-choice-pinterest\.jpg/);
+  assert.match(script, /data-share-placement=\"guides_duration_share\"/);
+  assert.match(script, /data-pinterest-placement=\"guides_duration_pinterest\"/);
   assert.match(script, /20-minute-meditation-music\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/meditation\/still-water\.m4a/);
   assert.match(script, /ct=yixiu_h5_still_water_20260830/);

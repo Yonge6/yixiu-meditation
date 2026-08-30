@@ -257,6 +257,99 @@
     });
   }
 
+  const staticShareSurfaces = [...document.querySelectorAll("[data-share-surface]")];
+
+  for (const surface of staticShareSurfaces) {
+    const staticShareButton = surface.querySelector("[data-share-button]");
+    const staticPinterestLink = surface.querySelector("[data-pinterest-link]");
+    const campaign = surface.dataset.shareCampaign?.trim() || "scene_share";
+    const placement = surface.dataset.sharePlacement?.trim() || "intent_share";
+    const pinterestStaticPlacement = surface.dataset.pinterestPlacement?.trim() || placement.replace(/_share$/, "_pinterest");
+    const defaultLabel = staticShareButton?.textContent?.trim() || "Share";
+    const shareTitle = surface.dataset.shareTitle?.trim()
+      || document.querySelector('meta[property="og:title"]')?.content
+      || document.querySelector("h1")?.textContent?.trim()
+      || document.title;
+    const shareText = surface.dataset.shareText?.trim()
+      || document.querySelector('meta[name="description"]')?.content
+      || "Listen with Yixiu.";
+    let staticFeedbackTimer = null;
+
+    function staticDestination(source, medium, content) {
+      const canonical = document.querySelector('link[rel="canonical"]')?.href;
+      const url = new URL(canonical || window.location.href);
+      url.search = "";
+      url.hash = "";
+      url.searchParams.set("utm_source", source);
+      url.searchParams.set("utm_medium", medium);
+      url.searchParams.set("utm_campaign", campaign);
+      url.searchParams.set("utm_content", content);
+      return url.toString();
+    }
+
+    function staticPinterestIntent() {
+      const url = new URL("https://www.pinterest.com/pin/create/button/");
+      const image = document.querySelector('meta[property="og:image"]')?.content;
+      url.searchParams.set("url", staticDestination("pinterest", "organic_share", pinterestStaticPlacement));
+      if (image) url.searchParams.set("media", image);
+      url.searchParams.set("description", `${shareTitle}\n\n${shareText}`);
+      return url.toString();
+    }
+
+    function staticFeedback(label) {
+      if (!staticShareButton) return;
+      window.clearTimeout(staticFeedbackTimer);
+      staticShareButton.textContent = label;
+      staticFeedbackTimer = window.setTimeout(() => {
+        staticShareButton.textContent = defaultLabel;
+      }, 2400);
+    }
+
+    if (staticShareButton) {
+      staticShareButton.addEventListener("click", async () => {
+        const url = staticDestination("share", "referral", placement);
+        let method;
+
+        staticShareButton.disabled = true;
+        try {
+          if (typeof navigator.share === "function") {
+            await navigator.share({ title: shareTitle, text: shareText, url });
+            method = "native";
+            staticFeedback("Shared");
+          } else if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(url);
+            method = "clipboard";
+            staticFeedback("Link copied");
+          } else {
+            throw new Error("Sharing is unavailable");
+          }
+
+          report("yixiu_share", {
+            share_method: method,
+            shared_url: url,
+            placement,
+          });
+        } catch (error) {
+          if (error?.name !== "AbortError") staticFeedback("Could not share");
+        } finally {
+          staticShareButton.disabled = false;
+        }
+      });
+    }
+
+    if (staticPinterestLink) {
+      staticPinterestLink.href = staticPinterestIntent();
+      staticPinterestLink.addEventListener("click", () => {
+        staticPinterestLink.href = staticPinterestIntent();
+        report("yixiu_share", {
+          share_method: "pinterest_intent",
+          shared_url: staticDestination("pinterest", "organic_share", pinterestStaticPlacement),
+          placement: pinterestStaticPlacement,
+        });
+      });
+    }
+  }
+
   function updateButton(button, playing) {
     button.setAttribute("aria-pressed", String(playing));
     button.classList.toggle("is-playing", playing);

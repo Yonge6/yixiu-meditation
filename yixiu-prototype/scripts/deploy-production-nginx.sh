@@ -78,6 +78,7 @@ test -f "$site_path/assets/yixiu/snow-wind-pinterest-2x3.png"
 test -f "$site_path/assets/yixiu/snow-wind-pinterest-2x3.jpg"
 test -f "$site_path/assets/yixiu/spring-creek.webp"
 test -f "$site_path/assets/yixiu/study-sounds-comparison-pinterest.jpg"
+test -f "$site_path/assets/yixiu/meditation-duration-choice-pinterest.jpg"
 test -f "$site_path/assets/yixiu/audio/sunrise-river.m4a"
 test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 10
 test "$(find "$site_path/assets/yixiu/meditation" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
@@ -117,10 +118,14 @@ grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/river-sounds-for
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/guides/index.html" >/dev/null
 grep -F '/discover.css?v=20260830-duration-choice' "$site_path/guides/index.html" >/dev/null
+grep -F '/discover.js?v=20260830-duration-share' "$site_path/guides/index.html" >/dev/null
 grep -F '<h2 id="duration-choice-title">One minute or twenty?</h2>' "$site_path/guides/index.html" >/dev/null
 grep -F 'data-analytics-placement="guides_duration_first_breath"' "$site_path/guides/index.html" >/dev/null
 grep -F 'data-analytics-placement="guides_duration_still_water"' "$site_path/guides/index.html" >/dev/null
 grep -F 'data-analytics-placement="guides_duration_choice"' "$site_path/guides/index.html" >/dev/null
+grep -F 'data-share-placement="guides_duration_share"' "$site_path/guides/index.html" >/dev/null
+grep -F 'data-pinterest-placement="guides_duration_pinterest"' "$site_path/guides/index.html" >/dev/null
+grep -F '/assets/yixiu/meditation-duration-choice-pinterest.jpg' "$site_path/guides/index.html" >/dev/null
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/sleep-sounds/index.html" >/dev/null
@@ -136,7 +141,7 @@ grep -F 'Know someone who needs a quieter night?' "$site_path/sleep-sounds/index
 grep -F 'shareDefaultLabel' "$site_path/discover.js" >/dev/null
 grep -F 'Know someone who would enjoy this sound?' "$site_path/discover.js" >/dev/null
 grep -F 'Send this sound to someone' "$site_path/discover.js" >/dev/null
-test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 24
+test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 23
 grep -F '.intent-share-copy' "$site_path/discover.css" >/dev/null
 grep -F 'dataset.ensureVisible' "$site_path/discover.js" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
@@ -291,7 +296,7 @@ grep -F 'Know someone who needs a quieter night?' "$deploy_target/sleep-sounds/i
 grep -F 'shareDefaultLabel' "$deploy_target/discover.js" >/dev/null
 grep -F 'Know someone who would enjoy this sound?' "$deploy_target/discover.js" >/dev/null
 grep -F 'Send this sound to someone' "$deploy_target/discover.js" >/dev/null
-test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 24
+test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 23
 grep -F '.intent-share-copy' "$deploy_target/discover.css" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-event="yixiu_focus_path_click"' "$deploy_target/focus-sounds/index.html" >/dev/null
@@ -300,10 +305,14 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$deploy
 grep -F 'dataset.ensureVisible' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F '/discover.css?v=20260830-duration-choice' "$deploy_target/guides/index.html" >/dev/null
+grep -F '/discover.js?v=20260830-duration-share' "$deploy_target/guides/index.html" >/dev/null
 grep -F '<h2 id="duration-choice-title">One minute or twenty?</h2>' "$deploy_target/guides/index.html" >/dev/null
 grep -F 'data-analytics-placement="guides_duration_first_breath"' "$deploy_target/guides/index.html" >/dev/null
 grep -F 'data-analytics-placement="guides_duration_still_water"' "$deploy_target/guides/index.html" >/dev/null
 grep -F 'data-analytics-placement="guides_duration_choice"' "$deploy_target/guides/index.html" >/dev/null
+grep -F 'data-share-placement="guides_duration_share"' "$deploy_target/guides/index.html" >/dev/null
+grep -F 'data-pinterest-placement="guides_duration_pinterest"' "$deploy_target/guides/index.html" >/dev/null
+test -f "$deploy_target/assets/yixiu/meditation-duration-choice-pinterest.jpg"
 grep -F 'data-audio-preview="/assets/yixiu/audio/meditation/first-breath.m4a"' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
 grep -F 'ct=yixiu_h5_first_breath_20260830' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-analytics-placement="first_breath_meditation_after_preview"' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
@@ -415,7 +424,15 @@ curl --compressed -fsS \
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/guides/ \
+  | grep -F 'data-pinterest-placement="guides_duration_pinterest"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/guides/ \
   | grep -F 'data-analytics-placement="guides_duration_choice"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/assets/yixiu/meditation-duration-choice-pinterest.jpg \
+  -o /dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/1-minute-meditation-music/ \
