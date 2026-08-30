@@ -1,0 +1,313 @@
+:root {
+  color-scheme: dark;
+  --quiet-ink: #f3f5ef;
+  --quiet-muted: rgba(224, 239, 236, .66);
+  --quiet-line: rgba(171, 226, 225, .25);
+  --quiet-aqua: #a8e3df;
+  --quiet-deep: #031820;
+  --quiet-panel: rgba(4, 29, 37, .72);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { min-height: 100%; margin: 0; background: var(--quiet-deep); }
+body { overflow-x: hidden; }
+
+[hidden] { display: none !important; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.quiet-pass-origin {
+  margin-top: 20px;
+  padding: 22px;
+  border: 1px solid var(--quiet-line);
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(7, 48, 57, .78), rgba(3, 24, 32, .88));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .04);
+}
+
+.quiet-pass-origin small {
+  color: var(--quiet-aqua);
+  font: 650 10px/1.4 system-ui, sans-serif;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.quiet-pass-origin p {
+  max-width: 540px;
+  margin: 10px 0 16px;
+  color: rgba(243, 245, 239, .76);
+  font: 400 15px/1.6 Georgia, "Noto Serif SC", serif;
+}
+
+.quiet-pass-origin button,
+.quiet-pass-secondary,
+.quiet-pass-app-link {
+  min-height: 48px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 650 12px/1.3 system-ui, sans-serif;
+  letter-spacing: .025em;
+}
+
+.quiet-pass-origin button {
+  padding: 0 20px;
+  border: 1px solid rgba(168, 227, 223, .58);
+  color: #06232a;
+  background: var(--quiet-aqua);
+  cursor: pointer;
+}
+
+.quiet-pass-origin [role="status"] {
+  display: block;
+  min-height: 20px;
+  margin-top: 10px;
+  color: var(--quiet-muted);
+  font: 500 11px/1.5 system-ui, sans-serif;
+}
+
+.quiet-pass-page {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--quiet-ink);
+  background: var(--quiet-deep);
+  font-family: "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+}
+
+.quiet-pass-backdrop,
+.quiet-pass-veil,
+.quiet-pass-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.quiet-pass-backdrop {
+  z-index: -4;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(.76) contrast(1.06) brightness(.58);
+  transform: scale(1.035);
+  animation: quiet-arrive 1.4s cubic-bezier(.2, .75, .18, 1) both;
+}
+
+.quiet-pass-veil {
+  z-index: -3;
+  background:
+    radial-gradient(circle at 52% 38%, transparent 0 17%, rgba(1, 19, 27, .16) 48%, rgba(1, 12, 18, .86) 100%),
+    linear-gradient(180deg, rgba(2, 20, 28, .12), rgba(2, 17, 23, .9));
+}
+
+.quiet-pass-grain {
+  z-index: -2;
+  opacity: .22;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+.quiet-pass-shell {
+  width: min(100%, 1120px);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: max(24px, env(safe-area-inset-top)) clamp(20px, 5vw, 64px) max(28px, env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 30px;
+}
+
+.quiet-pass-header,
+.quiet-pass-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.quiet-pass-brand {
+  color: inherit;
+  text-decoration: none;
+  font: 400 24px/1 Georgia, "Noto Serif SC", serif;
+  letter-spacing: -.03em;
+}
+
+.quiet-pass-language {
+  min-width: 64px;
+  min-height: 40px;
+  border: 1px solid var(--quiet-line);
+  border-radius: 999px;
+  color: rgba(244, 249, 247, .86);
+  background: rgba(2, 25, 32, .46);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  font: 650 11px/1 system-ui, sans-serif;
+}
+
+.quiet-pass-card {
+  width: min(100%, 700px);
+  margin: auto;
+  padding: clamp(28px, 5vw, 58px);
+  border: 1px solid rgba(183, 234, 231, .28);
+  border-radius: clamp(26px, 5vw, 42px);
+  background: linear-gradient(150deg, rgba(6, 38, 47, .7), rgba(2, 22, 29, .82));
+  box-shadow: 0 40px 100px rgba(0, 0, 0, .38), inset 0 1px rgba(255, 255, 255, .07);
+  backdrop-filter: blur(24px) saturate(1.08);
+  animation: quiet-card-arrive .9s .12s cubic-bezier(.2, .75, .18, 1) both;
+}
+
+.quiet-pass-kicker {
+  margin: 0;
+  color: var(--quiet-aqua);
+  font: 650 10px/1.5 system-ui, sans-serif;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.quiet-pass-card h1 {
+  max-width: 570px;
+  margin: 18px 0 14px;
+  font: 400 clamp(42px, 7vw, 76px)/.98 Georgia, "Noto Serif SC", serif;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.quiet-pass-intro {
+  max-width: 520px;
+  margin: 0;
+  color: var(--quiet-muted);
+  font: 400 clamp(14px, 2vw, 17px)/1.7 "Noto Sans SC", system-ui, sans-serif;
+}
+
+.quiet-pass-player {
+  margin-top: clamp(30px, 5vw, 52px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+}
+
+.quiet-pass-play {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border: 1px solid rgba(202, 244, 240, .52);
+  border-radius: 50%;
+  color: #06242b;
+  background: rgba(181, 233, 228, .94);
+  cursor: pointer;
+  box-shadow: 0 12px 34px rgba(1, 16, 22, .4);
+}
+
+.quiet-pass-play::before {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 52%;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid currentColor;
+  transform: translate(-40%, -50%);
+}
+
+.is-playing .quiet-pass-play::before {
+  width: 13px;
+  height: 17px;
+  border: 0;
+  background: linear-gradient(90deg, currentColor 0 35%, transparent 35% 65%, currentColor 65% 100%);
+  transform: translate(-50%, -50%);
+}
+
+.quiet-pass-ripple {
+  position: absolute;
+  inset: -11px;
+  border: 1px solid rgba(169, 232, 227, .32);
+  border-radius: 50%;
+  animation: quiet-ripple 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.quiet-pass-player-copy { min-width: 0; }
+.quiet-pass-track { margin: 0 0 7px; font: 400 clamp(24px, 4vw, 34px)/1.1 Georgia, "Noto Serif SC", serif; }
+.quiet-pass-note { margin: 0; color: var(--quiet-muted); font: 500 12px/1.5 system-ui, sans-serif; }
+.quiet-pass-progress-track { height: 2px; margin-top: 18px; overflow: hidden; background: rgba(180, 226, 224, .18); }
+.quiet-pass-progress-track::after { content: ""; display: block; width: calc(var(--quiet-pass-progress, 0) * 100%); height: 100%; background: var(--quiet-aqua); transition: width .3s linear; }
+.quiet-pass-time { margin-top: 8px; display: flex; justify-content: space-between; color: rgba(222, 239, 236, .5); font: 600 10px/1.4 system-ui, sans-serif; letter-spacing: .07em; }
+
+.quiet-pass-action-label {
+  margin-top: 18px;
+  min-height: 20px;
+  color: rgba(229, 243, 239, .78);
+  font: 600 12px/1.4 system-ui, sans-serif;
+}
+
+.quiet-pass-complete,
+.quiet-pass-error {
+  margin-top: 28px;
+  padding-top: 26px;
+  border-top: 1px solid var(--quiet-line);
+}
+
+.quiet-pass-complete { animation: quiet-complete .7s cubic-bezier(.2, .75, .18, 1) both; }
+.quiet-pass-complete h2 { margin: 0 0 9px; font: 400 clamp(27px, 5vw, 40px)/1.08 Georgia, "Noto Serif SC", serif; }
+.quiet-pass-complete p,
+.quiet-pass-error p { margin: 0 0 18px; color: var(--quiet-muted); font: 400 14px/1.65 system-ui, sans-serif; }
+.quiet-pass-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.quiet-pass-secondary,
+.quiet-pass-app-link { padding: 0 18px; text-decoration: none; }
+.quiet-pass-secondary { border: 1px solid rgba(168, 227, 223, .56); color: #06242b; background: var(--quiet-aqua); cursor: pointer; }
+.quiet-pass-app-link { border: 1px solid var(--quiet-line); color: var(--quiet-ink); background: rgba(4, 31, 39, .6); }
+.quiet-pass-error button { margin-right: 12px; padding: 0; border: 0; color: var(--quiet-aqua); background: none; cursor: pointer; font: 650 12px/1.5 system-ui, sans-serif; }
+.quiet-pass-error a { color: rgba(239, 247, 244, .8); font: 550 12px/1.5 system-ui, sans-serif; }
+
+.quiet-pass-footer {
+  color: rgba(220, 239, 235, .54);
+  font: 500 10px/1.5 system-ui, sans-serif;
+  letter-spacing: .04em;
+}
+
+.quiet-pass-footer a { color: inherit; text-underline-offset: 3px; }
+
+button:focus-visible,
+a:focus-visible { outline: 2px solid #b8ece8; outline-offset: 4px; }
+
+@keyframes quiet-arrive { from { opacity: 0; transform: scale(1.09); } to { opacity: 1; transform: scale(1.035); } }
+@keyframes quiet-card-arrive { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes quiet-complete { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes quiet-ripple { 0%, 100% { opacity: .28; transform: scale(.94); } 50% { opacity: .7; transform: scale(1.08); } }
+
+@media (max-width: 560px) {
+  .quiet-pass-shell { gap: 18px; }
+  .quiet-pass-card { padding: 28px 22px; border-radius: 28px; }
+  .quiet-pass-card h1 { font-size: clamp(40px, 12.8vw, 56px); }
+  .quiet-pass-player { grid-template-columns: 72px minmax(0, 1fr); gap: 15px; }
+  .quiet-pass-play { width: 72px; height: 72px; }
+  .quiet-pass-actions { display: grid; }
+  .quiet-pass-secondary,
+  .quiet-pass-app-link { width: 100%; }
+  .quiet-pass-footer { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .quiet-pass-origin button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+  .quiet-pass-backdrop,
+  .quiet-pass-card,
+  .quiet-pass-complete,
+  .quiet-pass-ripple { animation: none !important; }
+  .quiet-pass-progress-track::after { transition: none; }
+}
