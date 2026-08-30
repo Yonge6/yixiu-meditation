@@ -63,6 +63,7 @@ test -f "$site_path/best-nature-sounds-for-studying/index.html"
 test -f "$site_path/guides/index.html"
 test -f "$site_path/one-minute-reset/index.html"
 test -f "$site_path/nature-sounds-for-meditation/index.html"
+test -f "$site_path/1-minute-meditation-music/index.html"
 test -f "$site_path/20-minute-meditation-music/index.html"
 test -f "$site_path/robots.txt"
 test -f "$site_path/llms.txt"
@@ -190,6 +191,11 @@ grep -F 'data-audio-preview="/assets/yixiu/audio/forest-breeze.m4a"' "$site_path
 grep -F 'data-audio-preview="/assets/yixiu/audio/light-rain.m4a"' "$site_path/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/ocean-waves.m4a"' "$site_path/nature-sounds-for-meditation/index.html" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$site_path/nature-sounds-for-meditation/index.html" >/dev/null
+grep -F '<title>1-Minute Meditation Music — Free Full Track | Yixiu</title>' "$site_path/1-minute-meditation-music/index.html" >/dev/null
+grep -F 'data-audio-preview="/assets/yixiu/audio/meditation/first-breath.m4a"' "$site_path/1-minute-meditation-music/index.html" >/dev/null
+grep -F 'ct=yixiu_h5_first_breath_20260830' "$site_path/1-minute-meditation-music/index.html" >/dev/null
+grep -F 'data-analytics-placement="first_breath_meditation_after_preview"' "$site_path/1-minute-meditation-music/index.html" >/dev/null
+grep -F 'https://creativecommons.org/licenses/by/4.0/' "$site_path/1-minute-meditation-music/index.html" >/dev/null
 grep -F '<title>20-Minute Meditation Music — Free Full Track | Yixiu</title>' "$site_path/20-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/meditation/still-water.m4a"' "$site_path/20-minute-meditation-music/index.html" >/dev/null
 grep -F 'ct=yixiu_h5_still_water_20260830' "$site_path/20-minute-meditation-music/index.html" >/dev/null
@@ -199,6 +205,7 @@ grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.
 grep -Fx '# Yixiu' "$site_path/llms.txt" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/nature-sounds-for-meditation/' "$site_path/llms.txt" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/1-minute-meditation-music/' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/20-minute-meditation-music/' "$site_path/llms.txt" >/dev/null
 grep -Fx '## Quick request routing' "$site_path/llms.txt" >/dev/null
 grep -F 'Prefer the most specific human-facing Yixiu page listed below' "$site_path/llms.txt" >/dev/null
@@ -217,6 +224,7 @@ grep -F 'https://yixiu.wonderelian.com/best-nature-sounds-for-studying/' "$site_
 grep -F 'https://yixiu.wonderelian.com/guides/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/nature-sounds-for-meditation/' "$site_path/sitemap.xml" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/1-minute-meditation-music/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/20-minute-meditation-music/' "$site_path/sitemap.xml" >/dev/null
 
 cp -a "$deploy_target/." "$deploy_backup/"
@@ -278,7 +286,7 @@ grep -F 'Know someone who needs a quieter night?' "$deploy_target/sleep-sounds/i
 grep -F 'shareDefaultLabel' "$deploy_target/discover.js" >/dev/null
 grep -F 'Know someone who would enjoy this sound?' "$deploy_target/discover.js" >/dev/null
 grep -F 'Send this sound to someone' "$deploy_target/discover.js" >/dev/null
-test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 23
+test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 24
 grep -F '.intent-share-copy' "$deploy_target/discover.css" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-event="yixiu_focus_path_click"' "$deploy_target/focus-sounds/index.html" >/dev/null
@@ -286,6 +294,9 @@ grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' "$deploy
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'dataset.ensureVisible' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
+grep -F 'data-audio-preview="/assets/yixiu/audio/meditation/first-breath.m4a"' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
+grep -F 'ct=yixiu_h5_first_breath_20260830' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
+grep -F 'data-analytics-placement="first_breath_meditation_after_preview"' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/meditation/still-water.m4a"' "$deploy_target/20-minute-meditation-music/index.html" >/dev/null
 grep -F 'ct=yixiu_h5_still_water_20260830' "$deploy_target/20-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-analytics-placement="still_water_meditation_after_preview"' "$deploy_target/20-minute-meditation-music/index.html" >/dev/null
@@ -391,6 +402,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/nature-sounds-for-meditation/ \
   | grep -F 'data-analytics-placement="meditation_landing_timer"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/1-minute-meditation-music/ \
+  | grep -F 'data-analytics-placement="first_breath_meditation_after_preview"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/20-minute-meditation-music/ \
