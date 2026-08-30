@@ -538,7 +538,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/waterfall-sounds-for-noise-masking\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/river-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-nature-sounds-for-studying\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/guides\/<\/loc><lastmod>2026-08-30<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-when-iphone-locked\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
@@ -953,16 +953,24 @@ test("guides hub organizes every English intent page and exposes a real preview 
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
-  assert.match(title, /^Nature Sound Guides/);
+  assert.match(title, /^Choose Nature Sounds/);
   assert.equal(h1Count, 1);
   assert.equal(collection.mainEntity["@id"], itemList["@id"]);
   assert.equal(itemList.itemListElement.length, 23);
   assert.equal(itemList.itemListElement[0].name, "Rain Sounds Black Screen");
-  assert.equal(faq.mainEntity.length, 3);
+  assert.equal(faq.mainEntity.length, 4);
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/river-flow\.m4a"/);
   assert.match(html, /<h3>Rain sounds black screen<\/h3>/);
   assert.match(html, /15-, 30- or 60-minute timer, then cover the open page with a black screen/);
+  assert.match(html, /<h2 id="duration-choice-title">One minute or twenty\?<\/h2>/);
+  assert.match(html, /data-analytics-placement="guides_duration_first_breath"/);
+  assert.match(html, /data-analytics-placement="guides_duration_still_water"/);
+  assert.match(html, /ct=yixiu_h5_20260827/);
+  assert.match(html, /data-analytics-placement="guides_duration_choice"/);
+  assert.match(html, /Both complete tracks play free on the web with no account, ads or spoken guidance/);
+  assert.equal(faq.mainEntity[3].name, "Should I choose one minute or 20 minutes of meditation music?");
+  assert.match(faq.mainEntity[3].acceptedAnswer.text, /Both play free online without an account, ads or spoken guidance/);
   for (const route of ["best-sleep-sounds", "sleep-sounds", "rain-sounds-when-iphone-locked", "thunderstorm-sounds-for-sleep", "wind-sounds-for-sleeping", "underwater-white-noise-for-sleep", "ocean-waves-for-sleeping", "forest-sounds-for-sleep", "focus-sounds", "morning-bird-sounds-for-focus", "forest-sounds-for-focus", "rain-sounds-for-reading", "rain-sounds-for-studying", "white-noise-for-studying", "river-sounds-for-studying", "best-nature-sounds-for-studying", "ocean-waves-for-focus", "mountain-stream-sounds-for-focus", "waterfall-sounds-for-noise-masking", "one-minute-reset", "nature-sounds-for-meditation", "1-minute-meditation-music", "20-minute-meditation-music"]) {
     assert.match(html, new RegExp(`href="/${route}/"`));
   }
