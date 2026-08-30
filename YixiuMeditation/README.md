@@ -35,6 +35,22 @@ xcodebuild \
   build
 ```
 
+### 内部 Plus 体验包
+
+真机内部体验可以在 Debug 编译中增加 `YIXIU_INTERNAL_PLUS` 条件：
+
+```sh
+xcodebuild \
+  -project YixiuMeditation.xcodeproj \
+  -scheme YixiuMeditation \
+  -configuration Debug \
+  -destination 'generic/platform=iOS' \
+  SWIFT_ACTIVE_COMPILATION_CONDITIONS='DEBUG YIXIU_INTERNAL_PLUS' \
+  build
+```
+
+该标志只在 Debug 下生效，会显示“体验资格”并解锁全部声音；Release / App Store 编译仍只认 Apple 已验证的订阅与老用户权益。
+
 ## 当前验证
 
 - iOS Simulator Debug 构建通过

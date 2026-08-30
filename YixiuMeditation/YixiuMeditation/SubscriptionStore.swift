@@ -26,6 +26,13 @@ final class SubscriptionStore: ObservableObject {
 
     var hasPlus: Bool { accessLevel == .plus }
     var hasLegacyAccess: Bool { accessLevel == .legacy }
+    var isInternalPlusExperience: Bool {
+        #if DEBUG
+        forcedAccessLevel == .plus
+        #else
+        false
+        #endif
+    }
 
     private let defaults: UserDefaults
     private let forcedAccessLevel: YixiuAccessLevel?
@@ -35,7 +42,9 @@ final class SubscriptionStore: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        #if DEBUG
+        #if DEBUG && YIXIU_INTERNAL_PLUS
+        forcedAccessLevel = ProcessInfo.processInfo.arguments.contains("-YixiuForceFreeAccess") ? .free : .plus
+        #elseif DEBUG
         if ProcessInfo.processInfo.arguments.contains("-YixiuForceFreeAccess") {
             forcedAccessLevel = .free
         } else if ProcessInfo.processInfo.arguments.contains("-YixiuForcePlusAccess") {
