@@ -633,16 +633,7 @@ struct SoundLibraryView: View {
                 .stroke(appState.scene == scene ? YixiuTheme.aqua : YixiuTheme.hairline, lineWidth: 0.8)
         )
         .overlay(alignment: .topLeading) {
-            if !subscriptionStore.canAccess(scene) {
-                Label("PLUS", systemImage: "lock.fill")
-                    .font(YixiuTheme.sans(8, weight: .semibold))
-                    .tracking(0.8)
-                    .foregroundStyle(YixiuTheme.deepWater)
-                    .padding(.horizontal, 9)
-                    .frame(height: 26)
-                    .background(Capsule().fill(YixiuTheme.aquaStrong))
-                    .padding(9)
-            } else if SubscriptionAccessPolicy.freeScenes.contains(scene) {
+            if SubscriptionAccessPolicy.freeScenes.contains(scene) {
                 Text("FREE")
                     .font(YixiuTheme.sans(8, weight: .semibold))
                     .tracking(0.8)
@@ -651,6 +642,19 @@ struct SoundLibraryView: View {
                     .frame(height: 26)
                     .background(Capsule().fill(YixiuTheme.aquaStrong))
                     .padding(9)
+            } else {
+                Image(systemName: "diamond.fill")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(YixiuTheme.deepWater)
+                    .frame(width: 26, height: 26)
+                    .background(Circle().fill(YixiuTheme.aquaStrong))
+                    .overlay(
+                        Circle()
+                            .stroke(YixiuTheme.moon.opacity(0.36), lineWidth: 0.8)
+                    )
+                    .shadow(color: YixiuTheme.aqua.opacity(0.34), radius: 8)
+                    .padding(9)
+                    .accessibilityHidden(true)
             }
         }
     }
