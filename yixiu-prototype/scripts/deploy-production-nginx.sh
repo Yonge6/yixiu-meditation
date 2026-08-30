@@ -116,6 +116,11 @@ grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/waterfall-sounds
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/guides/index.html" >/dev/null
+grep -F '/discover.css?v=20260830-duration-choice' "$site_path/guides/index.html" >/dev/null
+grep -F '<h2 id="duration-choice-title">One minute or twenty?</h2>' "$site_path/guides/index.html" >/dev/null
+grep -F 'data-analytics-placement="guides_duration_first_breath"' "$site_path/guides/index.html" >/dev/null
+grep -F 'data-analytics-placement="guides_duration_still_water"' "$site_path/guides/index.html" >/dev/null
+grep -F 'data-analytics-placement="guides_duration_choice"' "$site_path/guides/index.html" >/dev/null
 grep -F 'ppid=6c015245-76ff-4266-8837-5a0ffc289b9c' "$site_path/one-minute-reset/index.html" >/dev/null
 grep -F 'data-audio-preview=' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-preview-timer' "$site_path/sleep-sounds/index.html" >/dev/null
@@ -294,6 +299,11 @@ grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' "$deploy
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'dataset.ensureVisible' "$deploy_target/discover.js" >/dev/null
 grep -F 'data-analytics-placement="meditation_landing_timer"' "$deploy_target/nature-sounds-for-meditation/index.html" >/dev/null
+grep -F '/discover.css?v=20260830-duration-choice' "$deploy_target/guides/index.html" >/dev/null
+grep -F '<h2 id="duration-choice-title">One minute or twenty?</h2>' "$deploy_target/guides/index.html" >/dev/null
+grep -F 'data-analytics-placement="guides_duration_first_breath"' "$deploy_target/guides/index.html" >/dev/null
+grep -F 'data-analytics-placement="guides_duration_still_water"' "$deploy_target/guides/index.html" >/dev/null
+grep -F 'data-analytics-placement="guides_duration_choice"' "$deploy_target/guides/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/meditation/first-breath.m4a"' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
 grep -F 'ct=yixiu_h5_first_breath_20260830' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-analytics-placement="first_breath_meditation_after_preview"' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
@@ -402,6 +412,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/nature-sounds-for-meditation/ \
   | grep -F 'data-analytics-placement="meditation_landing_timer"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/guides/ \
+  | grep -F 'data-analytics-placement="guides_duration_choice"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/1-minute-meditation-music/ \
