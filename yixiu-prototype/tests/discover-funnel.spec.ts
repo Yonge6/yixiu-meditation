@@ -744,3 +744,110 @@ test("cancelling the native share sheet does not record a share", async ({ page 
   ));
   expect(shareEvents).not.toContainEqual(expect.objectContaining({ event: "yixiu_share" }));
 });
+
+test("Guides duration choice shares an attributed referral and Pinterest intent", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async (data: ShareData) => {
+        (window as typeof window & { __durationSharedData?: ShareData }).__durationSharedData = data;
+      },
+    });
+  });
+  await page.goto("/guides/index.html", { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => {
+    const state = window as typeof window & { __durationShareEvents?: Array<Record<string, unknown>> };
+    state.__durationShareEvents = [];
+    window.addEventListener("yixiu:analytics", ((event: CustomEvent) => {
+      state.__durationShareEvents?.push(event.detail);
+    }) as EventListener);
+    document.addEventListener("click", (event) => {
+      if ((event.target as Element | null)?.closest?.("[data-pinterest-link]")) event.preventDefault();
+    }, true);
+  });
+
+  const surface = page.locator("[data-share-surface]");
+  const share = surface.locator("[data-share-button]");
+  const pinterest = surface.getByRole("link", { name: "Save this meditation duration choice to Pinterest" });
+
+  await share.click();
+  await expect(share).toHaveText("Shared");
+  const nativeResult = await page.evaluate(() => ({
+    data: (window as typeof window & { __durationSharedData?: ShareData }).__durationSharedData,
+    events: (window as typeof window & { __durationShareEvents?: Array<Record<string, unknown>> }).__durationShareEvents,
+  }));
+  expect(nativeResult.data?.url).toBe(
+    "https://yixiu.wonderelian.com/guides/?utm_source=share&utm_medium=referral&utm_campaign=meditation_music&utm_content=guides_duration_share",
+  );
+  expect(nativeResult.events).toContainEqual(expect.objectContaining({
+    event: "yixiu_share",
+    share_method: "native",
+    placement: "guides_duration_share",
+  }));
+
+  const pinterestIntent = new URL(await pinterest.getAttribute("href") || "");
+  expect(pinterestIntent.searchParams.get("url")).toBe(
+    "https://yixiu.wonderelian.com/guides/?utm_source=pinterest&utm_medium=organic_share&utm_campaign=meditation_music&utm_content=guides_duration_pinterest",
+  );
+  expect(pinterestIntent.searchParams.get("media")).toBe(
+    "https://yixiu.wonderelian.com/assets/yixiu/meditation-duration-choice-pinterest.jpg",
+  );
+  await pinterest.click();
+  const pinterestEvents = await page.evaluate(() => (
+    (window as typeof window & { __durationShareEvents?: Array<Record<string, unknown>> }).__durationShareEvents
+  ));
+  expect(pinterestEvents).toContainEqual(expect.objectContaining({
+    event: "yixiu_share",
+    share_method: "pinterest_intent",
+    placement: "guides_duration_pinterest",
+  }));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("Guides duration choice copies its attributed referral when native sharing is unavailable", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async (value: string) => {
+          (window as typeof window & { __durationCopiedUrl?: string }).__durationCopiedUrl = value;
+        },
+      },
+    });
+  });
+  await page.goto("/guides/index.html", { waitUntil: "domcontentloaded" });
+  const share = page.locator("[data-share-surface] [data-share-button]");
+  await share.click();
+  await expect(share).toHaveText("Link copied");
+  expect(await page.evaluate(() => (
+    (window as typeof window & { __durationCopiedUrl?: string }).__durationCopiedUrl
+  ))).toBe(
+    "https://yixiu.wonderelian.com/guides/?utm_source=share&utm_medium=referral&utm_campaign=meditation_music&utm_content=guides_duration_share",
+  );
+});
+
+test("Guides duration choice cancellation records no share", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async () => {
+        throw new DOMException("Share cancelled", "AbortError");
+      },
+    });
+  });
+  await page.goto("/guides/index.html", { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => {
+    const state = window as typeof window & { __durationCancelledEvents?: Array<Record<string, unknown>> };
+    state.__durationCancelledEvents = [];
+    window.addEventListener("yixiu:analytics", ((event: CustomEvent) => {
+      state.__durationCancelledEvents?.push(event.detail);
+    }) as EventListener);
+  });
+  const share = page.locator("[data-share-surface] [data-share-button]");
+  await share.click();
+  await expect(share).toHaveText("Share this choice");
+  expect(await page.evaluate(() => (
+    (window as typeof window & { __durationCancelledEvents?: Array<Record<string, unknown>> }).__durationCancelledEvents
+  ))).not.toContainEqual(expect.objectContaining({ event: "yixiu_share" }));
+});

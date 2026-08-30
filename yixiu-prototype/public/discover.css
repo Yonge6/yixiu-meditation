@@ -300,6 +300,22 @@ a { color: inherit; }
 .duration-choice-footer p { max-width: 560px; margin: 0; color: rgba(243,245,239,.68); font: 500 13px/1.6 system-ui, sans-serif; }
 .duration-choice-footer .intent-button { flex: 0 0 auto; }
 
+.duration-choice-share {
+  padding-top: 22px;
+  border-top: 1px solid rgba(151,218,219,.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.duration-choice-share > p { max-width: 470px; margin: 0; color: rgba(243,245,239,.78); font: 500 13px/1.6 system-ui, sans-serif; }
+.duration-choice-share-actions { display: flex; flex: 0 0 auto; gap: 10px; }
+.duration-choice-share .intent-share,
+.duration-choice-share .intent-pinterest { min-height: 48px; margin: 0; }
+.duration-choice-share .intent-share:focus-visible,
+.duration-choice-share .intent-pinterest:focus-visible { outline: 2px solid #a6e8e8; outline-offset: 3px; }
+
 .guide-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -450,6 +466,10 @@ a { color: inherit; }
   .duration-choice-copy { padding: 20px; }
   .duration-choice-footer { align-items: stretch; flex-direction: column; }
   .duration-choice-footer .intent-button { width: 100%; }
+  .duration-choice-share { align-items: stretch; flex-direction: column; }
+  .duration-choice-share-actions { display: grid; }
+  .duration-choice-share .intent-share,
+  .duration-choice-share .intent-pinterest { width: 100%; }
   .guide-grid,
   .guide-grid.three { grid-template-columns: 1fr; }
   .guide-card { min-height: 0; }
