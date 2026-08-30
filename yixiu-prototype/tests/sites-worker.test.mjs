@@ -1398,6 +1398,12 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/spring-creek\.webp/);
   assert.match(script, /assets\/yixiu\/audio\/sunrise-river\.m4a/);
   assert.match(script, /data-analytics-placement=\"meditation_landing_timer\"/);
+  assert.match(script, /discover\.css\?v=20260830-duration-choice/);
+  assert.match(script, /duration-choice-title/);
+  assert.equal((script.match(/data-analytics-placement=\"guides_duration_first_breath\"/g) || []).length, 2);
+  assert.equal((script.match(/data-analytics-placement=\"guides_duration_still_water\"/g) || []).length, 2);
+  assert.equal((script.match(/data-analytics-placement=\"guides_duration_choice\"/g) || []).length, 3);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/guides\//);
   assert.match(script, /1-minute-meditation-music\/index\.html/);
   assert.match(script, /assets\/yixiu\/audio\/meditation\/first-breath\.m4a/);
   assert.match(script, /ct=yixiu_h5_first_breath_20260830/);
