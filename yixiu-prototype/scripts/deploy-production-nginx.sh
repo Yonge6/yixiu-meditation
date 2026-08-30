@@ -93,7 +93,7 @@ grep -FR 'yixiu_h5_music_plus_20260830' "$site_path/assets" >/dev/null
 grep -FR 'still-water.m4a' "$site_path/assets" >/dev/null
 grep -FR '14 NATURE SOUNDS' "$site_path/assets" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
-test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 24
+test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 25
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$site_path/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$site_path/index.html" >/dev/null
 test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 25
@@ -250,7 +250,7 @@ fi
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$deploy_target/index.html" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
-test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 24
+test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 25
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$deploy_target/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$deploy_target/index.html" >/dev/null
 test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 25
