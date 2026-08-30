@@ -96,7 +96,7 @@ grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
 test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 25
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$site_path/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$site_path/index.html" >/dev/null
-test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 25
+test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 26
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$site_path/index.html" >/dev/null
@@ -253,7 +253,7 @@ grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
 test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 25
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$deploy_target/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$deploy_target/index.html" >/dev/null
-test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 25
+test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 26
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -Fx '# Yixiu' "$deploy_target/llms.txt" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$deploy_target/llms.txt" >/dev/null
