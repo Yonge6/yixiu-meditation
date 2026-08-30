@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AppState: ObservableObject {
-    @Published var language: AppLanguage = .zh {
+    @Published var language: AppLanguage = .en {
         didSet { defaults.set(language.rawValue, forKey: "language") }
     }
     @Published var scene: MeditationScene = .ocean {
