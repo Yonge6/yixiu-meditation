@@ -1031,10 +1031,14 @@ test("free online sound machine serves 10 real recordings with a truthful timer 
   assert.equal(webapp.isAccessibleForFree, true);
   assert.equal(itemList.numberOfItems, 10);
   assert.equal(itemList.itemListElement.length, 10);
+  assert.equal(itemList.itemListElement[3].url, "https://yixiu.wonderelian.com/thunderstorm-sounds-for-sleep/");
+  assert.equal(itemList.itemListElement[6].url, "https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/");
   assert.equal(software.softwareVersion, "1.5");
   assert.equal(faq.mainEntity.length, 4);
   assert.match(html, /ct=yixiu_h5_20260827/);
   assert.match(html, /data-analytics-placement="sound_machine_after_preview"/);
+  assert.match(html, /href="\/thunderstorm-sounds-for-sleep\/">Thunderstorm sounds for sleep guide/);
+  assert.match(html, /href="\/waterfall-sounds-for-noise-masking\/">Waterfall sounds for noise masking guide/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee|insomnia/i);
 

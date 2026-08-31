@@ -112,6 +112,8 @@ grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$site_path
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_path/best-sleep-sounds/index.html" >/dev/null
 grep -F '<title>Free Online Sound Machine — Nature Sounds &amp; Timer | Yixiu</title>' "$site_path/free-online-sound-machine/index.html" >/dev/null
 grep -F 'data-analytics-placement="sound_machine_after_preview"' "$site_path/free-online-sound-machine/index.html" >/dev/null
+grep -F 'href="/thunderstorm-sounds-for-sleep/">Thunderstorm sounds for sleep guide' "$site_path/free-online-sound-machine/index.html" >/dev/null
+grep -F 'href="/waterfall-sounds-for-noise-masking/">Waterfall sounds for noise masking guide' "$site_path/free-online-sound-machine/index.html" >/dev/null
 test "$(grep -o 'data-audio-preview="[^"]*\.m4a"' "$site_path/free-online-sound-machine/index.html" | wc -l)" -eq 10
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
@@ -324,6 +326,8 @@ test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/dis
 grep -F '.intent-share-copy' "$deploy_target/discover.css" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="sound_machine_after_preview"' "$deploy_target/free-online-sound-machine/index.html" >/dev/null
+grep -F 'href="/thunderstorm-sounds-for-sleep/">Thunderstorm sounds for sleep guide' "$deploy_target/free-online-sound-machine/index.html" >/dev/null
+grep -F 'href="/waterfall-sounds-for-noise-masking/">Waterfall sounds for noise masking guide' "$deploy_target/free-online-sound-machine/index.html" >/dev/null
 grep -F 'data-analytics-event="yixiu_focus_path_click"' "$deploy_target/focus-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' "$deploy_target/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
