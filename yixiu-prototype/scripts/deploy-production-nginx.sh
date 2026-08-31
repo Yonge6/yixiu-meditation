@@ -68,6 +68,7 @@ test -f "$site_path/1-minute-meditation-music/index.html"
 test -f "$site_path/20-minute-meditation-music/index.html"
 test -f "$site_path/gift/first-breath/index.html"
 test -f "$site_path/gift/still-water/index.html"
+test -f "$site_path/gift/window-rain/index.html"
 test -f "$site_path/quiet-pass.js"
 test -f "$site_path/quiet-pass.css"
 test -f "$site_path/robots.txt"
@@ -226,11 +227,17 @@ grep -F 'data-quiet-pass-origin="first-breath"' "$site_path/1-minute-meditation-
 grep -F 'data-quiet-pass-threshold="60"' "$site_path/1-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-quiet-pass-origin="still-water"' "$site_path/20-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-quiet-pass-threshold="180"' "$site_path/20-minute-meditation-music/index.html" >/dev/null
+grep -F 'data-quiet-pass-origin="window-rain"' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-quiet-pass-scene-key="window"' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-quiet-pass-threshold="60"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F '<title>Someone Sent You First Breath — A Quiet Minute | Yixiu</title>' "$site_path/gift/first-breath/index.html" >/dev/null
 grep -F '<title>Someone Sent You Still Water — A Quiet Moment | Yixiu</title>' "$site_path/gift/still-water/index.html" >/dev/null
+grep -F '<title>Someone Sent You Window Rain — A Quiet Moment | Yixiu</title>' "$site_path/gift/window-rain/index.html" >/dev/null
 grep -F '<meta name="robots" content="noindex,follow" />' "$site_path/gift/first-breath/index.html" >/dev/null
 grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/meditation/first-breath.m4a"' "$site_path/gift/first-breath/index.html" >/dev/null
 grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/meditation/still-water.m4a"' "$site_path/gift/still-water/index.html" >/dev/null
+grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/light-rain.m4a"' "$site_path/gift/window-rain/index.html" >/dev/null
+grep -F 'data-quiet-pass-content="window_rain_gift"' "$site_path/gift/window-rain/index.html" >/dev/null
 grep -F 'ct=yixiu_quiet_pass_20260830' "$site_path/gift/first-breath/index.html" >/dev/null
 grep -F 'gift_qualified_60s' "$site_path/quiet-pass.js" >/dev/null
 grep -F 'crypto.getRandomValues' "$site_path/quiet-pass.js" >/dev/null
@@ -350,10 +357,14 @@ grep -F 'ct=yixiu_h5_still_water_20260830' "$deploy_target/20-minute-meditation-
 grep -F 'data-analytics-placement="still_water_meditation_after_preview"' "$deploy_target/20-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-quiet-pass-origin="first-breath"' "$deploy_target/1-minute-meditation-music/index.html" >/dev/null
 grep -F 'data-quiet-pass-origin="still-water"' "$deploy_target/20-minute-meditation-music/index.html" >/dev/null
+grep -F 'data-quiet-pass-origin="window-rain"' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'data-quiet-pass-threshold="60"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F '<title>Someone Sent You First Breath — A Quiet Minute | Yixiu</title>' "$deploy_target/gift/first-breath/index.html" >/dev/null
 grep -F '<title>Someone Sent You Still Water — A Quiet Moment | Yixiu</title>' "$deploy_target/gift/still-water/index.html" >/dev/null
+grep -F '<title>Someone Sent You Window Rain — A Quiet Moment | Yixiu</title>' "$deploy_target/gift/window-rain/index.html" >/dev/null
 grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/meditation/first-breath.m4a"' "$deploy_target/gift/first-breath/index.html" >/dev/null
 grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/meditation/still-water.m4a"' "$deploy_target/gift/still-water/index.html" >/dev/null
+grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/light-rain.m4a"' "$deploy_target/gift/window-rain/index.html" >/dev/null
 grep -F 'ct=yixiu_quiet_pass_20260830' "$deploy_target/gift/still-water/index.html" >/dev/null
 grep -F 'gift_qualified_60s' "$deploy_target/quiet-pass.js" >/dev/null
 grep -F '@media (prefers-reduced-motion: reduce)' "$deploy_target/quiet-pass.css" >/dev/null
@@ -491,6 +502,14 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/gift/still-water/ \
   | grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/meditation/still-water.m4a"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/gift/window-rain/ \
+  | grep -F 'data-quiet-pass-audio="/assets/yixiu/audio/light-rain.m4a"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/sleep-sounds/ \
+  | grep -F 'data-quiet-pass-origin="window-rain"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/quiet-pass.js \

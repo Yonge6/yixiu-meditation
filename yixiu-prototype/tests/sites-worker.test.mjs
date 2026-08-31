@@ -947,7 +947,7 @@ test("1-minute meditation music page serves the complete First Breath track with
   assert.doesNotMatch(html, /aggregateRating|reviewCount|cure|treat|guarantee|anxiety|insomnia/i);
 });
 
-test("quiet pass exposes two anonymous scene-specific gift pages without changing membership", async () => {
+test("quiet pass exposes three anonymous scene-specific gift pages without changing membership", async () => {
   const cases = [
     {
       route: "first-breath",
@@ -966,6 +966,15 @@ test("quiet pass exposes two anonymous scene-specific gift pages without changin
       audio: "/assets/yixiu/audio/meditation/still-water.m4a",
       source: "/20-minute-meditation-music/",
       content: "still_water_gift",
+    },
+    {
+      route: "window-rain",
+      canonical: "https://yixiu.wonderelian.com/gift/window-rain/",
+      title: "Someone Sent You Window Rain — A Quiet Moment | Yixiu",
+      image: "/assets/yixiu/window-rain.png",
+      audio: "/assets/yixiu/audio/light-rain.m4a",
+      source: "/sleep-sounds/",
+      content: "window_rain_gift",
     },
   ];
 
@@ -997,10 +1006,17 @@ test("quiet pass exposes two anonymous scene-specific gift pages without changin
 
   const firstBreath = await readFile(new URL("../public/1-minute-meditation-music/index.html", import.meta.url), "utf8");
   const stillWater = await readFile(new URL("../public/20-minute-meditation-music/index.html", import.meta.url), "utf8");
+  const windowRain = await readFile(new URL("../public/sleep-sounds/index.html", import.meta.url), "utf8");
   assert.match(firstBreath, /data-quiet-pass-origin="first-breath"/);
   assert.match(firstBreath, /data-quiet-pass-threshold="60"/);
   assert.match(stillWater, /data-quiet-pass-origin="still-water"/);
   assert.match(stillWater, /data-quiet-pass-threshold="180"/);
+  assert.match(windowRain, /data-quiet-pass-origin="window-rain"/);
+  assert.match(windowRain, /data-quiet-pass-scene-key="window"/);
+  assert.match(windowRain, /data-quiet-pass-threshold="60"/);
+  assert.match(windowRain, /data-quiet-pass-gift-path="\/gift\/window-rain\/"/);
+  assert.match(windowRain, /href="\/quiet-pass\.css\?v=20260831-window-rain"/);
+  assert.match(windowRain, /src="\/quiet-pass\.js\?v=20260831-window-rain"/);
   assert.match(firstBreath, /src="\/quiet-pass\.js\?v=20260830-quiet-pass"/);
   assert.match(stillWater, /src="\/quiet-pass\.js\?v=20260830-quiet-pass"/);
 });
@@ -1538,14 +1554,19 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /data-analytics-placement=\"still_water_meditation_after_preview\"/);
   assert.match(script, /gift\/first-breath\/index\.html/);
   assert.match(script, /gift\/still-water\/index\.html/);
+  assert.match(script, /gift\/window-rain\/index\.html/);
   assert.match(script, /Someone Sent You First Breath/);
   assert.match(script, /Someone Sent You Still Water/);
+  assert.match(script, /Someone Sent You Window Rain/);
   assert.match(script, /data-quiet-pass-origin=\"first-breath\"/);
   assert.match(script, /data-quiet-pass-threshold=\"180\"/);
+  assert.match(script, /data-quiet-pass-origin=\"window-rain\"/);
+  assert.match(script, /data-quiet-pass-audio=\"\/assets\/yixiu\/audio\/light-rain\.m4a\"/);
   assert.match(script, /ct=yixiu_quiet_pass_20260830/);
   assert.match(script, /gift_qualified_60s/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/gift\/first-breath\//);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/gift\/still-water\//);
+  assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/gift\/window-rain\//);
   assert.match(script, /site_path\/llms\.txt/);
   assert.match(script, /deploy_target\/llms\.txt/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/llms\.txt/);
