@@ -42,3 +42,28 @@ This public readback proves publication only. H5 sessions and campaign-attribute
 - Desktop Chrome mobile-width visual and interaction check succeeds.
 - Production URL returns HTTP `200` and the expected canonical, H1, 10 playable recordings and analytics placement after deployment.
 - IndexNow submission is attempted only after the production URL is live; its platform response is recorded separately from ranking or traffic outcomes.
+
+## Production acceptance
+
+Deployed from merge commit `28941cfd663a14e7c8b9095275f8ad3c99453da3`.
+
+- Pull request: `https://github.com/Yonge6/yixiu-meditation/pull/188`
+- Release ID: `20260831-28941cf-sound-machine-1110`
+- Deployment receipt: `DEPLOY_OK_YIXIU_20260831-28941cf-sound-machine-1110`
+- Archive SHA-256: `a965c2c75bc9e9cbb2157c1e227579770f6dbbe9ab9ca0bf71b9fcf476bcedc6`
+- Server backup: `/srv/wonderelian/backups/yixiu-20260831-28941cf-sound-machine-1110`
+- Retained artifacts: `/srv/wonderelian/backups/yixiu-20260831-28941cf-sound-machine-1110/release-artifacts`
+- Nginx syntax, reload, staged acceptance, deployed-file acceptance and loopback HTTPS checks passed.
+- Public page returned HTTP `200` with exactly one canonical, one matching H1, 10 audio-preview controls and App Store version `1.5`.
+- IndexNow accepted the new page, Guides, sitemap and `llms.txt` batch with HTTP `200`.
+
+Clean build and public SHA-256 values matched:
+
+- `free-online-sound-machine/index.html`: `df2d208005518b69349e0d3ac4e8db52a14bd9f7cf0c79e543f8e6b29a4158fe`
+- `guides/index.html`: `731fdcf403ee42de846957c25b609ae1c736789273a7bae8299c095ea7eb6259`
+- `sitemap.xml`: `fee9813aa667363442f4cef797aab087abcb04029fd851b910703cd93b3d810e`
+- `llms.txt`: `bdbaa52544abc459ca4866d774eeb88e2d90a569a20ba1e845ae4a049fbf3b13`
+
+Desktop Chrome production readback at `390×844` verified the exact English title, responsive first screen, all 10 sound choices, 15-minute timer selection, real Window Rain playback, post-preview sharing and App Store continuation. The timer advanced to `14:59`, the play control changed to pressed `Pause Window Rain`, and the page produced no console errors.
+
+These checks prove the release is live and usable. They do not prove search ranking, organic acquisition, a new visit or an attributed App download; the measurement boundary above remains unchanged.
