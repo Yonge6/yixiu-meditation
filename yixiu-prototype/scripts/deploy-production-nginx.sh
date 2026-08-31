@@ -61,6 +61,7 @@ test -f "$site_path/rain-sounds-for-studying/index.html"
 test -f "$site_path/white-noise-for-studying/index.html"
 test -f "$site_path/best-nature-sounds-for-studying/index.html"
 test -f "$site_path/guides/index.html"
+test -f "$site_path/free-online-sound-machine/index.html"
 test -f "$site_path/one-minute-reset/index.html"
 test -f "$site_path/nature-sounds-for-meditation/index.html"
 test -f "$site_path/1-minute-meditation-music/index.html"
@@ -98,10 +99,10 @@ grep -FR 'yixiu_h5_music_plus_20260830' "$site_path/assets" >/dev/null
 grep -FR 'still-water.m4a' "$site_path/assets" >/dev/null
 grep -FR '14 NATURE SOUNDS' "$site_path/assets" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
-test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 25
+test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.5"' {} + | wc -l)" -eq 26
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$site_path/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$site_path/index.html" >/dev/null
-test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 28
+test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 29
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$site_path/index.html" >/dev/null
@@ -109,6 +110,9 @@ grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/ind
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$site_path/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$site_path/best-sleep-sounds/index.html" >/dev/null
+grep -F '<title>Free Online Sound Machine — Nature Sounds &amp; Timer | Yixiu</title>' "$site_path/free-online-sound-machine/index.html" >/dev/null
+grep -F 'data-analytics-placement="sound_machine_after_preview"' "$site_path/free-online-sound-machine/index.html" >/dev/null
+test "$(grep -o 'data-audio-preview="[^"]*\.m4a"' "$site_path/free-online-sound-machine/index.html" | wc -l)" -eq 10
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/rain-sounds-when-iphone-locked/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/focus-sounds/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/forest-sounds-for-focus/index.html" >/dev/null
@@ -145,7 +149,7 @@ grep -F 'Know someone who needs a quieter night?' "$site_path/sleep-sounds/index
 grep -F 'shareDefaultLabel' "$site_path/discover.js" >/dev/null
 grep -F 'Know someone who would enjoy this sound?' "$site_path/discover.js" >/dev/null
 grep -F 'Send this sound to someone' "$site_path/discover.js" >/dev/null
-test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 21
+test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 22
 test "$(find "$site_path" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260830-quiet-pass-progress"' {} + | wc -l)" -eq 2
 grep -F '.intent-share-copy' "$site_path/discover.css" >/dev/null
 grep -F 'dataset.ensureVisible' "$site_path/discover.js" >/dev/null
@@ -254,6 +258,7 @@ grep -F 'https://yixiu.wonderelian.com/rain-sounds-when-iphone-locked/' "$site_p
 grep -F 'https://yixiu.wonderelian.com/nature-sounds-for-meditation/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/1-minute-meditation-music/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/20-minute-meditation-music/' "$site_path/sitemap.xml" >/dev/null
+grep -F 'https://yixiu.wonderelian.com/free-online-sound-machine/' "$site_path/sitemap.xml" >/dev/null
 
 cp -a "$deploy_target/." "$deploy_backup/"
 rsync -a "$site_path/" "$deploy_target/"
@@ -278,10 +283,10 @@ fi
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$deploy_target/index.html" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
-test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.4"' {} + | wc -l)" -eq 25
+test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.5"' {} + | wc -l)" -eq 26
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$deploy_target/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$deploy_target/index.html" >/dev/null
-test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 28
+test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 29
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -Fx '# Yixiu' "$deploy_target/llms.txt" >/dev/null
 grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$deploy_target/llms.txt" >/dev/null
@@ -314,10 +319,11 @@ grep -F 'Know someone who needs a quieter night?' "$deploy_target/sleep-sounds/i
 grep -F 'shareDefaultLabel' "$deploy_target/discover.js" >/dev/null
 grep -F 'Know someone who would enjoy this sound?' "$deploy_target/discover.js" >/dev/null
 grep -F 'Send this sound to someone' "$deploy_target/discover.js" >/dev/null
-test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 21
+test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260829-global-share-prompt"' {} + | wc -l)" -eq 22
 test "$(find "$deploy_target" -type f -name index.html -exec grep -lF 'src="/discover.js?v=20260830-quiet-pass-progress"' {} + | wc -l)" -eq 2
 grep -F '.intent-share-copy' "$deploy_target/discover.css" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-placement="sound_machine_after_preview"' "$deploy_target/free-online-sound-machine/index.html" >/dev/null
 grep -F 'data-analytics-event="yixiu_focus_path_click"' "$deploy_target/focus-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="focus_landing_mountain_stream_path"' "$deploy_target/focus-sounds/index.html" >/dev/null
 grep -F 'data-audio-preview="/assets/yixiu/audio/forest-waterfall.m4a"' "$deploy_target/best-sleep-sounds/index.html" >/dev/null
@@ -425,6 +431,10 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/best-sleep-sounds/ \
   | grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/free-online-sound-machine/ \
+  | grep -F 'data-analytics-placement="sound_machine_after_preview"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/focus-sounds/ \
