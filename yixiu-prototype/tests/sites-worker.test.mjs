@@ -1542,7 +1542,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /ct=yixiu_h5_first_breath_20260830/);
   assert.match(script, /data-analytics-placement=\"first_breath_meditation_after_preview\"/);
   assert.equal((script.match(/softwareVersion[^\n]+1\\\.5[^\n]+-eq 26/g) ?? []).length, 2);
-  assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+-eq 29/g) ?? []).length, 2);
+  assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+-eq 30/g) ?? []).length, 2);
   assert.equal((script.match(/global-share-prompt[^\n]+-eq 22/g) ?? []).length, 2);
   assert.equal((script.match(/quiet-pass-progress[^\n]+-eq 2/g) ?? []).length, 2);
   assert.match(script, /meditation-duration-choice-pinterest\.jpg/);
