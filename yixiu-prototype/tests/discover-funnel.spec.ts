@@ -170,6 +170,39 @@ test("sleep comparison switches seven real recordings and reveals its matched iP
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("sound machine starts Window Rain from the hero and still lets visitors browse and switch", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/free-online-sound-machine/index.html?utm_source=bing&utm_medium=organic", {
+    waitUntil: "domcontentloaded",
+  });
+
+  const timer = page.locator("[data-preview-timer]");
+  const heroRain = page.locator('button[data-analytics-placement="sound_machine_hero_rain"]');
+  await expect(heroRain).toBeVisible();
+  await expect(heroRain).toHaveAccessibleName("Play Window Rain");
+  await expect(heroRain).toHaveAttribute("data-audio-preview", "/assets/yixiu/audio/light-rain.m4a");
+  await heroRain.click();
+  await expect(heroRain).toHaveAttribute("aria-pressed", "true");
+  await expect(heroRain).toHaveAccessibleName("Pause Window Rain");
+  await page.clock.runFor(1_000);
+  await expect(timer.locator("[data-preview-timer-status]")).toHaveText("29:59 remaining");
+
+  const afterPreview = page.locator("[data-after-preview]");
+  await expect(afterPreview).toBeVisible();
+  await expect(afterPreview.getByRole("button", { name: "Send this sound to someone" })).toBeVisible();
+
+  const browse = page.getByRole("link", { name: "Browse all 10 sounds" });
+  await expect(browse).toHaveAttribute("href", "#sounds");
+  await browse.click();
+  await expect(page.locator("#sounds")).toBeInViewport();
+
+  const ocean = page.locator('button[data-analytics-placement="sound_machine_ocean"]');
+  await ocean.click();
+  await expect(heroRain).toHaveAttribute("aria-pressed", "false");
+  await expect(ocean).toHaveAttribute("aria-pressed", "true");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test("video search landings keep one eager player prominent in the mobile first screen", async ({ page }) => {
   for (const path of [
     "/mountain-stream-sounds-for-focus/index.html",
