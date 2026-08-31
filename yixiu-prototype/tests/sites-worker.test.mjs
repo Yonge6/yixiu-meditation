@@ -549,7 +549,7 @@ test("robots and sitemap expose the crawlable focus routes", async () => {
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-when-iphone-locked\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/rain-sounds-for-reading\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
-  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
+  assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/thunderstorm-sounds-for-sleep\/<\/loc><lastmod>2026-08-31<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/morning-bird-sounds-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/forest-sounds-for-focus\/<\/loc><lastmod>2026-08-29<\/lastmod>/);
   assert.match(sitemap, /https:\/\/yixiu\.wonderelian\.com\/wind-sounds-for-sleeping\/<\/loc><lastmod>2026-08-28<\/lastmod>/);
@@ -1150,8 +1150,9 @@ test("thunderstorm sleep page serves distant thunder and keeps every claim, sche
   const faq = schema["@graph"].find((entry) => entry["@type"] === "FAQPage");
 
   assert.ok(title.length >= 50 && title.length <= 60);
-  assert.match(title, /^Thunderstorm Sounds for Sleep/);
+  assert.equal(title, "Thunderstorm Sounds for Sleep — Free Preview | Yixiu");
   assert.ok(description.length >= 150 && description.length <= 160);
+  assert.match(description, /^Play free thunderstorm sounds for sleep:/);
   assert.equal(h1Count, 1);
   assert.equal(faqQuestions.length, 4);
   assert.equal(faq.mainEntity.length, faqQuestions.length);
@@ -1165,6 +1166,8 @@ test("thunderstorm sleep page serves distant thunder and keeps every claim, sche
   assert.match(software.downloadUrl, /id1461182261\?ppid=67cb8784-2b16-4849-b940-90fdf4d99752$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/distant-thunder\.m4a"/);
   assert.match(html, /data-analytics-placement="thunder_sleep_after_preview"/);
+  assert.match(html, /<h1>Play free thunderstorm sounds for sleep, kept at a distance\.<\/h1>/);
+  assert.match(html, /Free browser preview · No account · No ads · iPhone background playback/);
   assert.match(html, /href="\/sleep-sounds\/"/);
   assert.match(html, /href="\/ocean-waves-for-focus\/"/);
   assert.match(html, /href="\/guides\/">Guides<\/a>/);
