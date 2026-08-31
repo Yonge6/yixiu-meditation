@@ -1038,7 +1038,7 @@ test("free online sound machine serves 10 real recordings with a truthful timer 
   assert.ok(description.length >= 150 && description.length <= 160);
   assert.equal(h1Count, 1);
   assert.match(html, /<h1>A free online sound machine for the moment you have\.<\/h1>/);
-  assert.equal(previews.length, 10);
+  assert.equal(previews.length, 11);
   assert.equal(new Set(previews).size, 10);
   for (const preview of previews) await access(new URL(`../public${preview}`, import.meta.url));
   assert.match(html, /data-preview-minutes="15"/);
@@ -1052,6 +1052,8 @@ test("free online sound machine serves 10 real recordings with a truthful timer 
   assert.equal(software.softwareVersion, "1.5");
   assert.equal(faq.mainEntity.length, 4);
   assert.match(html, /ct=yixiu_h5_20260827/);
+  assert.match(html, /data-analytics-placement="sound_machine_hero_rain"/);
+  assert.match(html, /href="#sounds">Browse all 10 sounds<\/a>/);
   assert.match(html, /data-analytics-placement="sound_machine_after_preview"/);
   assert.match(html, /href="\/thunderstorm-sounds-for-sleep\/">Thunderstorm sounds for sleep guide/);
   assert.match(html, /href="\/waterfall-sounds-for-noise-masking\/">Waterfall sounds for noise masking guide/);

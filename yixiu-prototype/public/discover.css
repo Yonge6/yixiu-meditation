@@ -90,6 +90,8 @@ a { color: inherit; }
 .intent-button { min-height: 52px; padding: 0 24px; border: 1px solid rgba(159,225,225,.48); border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; color: inherit; font: 600 14px/1 system-ui, sans-serif; text-decoration: none; background: rgba(4,35,44,.5); backdrop-filter: blur(12px); cursor: pointer; }
 .intent-button.primary { color: #03232b; background: #a6e8e8; border-color: #a6e8e8; }
 .intent-button.app-store { background: rgba(3,30,38,.72); border-color: rgba(228,244,240,.42); }
+.intent-browse-link { min-height: 52px; padding: 0 8px; display: inline-flex; align-items: center; color: #d5f7f3; font: 650 13px/1 system-ui, sans-serif; text-underline-offset: 5px; }
+.intent-browse-link:focus-visible { outline: 2px solid #a6e8e8; outline-offset: 3px; border-radius: 4px; }
 .intent-button.dark-screen { background: rgba(2,18,24,.76); border-color: rgba(228,244,240,.3); }
 .intent-button.dark-screen:disabled { opacity: .44; cursor: not-allowed; }
 .intent-button:active { transform: scale(.98); }
