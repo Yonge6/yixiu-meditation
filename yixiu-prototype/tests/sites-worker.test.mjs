@@ -1045,12 +1045,17 @@ test("free online sound machine serves 10 real recordings with a truthful timer 
   assert.match(html, /data-preview-minutes="30"/);
   assert.match(html, /data-preview-minutes="60"/);
   assert.equal(webapp.isAccessibleForFree, true);
+  assert.deepEqual(webapp.alternateName, ["Free Online Noise Machine", "Free Online Noise Generator"]);
   assert.equal(itemList.numberOfItems, 10);
   assert.equal(itemList.itemListElement.length, 10);
   assert.equal(itemList.itemListElement[3].url, "https://yixiu.wonderelian.com/thunderstorm-sounds-for-sleep/");
   assert.equal(itemList.itemListElement[6].url, "https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/");
   assert.equal(software.softwareVersion, "1.5");
-  assert.equal(faq.mainEntity.length, 4);
+  assert.equal(faq.mainEntity.length, 5);
+  const noiseGeneratorFaq = faq.mainEntity.find((entry) => entry.name === "Is this the same as a free online noise generator?");
+  assert.equal(noiseGeneratorFaq.acceptedAnswer.text, "It can serve the same everyday purpose, but Yixiu plays recorded rain, water, wind, birds, thunder and underwater white noise instead of generating an adjustable electronic tone or frequency.");
+  assert.match(html, /Use it as a free online noise machine for a quiet room/);
+  assert.match(html, /<summary>Is this the same as a free online noise generator\?<\/summary><p>It can serve the same everyday purpose, but Yixiu plays recorded rain, water, wind, birds, thunder and underwater white noise instead of generating an adjustable electronic tone or frequency\.<\/p>/);
   assert.match(html, /ct=yixiu_h5_20260827/);
   assert.match(html, /data-analytics-placement="sound_machine_hero_rain"/);
   assert.match(html, /href="#sounds">Browse all 10 sounds<\/a>/);
