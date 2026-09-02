@@ -189,7 +189,9 @@ struct MeView: View {
 
     private var membershipCard: some View {
         Button {
-            if subscriptionStore.hasPlus {
+            if subscriptionStore.isInternalPlusExperience {
+                return
+            } else if subscriptionStore.hasPlus {
                 openURL(URL(string: "https://apps.apple.com/account/subscriptions")!)
             } else {
                 paywallOpen = true
@@ -229,9 +231,11 @@ struct MeView: View {
 
                 Spacer(minLength: 5)
 
-                Image(systemName: subscriptionStore.hasPlus ? "arrow.up.right" : "chevron.right")
-                    .font(YixiuTheme.sans(12, weight: .light))
-                    .foregroundStyle(YixiuTheme.mist)
+                if !subscriptionStore.isInternalPlusExperience {
+                    Image(systemName: subscriptionStore.hasPlus ? "arrow.up.right" : "chevron.right")
+                        .font(YixiuTheme.sans(12, weight: .light))
+                        .foregroundStyle(YixiuTheme.mist)
+                }
             }
             .foregroundStyle(YixiuTheme.moon)
             .padding(.horizontal, 17)
@@ -252,21 +256,30 @@ struct MeView: View {
     }
 
     private var membershipBadge: String {
+        if subscriptionStore.isInternalPlusExperience {
+            return language.text(zh: "体验资格", en: "PREVIEW")
+        }
         switch subscriptionStore.accessLevel {
-        case .plus: language.text(zh: "已订阅", en: "ACTIVE")
-        case .legacy: language.text(zh: "已保留", en: "KEPT")
-        case .free: "PLUS"
+        case .plus: return language.text(zh: "已订阅", en: "ACTIVE")
+        case .legacy: return language.text(zh: "已保留", en: "KEPT")
+        case .free: return "PLUS"
         }
     }
 
     private var membershipSubtitle: String {
+        if subscriptionStore.isInternalPlusExperience {
+            return language.text(
+                zh: "内部体验版 · 全部 24 种声音已解锁",
+                en: "Internal preview · All 24 sounds unlocked"
+            )
+        }
         switch subscriptionStore.accessLevel {
         case .plus:
-            language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
+            return language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
         case .legacy:
-            language.text(zh: "原有 14 种自然声继续保留，2 首冥想音乐免费", en: "Your 14 nature sounds remain, plus 2 free meditation tracks")
+            return language.text(zh: "原有 14 种自然声继续保留，2 首冥想音乐免费", en: "Your 14 nature sounds remain, plus 2 free meditation tracks")
         case .free:
-            language.text(zh: "5 种自然声 + 2 首冥想音乐免费聆听", en: "5 nature sounds + 2 meditation tracks are free")
+            return language.text(zh: "5 种自然声 + 2 首冥想音乐免费聆听", en: "5 nature sounds + 2 meditation tracks are free")
         }
     }
 

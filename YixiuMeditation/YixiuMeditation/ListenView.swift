@@ -255,43 +255,65 @@ struct ListenView: View {
 
     private var header: some View {
         HStack {
-            Button {
-                appState.language = appState.language == .zh ? .en : .zh
-            } label: {
-                HStack(alignment: .firstTextBaseline, spacing: 11) {
-                    Text(language == .zh ? "一休" : "YIXIU")
-                        .font(YixiuTheme.chineseDisplay(25))
-                        .tracking(2)
-                    Text(language == .zh ? "YIXIU" : "一休")
-                        .font(YixiuTheme.sans(11, weight: .regular))
-                        .tracking(4)
-                }
-                .foregroundStyle(YixiuTheme.moon)
+            HStack(alignment: .firstTextBaseline, spacing: 11) {
+                Text(language == .zh ? "一休" : "YIXIU")
+                    .font(language == .zh ? YixiuTheme.chineseDisplay(25) : YixiuTheme.englishSerif(25))
+                    .tracking(2)
+                Text(language == .zh ? "YIXIU" : "一休")
+                    .font(YixiuTheme.sans(11, weight: .regular))
+                    .tracking(4)
             }
-            .buttonStyle(.plain)
+            .foregroundStyle(YixiuTheme.moon)
+            .accessibilityElement(children: .combine)
 
             Spacer()
 
-            ShareLink(
-                item: appState.scene.shareURL(language: language),
-                subject: Text(appState.scene.shareTitle(language: language)),
-                message: Text(appState.scene.shareMessage(language: language)),
-                preview: SharePreview(
-                    appState.scene.shareTitle(language: language),
-                    image: Image(appState.scene.assetName)
-                )
-            ) {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.system(size: 17, weight: .regular))
-                    .foregroundStyle(YixiuTheme.moon)
-                    .frame(width: 44, height: 44)
-                    .background(Circle().fill(YixiuTheme.deepWater.opacity(0.34)))
-                    .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+            HStack(spacing: 8) {
+                Button {
+                    appState.language = language == .zh ? .en : .zh
+                } label: {
+                    Text(language == .en ? "中" : "EN")
+                        .font(language == .en ? YixiuTheme.chineseDisplay(15, weight: .medium) : YixiuTheme.sans(10, weight: .semibold))
+                        .tracking(language == .en ? 0 : 0.8)
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWater.opacity(0.48)))
+                        .overlay(
+                            Circle()
+                                .stroke(
+                                    LinearGradient(
+                                        colors: [YixiuTheme.moon.opacity(0.46), YixiuTheme.aqua.opacity(0.24)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 0.8
+                                )
+                        )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(language.text(zh: "切换到英文", en: "Switch to Chinese"))
+
+                ShareLink(
+                    item: appState.scene.shareURL(language: language),
+                    subject: Text(appState.scene.shareTitle(language: language)),
+                    message: Text(appState.scene.shareMessage(language: language)),
+                    preview: SharePreview(
+                        appState.scene.shareTitle(language: language),
+                        image: Image(appState.scene.assetName)
+                    )
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 17, weight: .regular))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWater.opacity(0.48)))
+                        .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                }
+                .accessibilityLabel(language.text(
+                    zh: "分享\(appState.scene.zhName)",
+                    en: "Share \(appState.scene.enName)"
+                ))
             }
-            .accessibilityLabel(language.text(
-                zh: "分享\(appState.scene.zhName)",
-                en: "Share \(appState.scene.enName)"
-            ))
         }
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity)
@@ -633,16 +655,7 @@ struct SoundLibraryView: View {
                 .stroke(appState.scene == scene ? YixiuTheme.aqua : YixiuTheme.hairline, lineWidth: 0.8)
         )
         .overlay(alignment: .topLeading) {
-            if !subscriptionStore.canAccess(scene) {
-                Label("PLUS", systemImage: "lock.fill")
-                    .font(YixiuTheme.sans(8, weight: .semibold))
-                    .tracking(0.8)
-                    .foregroundStyle(YixiuTheme.deepWater)
-                    .padding(.horizontal, 9)
-                    .frame(height: 26)
-                    .background(Capsule().fill(YixiuTheme.aquaStrong))
-                    .padding(9)
-            } else if SubscriptionAccessPolicy.freeScenes.contains(scene) {
+            if SubscriptionAccessPolicy.freeScenes.contains(scene) {
                 Text("FREE")
                     .font(YixiuTheme.sans(8, weight: .semibold))
                     .tracking(0.8)
@@ -651,7 +664,104 @@ struct SoundLibraryView: View {
                     .frame(height: 26)
                     .background(Capsule().fill(YixiuTheme.aquaStrong))
                     .padding(9)
+            } else {
+                PremiumGemBadge()
+                    .padding(9)
+                    .accessibilityHidden(true)
             }
         }
+    }
+}
+
+private struct PremiumGemBadge: View {
+    var body: some View {
+        ZStack {
+            CutCornerMedallion()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            YixiuTheme.moon.opacity(0.16),
+                            YixiuTheme.deepWaterSoft.opacity(0.94),
+                            YixiuTheme.deepWater.opacity(0.98)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            CutCornerMedallion()
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            YixiuTheme.moon.opacity(0.78),
+                            YixiuTheme.aquaStrong.opacity(0.46),
+                            YixiuTheme.mist.opacity(0.18)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 0.8
+                )
+
+            FacetedGemShape()
+                .stroke(
+                    LinearGradient(
+                        colors: [YixiuTheme.moon, YixiuTheme.aquaStrong, YixiuTheme.mist],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    style: StrokeStyle(lineWidth: 1.05, lineCap: .round, lineJoin: .round)
+                )
+                .frame(width: 16, height: 14)
+        }
+        .frame(width: 30, height: 30)
+        .shadow(color: .black.opacity(0.34), radius: 5, y: 2)
+        .shadow(color: YixiuTheme.aqua.opacity(0.16), radius: 7)
+        .drawingGroup()
+    }
+}
+
+private struct CutCornerMedallion: Shape {
+    func path(in rect: CGRect) -> Path {
+        let cut = min(rect.width, rect.height) * 0.20
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX + cut, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX - cut, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY + cut))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - cut))
+        path.addLine(to: CGPoint(x: rect.maxX - cut, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX + cut, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY - cut))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + cut))
+        path.closeSubpath()
+        return path
+    }
+}
+
+private struct FacetedGemShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let left = CGPoint(x: rect.minX + 0.8, y: rect.minY + rect.height * 0.34)
+        let topLeft = CGPoint(x: rect.minX + rect.width * 0.26, y: rect.minY + 0.8)
+        let topRight = CGPoint(x: rect.maxX - rect.width * 0.26, y: rect.minY + 0.8)
+        let right = CGPoint(x: rect.maxX - 0.8, y: rect.minY + rect.height * 0.34)
+        let crown = CGPoint(x: rect.midX, y: rect.minY + rect.height * 0.34)
+        let tip = CGPoint(x: rect.midX, y: rect.maxY - 0.8)
+
+        var path = Path()
+        path.move(to: left)
+        path.addLine(to: topLeft)
+        path.addLine(to: topRight)
+        path.addLine(to: right)
+        path.addLine(to: tip)
+        path.closeSubpath()
+
+        path.move(to: left)
+        path.addLine(to: right)
+        path.move(to: topLeft)
+        path.addLine(to: crown)
+        path.addLine(to: topRight)
+        path.move(to: crown)
+        path.addLine(to: tip)
+        return path
     }
 }
