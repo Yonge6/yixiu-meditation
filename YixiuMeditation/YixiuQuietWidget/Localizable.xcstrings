@@ -1,0 +1,20 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Breathe in · Hold · Breathe out" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "吸气 · 停留 · 呼气" } } } },
+    "Complete" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已完成" } } } },
+    "Done" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } } } },
+    "Finish Quiet Minute" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束一分钟安静" } } } },
+    "Live Activities are turned off for Yixiu." : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "一休的实时活动已被关闭。" } } } },
+    "One-Minute Pause" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "一分钟安静" } } } },
+    "Quiet Minute" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "安静一分钟" } } } },
+    "Quiet minute complete" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "一分钟安静已完成" } } } },
+    "Quiet minute in progress" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在安静一分钟" } } } },
+    "Ready" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "就绪" } } } },
+    "Running" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "进行中" } } } },
+    "Start a quiet 60-second breathing pause." : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始一次安静的 60 秒呼吸停顿。" } } } },
+    "Start or stop a quiet 60-second breathing pause." : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始或结束一次安静的 60 秒呼吸停顿。" } } } },
+    "Time remaining" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "剩余时间" } } } }
+  },
+  "version" : "1.0"
+}
