@@ -12,6 +12,11 @@ struct YixiuMeditationApp: App {
                 .environmentObject(subscriptionStore)
                 .preferredColorScheme(.dark)
                 .task {
+#if DEBUG
+                    if ProcessInfo.processInfo.arguments.contains("-yixiuStartQuietMinute") {
+                        try? await QuietMinuteActivityManager.start()
+                    }
+#endif
                     appState.enforceAccessLevel(subscriptionStore.accessLevel)
                     await subscriptionStore.start()
                     appState.enforceAccessLevel(subscriptionStore.accessLevel)

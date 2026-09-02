@@ -2,6 +2,8 @@
 *.xcuserstate
 xcuserdata/
 DerivedData/
+YixiuMeditation/.build/
+.artifacts/
 
 yixiu-prototype/node_modules/
 yixiu-prototype/dist/

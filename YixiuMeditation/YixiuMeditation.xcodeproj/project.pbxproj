@@ -23,7 +23,43 @@
 		A2000000000000000000000E /* SubscriptionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000010 /* SubscriptionStore.swift */; };
 		A2000000000000000000000F /* PlusPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* PlusPaywallView.swift */; };
 		A20000000000000000000010 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000004 /* InfoPlist.strings */; };
+		B20000000000000000000001 /* QuietMinuteActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* QuietMinuteActivityAttributes.swift */; };
+		B20000000000000000000002 /* QuietMinuteIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* QuietMinuteIntents.swift */; };
+		B20000000000000000000003 /* OneMinuteControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* OneMinuteControl.swift */; };
+		B20000000000000000000004 /* QuietMinuteLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* QuietMinuteLiveActivity.swift */; };
+		B20000000000000000000005 /* YixiuQuietWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* YixiuQuietWidgetBundle.swift */; };
+		B20000000000000000000006 /* QuietMinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000008 /* QuietMinuteSchedule.swift */; };
+		B20000000000000000000007 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000007 /* Localizable.xcstrings */; };
+		B20000000000000000000008 /* YixiuQuietWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* YixiuQuietWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B20000000000000000000009 /* QuietMinuteActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000A /* QuietMinuteActivityManager.swift */; };
+		B2000000000000000000000A /* QuietMinuteActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* QuietMinuteActivityAttributes.swift */; };
+		B2000000000000000000000B /* QuietMinuteActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000A /* QuietMinuteActivityManager.swift */; };
+		B2000000000000000000000C /* QuietMinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000008 /* QuietMinuteSchedule.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B70000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A60000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B50000000000000000000001;
+			remoteInfo = YixiuQuietWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B30000000000000000000004 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B20000000000000000000008 /* YixiuQuietWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A10000000000000000000001 /* YixiuMeditationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YixiuMeditationApp.swift; sourceTree = "<group>"; };
@@ -46,10 +82,27 @@
 		A10000000000000000000012 /* YixiuPlus.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = YixiuPlus.storekit; sourceTree = "<group>"; };
 		A10000000000000000000013 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		A10000000000000000000014 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B10000000000000000000001 /* YixiuQuietWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = YixiuQuietWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B10000000000000000000002 /* QuietMinuteActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteActivityAttributes.swift; sourceTree = "<group>"; };
+		B10000000000000000000003 /* QuietMinuteIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteIntents.swift; sourceTree = "<group>"; };
+		B10000000000000000000004 /* OneMinuteControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneMinuteControl.swift; sourceTree = "<group>"; };
+		B10000000000000000000005 /* QuietMinuteLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteLiveActivity.swift; sourceTree = "<group>"; };
+		B10000000000000000000006 /* YixiuQuietWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YixiuQuietWidgetBundle.swift; sourceTree = "<group>"; };
+		B10000000000000000000007 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		B10000000000000000000008 /* QuietMinuteSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteSchedule.swift; sourceTree = "<group>"; };
+		B10000000000000000000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B1000000000000000000000A /* QuietMinuteActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteActivityManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A30000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B30000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -63,6 +116,8 @@
 			isa = PBXGroup;
 			children = (
 				A40000000000000000000002 /* YixiuMeditation */,
+				B40000000000000000000001 /* YixiuQuietWidget */,
+				B40000000000000000000002 /* Shared */,
 				A40000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -96,8 +151,32 @@
 			isa = PBXGroup;
 			children = (
 				A1000000000000000000000B /* YixiuMeditation.app */,
+				B10000000000000000000001 /* YixiuQuietWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B40000000000000000000001 /* YixiuQuietWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000002 /* QuietMinuteActivityAttributes.swift */,
+				B10000000000000000000003 /* QuietMinuteIntents.swift */,
+				B1000000000000000000000A /* QuietMinuteActivityManager.swift */,
+				B10000000000000000000004 /* OneMinuteControl.swift */,
+				B10000000000000000000005 /* QuietMinuteLiveActivity.swift */,
+				B10000000000000000000006 /* YixiuQuietWidgetBundle.swift */,
+				B10000000000000000000007 /* Localizable.xcstrings */,
+				B10000000000000000000009 /* Info.plist */,
+			);
+			path = YixiuQuietWidget;
+			sourceTree = "<group>";
+		};
+		B40000000000000000000002 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000008 /* QuietMinuteSchedule.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,15 +201,34 @@
 				A30000000000000000000002 /* Sources */,
 				A30000000000000000000001 /* Frameworks */,
 				A30000000000000000000003 /* Resources */,
+				B30000000000000000000004 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B70000000000000000000002 /* PBXTargetDependency */,
 			);
 			name = YixiuMeditation;
 			productName = YixiuMeditation;
 			productReference = A1000000000000000000000B /* YixiuMeditation.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B50000000000000000000001 /* YixiuQuietWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B90000000000000000000001 /* Build configuration list for PBXNativeTarget "YixiuQuietWidget" */;
+			buildPhases = (
+				B30000000000000000000002 /* Sources */,
+				B30000000000000000000001 /* Frameworks */,
+				B30000000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YixiuQuietWidget;
+			productName = YixiuQuietWidget;
+			productReference = B10000000000000000000001 /* YixiuQuietWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -143,6 +241,9 @@
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					A50000000000000000000001 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					B50000000000000000000001 = {
 						CreatedOnToolsVersion = 26.6;
 					};
 				};
@@ -162,6 +263,7 @@
 			projectRoot = "";
 			targets = (
 				A50000000000000000000001 /* YixiuMeditation */,
+				B50000000000000000000001 /* YixiuQuietWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -175,6 +277,14 @@
 				A2000000000000000000000B /* Audio in Resources */,
 				A2000000000000000000000C /* Fonts in Resources */,
 				A20000000000000000000010 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B30000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B20000000000000000000007 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,10 +307,35 @@
 				A2000000000000000000000D /* SubscriptionAccessPolicy.swift in Sources */,
 				A2000000000000000000000E /* SubscriptionStore.swift in Sources */,
 				A2000000000000000000000F /* PlusPaywallView.swift in Sources */,
+				B2000000000000000000000A /* QuietMinuteActivityAttributes.swift in Sources */,
+				B2000000000000000000000B /* QuietMinuteActivityManager.swift in Sources */,
+				B2000000000000000000000C /* QuietMinuteSchedule.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B30000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B20000000000000000000001 /* QuietMinuteActivityAttributes.swift in Sources */,
+				B20000000000000000000002 /* QuietMinuteIntents.swift in Sources */,
+				B20000000000000000000009 /* QuietMinuteActivityManager.swift in Sources */,
+				B20000000000000000000003 /* OneMinuteControl.swift in Sources */,
+				B20000000000000000000004 /* QuietMinuteLiveActivity.swift in Sources */,
+				B20000000000000000000005 /* YixiuQuietWidgetBundle.swift in Sources */,
+				B20000000000000000000006 /* QuietMinuteSchedule.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B70000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B50000000000000000000001 /* YixiuQuietWidget */;
+			targetProxy = B70000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A80000000000000000000001 /* Debug */ = {
@@ -310,7 +445,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -327,7 +462,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -344,7 +479,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -361,12 +496,66 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B80000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 19;
+				DEVELOPMENT_TEAM = L855ZVM679;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = YixiuQuietWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.7;
+				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu.YixiuQuietWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B80000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 19;
+				DEVELOPMENT_TEAM = L855ZVM679;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = YixiuQuietWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.7;
+				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu.YixiuQuietWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -390,6 +579,15 @@
 			buildConfigurations = (
 				A80000000000000000000003 /* Debug */,
 				A80000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B90000000000000000000001 /* Build configuration list for PBXNativeTarget "YixiuQuietWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B80000000000000000000001 /* Debug */,
+				B80000000000000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
