@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react";
 import "@fontsource/noto-sans-sc/400.css";
 import "@fontsource/noto-sans-sc/500.css";
 import "@fontsource/noto-serif-sc/400.css";
@@ -567,6 +567,29 @@ function recordGrowthEvent(event: string, parameters: Record<string, string | nu
   }));
 }
 
+function isIPhoneWeChatBrowser() {
+  return /MicroMessenger/i.test(navigator.userAgent) && /iPhone/i.test(navigator.userAgent);
+}
+
+async function copyTextToClipboard(value: string) {
+  const clipboard = Reflect.get(navigator, "clipboard") as Clipboard | undefined;
+  if (clipboard?.writeText) {
+    await clipboard.writeText(value);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("Unable to copy the App Store link");
+}
+
 function linkedScene() {
   const query = new URLSearchParams(window.location.search);
   const sceneId = query.get("music") ?? query.get("scene");
@@ -623,6 +646,8 @@ export default function Prototype() {
   const [videoChannelOpen, setVideoChannelOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [downloadFeedback, setDownloadFeedback] = useState(false);
+  const [wechatDownloadUrl, setWechatDownloadUrl] = useState<string | null>(null);
+  const [wechatCopyState, setWechatCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [instagramGuideOpen, setInstagramGuideOpen] = useState(() => isInstagramProfileReferral());
   const [wisdomIndex, setWisdomIndex] = useState(0);
   const [breathingStatus, setBreathingStatus] = useState<BreathingStatus>("idle");
@@ -818,6 +843,32 @@ export default function Prototype() {
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       console.error("Unable to share the current Yixiu scene", error);
+    }
+  };
+
+  const handleAppStoreClick = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (!isIPhoneWeChatBrowser()) {
+      setDownloadFeedback(true);
+      return;
+    }
+
+    event.preventDefault();
+    const placement = event.currentTarget.dataset.analyticsPlacement ?? "unknown";
+    setUpgradeOpen(false);
+    setWechatDownloadUrl(event.currentTarget.href);
+    setWechatCopyState("idle");
+    recordGrowthEvent("yixiu_wechat_app_store_guide_view", { placement });
+  };
+
+  const copyWechatAppStoreLink = async () => {
+    if (!wechatDownloadUrl) return;
+    try {
+      await copyTextToClipboard(wechatDownloadUrl);
+      setWechatCopyState("copied");
+      recordGrowthEvent("yixiu_wechat_app_store_link_copy");
+    } catch (error) {
+      console.error("Unable to copy the Yixiu App Store link", error);
+      setWechatCopyState("error");
     }
   };
 
@@ -1114,7 +1165,7 @@ export default function Prototype() {
             data-analytics-event="yixiu_download_click"
             data-analytics-placement="player_header"
             aria-label={language === "zh" ? "在 App Store 下载一休" : "Download Yixiu on the App Store"}
-            onClick={() => setDownloadFeedback(true)}
+            onClick={handleAppStoreClick}
           >
             {language === "zh" ? "下载" : "GET APP"}
           </a>
@@ -1596,7 +1647,7 @@ export default function Prototype() {
                   </div>
                 </section>
 
-                <a className="me-app-download" href={sleepAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={() => setDownloadFeedback(true)}>
+                <a className="me-app-download" href={sleepAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={handleAppStoreClick}>
                   <span>
                     <small>YIXIU FOR IPHONE</small>
                     <strong>{language === "zh" ? "下载一休 App" : "Download Yixiu"}</strong>
@@ -1770,11 +1821,48 @@ export default function Prototype() {
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
             <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
-            <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={() => recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id })}>
+            <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
+              handleAppStoreClick(event);
+              recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id });
+            }}>
               {language === "zh" ? "在 App Store 查看一休 Plus" : "View Yixiu Plus on the App Store"}
               <ExternalLinkIcon />
             </a>
             <em>{language === "zh" ? "H5 无需账号；会员权益由 App Store 安全管理。" : "No H5 account is required. Membership is managed securely by the App Store."}</em>
+          </section>
+        </div>
+      ) : null}
+
+      {wechatDownloadUrl ? (
+        <div className="wechat-browser-guide" role="dialog" aria-modal="true" aria-label={language === "zh" ? "在默认浏览器中打开" : "Open in your default browser"}>
+          <button
+            className="wechat-browser-guide-backdrop"
+            type="button"
+            aria-label={language === "zh" ? "关闭" : "Close"}
+            onClick={() => setWechatDownloadUrl(null)}
+          />
+          <div className="wechat-browser-guide-pointer" aria-hidden="true">
+            <span>···</span>
+            <i>↗</i>
+          </div>
+          <section>
+            <button className="wechat-browser-guide-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setWechatDownloadUrl(null)}><Cross2Icon /></button>
+            <small>WECHAT</small>
+            <h2>{language === "zh" ? "微信暂时无法直接打开 App Store" : "Open Yixiu in your default browser"}</h2>
+            <p>{language === "zh" ? "请点击右上角 ···，选择“在默认浏览器中打开”，然后再次点击下载。" : "Tap ··· in the top-right, choose “Open in Default Browser,” then tap download again."}</p>
+            <div className="wechat-browser-guide-actions">
+              <button type="button" className="is-primary" onClick={() => setWechatDownloadUrl(null)}>{language === "zh" ? "知道了" : "Got it"}</button>
+              <button type="button" className="is-secondary" onClick={copyWechatAppStoreLink}>
+                {wechatCopyState === "copied"
+                  ? (language === "zh" ? "链接已复制" : "Link copied")
+                  : wechatCopyState === "error"
+                    ? (language === "zh" ? "复制失败，请重试" : "Couldn’t copy — try again")
+                    : (language === "zh" ? "复制 App Store 链接" : "Copy App Store link")}
+              </button>
+            </div>
+            <p className="wechat-browser-guide-status" role="status" aria-live="polite">
+              {wechatCopyState === "copied" ? (language === "zh" ? "可粘贴到 Safari 打开" : "Paste it into Safari to open") : ""}
+            </p>
           </section>
         </div>
       ) : null}

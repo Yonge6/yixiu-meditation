@@ -429,6 +429,46 @@ test("opens the region-neutral App Store link in the current embedded-browser wi
   ]);
 });
 
+test("guides iPhone WeChat visitors to the default browser and keeps a copyable App Store link", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 MicroMessenger/8.0.50",
+  });
+  const wechatPage = await context.newPage();
+  await wechatPage.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async (value: string) => {
+          Reflect.set(window, "__copiedAppStoreUrl", value);
+        },
+      },
+    });
+  });
+
+  await wechatPage.goto("/?lang=zh");
+  await wechatPage.getByRole("link", { name: "在 App Store 下载一休" }).click();
+
+  expect(new URL(wechatPage.url()).origin).toBe(new URL(baseURL!).origin);
+  expect(wechatPage.url()).not.toMatch(/^https:\/\/apps\.apple\.com/);
+  const dialog = wechatPage.getByRole("dialog", { name: "在默认浏览器中打开" });
+  await expect(dialog.getByRole("heading", { name: "微信暂时无法直接打开 App Store" })).toBeVisible();
+  await expect(dialog.getByText("请点击右上角 ···，选择“在默认浏览器中打开”，然后再次点击下载。")).toBeVisible();
+  await dialog.getByRole("button", { name: "复制 App Store 链接" }).click();
+  await expect(dialog.getByRole("button", { name: "链接已复制" })).toBeVisible();
+  await expect(dialog.getByRole("status")).toHaveText("可粘贴到 Safari 打开");
+  expect(await wechatPage.evaluate(() => Reflect.get(window, "__copiedAppStoreUrl"))).toMatch(/^https:\/\/apps\.apple\.com\/app\/id1461182261/);
+  await dialog.getByRole("button", { name: "知道了" }).click();
+  await expect(dialog).toBeHidden();
+
+  await wechatPage.goto("/?lang=en");
+  await wechatPage.getByRole("link", { name: "Download Yixiu on the App Store" }).click();
+  const englishDialog = wechatPage.getByRole("dialog", { name: "Open in your default browser" });
+  await expect(englishDialog.getByRole("heading", { name: "Open Yixiu in your default browser" })).toBeVisible();
+  await expect(englishDialog.getByText("Tap ··· in the top-right, choose “Open in Default Browser,” then tap download again.")).toBeVisible();
+  await context.close();
+});
+
 test("shows the WonderElian WeChat Channels QR code in Contact", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   await page.getByRole("button", { name: /联系与反馈/ }).click();
