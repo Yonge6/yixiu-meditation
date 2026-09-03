@@ -226,6 +226,7 @@ test("all H5 App Store actions use the shared Apple campaign attribution", async
     assert.ok(appStoreHrefs.length > 0, `${pagePath} should expose an App Store action`);
     for (const href of appStoreHrefs) {
       const url = new URL(href);
+      assert.equal(url.pathname, "/app/id1461182261", `${pagePath} should use Apple's region-neutral app path`);
       assert.equal(url.searchParams.get("pt"), "120014121", pagePath);
       assert.equal(url.searchParams.get("ct"), "yixiu_h5_20260827", pagePath);
       assert.equal(url.searchParams.get("mt"), "8", pagePath);
@@ -1471,7 +1472,7 @@ test("llms.txt exposes the existing Yixiu collection without unrelated products 
   assert.match(llms, /^## Focus and Study$/m);
   assert.match(llms, /^## Meditation and Reset$/m);
   assert.match(llms, /^## Optional$/m);
-  assert.match(llms, /https:\/\/apps\.apple\.com\/us\/app\/yixiu-white-noise-sleep\/id1461182261/);
+  assert.match(llms, /https:\/\/apps\.apple\.com\/app\/id1461182261/);
   assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/guides\//);
   assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/best-sleep-sounds\//);
   assert.match(llms, /https:\/\/yixiu\.wonderelian\.com\/free-online-sound-machine\//);

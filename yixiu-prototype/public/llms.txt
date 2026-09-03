@@ -5,7 +5,7 @@
 Yixiu is a bilingual nature-sound experience for the web and iPhone. The web sessions use real licensed nature recordings with no music, talking, account, or ads. The iPhone app adds a larger sound library and 15, 30, or 60-minute timers.
 
 - [Yixiu on the web](https://yixiu.wonderelian.com/): Explore and play the complete bilingual H5 sound library.
-- [Yixiu on the App Store](https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261): Official iPhone app listing.
+- [Yixiu on the App Store](https://apps.apple.com/app/id1461182261): Official iPhone app listing.
 - [Nature sound guides](https://yixiu.wonderelian.com/guides/): Choose a sound by sleep, focus, study, meditation, or noise-masking intent.
 - [Free online sound machine](https://yixiu.wonderelian.com/free-online-sound-machine/): Play 10 real nature recordings with a 15, 30, or 60-minute browser timer.
 
