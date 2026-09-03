@@ -430,6 +430,25 @@ function WaterWavesIcon() {
   );
 }
 
+function PremiumGemIcon() {
+  return (
+    <svg data-premium-gem viewBox="0 0 18 16" aria-hidden="true">
+      <path className="premium-gem-outline" d="M1 5.2 4.7 1h8.6L17 5.2 9 15 1 5.2Z" />
+      <path className="premium-gem-facets" d="M1 5.2h16M4.7 1 9 5.2 13.3 1M9 5.2V15" />
+    </svg>
+  );
+}
+
+function SceneAccessBadge({ free }: { free: boolean }) {
+  return free ? (
+    <span className="scene-access-badge is-free">FREE</span>
+  ) : (
+    <span className="scene-access-badge is-plus" aria-label="Yixiu Plus">
+      <PremiumGemIcon />
+    </span>
+  );
+}
+
 type AudioGraph = {
   audio: HTMLAudioElement;
 };
@@ -577,7 +596,7 @@ function instagramProfileDestination(path: string, content: string) {
 }
 
 function preferredLanguage(): Language {
-  return navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+  return "en";
 }
 
 export default function Prototype() {
@@ -1084,17 +1103,10 @@ export default function Prototype() {
       <div className="ocean-shade" aria-hidden="true" />
 
       {activeTab === "sounds" ? <header className="player-header">
-        <button
-          className="brand-button"
-          type="button"
-          aria-label={language === "zh" ? "切换到英文" : "Switch to Chinese"}
-          data-analytics-event="yixiu_language_change"
-          data-analytics-value={language === "zh" ? "en" : "zh"}
-          onClick={() => setLanguage((current) => current === "zh" ? "en" : "zh")}
-        >
+        <div className="brand-lockup" aria-label="Yixiu">
           <span>{language === "zh" ? "一休" : "YIXIU"}</span>
           <small>{language === "zh" ? "YIXIU" : "一休"}</small>
-        </button>
+        </div>
         <div className="header-actions">
           <a
             className="header-download-link"
@@ -1114,6 +1126,16 @@ export default function Prototype() {
             onClick={shareScene}
           >
             <UploadIcon />
+          </button>
+          <button
+            className="header-language-button"
+            type="button"
+            aria-label={language === "zh" ? "切换到英文" : "Switch to Chinese"}
+            data-analytics-event="yixiu_language_change"
+            data-analytics-value={language === "zh" ? "en" : "zh"}
+            onClick={() => setLanguage((current) => current === "zh" ? "en" : "zh")}
+          >
+            {language === "zh" ? "EN" : "中"}
           </button>
         </div>
       </header> : null}
@@ -1283,7 +1305,7 @@ export default function Prototype() {
                               <small>{language === "zh" ? scene.en : scene.zh}</small>
                               <em>{language === "zh" ? scene.useZh : scene.useEn}</em>
                             </span>
-                            <span className={`scene-access-badge ${freeSceneIds.has(sceneId) ? "is-free" : "is-plus"}`}>{freeSceneIds.has(sceneId) ? "FREE" : "PLUS"}</span>
+                            <SceneAccessBadge free={freeSceneIds.has(sceneId)} />
                           </button>
                           <button className="scene-favorite" type="button" aria-label={`${language === "zh" ? "收藏" : "Favorite"} ${language === "zh" ? scene.zh : scene.en}`} aria-pressed={favorites.includes(sceneId)} onClick={() => toggleFavorite(sceneId)}>
                             {favorites.includes(sceneId) ? <HeartFilledIcon /> : <HeartIcon />}
@@ -1687,7 +1709,7 @@ export default function Prototype() {
             <div className="scene-grid">
               {filteredSceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" data-scene-id={scene.id} aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span><span className={`scene-access-badge ${freeSceneIds.has(scene.id) ? "is-free" : "is-plus"}`}>{freeSceneIds.has(scene.id) ? "FREE" : "PLUS"}</span></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
+                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" data-scene-id={scene.id} aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span><SceneAccessBadge free={freeSceneIds.has(scene.id)} /></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
               })}
             </div>
           </section>

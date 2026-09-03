@@ -18,6 +18,23 @@ test("opens on the ocean scene in a paused 30-minute state", async ({ page }) =>
   expect(durationBox!.y + durationBox!.height).toBeLessThanOrEqual(playBox!.y + 4);
 });
 
+test("starts fresh visitors in English while preserving explicit Chinese links", async ({ page }) => {
+  await page.evaluate(() => localStorage.clear());
+  await page.goto("/");
+
+  await expect(page.getByRole("heading", { name: "OCEAN WAVES" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Switch to Chinese" })).toHaveText("中");
+
+  const headerActions = page.locator(".header-actions > *");
+  await expect(headerActions).toHaveCount(3);
+  await expect(headerActions.nth(1)).toHaveAttribute("aria-label", "Share Ocean Waves");
+  await expect(headerActions.nth(2)).toHaveAttribute("aria-label", "Switch to Chinese");
+
+  await page.goto("/?lang=zh");
+  await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "切换到英文" })).toHaveText("EN");
+});
+
 test("keeps a low-saturation color in every scene image slot while assets load", async ({ page }) => {
   const backdrop = page.locator(".scene-current-backdrop");
   await expect(backdrop).toHaveAttribute("data-image-scene", "ocean");
@@ -255,7 +272,7 @@ test("selects timer and switches the interface language", async ({ page }) => {
 
   await page.getByRole("button", { name: "切换到英文" }).click();
   await expect(page.getByRole("heading", { name: "OCEAN WAVES" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Switch to Chinese" })).toContainText("YIXIU");
+  await expect(page.getByRole("button", { name: "Switch to Chinese" })).toHaveText("中");
   await expect(page.getByRole("button", { name: "Focus 静心" })).toBeVisible();
 });
 
@@ -430,6 +447,17 @@ test("keeps all three bottom tabs on one fixed baseline", async ({ page }) => {
     return { y: box.y, height: box.height };
   }));
   expect(activeBoxes).toEqual(initialBoxes);
+
+  const tabBarStyle = await page.locator(".bottom-nav").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { borderRadius: Number.parseFloat(style.borderRadius) };
+  });
+  const activeStyle = await page.locator(".bottom-nav button.is-active").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { backgroundImage: style.backgroundImage };
+  });
+  expect(tabBarStyle.borderRadius).toBeGreaterThanOrEqual(24);
+  expect(activeStyle.backgroundImage).not.toBe("none");
 });
 
 test("loads a real morning-birds recording instead of generated noise", async ({ page }) => {
@@ -468,6 +496,8 @@ test("enforces exactly five free nature sounds and two free meditation tracks", 
   const library = page.getByRole("dialog", { name: "声音库" });
   await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(7);
   await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(17);
+  await expect(library.locator(".scene-access-badge.is-plus [data-premium-gem]")).toHaveCount(17);
+  await expect(library.getByText("PLUS", { exact: true })).toHaveCount(0);
 
   await library.getByRole("tab", { name: "自然声" }).click();
   await expect(library.locator(".scene-grid article")).toHaveCount(14);
