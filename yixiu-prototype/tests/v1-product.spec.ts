@@ -377,7 +377,9 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
   await expect(workLinks.nth(3)).toContainText("道德经");
   await expect(page.getByText(/YIXIU 2\.0/)).toHaveCount(0);
   const downloadLink = page.getByRole("link", { name: /下载一休 App/ });
+  await expect(downloadLink).toHaveAttribute("href", /^https:\/\/apps\.apple\.com\/app\/id1461182261/);
   await expect(downloadLink).toHaveAttribute("href", /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/);
+  await expect(downloadLink).not.toHaveAttribute("target", "_blank");
   await downloadLink.evaluate((element) => {
     element.addEventListener("click", (event) => event.preventDefault(), { once: true });
   });
@@ -405,9 +407,26 @@ test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => 
 test("keeps an attributable App Store action on the player first screen", async ({ page }) => {
   const downloadLink = page.getByRole("link", { name: "在 App Store 下载一休" });
   await expect(downloadLink).toBeVisible();
+  await expect(downloadLink).toHaveAttribute("href", /^https:\/\/apps\.apple\.com\/app\/id1461182261/);
   await expect(downloadLink).toHaveAttribute("href", /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/);
+  await expect(downloadLink).not.toHaveAttribute("target", "_blank");
   await expect(downloadLink).toHaveAttribute("data-analytics-event", "yixiu_download_click");
   await expect(downloadLink).toHaveAttribute("data-analytics-placement", "player_header");
+});
+
+test("opens the region-neutral App Store link in the current embedded-browser window", async ({ page }) => {
+  await page.route("https://apps.apple.com/**", async (route) => {
+    await route.fulfill({ status: 200, contentType: "text/html", body: "<title>App Store</title>" });
+  });
+
+  const downloadLink = page.getByRole("link", { name: "在 App Store 下载一休" });
+  await expect(downloadLink).toHaveAttribute("href", /^https:\/\/apps\.apple\.com\/app\/id1461182261/);
+  await expect(downloadLink).not.toHaveAttribute("target", "_blank");
+
+  await Promise.all([
+    page.waitForURL(/^https:\/\/apps\.apple\.com\/app\/id1461182261/),
+    downloadLink.click(),
+  ]);
 });
 
 test("shows the WonderElian WeChat Channels QR code in Contact", async ({ page }) => {

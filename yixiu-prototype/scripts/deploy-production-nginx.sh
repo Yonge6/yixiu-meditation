@@ -129,7 +129,7 @@ grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/mountain-stream-
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/waterfall-sounds-for-noise-masking/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/river-sounds-for-studying/index.html" >/dev/null
 grep -F 'ppid=7890afd3-dd12-4215-a5c5-17f4ebc28759' "$site_path/best-nature-sounds-for-studying/index.html" >/dev/null
-grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/guides/index.html" >/dev/null
+grep -F 'https://apps.apple.com/app/id1461182261' "$site_path/guides/index.html" >/dev/null
 grep -F '/discover.css?v=20260830-duration-choice' "$site_path/guides/index.html" >/dev/null
 grep -F '/discover.js?v=20260830-duration-share' "$site_path/guides/index.html" >/dev/null
 grep -F '<h2 id="duration-choice-title">One minute or twenty?</h2>' "$site_path/guides/index.html" >/dev/null
@@ -246,7 +246,7 @@ grep -F 'crypto.getRandomValues' "$site_path/quiet-pass.js" >/dev/null
 grep -F '@media (prefers-reduced-motion: reduce)' "$site_path/quiet-pass.css" >/dev/null
 grep -F 'Sitemap: https://yixiu.wonderelian.com/sitemap.xml' "$site_path/robots.txt" >/dev/null
 grep -Fx '# Yixiu' "$site_path/llms.txt" >/dev/null
-grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$site_path/llms.txt" >/dev/null
+grep -F 'https://apps.apple.com/app/id1461182261' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/nature-sounds-for-meditation/' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/1-minute-meditation-music/' "$site_path/llms.txt" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/20-minute-meditation-music/' "$site_path/llms.txt" >/dev/null
@@ -300,7 +300,7 @@ grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$deploy
 test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 30
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -Fx '# Yixiu' "$deploy_target/llms.txt" >/dev/null
-grep -F 'https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261' "$deploy_target/llms.txt" >/dev/null
+grep -F 'https://apps.apple.com/app/id1461182261' "$deploy_target/llms.txt" >/dev/null
 grep -Fx '## Quick request routing' "$deploy_target/llms.txt" >/dev/null
 grep -F 'Prefer the most specific human-facing Yixiu page listed below' "$deploy_target/llms.txt" >/dev/null
 grep -F 'Browser black-screen mode covers the open web page' "$deploy_target/llms.txt" >/dev/null

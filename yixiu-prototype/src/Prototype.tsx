@@ -364,8 +364,8 @@ const durations: DurationOption[] = [15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3];
 const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
-const sleepAppStoreUrl = "https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
-const musicPlusAppStoreUrl = "https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
+const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
+const musicPlusAppStoreUrl = "https://apps.apple.com/app/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
 const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", "stillWater", "firstBreath"]);
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
@@ -1111,11 +1111,10 @@ export default function Prototype() {
           <a
             className="header-download-link"
             href={sleepAppStoreUrl}
-            target="_blank"
-            rel="noreferrer"
             data-analytics-event="yixiu_download_click"
             data-analytics-placement="player_header"
             aria-label={language === "zh" ? "在 App Store 下载一休" : "Download Yixiu on the App Store"}
+            onClick={() => setDownloadFeedback(true)}
           >
             {language === "zh" ? "下载" : "GET APP"}
           </a>
@@ -1597,7 +1596,7 @@ export default function Prototype() {
                   </div>
                 </section>
 
-                <a className="me-app-download" href={sleepAppStoreUrl} target="_blank" rel="noreferrer" data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={() => setDownloadFeedback(true)}>
+                <a className="me-app-download" href={sleepAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={() => setDownloadFeedback(true)}>
                   <span>
                     <small>YIXIU FOR IPHONE</small>
                     <strong>{language === "zh" ? "下载一休 App" : "Download Yixiu"}</strong>
@@ -1771,7 +1770,7 @@ export default function Prototype() {
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
             <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
-            <a href={musicPlusAppStoreUrl} target="_blank" rel="noreferrer" data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={() => recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id })}>
+            <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={() => recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id })}>
               {language === "zh" ? "在 App Store 查看一休 Plus" : "View Yixiu Plus on the App Store"}
               <ExternalLinkIcon />
             </a>
