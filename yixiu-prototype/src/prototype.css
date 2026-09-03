@@ -2791,6 +2791,143 @@ img[data-image-scene="tide"] {
 .plus-upgrade-modal em { display: block; margin-top: 14px; color: var(--mist); font-size: 9px; font-style: normal; line-height: 1.6; text-align: center; }
 .plus-upgrade-close { position: absolute; top: 12px; right: 12px; display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50% !important; color: var(--moon) !important; background: rgba(1, 18, 26, 0.5) !important; }
 
+.wechat-browser-guide {
+  position: absolute;
+  z-index: 140;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 76px 24px 24px;
+}
+
+.wechat-browser-guide-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgba(0, 10, 16, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.wechat-browser-guide-pointer {
+  position: absolute;
+  z-index: 1;
+  top: max(16px, env(safe-area-inset-top));
+  right: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--moon);
+  filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.45));
+}
+
+.wechat-browser-guide-pointer span {
+  display: grid;
+  min-width: 44px;
+  height: 32px;
+  place-items: center;
+  padding: 0 10px 7px;
+  border: 1px solid rgba(195, 241, 242, 0.42);
+  border-radius: 999px;
+  background: rgba(8, 48, 58, 0.92);
+  font-size: 21px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.wechat-browser-guide-pointer i {
+  margin-top: -4px;
+  color: var(--aqua-strong);
+  font-family: var(--sans);
+  font-size: 25px;
+  font-style: normal;
+  transform: rotate(-8deg);
+}
+
+.wechat-browser-guide section {
+  position: relative;
+  width: min(100%, 360px);
+  padding: 36px 24px 22px;
+  border: 1px solid rgba(168, 226, 230, 0.3);
+  border-radius: 28px;
+  color: var(--moon);
+  background: linear-gradient(155deg, rgba(8, 48, 58, 0.99), rgba(2, 20, 29, 0.99));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.56);
+}
+
+.wechat-browser-guide-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--moon);
+  background: rgba(1, 18, 26, 0.52);
+}
+
+.wechat-browser-guide section > small {
+  color: var(--aqua);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+}
+
+.wechat-browser-guide h2 {
+  max-width: 270px;
+  margin: 10px 0 13px;
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.38;
+}
+
+.wechat-browser-guide section > p:not(.wechat-browser-guide-status) {
+  margin: 0;
+  color: var(--mist);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.wechat-browser-guide-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.wechat-browser-guide-actions button {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.wechat-browser-guide-actions .is-primary {
+  border: 1px solid var(--aqua-strong);
+  color: var(--deep-water);
+  background: var(--aqua-strong);
+}
+
+.wechat-browser-guide-actions .is-secondary {
+  border: 1px solid rgba(168, 226, 230, 0.28);
+  color: var(--moon);
+  background: rgba(168, 226, 230, 0.08);
+}
+
+.wechat-browser-guide-status {
+  min-height: 16px;
+  margin: 8px 0 -4px;
+  color: var(--aqua);
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .wisdom-panel small,
 .info-panel small {
   color: var(--aqua);
