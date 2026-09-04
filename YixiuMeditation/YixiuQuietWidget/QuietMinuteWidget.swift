@@ -21,7 +21,7 @@ struct QuietMinuteProvider: TimelineProvider {
 }
 
 struct QuietMinuteWidget: Widget {
-    static let kind = "com.health.yixiu.quiet-minute-widget"
+    nonisolated static let kind = "com.health.yixiu.quiet-minute-widget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: Self.kind, provider: QuietMinuteProvider()) { entry in
