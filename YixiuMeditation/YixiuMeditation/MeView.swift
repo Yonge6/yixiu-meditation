@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import UIKit
 
 private enum MePage: Equatable {
     case home
@@ -12,6 +13,7 @@ private enum MePage: Equatable {
 struct MeView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
+    @EnvironmentObject private var dailyReminder: DailyReminderManager
     @Environment(\.requestReview) private var requestReview
     @Environment(\.openURL) private var openURL
     @State private var page: MePage = .home
@@ -111,6 +113,9 @@ struct MeView: View {
                 timerCard
                     .padding(.top, 12)
 
+                dailyReminderCard
+                    .padding(.top, 12)
+
                 settingsCard
                     .padding(.top, 12)
 
@@ -132,7 +137,7 @@ struct MeView: View {
 
                 Spacer(minLength: 122)
             }
-            .frame(width: max(geometry.size.width - 36, 0))
+            .frame(width: max(min(geometry.size.width - 36, 680), 0))
             .padding(.horizontal, 18)
         }
         .frame(width: geometry.size.width)
@@ -504,6 +509,81 @@ struct MeView: View {
         .yixiuPanel()
     }
 
+    private var dailyReminderCard: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 13) {
+                Image(systemName: "moon.stars")
+                    .font(.system(size: 17, weight: .light))
+                    .foregroundStyle(YixiuTheme.aqua)
+                    .frame(width: 38, height: 38)
+                    .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(language.text(zh: "每日安静提醒", en: "Daily quiet reminder"))
+                        .font(YixiuTheme.chineseDisplay(17))
+                    Text(language.text(zh: "每天在你的设备上轻声提醒", en: "A gentle reminder on this device"))
+                        .font(YixiuTheme.sans(10))
+                        .foregroundStyle(YixiuTheme.mist)
+                }
+
+                Spacer(minLength: 8)
+
+                Toggle("", isOn: Binding(
+                    get: { dailyReminder.isEnabled },
+                    set: { enabled in
+                        Task { await dailyReminder.setEnabled(enabled, languageCode: language.rawValue) }
+                    }
+                ))
+                .labelsHidden()
+                .tint(YixiuTheme.aquaStrong)
+            }
+            .frame(minHeight: 66)
+
+            if dailyReminder.isEnabled {
+                Divider().overlay(YixiuTheme.hairline)
+                HStack {
+                    Text(language.text(zh: "提醒时间", en: "Reminder time"))
+                        .font(YixiuTheme.sans(14))
+                    Spacer()
+                    DatePicker(
+                        "",
+                        selection: Binding(
+                            get: { dailyReminder.reminderTime },
+                            set: { date in
+                                Task { await dailyReminder.updateTime(date, languageCode: language.rawValue) }
+                            }
+                        ),
+                        displayedComponents: .hourAndMinute
+                    )
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                    .tint(YixiuTheme.aquaStrong)
+                }
+                .frame(minHeight: 58)
+            } else if dailyReminder.isDenied {
+                Divider().overlay(YixiuTheme.hairline)
+                Button {
+                    openURL(URL(string: UIApplication.openSettingsURLString)!)
+                } label: {
+                    HStack {
+                        Text(language.text(zh: "通知权限已关闭", en: "Notifications are off"))
+                            .font(YixiuTheme.sans(12))
+                            .foregroundStyle(YixiuTheme.mist)
+                        Spacer()
+                        Text(language.text(zh: "前往设置", en: "Open Settings"))
+                            .font(YixiuTheme.sans(12, weight: .semibold))
+                            .foregroundStyle(YixiuTheme.aqua)
+                    }
+                    .frame(minHeight: 52)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 17)
+        .yixiuPanel()
+    }
+
     private var aboutCard: some View {
         VStack(spacing: 0) {
             infoRow(
@@ -649,7 +729,7 @@ struct MeView: View {
 
             ScrollView(showsIndicators: false) {
                 detailBody
-                    .frame(width: max(geometry.size.width - 40, 0), alignment: .leading)
+                    .frame(width: max(min(geometry.size.width - 40, 680), 0), alignment: .leading)
                     .padding(.horizontal, 20)
                     .padding(.top, 26)
                     .padding(.bottom, 124)

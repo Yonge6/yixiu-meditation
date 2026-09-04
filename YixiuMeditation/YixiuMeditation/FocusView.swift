@@ -125,7 +125,7 @@ struct FocusView: View {
                 }
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
-                .frame(width: geometry.size.width)
+                .frame(width: min(geometry.size.width, 680))
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .clipped()

@@ -84,6 +84,15 @@ test("root page exposes truthful software application structured data", async ()
   assert.doesNotMatch(schemaSource, /aggregateRating|reviewCount/);
 });
 
+test("root page declares the complete region-neutral Apple Smart App Banner", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+
+  assert.match(
+    html,
+    /<meta name="apple-itunes-app" content="app-id=1461182261, app-argument=https:\/\/apps\.apple\.com\/app\/id1461182261" \/>/,
+  );
+});
+
 test("root page exposes a useful no-JavaScript Yixiu entry point", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const fallback = html.match(/<main class="html-fallback">([\s\S]*?)<\/main>/)?.[1];

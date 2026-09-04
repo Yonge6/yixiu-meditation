@@ -46,12 +46,25 @@ test("keeps a low-saturation color in every scene image slot while assets load",
   expect(await soundSpaceImage.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(82, 109, 120)");
 });
 
-test("opens shared scene links and shares the current scene URL", async ({ page }) => {
+test("opens shared scene links and shares a PNG card with the current scene URL", async ({ page }) => {
   await page.addInitScript(() => {
+    Object.defineProperty(navigator, "canShare", {
+      configurable: true,
+      value: (payload: ShareData) => payload.files?.length === 1 && payload.files[0].type === "image/png",
+    });
     Object.defineProperty(navigator, "share", {
       configurable: true,
       value: async (payload: ShareData) => {
-        (window as Window & { __yixiuShare?: ShareData }).__yixiuShare = payload;
+        const file = payload.files?.[0];
+        (window as Window & { __yixiuShare?: Record<string, unknown> }).__yixiuShare = {
+          title: payload.title,
+          text: payload.text,
+          url: payload.url,
+          fileCount: payload.files?.length ?? 0,
+          fileName: file?.name,
+          fileType: file?.type,
+          fileSize: file?.size ?? 0,
+        };
       },
     });
   });
@@ -60,9 +73,49 @@ test("opens shared scene links and shares the current scene URL", async ({ page 
   await expect(page.getByRole("heading", { name: "MORNING BIRDS" })).toBeVisible();
   await page.getByRole("button", { name: "Share Morning Birds" }).click();
 
-  const payload = await page.evaluate(() => (window as Window & { __yixiuShare?: ShareData }).__yixiuShare);
+  await expect.poll(() => page.evaluate(() => Boolean((window as Window & { __yixiuShare?: Record<string, unknown> }).__yixiuShare))).toBe(true);
+  const payload = await page.evaluate(() => (window as Window & { __yixiuShare?: Record<string, unknown> }).__yixiuShare);
   expect(payload?.title).toContain("Morning Birds");
   expect(payload?.url).toBe("https://yixiu.wonderelian.com/?scene=birds&lang=en&utm_source=share&utm_medium=referral&utm_campaign=scene_share&utm_content=birds_en");
+  expect(payload?.fileCount).toBe(1);
+  expect(payload?.fileName).toBe("yixiu-morning-birds.png");
+  expect(payload?.fileType).toBe("image/png");
+  expect(Number(payload?.fileSize)).toBeGreaterThan(10_000);
+});
+
+test("shows a QR share-card fallback when PNG file sharing is unavailable", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
+    Object.defineProperty(navigator, "canShare", { configurable: true, value: undefined });
+  });
+  await page.goto("/?scene=rain&lang=zh");
+
+  await page.getByRole("button", { name: "分享屋檐雨" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "分享屋檐雨" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("img", { name: "一休屋檐雨分享图，右下角含二维码" })).toBeVisible();
+  await expect(dialog.getByRole("link", { name: "保存分享图" })).toHaveAttribute("download", "yixiu-rain-on-eaves.png");
+  await expect(dialog.getByRole("button", { name: "复制链接" })).toBeVisible();
+});
+
+test("falls back to the QR share card when an embedded browser rejects native image sharing", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "canShare", { configurable: true, value: () => true });
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async () => {
+        throw new DOMException("Embedded browser rejected sharing", "NotAllowedError");
+      },
+    });
+  });
+  await page.goto("/?scene=rain&lang=zh");
+
+  await page.getByRole("button", { name: "分享屋檐雨" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "分享屋檐雨" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("img", { name: "一休屋檐雨分享图，右下角含二维码" })).toBeVisible();
 });
 
 test("shows an attributed Instagram profile guide only for link-in-bio visitors", async ({ page }) => {
@@ -594,6 +647,10 @@ test("plays free meditation music and gates a Plus track", async ({ page }) => {
 
 test("opens and shares a meditation music deep link", async ({ page }) => {
   await page.addInitScript(() => {
+    Object.defineProperty(navigator, "canShare", {
+      configurable: true,
+      value: (payload: ShareData) => payload.files?.length === 1 && payload.files[0].type === "image/png",
+    });
     Object.defineProperty(navigator, "share", {
       configurable: true,
       value: async (payload: ShareData) => {
@@ -604,6 +661,7 @@ test("opens and shares a meditation music deep link", async ({ page }) => {
   await page.goto("/?music=firstBreath&lang=en");
   await expect(page.getByRole("heading", { name: "FIRST BREATH" })).toBeVisible();
   await page.getByRole("button", { name: "Share First Breath" }).click();
+  await expect.poll(() => page.evaluate(() => Boolean((window as Window & { __yixiuMusicShare?: ShareData }).__yixiuMusicShare))).toBe(true);
   const payload = await page.evaluate(() => (window as Window & { __yixiuMusicShare?: ShareData }).__yixiuMusicShare);
   expect(payload?.url).toContain("?music=firstBreath&lang=en");
 });
