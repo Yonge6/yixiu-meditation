@@ -310,7 +310,7 @@ grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$deploy_target/assets" >
 grep -FR 'yixiu_h5_music_plus_20260830' "$deploy_target/assets" >/dev/null
 grep -FR 'still-water.m4a' "$deploy_target/assets" >/dev/null
 test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 10
-test "$(find "$deploy_target/assets/yixiu/meditation" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
+test "$(find "$deploy_target/assets/yixiu/meditation" -maxdepth 1 -type f -name '*.jpg' ! -name 'still-water-mobile.jpg' | wc -l)" -eq 10
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null
 grep -F '<title>White Noise Black Screen for Sleep — Free, No Ads | Yixiu</title>' "$deploy_target/underwater-white-noise-for-sleep/index.html" >/dev/null
