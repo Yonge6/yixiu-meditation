@@ -18,10 +18,12 @@ No download, trial, subscription, purchase, or revenue outcome is inferred from 
 - GitHub Release: <https://github.com/Yonge6/yixiu-meditation/releases/tag/yixiu-web-20260904-share-reminder-widget-ipad>
 - Archive: `yixiu-20260904-79480eb-share-reminder-widget-ipad-2347.tar.gz`
 - Archive SHA-256: `77384c3eb7d107de564b2e53fdd857f92c5be18efb833b40a611eb2c5545b721`
-- Deployment result: `DEPLOY_OK_YIXIU_20260904-79480eb-share-reminder-widget-ipad-2347`
-- Rollback backup: `/srv/wonderelian/backups/yixiu-20260904-79480eb-share-reminder-widget-ipad-2347`
+- Final deployment result: `DEPLOY_OK_YIXIU_20260905-5af2e8e-share-reminder-widget-ipad-final-0015`
+- Final rollback backup: `/srv/wonderelian/backups/yixiu-20260905-5af2e8e-share-reminder-widget-ipad-final-0015`
 
 The GitHub-to-production download was abnormally slow, so the exact GitHub Release asset was copied directly to the server and verified against the same SHA-256 before deployment. The original post-deploy script then encountered one stale-file assertion: the production directory intentionally retained the historical `still-water-mobile.jpg` because deployment uses non-destructive `rsync`. The assertion was narrowed to exclude only that known legacy file; all remaining post-deploy gates passed and emitted the deployment result above.
+
+After the first deployment, a later repository merge coincided with the production `index.html` being replaced by the preceding H5 revision. The completed GitHub Pages workflow artifact itself contained the correct new assets, so the exact SHA-verified GitHub Release archive was deployed again only after all repository merges and workflows had completed. The final deployment and rollback IDs above refer to this last reconciliation, and the final public readback below was taken afterward.
 
 ## Verification
 
