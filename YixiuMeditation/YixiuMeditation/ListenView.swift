@@ -7,6 +7,8 @@ struct ListenView: View {
     @State private var timerOpen = false
     @State private var libraryOpen = false
     @State private var paywallOpen = false
+    @State private var sharePayload: SceneSharePayload?
+    @State private var shareRenderingFailed = false
     @State private var sceneDragOffset: CGFloat = 0
     @State private var sceneSwipeProgress: CGFloat = 0
     @State private var sceneSwipeSettling = false
@@ -27,6 +29,7 @@ struct ListenView: View {
                     .accessibilityHidden(true)
 
                 header
+                    .frame(width: min(geometry.size.width, 720))
                     .position(
                         x: geometry.size.width / 2,
                         y: max(geometry.safeAreaInsets.top + 30, 84)
@@ -40,6 +43,7 @@ struct ListenView: View {
 
                 if timerOpen {
                     timerPanel
+                        .frame(maxWidth: 520)
                         .padding(.horizontal, 18)
                         .position(x: geometry.size.width / 2, y: geometry.size.height * 0.615)
                         .transition(.scale(scale: 0.96).combined(with: .opacity))
@@ -92,6 +96,19 @@ struct ListenView: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
+        }
+        .sheet(item: $sharePayload) { payload in
+            ActivityShareSheet(items: [payload.image, payload.url])
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+        }
+        .alert(
+            language.text(zh: "暂时无法生成分享图", en: "Could not create the share card"),
+            isPresented: $shareRenderingFailed
+        ) {
+            Button(language.text(zh: "好", en: "OK"), role: .cancel) {}
+        } message: {
+            Text(language.text(zh: "请稍后再试。", en: "Please try again in a moment."))
         }
     }
 
@@ -293,15 +310,16 @@ struct ListenView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(language.text(zh: "切换到英文", en: "Switch to Chinese"))
 
-                ShareLink(
-                    item: appState.scene.shareURL(language: language),
-                    subject: Text(appState.scene.shareTitle(language: language)),
-                    message: Text(appState.scene.shareMessage(language: language)),
-                    preview: SharePreview(
-                        appState.scene.shareTitle(language: language),
-                        image: Image(appState.scene.assetName)
+                Button {
+                    guard let image = SceneShareCardRenderer.render(scene: appState.scene, language: language) else {
+                        shareRenderingFailed = true
+                        return
+                    }
+                    sharePayload = SceneSharePayload(
+                        image: image,
+                        url: appState.scene.shareURL(language: language)
                     )
-                ) {
+                } label: {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 17, weight: .regular))
                         .foregroundStyle(YixiuTheme.moon)
@@ -309,6 +327,7 @@ struct ListenView: View {
                         .background(Circle().fill(YixiuTheme.deepWater.opacity(0.48)))
                         .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
                 }
+                .buttonStyle(.plain)
                 .accessibilityLabel(language.text(
                     zh: "分享\(appState.scene.zhName)",
                     en: "Share \(appState.scene.enName)"

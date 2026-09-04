@@ -20,7 +20,7 @@ Yixiu already declares Apple's `apple-itunes-app` meta tag. Style Atlas adds an 
 
 ## Daily reminder and widgets
 
-The daily reminder is a local notification, not a remote push service. It asks for notification permission only when the user enables it, schedules one repeating calendar notification at 21:30 in the device's current locale/time zone, and exposes the switch and time picker in My Yixiu. Disabling removes the pending reminder. Denied permission is shown honestly and links users to Settings; it is never treated as enabled.
+The daily reminder is a local notification, not a remote push service. It asks for notification permission only when the user enables it, schedules a rolling 30-day queue at 21:30 in the device's current locale/time zone, and refreshes that queue on launch or setting changes. My Yixiu exposes the switch and time picker. Disabling removes the pending reminders. Denied permission is shown honestly and links users to Settings; it is never treated as enabled.
 
 The existing widget extension already owns the Control Center control and Live Activity. It gains a conventional WidgetKit surface with small, medium, and lock-screen families. The small widget offers the one-minute pause; the medium widget combines the invitation with a brief breathing rhythm; lock-screen variants remain compact. An App Intent starts the existing one-minute Live Activity, keeping one source of truth for timing.
 

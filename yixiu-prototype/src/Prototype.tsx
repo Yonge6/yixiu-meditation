@@ -20,6 +20,7 @@ import {
   TrackPreviousIcon,
   UploadIcon,
 } from "@radix-ui/react-icons";
+import QRCode from "qrcode";
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
@@ -55,6 +56,11 @@ type SceneCategory = "all" | "nature" | "meditation" | "sleep" | "focus" | "morn
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
 type DrawerView = "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
 type MeView = "home" | "about" | "privacy" | "sources" | "support";
+type ShareCardPreview = {
+  imageUrl: string;
+  fileName: string;
+  shareUrl: string;
+};
 
 type SwipeStart = {
   pointerId: number;
@@ -561,6 +567,101 @@ function sceneShareUrl(sceneId: SceneId, language: Language) {
   return url.toString();
 }
 
+function shareCardFileName(scene: Scene) {
+  const slug = scene.en.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `yixiu-${slug}.png`;
+}
+
+function loadShareImage(source: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.decoding = "async";
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error(`Unable to load share-card image: ${source}`));
+    image.src = source;
+  });
+}
+
+function roundedRect(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+) {
+  context.beginPath();
+  context.roundRect(x, y, width, height, radius);
+  context.closePath();
+}
+
+async function createSceneShareCard(scene: Scene, language: Language, shareUrl: string) {
+  await document.fonts.ready;
+  const source = await loadShareImage(scene.image);
+  const canvas = document.createElement("canvas");
+  canvas.width = 1080;
+  canvas.height = 1350;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Canvas rendering is unavailable");
+
+  const sourceRatio = source.naturalWidth / source.naturalHeight;
+  const canvasRatio = canvas.width / canvas.height;
+  const drawWidth = sourceRatio > canvasRatio ? source.naturalHeight * canvasRatio : source.naturalWidth;
+  const drawHeight = sourceRatio > canvasRatio ? source.naturalHeight : source.naturalWidth / canvasRatio;
+  const sourceX = (source.naturalWidth - drawWidth) / 2;
+  const sourceY = (source.naturalHeight - drawHeight) / 2;
+  context.drawImage(source, sourceX, sourceY, drawWidth, drawHeight, 0, 0, canvas.width, canvas.height);
+
+  const wash = context.createLinearGradient(0, 0, 0, canvas.height);
+  wash.addColorStop(0, "rgba(0, 16, 25, 0.08)");
+  wash.addColorStop(0.48, "rgba(0, 19, 29, 0.18)");
+  wash.addColorStop(1, "rgba(0, 13, 21, 0.96)");
+  context.fillStyle = wash;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  context.fillStyle = "rgba(236, 247, 243, 0.96)";
+  context.font = language === "zh" ? "600 46px 'Noto Serif SC'" : "600 46px 'Noto Serif SC'";
+  context.fillText(language === "zh" ? "一休" : "YIXIU", 72, 102);
+  context.fillStyle = "rgba(169, 224, 224, 0.82)";
+  context.font = "500 21px 'Noto Sans SC'";
+  context.letterSpacing = "5px";
+  context.fillText(language === "zh" ? "YIXIU" : "一休", 72, 140);
+  context.letterSpacing = "0px";
+
+  const primary = language === "zh" ? scene.zh : scene.en.toUpperCase();
+  const secondary = language === "zh" ? scene.en.toUpperCase() : scene.zh;
+  context.fillStyle = "#eef8f4";
+  context.font = language === "zh" ? "600 78px 'Noto Serif SC'" : "600 68px 'Noto Serif SC'";
+  context.fillText(primary, 72, 930, 720);
+  context.fillStyle = "rgba(206, 231, 229, 0.72)";
+  context.font = "400 24px 'Noto Sans SC'";
+  context.fillText(secondary, 74, 976, 680);
+
+  context.fillStyle = "rgba(236, 247, 243, 0.94)";
+  context.font = language === "zh" ? "400 38px 'Noto Serif SC'" : "400 34px 'Noto Serif SC'";
+  context.fillText(language === "zh" ? "真实自己，流动人生。" : "True to yourself, flow with life.", 72, 1080, 650);
+  context.fillStyle = "rgba(169, 224, 224, 0.74)";
+  context.font = "400 22px 'Noto Sans SC'";
+  context.fillText(language === "zh" ? "扫码聆听这一刻" : "Scan to listen to this moment", 72, 1124, 620);
+
+  const qrCanvas = document.createElement("canvas");
+  await QRCode.toCanvas(qrCanvas, shareUrl, {
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 188,
+    color: { dark: "#05212aff", light: "#f4fbf8ff" },
+  });
+  context.fillStyle = "rgba(244, 251, 248, 0.96)";
+  roundedRect(context, 800, 1060, 220, 220, 28);
+  context.fill();
+  context.drawImage(qrCanvas, 816, 1076, 188, 188);
+
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((result) => result ? resolve(result) : reject(new Error("Unable to encode share card")), "image/png");
+  });
+  return new File([blob], shareCardFileName(scene), { type: "image/png" });
+}
+
 function recordGrowthEvent(event: string, parameters: Record<string, string | number | boolean> = {}) {
   window.dispatchEvent(new CustomEvent("yixiu:analytics", {
     detail: { event, ...parameters },
@@ -648,6 +749,8 @@ export default function Prototype() {
   const [downloadFeedback, setDownloadFeedback] = useState(false);
   const [wechatDownloadUrl, setWechatDownloadUrl] = useState<string | null>(null);
   const [wechatCopyState, setWechatCopyState] = useState<"idle" | "copied" | "error">("idle");
+  const [shareCardPreview, setShareCardPreview] = useState<ShareCardPreview | null>(null);
+  const [shareCardCopyState, setShareCardCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [instagramGuideOpen, setInstagramGuideOpen] = useState(() => isInstagramProfileReferral());
   const [wisdomIndex, setWisdomIndex] = useState(0);
   const [breathingStatus, setBreathingStatus] = useState<BreathingStatus>("idle");
@@ -795,6 +898,10 @@ export default function Prototype() {
     }
   }, []);
 
+  useEffect(() => () => {
+    if (shareCardPreview) URL.revokeObjectURL(shareCardPreview.imageUrl);
+  }, [shareCardPreview]);
+
   const localized = useMemo(
     () => ({
       scenePrimary: language === "zh" ? active.zh : active.en,
@@ -834,15 +941,41 @@ export default function Prototype() {
     const nativeShare = Reflect.get(navigator, "share") as Navigator["share"] | undefined;
 
     try {
-      if (nativeShare) {
-        await nativeShare.call(navigator, { title, text, url });
-      } else {
-        await navigator.clipboard.writeText(url);
+      const file = await createSceneShareCard(active, language, url);
+      const payload: ShareData = { title, text, url, files: [file] };
+      const canShareFiles = Boolean(nativeShare && navigator.canShare?.(payload));
+      if (nativeShare && canShareFiles) {
+        try {
+          await nativeShare.call(navigator, payload);
+          recordGrowthEvent("yixiu_scene_share", { shared_scene: active.id, share_method: "system_png" });
+          return;
+        } catch (error) {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+          console.warn("Native image sharing failed; opening the Yixiu share-card preview instead", error);
+        }
       }
-      recordGrowthEvent("yixiu_scene_share", { shared_scene: active.id, share_method: nativeShare ? "system" : "clipboard" });
+
+      setShareCardCopyState("idle");
+      setShareCardPreview({ imageUrl: URL.createObjectURL(file), fileName: file.name, shareUrl: url });
+      recordGrowthEvent("yixiu_scene_share", { shared_scene: active.id, share_method: "card_preview" });
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
       console.error("Unable to share the current Yixiu scene", error);
+    }
+  };
+
+  const closeShareCard = () => {
+    setShareCardPreview(null);
+    setShareCardCopyState("idle");
+  };
+
+  const copyShareCardLink = async () => {
+    if (!shareCardPreview) return;
+    try {
+      await copyTextToClipboard(shareCardPreview.shareUrl);
+      setShareCardCopyState("copied");
+    } catch (error) {
+      console.error("Unable to copy the Yixiu scene link", error);
+      setShareCardCopyState("error");
     }
   };
 
@@ -1829,6 +1962,41 @@ export default function Prototype() {
               <ExternalLinkIcon />
             </a>
             <em>{language === "zh" ? "H5 无需账号；会员权益由 App Store 安全管理。" : "No H5 account is required. Membership is managed securely by the App Store."}</em>
+          </section>
+        </div>
+      ) : null}
+
+      {shareCardPreview ? (
+        <div
+          className="share-card-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-label={language === "zh" ? `分享${active.zh}` : `Share ${active.en}`}
+        >
+          <button className="share-card-backdrop" type="button" aria-label={language === "zh" ? "关闭分享图" : "Close share card"} onClick={closeShareCard} />
+          <section>
+            <button className="share-card-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={closeShareCard}><Cross2Icon /></button>
+            <div className="share-card-copy">
+              <small>{language === "zh" ? "分享这一刻" : "SHARE THIS MOMENT"}</small>
+              <h2>{language === "zh" ? "长按图片，分享到微信" : "Save or share the image"}</h2>
+              <p>{language === "zh" ? "二维码已放在右下角。微信内可长按保存，再发给朋友或朋友圈。" : "The QR code in the lower-right opens this exact scene."}</p>
+            </div>
+            <img
+              src={shareCardPreview.imageUrl}
+              alt={language === "zh" ? `一休${active.zh}分享图，右下角含二维码` : `Yixiu ${active.en} share card with a QR code in the lower-right`}
+            />
+            <div className="share-card-actions">
+              <a href={shareCardPreview.imageUrl} download={shareCardPreview.fileName}>
+                {language === "zh" ? "保存分享图" : "Save image"}
+              </a>
+              <button type="button" onClick={copyShareCardLink}>
+                {shareCardCopyState === "copied"
+                  ? (language === "zh" ? "链接已复制" : "Link copied")
+                  : shareCardCopyState === "error"
+                    ? (language === "zh" ? "复制失败" : "Copy failed")
+                    : (language === "zh" ? "复制链接" : "Copy link")}
+              </button>
+            </div>
           </section>
         </div>
       ) : null}

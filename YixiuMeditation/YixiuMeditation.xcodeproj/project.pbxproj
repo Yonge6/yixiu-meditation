@@ -23,6 +23,10 @@
 		A2000000000000000000000E /* SubscriptionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000010 /* SubscriptionStore.swift */; };
 		A2000000000000000000000F /* PlusPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* PlusPaywallView.swift */; };
 		A20000000000000000000010 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000004 /* InfoPlist.strings */; };
+		A20000000000000000000011 /* ActivityShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* ActivityShareSheet.swift */; };
+		A20000000000000000000012 /* SceneShareCardRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000016 /* SceneShareCardRenderer.swift */; };
+		A20000000000000000000013 /* DailyReminderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000017 /* DailyReminderManager.swift */; };
+		A20000000000000000000014 /* DailyReminderSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000B /* DailyReminderSchedule.swift */; };
 		B20000000000000000000001 /* QuietMinuteActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* QuietMinuteActivityAttributes.swift */; };
 		B20000000000000000000002 /* QuietMinuteIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* QuietMinuteIntents.swift */; };
 		B20000000000000000000003 /* OneMinuteControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* OneMinuteControl.swift */; };
@@ -35,6 +39,7 @@
 		B2000000000000000000000A /* QuietMinuteActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* QuietMinuteActivityAttributes.swift */; };
 		B2000000000000000000000B /* QuietMinuteActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000A /* QuietMinuteActivityManager.swift */; };
 		B2000000000000000000000C /* QuietMinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000008 /* QuietMinuteSchedule.swift */; };
+		B2000000000000000000000D /* QuietMinuteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000C /* QuietMinuteWidget.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +87,9 @@
 		A10000000000000000000012 /* YixiuPlus.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = YixiuPlus.storekit; sourceTree = "<group>"; };
 		A10000000000000000000013 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		A10000000000000000000014 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A10000000000000000000015 /* ActivityShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityShareSheet.swift; sourceTree = "<group>"; };
+		A10000000000000000000016 /* SceneShareCardRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneShareCardRenderer.swift; sourceTree = "<group>"; };
+		A10000000000000000000017 /* DailyReminderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReminderManager.swift; sourceTree = "<group>"; };
 		B10000000000000000000001 /* YixiuQuietWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = YixiuQuietWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10000000000000000000002 /* QuietMinuteActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteActivityAttributes.swift; sourceTree = "<group>"; };
 		B10000000000000000000003 /* QuietMinuteIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteIntents.swift; sourceTree = "<group>"; };
@@ -92,6 +100,8 @@
 		B10000000000000000000008 /* QuietMinuteSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteSchedule.swift; sourceTree = "<group>"; };
 		B10000000000000000000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1000000000000000000000A /* QuietMinuteActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteActivityManager.swift; sourceTree = "<group>"; };
+		B1000000000000000000000B /* DailyReminderSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReminderSchedule.swift; sourceTree = "<group>"; };
+		B1000000000000000000000C /* QuietMinuteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietMinuteWidget.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +147,9 @@
 				A1000000000000000000000F /* SubscriptionAccessPolicy.swift */,
 				A10000000000000000000010 /* SubscriptionStore.swift */,
 				A10000000000000000000011 /* PlusPaywallView.swift */,
+				A10000000000000000000015 /* ActivityShareSheet.swift */,
+				A10000000000000000000016 /* SceneShareCardRenderer.swift */,
+				A10000000000000000000017 /* DailyReminderManager.swift */,
 				A10000000000000000000012 /* YixiuPlus.storekit */,
 				A1000000000000000000000A /* Assets.xcassets */,
 				A1000000000000000000000D /* Audio */,
@@ -163,6 +176,7 @@
 				B10000000000000000000003 /* QuietMinuteIntents.swift */,
 				B1000000000000000000000A /* QuietMinuteActivityManager.swift */,
 				B10000000000000000000004 /* OneMinuteControl.swift */,
+				B1000000000000000000000C /* QuietMinuteWidget.swift */,
 				B10000000000000000000005 /* QuietMinuteLiveActivity.swift */,
 				B10000000000000000000006 /* YixiuQuietWidgetBundle.swift */,
 				B10000000000000000000007 /* Localizable.xcstrings */,
@@ -175,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				B10000000000000000000008 /* QuietMinuteSchedule.swift */,
+				B1000000000000000000000B /* DailyReminderSchedule.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -307,6 +322,10 @@
 				A2000000000000000000000D /* SubscriptionAccessPolicy.swift in Sources */,
 				A2000000000000000000000E /* SubscriptionStore.swift in Sources */,
 				A2000000000000000000000F /* PlusPaywallView.swift in Sources */,
+				A20000000000000000000011 /* ActivityShareSheet.swift in Sources */,
+				A20000000000000000000012 /* SceneShareCardRenderer.swift in Sources */,
+				A20000000000000000000013 /* DailyReminderManager.swift in Sources */,
+				A20000000000000000000014 /* DailyReminderSchedule.swift in Sources */,
 				B2000000000000000000000A /* QuietMinuteActivityAttributes.swift in Sources */,
 				B2000000000000000000000B /* QuietMinuteActivityManager.swift in Sources */,
 				B2000000000000000000000C /* QuietMinuteSchedule.swift in Sources */,
@@ -324,6 +343,7 @@
 				B20000000000000000000004 /* QuietMinuteLiveActivity.swift in Sources */,
 				B20000000000000000000005 /* YixiuQuietWidgetBundle.swift in Sources */,
 				B20000000000000000000006 /* QuietMinuteSchedule.swift in Sources */,
+				B2000000000000000000000D /* QuietMinuteWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,7 +490,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -504,7 +524,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -531,7 +551,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -558,7 +578,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
