@@ -472,7 +472,7 @@ struct ListenView: View {
 
     private var timerPanel: some View {
         HStack(spacing: 7) {
-            ForEach([15, 30, 60, 0], id: \.self) { minutes in
+            ForEach([5, 15, 30, 60, 0], id: \.self) { minutes in
                 Button {
                     guard subscriptionStore.canUseTimer(minutes) else {
                         timerOpen = false

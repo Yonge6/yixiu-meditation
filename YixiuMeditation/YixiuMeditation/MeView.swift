@@ -96,8 +96,11 @@ struct MeView: View {
                     .foregroundStyle(YixiuTheme.moon)
                     .padding(.top, 12)
 
-                soundSpaceCard
+                journalCard
                     .padding(.top, 20)
+
+                soundSpaceCard
+                    .padding(.top, 16)
 
                 membershipCard
                     .padding(.top, 12)
@@ -190,6 +193,85 @@ struct MeView: View {
                 .stroke(YixiuTheme.hairline, lineWidth: 0.8)
         )
         .shadow(color: .black.opacity(0.2), radius: 18, y: 10)
+    }
+
+    private var journalCard: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(language.text(zh: "留给自己的时间", en: "TIME TO YOURSELF"))
+                        .font(YixiuTheme.sans(11, weight: .medium)).tracking(1.4)
+                    HStack(alignment: .firstTextBaseline, spacing: 7) {
+                        Text("\(PracticeEntry.weekMinutes(appState.practiceJournal))")
+                            .font(YixiuTheme.englishSerif(44)).foregroundStyle(YixiuTheme.moon)
+                        Text(language.text(zh: "分钟 · 本周", en: "min · this week"))
+                            .font(YixiuTheme.sans(12))
+                    }
+                }
+                Spacer()
+                Image(systemName: "water.waves").font(.system(size: 27, weight: .ultraLight))
+                    .foregroundStyle(YixiuTheme.aquaStrong)
+            }
+            HStack(spacing: 0) {
+                ForEach(PracticeEntry.weekDays(), id: \.self) { day in
+                    let completed = appState.practiceJournal.contains {
+                        $0.completedAt <= Date() && Calendar.current.isDate($0.completedAt, inSameDayAs: day)
+                    }
+                    VStack(spacing: 9) {
+                        Circle().fill(completed ? YixiuTheme.aquaStrong : YixiuTheme.mist.opacity(0.15))
+                            .frame(width: 8, height: 8)
+                        Text(day.formatted(.dateTime.weekday(.narrow).locale(Locale(identifier: language == .zh ? "zh_CN" : "en_US"))))
+                            .font(YixiuTheme.sans(11))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(day.formatted(date: .abbreviated, time: .omitted) + language.text(zh: completed ? "，有完成练习" : "，暂无记录", en: completed ? ", practice completed" : ", no practice recorded"))
+                }
+            }
+            Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7)
+            if appState.practiceJournal.isEmpty {
+                Text(language.text(zh: "不必连续，每次回来都算数。\n完成一次练习，时间会留在这里。", en: "No streak to keep. Every return matters.\nYour completed practices will appear here."))
+                    .font(YixiuTheme.sans(12)).lineSpacing(5)
+            } else {
+                ForEach(Array(appState.practiceJournal.prefix(3))) { entry in
+                    journalRow(entry)
+                }
+            }
+            Text(language.text(zh: "仅保存在此设备 · 不上传 · 最多 200 条", en: "On this device only · Not uploaded · Up to 200 entries"))
+                .font(YixiuTheme.sans(10)).foregroundStyle(YixiuTheme.mist.opacity(0.75))
+        }
+        .foregroundStyle(YixiuTheme.mist)
+        .padding(22)
+        .background(LinearGradient(colors: [YixiuTheme.deepWaterSoft.opacity(0.92), YixiuTheme.deepWater.opacity(0.98)], startPoint: .topLeading, endPoint: .bottomTrailing))
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(YixiuTheme.hairline, lineWidth: 0.7))
+    }
+
+    private func journalRow(_ entry: PracticeEntry) -> some View {
+        let scene = MeditationScene(rawValue: entry.sceneID) ?? .ocean
+        return Button {
+            guard subscriptionStore.canAccess(scene),
+                  entry.kind == .breathing ? subscriptionStore.canUseFocus(entry.seconds / 60) : subscriptionStore.canUseTimer(entry.seconds / 60) else {
+                paywallOpen = true
+                return
+            }
+            appState.replay(entry)
+        } label: {
+            HStack(spacing: 12) {
+                Image(scene.assetName).resizable().scaledToFill().frame(width: 42, height: 48)
+                    .clipShape(RoundedRectangle(cornerRadius: 9))
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(entry.kind == .breathing ? language.text(zh: "水之呼吸", en: "Water Breathing") : language.text(zh: scene.zhName, en: scene.enName))
+                        .font(YixiuTheme.sans(13, weight: .medium)).foregroundStyle(YixiuTheme.moon)
+                    Text("\(entry.seconds / 60) \(language == .zh ? "分钟" : "min") · \(entry.completedAt.formatted(.dateTime.month().day().locale(Locale(identifier: language == .zh ? "zh_CN" : "en_US"))))")
+                        .font(YixiuTheme.sans(11))
+                }
+                Spacer()
+                Image(systemName: "arrow.counterclockwise").foregroundStyle(YixiuTheme.aquaStrong)
+            }.frame(minHeight: 48)
+        }
+        .buttonStyle(.plain)
+        .accessibilityHint(language.text(zh: "再次练习", en: "Practice again"))
     }
 
     private var membershipCard: some View {
@@ -431,7 +513,7 @@ struct MeView: View {
             }
 
             HStack(spacing: 7) {
-                ForEach([15, 30, 60, 0], id: \.self) { minutes in
+                ForEach([5, 15, 30, 60, 0], id: \.self) { minutes in
                     Button {
                         guard subscriptionStore.canUseTimer(minutes) else {
                             paywallOpen = true
@@ -791,8 +873,8 @@ struct MeView: View {
                         en: "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."
                     ),
                     language.text(
-                        zh: "一休不会读取位置、照片、通讯录或健康数据。卸载 App 会同时移除本地偏好。",
-                        en: "Yixiu does not access location, photos, contacts or health data. Removing the app also removes local preferences."
+                        zh: "练习手记仅在此设备保存最近 200 次完成练习的时间、时长、类型与声音，不上传或跨设备同步。卸载 App 会同时移除本地偏好与手记。",
+                        en: "The journal keeps the date, duration, type and sound of up to 200 completed practices on this device. It is not uploaded or synced. Removing the app also removes local preferences and entries."
                     )
                 ],
                 quote: language.text(zh: "少一些记录，多一些当下。", en: "Less tracking. More presence.")

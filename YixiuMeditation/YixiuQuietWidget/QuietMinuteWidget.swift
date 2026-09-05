@@ -78,16 +78,17 @@ private struct QuietMinuteWidgetView: View {
                 .buttonStyle(.plain)
 
             case .systemMedium:
+                VStack(alignment: .leading, spacing: 12) {
                 Button(intent: StartQuietMinuteIntent()) {
                     HStack(spacing: 18) {
-                        waterMark(size: 72)
+                        waterMark(size: 54)
                         VStack(alignment: .leading, spacing: 7) {
                             Text("YIXIU · 一休")
                                 .font(.caption2.weight(.semibold))
                                 .tracking(1.2)
                                 .foregroundStyle(Color.cyan.opacity(0.9))
                             Text("One quiet minute")
-                                .font(.title2.weight(.semibold))
+                                .font(.headline)
                                 .foregroundStyle(.white)
                             Text("Inhale 4 · Hold 2 · Exhale 6")
                                 .font(.caption)
@@ -102,6 +103,13 @@ private struct QuietMinuteWidgetView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                Link(destination: URL(string: "yixiu://resume")!) {
+                    Label("Return to your sound", systemImage: "arrow.up.right")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.white.opacity(0.82))
+                        .frame(maxWidth: .infinity, minHeight: 30, alignment: .leading)
+                }
+                }
 
             default:
                 Button(intent: StartQuietMinuteIntent()) {

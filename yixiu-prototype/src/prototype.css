@@ -1177,7 +1177,7 @@ img[data-image-scene="tide"] {
   right: 18px;
   left: 18px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 7px;
   padding: 12px;
   border: 1px solid rgba(167, 225, 230, 0.22);
@@ -1339,6 +1339,51 @@ img[data-image-scene="tide"] {
 .focus-screen > *,
 .me-screen > * {
   max-width: 100%;
+}
+
+/* Daily rituals: a quiet photographic index, followed by a private field journal. */
+.focus-screen { overflow-y: auto; overscroll-behavior: contain; }
+.daily-practices { width: min(100%, 560px); margin: 23px auto 30px; text-align: left; }
+.daily-heading { margin: 0 0 18px; color: #eef4ee; font-family: var(--serif); font-size: clamp(24px, 5.8vw, 30px); line-height: 1.45; letter-spacing: 0.01em; }
+.daily-practice { display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 10px; padding: 0 16px 0 0 !important; overflow: hidden; border: 1px solid rgba(171, 218, 216, .2) !important; border-radius: 16px !important; background: rgba(2, 24, 32, .86) !important; text-align: left; transition: border-color .2s, background .2s; }
+.daily-practice:hover { border-color: rgba(145, 229, 217, .65) !important; background: rgba(9, 46, 52, .96) !important; }
+.practice-image { position: relative; flex: 0 0 66px; height: 78px; overflow: hidden; }
+.practice-image img { width: 100%; height: 100%; object-fit: cover; }
+.practice-image::after { position: absolute; inset: 0; content: ""; background: linear-gradient(transparent, rgba(0, 18, 27, .6)); }
+.practice-image small { position: absolute; left: 9px; bottom: 7px; z-index: 1; color: #edf7f2; font-size: 10px; letter-spacing: .08em; }
+.practice-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 7px; }
+.practice-copy strong { color: #eef4ee; font-size: 15px; font-weight: 500; line-height: 1.4; }
+.practice-copy small { color: #b2ccc9; font-size: 10px; letter-spacing: .07em; line-height: 1.6; }
+.daily-practice > svg { flex: 0 0 16px; color: #97d8cf; }
+.practice-birds > svg { color: #d9c7a0; }
+.daily-practice:focus-visible, .journal-entry:focus-visible { outline: 2px solid #b0eee4 !important; outline-offset: 4px; }
+.focus-screen[data-practicing="false"] > h1 { padding-top: 20px; border-top: 1px solid rgba(171, 218, 216, .18); width: min(100%, 560px); margin-left: auto; margin-right: auto; font-size: 26px; }
+.practice-journal { padding: 24px 22px 18px; border: 1px solid rgba(171, 218, 216, .2); border-radius: 24px; background: linear-gradient(140deg, rgba(18, 51, 57, .97), rgba(3, 24, 32, .98)); text-align: left; }
+.journal-heading { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+.journal-heading h2 { margin: 0; color: #bdcfcc; font-size: 11px; font-weight: 500; letter-spacing: .14em; }
+.journal-heading p { display: flex; align-items: baseline; gap: 9px; margin: 8px 0 0; }
+.journal-heading strong { color: #eef4ee; font-family: var(--serif); font-size: 46px; font-weight: 400; line-height: 1.1; }
+.journal-heading span { color: #b2ccc9; font-size: 12px; }
+.journal-heading > svg { width: 32px; height: 32px; color: #96d7cd; }
+.journal-week { display: grid; grid-template-columns: repeat(7, 1fr); margin: 24px 0 20px; padding-bottom: 22px; border-bottom: 1px solid rgba(171, 218, 216, .18); }
+.journal-week > span { display: flex; align-items: center; flex-direction: column; gap: 10px; }
+.journal-week i { width: 8px; height: 8px; border-radius: 50%; background: #426065; }
+.journal-week .has-practice i { background: #9dded1; box-shadow: 0 0 0 4px rgba(157, 222, 209, .08); }
+.journal-week small { color: #b2ccc9; font-size: 11px; }
+.journal-empty { margin: 0; color: #c6d6d2; font-size: 12px; line-height: 1.9; }
+.journal-privacy { margin: 18px 0 0; color: #99b2b0; font-size: 10px; line-height: 1.8; }
+.journal-entries { display: grid; gap: 14px; }
+.journal-entry { display: flex; align-items: center; gap: 12px; padding: 0 !important; width: 100%; min-height: 48px; background: transparent !important; text-align: left; }
+.journal-entry img { width: 42px; height: 48px; object-fit: cover; border-radius: 9px; }
+.journal-entry > span { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 5px; }
+.journal-entry strong { color: #e6eeea; font-size: 13px; font-weight: 500; }
+.journal-entry small { color: #b2ccc9; font-size: 11px; }
+.journal-entry > svg { color: #a7ded4; flex: 0 0 16px; }
+@media (min-width: 768px) {
+  .daily-practice { min-height: 90px; }
+  .practice-image { flex-basis: 86px; height: 90px; }
+  .practice-copy strong { font-size: 17px; }
+  .practice-copy small { font-size: 11px; }
 }
 
 .focus-screen h1,
@@ -1733,12 +1778,12 @@ img[data-image-scene="tide"] {
 .duration-options {
   display: grid;
   margin-top: 15px;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 7px;
 }
 
 .duration-options button {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 4px;
   border: 1px solid rgba(163, 225, 230, 0.2) !important;
   border-radius: 13px;

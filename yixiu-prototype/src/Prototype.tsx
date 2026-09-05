@@ -21,6 +21,7 @@ import {
   UploadIcon,
 } from "@radix-ui/react-icons";
 import QRCode from "qrcode";
+import { usePracticeJournal, weekDays, type PracticeEntry } from "./practiceJournal";
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
@@ -49,7 +50,7 @@ type SceneId =
   | "oasisRest"
   | "sunlitShore"
   | "oceanPassage";
-type DurationOption = 15 | 30 | 60 | 0;
+type DurationOption = 5 | 15 | 30 | 60 | 0;
 type FocusDuration = 1 | 3;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
 type SceneCategory = "all" | "nature" | "meditation" | "sleep" | "focus" | "morning" | "relax";
@@ -368,7 +369,7 @@ const sceneOrder: SceneId[] = [
   "sunlitShore",
   "oceanPassage",
 ];
-const durations: DurationOption[] = [15, 30, 60, 0];
+const durations: DurationOption[] = [5, 15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3];
 const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
@@ -422,7 +423,8 @@ function useStoredState<T>(key: string, fallback: T, linkedValue: T | null = nul
   });
 
   useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    try { window.localStorage.setItem(key, JSON.stringify(value)); }
+    catch { /* Playback remains usable when browser storage is unavailable. */ }
   }, [key, value]);
 
   return [value, setValue] as const;
@@ -788,6 +790,7 @@ function preferredLanguage(): Language {
 }
 
 export default function Prototype() {
+  const journal = usePracticeJournal(sceneOrder);
   const [language, setLanguage] = useStoredState<Language>("yixiu.language", preferredLanguage(), linkedLanguage());
   const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene());
   const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30);
@@ -831,6 +834,7 @@ export default function Prototype() {
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const breathingOriginalPlaybackRef = useRef(false);
+  const breathingSceneRef = useRef<SceneId>("ocean");
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [swipeProgress, setSwipeProgress] = useState(0);
   const [swipeSettling, setSwipeSettling] = useState(false);
@@ -843,8 +847,9 @@ export default function Prototype() {
   const nextScene = activeIndex < sceneOrder.length - 1 ? scenes[sceneOrder[activeIndex + 1]] : null;
   const swipePreviewScene = swipeOffset < 0 ? nextScene : previousScene;
   const isFavorite = favorites.includes(active.id);
-  const [remainingSeconds, setRemainingSeconds] = useWallClockTimer(isPlaying, duration * 60, () => {
+  const [remainingSeconds, setRemainingSeconds] = useWallClockTimer(isPlaying && breathingStatus !== "running", duration * 60, () => {
     setIsPlaying(false);
+    journal.complete({ sceneId: active.id, seconds: duration * 60, kind: "listening" });
     setWisdomIndex(index => (index + 1) % wisdoms.length);
     setWisdomOpen(true);
     recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
@@ -854,6 +859,7 @@ export default function Prototype() {
   const [breathingRemaining, resetBreathingTimer] = useWallClockTimer(breathingStatus === "running", breathingTotalSeconds, () => {
     setBreathingStatus("complete");
     setIsPlaying(breathingOriginalPlaybackRef.current);
+    journal.complete({ sceneId: breathingSceneRef.current, seconds: breathingTotalSeconds, kind: "breathing" });
     recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
   });
   const breathingElapsed = breathingTotalSeconds - breathingRemaining;
@@ -1275,6 +1281,7 @@ export default function Prototype() {
   }, [active, isPlaying, language, nextScene, previousScene]);
 
   const beginBreathing = () => {
+    breathingSceneRef.current = active.id;
     breathingOriginalPlaybackRef.current = isPlaying;
     setIsPlaying(focusSoundEnabled);
     resetBreathingTimer();
@@ -1283,10 +1290,47 @@ export default function Prototype() {
   };
 
   const resetBreathing = () => {
-    setIsPlaying(breathingOriginalPlaybackRef.current);
+    if (breathingStatus === "running") setIsPlaying(breathingOriginalPlaybackRef.current);
     resetBreathingTimer();
     setBreathingStatus("idle");
   };
+
+  const toggleBreathing = () => {
+    if (breathingStatus === "running") {
+      setBreathingStatus("paused");
+      setIsPlaying(breathingOriginalPlaybackRef.current);
+    } else {
+      breathingOriginalPlaybackRef.current = isPlaying;
+      setIsPlaying(focusSoundEnabled);
+      setBreathingStatus("running");
+    }
+  };
+
+  const startQuickPractice = (sceneId: SceneId, minutes: DurationOption | FocusDuration, kind: PracticeEntry["kind"]) => {
+    if (!freeSceneIds.has(sceneId)) { setUpgradeOpen(true); return; }
+    setActiveScene(sceneId);
+    recordRecentScene(sceneId);
+    setWisdomOpen(false);
+    if (kind === "breathing") {
+      breathingOriginalPlaybackRef.current = false;
+      breathingSceneRef.current = sceneId;
+      setFocusDuration(minutes as FocusDuration);
+      setFocusSoundEnabled(true);
+      resetBreathingTimer(minutes * 60);
+      setBreathingStatus("running");
+      setActiveTab("focus");
+    } else {
+      setBreathingStatus("idle");
+      resetBreathingTimer();
+      setDuration(minutes as DurationOption);
+      setRemainingSeconds(minutes * 60);
+      setActiveTab("sounds");
+    }
+    setIsPlaying(true);
+  };
+
+  const days = weekDays();
+  const weekMinutes = Math.floor(journal.entries.filter(entry => entry.completedAt >= days[0].getTime() && entry.completedAt <= Date.now()).reduce((sum, entry) => sum + entry.seconds, 0) / 60);
 
   const breathingCycleSecond = breathingElapsed % 12;
   const breathingPhase = breathingStatus === "complete"
@@ -1572,13 +1616,13 @@ export default function Prototype() {
                   </div>
                   <div className="breathing-readout" aria-live="polite"><strong>{breathingPhaseCopy}</strong><span>{formatSeconds(Math.max(60 - breathingElapsed, 0))}</span></div>
                   {breathingStatus === "idle" || breathingStatus === "complete" ? (
-                    <button className="focus-primary" type="button" onClick={() => { resetBreathingTimer(); setBreathingStatus("running"); }}>
+                    <button className="focus-primary" type="button" onClick={beginBreathing}>
                       {breathingStatus === "complete" ? (language === "zh" ? "再来一次" : "Begin again") : (language === "zh" ? "开始 1 分钟" : "Start 1 minute")}
                     </button>
                   ) : (
                     <div className="focus-actions">
-                      <button type="button" onClick={() => setBreathingStatus((current) => current === "running" ? "paused" : "running")}>{breathingStatus === "running" ? <PauseIcon /> : <PlayIcon />}<span>{breathingStatus === "running" ? (language === "zh" ? "暂停" : "Pause") : (language === "zh" ? "继续" : "Continue")}</span></button>
-                      <button type="button" onClick={() => { resetBreathingTimer(); setBreathingStatus("idle"); }}>{language === "zh" ? "重新开始" : "Restart"}</button>
+                      <button type="button" onClick={toggleBreathing}>{breathingStatus === "running" ? <PauseIcon /> : <PlayIcon />}<span>{breathingStatus === "running" ? (language === "zh" ? "暂停" : "Pause") : (language === "zh" ? "继续" : "Continue")}</span></button>
+                      <button type="button" onClick={resetBreathing}>{language === "zh" ? "重新开始" : "Restart"}</button>
                     </div>
                   )}
                   <p className="safety-note">{language === "zh" ? "顺其自然；如有不适，请暂停。" : "Let it be easy. Pause if you feel uncomfortable."}</p>
@@ -1695,8 +1739,24 @@ export default function Prototype() {
       ) : null}
 
       {activeTab === "focus" ? (
-        <section className="focus-screen" aria-label={language === "zh" ? "水之呼吸" : "Water breathing"}>
+        <section className="focus-screen" data-practicing={breathingStatus === "running" || breathingStatus === "paused"} aria-label={language === "zh" ? "水之呼吸" : "Water breathing"}>
           <div className="section-kicker">{language === "zh" ? "静心 · FOCUS" : "FOCUS · 静心"}</div>
+          {breathingStatus === "idle" || breathingStatus === "complete" ? (
+            <section className="daily-practices" aria-label={language === "zh" ? "三个日常练习" : "Three daily practices"}>
+              <p className="daily-heading">{language === "zh" ? "留一点时间，给自己" : "A little time, just for you"}</p>
+              {([
+                { scene: "rain", minutes: 15, kind: "listening", zh: "睡前，慢下来", en: "Let the day settle", detailZh: "15 分钟 · 屋檐雨", detailEn: "15 MIN · RAIN ON EAVES", mark: "01" },
+                { scene: "stream", minutes: 1, kind: "breathing", zh: "忙碌之间，呼吸", en: "A pause between things", detailZh: "1 分钟 · 溪流呼吸", detailEn: "1 MIN · BREATHE WITH THE STREAM", mark: "02" },
+                { scene: "birds", minutes: 5, kind: "listening", zh: "清晨，轻轻开始", en: "Begin a little lighter", detailZh: "5 分钟 · 晨林鸟语", detailEn: "5 MIN · MORNING BIRDS", mark: "03" },
+              ] as const).map(practice => (
+                <button className={`daily-practice practice-${practice.scene}`} type="button" key={practice.scene} onClick={() => startQuickPractice(practice.scene, practice.minutes, practice.kind)}>
+                  <span className="practice-image"><img src={scenes[practice.scene].image} alt="" /><small>{practice.mark}</small></span>
+                  <span className="practice-copy"><strong>{language === "zh" ? practice.zh : practice.en}</strong><small>{language === "zh" ? practice.detailZh : practice.detailEn}</small></span>
+                  <ExternalLinkIcon aria-hidden="true" />
+                </button>
+              ))}
+            </section>
+          ) : null}
           <h1>{language === "zh" ? "水之呼吸" : "Water Breathing"}</h1>
           <p className="section-intro">{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</p>
 
@@ -1712,7 +1772,10 @@ export default function Prototype() {
                 </button>
               ))}
             </div>
-            <button className={`focus-sound-toggle ${focusSoundEnabled ? "is-active" : ""}`} type="button" role="switch" aria-checked={focusSoundEnabled} onClick={() => setFocusSoundEnabled((current) => !current)}>
+            <button className={`focus-sound-toggle ${focusSoundEnabled ? "is-active" : ""}`} type="button" role="switch" aria-checked={focusSoundEnabled} onClick={() => {
+              setFocusSoundEnabled(current => !current);
+              if (breathingStatus === "running") setIsPlaying(!focusSoundEnabled);
+            }}>
               <WaterWavesIcon />
               <span>{language === "zh" ? "自然声" : "Nature sound"}</span>
             </button>
@@ -1737,7 +1800,7 @@ export default function Prototype() {
             </button>
           ) : (
             <div className="focus-actions">
-              <button type="button" aria-label={breathingStatus === "running" ? (language === "zh" ? "暂停呼吸" : "Pause breathing") : (language === "zh" ? "继续呼吸" : "Continue breathing")} onClick={() => setBreathingStatus((current) => current === "running" ? "paused" : "running")}>
+              <button type="button" aria-label={breathingStatus === "running" ? (language === "zh" ? "暂停呼吸" : "Pause breathing") : (language === "zh" ? "继续呼吸" : "Continue breathing")} onClick={toggleBreathing}>
                 {breathingStatus === "running" ? <PauseIcon /> : <PlayIcon />}
                 <span>{breathingStatus === "running" ? (language === "zh" ? "暂停" : "Pause") : (language === "zh" ? "继续" : "Continue")}</span>
               </button>
@@ -1759,6 +1822,29 @@ export default function Prototype() {
               <h1>{language === "zh" ? "回到自己的节奏" : "Return to your own rhythm"}</h1>
 
               <div className="me-scroll">
+                <section className="practice-journal" aria-label={language === "zh" ? "练习手记" : "Practice journal"}>
+                  <div className="journal-heading">
+                    <div><h2>{language === "zh" ? "留给自己的时间" : "TIME TO YOURSELF"}</h2><p><strong>{weekMinutes}</strong><span>{language === "zh" ? "分钟 · 本周" : "min · this week"}</span></p></div>
+                    <WaterWavesIcon />
+                  </div>
+                  <div className="journal-week" aria-label={language === "zh" ? "本周完成记录" : "This week’s completed practices"}>
+                    {days.map(day => {
+                      const completed = journal.entries.some(entry => new Date(entry.completedAt).toDateString() === day.toDateString() && entry.completedAt <= Date.now());
+                      const locale = language === "zh" ? "zh-CN" : "en-US";
+                      return <span key={day.toISOString()} className={completed ? "has-practice" : ""} aria-label={`${day.toLocaleDateString(locale)} · ${language === "zh" ? (completed ? "有完成练习" : "暂无记录") : (completed ? "practice completed" : "no practice recorded")}`}><i aria-hidden="true" /><small aria-hidden="true">{day.toLocaleDateString(locale, { weekday: "narrow" })}</small></span>;
+                    })}
+                  </div>
+                  {journal.entries.length === 0 ? <p className="journal-empty">{language === "zh" ? "不必连续，每次回来都算数。" : "No streak to keep. Every return matters."}<br />{language === "zh" ? "完成一次练习，时间会留在这里。" : "Your completed practices will appear here."}</p> : (
+                    <div className="journal-entries">{journal.entries.slice(0, 3).map(entry => {
+                      const scene = scenes[entry.sceneId as SceneId];
+                      const title = entry.kind === "breathing" ? (language === "zh" ? "水之呼吸" : "Water Breathing") : (language === "zh" ? scene.zh : scene.en);
+                      return <button type="button" className="journal-entry" key={entry.id} aria-label={`${language === "zh" ? "再次练习" : "Practice again"}: ${title}`} onClick={() => startQuickPractice(scene.id, entry.seconds / 60 as DurationOption | FocusDuration, entry.kind)}>
+                        <img src={scene.image} alt="" /><span><strong>{title}</strong><small>{entry.seconds / 60} {language === "zh" ? "分钟" : "min"} · {new Date(entry.completedAt).toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", { month: "short", day: "numeric" })}</small></span><PlayIcon aria-hidden="true" />
+                      </button>;
+                    })}</div>
+                  )}
+                  <p className="journal-privacy" role={journal.saved ? undefined : "status"}>{journal.saved ? (language === "zh" ? "仅保存在此浏览器 · 不上传 · 最多 200 条" : "In this browser only · Not uploaded · Up to 200 entries") : (language === "zh" ? "浏览器无法保存，关闭后记录将不保留。" : "Storage unavailable. These entries won’t survive closing the page.")}</p>
+                </section>
                 <section className="me-sound-space">
                   <img src={active.image} data-image-scene={active.id} alt="" />
                   <div className="me-sound-space-shade" />
@@ -1923,7 +2009,7 @@ export default function Prototype() {
                     </section>
                   </article>
                 ) : meView === "privacy" ? (
-                  <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
+                  <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "练习手记仅在此浏览器保存最近 200 次完成练习的时间、时长、类型与声音，不上传或跨设备同步。清除浏览器数据会同时移除本地偏好与手记。" : "The journal keeps the date, duration, type and sound of up to 200 completed practices in this browser. It is not uploaded or synced. Clearing browser data also removes local preferences and entries."}</p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
                 ) : meView === "sources" ? (
                   <article className="me-article"><small>{language === "zh" ? "声音与音乐授权" : "AUDIO & MUSIC LICENSES"}</small><h2>{language === "zh" ? "每一次聆听，都尊重原创" : "Every listen respects its source"}</h2><p>{language === "zh" ? "自然环境录音按 Mixkit Sound Effects Free License 使用。" : "Nature field recordings are used under the Mixkit Sound Effects Free License."}</p><p>{language === "zh" ? "长篇冥想音乐由 HoliznaCC0 创作，按 CC0 1.0 使用；短篇音乐由 Yanni Ziangos（YannZ）创作，按 CC BY 4.0 使用。" : "Long meditation music is by HoliznaCC0 under CC0 1.0. Short music is by Yanni Ziangos (YannZ) under CC BY 4.0."}</p><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a></article>
                 ) : (

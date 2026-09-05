@@ -13,6 +13,7 @@ final class AppState: ObservableObject {
         didSet {
             defaults.set(duration, forKey: "duration")
             remainingSeconds = duration == 0 ? 0 : duration * 60
+            playbackClock.reset(seconds: remainingSeconds)
         }
     }
     @Published var favorites: [MeditationScene] = [] {
@@ -45,10 +46,20 @@ final class AppState: ObservableObject {
     @Published var audioError: String?
     @Published var sessionCompleted = false
     @Published private(set) var reviewRequestToken = 0
+    @Published private(set) var practiceJournal: [PracticeEntry] = []
+    @Published var focusRequestToken = 0
+    var isFocusActive = false {
+        didSet {
+            playbackClock.pause(now: now())
+            if isPlaying { startTimer() }
+        }
+    }
 
     private let audio = AmbientAudioEngine()
-    private let defaults = UserDefaults.standard
+    private let defaults: UserDefaults
+    private let now: () -> TimeInterval
     private var timer: Timer?
+    private var playbackClock = PracticeCountdown(seconds: 30 * 60)
     private var hasStartedPlayback = false
     private var enforcedAccessLevel: YixiuAccessLevel?
 
@@ -61,7 +72,9 @@ final class AppState: ObservableObject {
         static let promptedVersion = "yixiu.engagement.reviewPromptedVersion"
     }
 
-    init() {
+    init(defaults: UserDefaults = .standard, now: @escaping () -> TimeInterval = { Date.timeIntervalSinceReferenceDate }) {
+        self.defaults = defaults
+        self.now = now
         recordLaunch()
 
         if
@@ -79,7 +92,7 @@ final class AppState: ObservableObject {
         }
 
         let savedDuration = defaults.integer(forKey: "duration")
-        if [0, 15, 30, 60].contains(savedDuration), defaults.object(forKey: "duration") != nil {
+        if [0, 5, 15, 30, 60].contains(savedDuration), defaults.object(forKey: "duration") != nil {
             duration = savedDuration
             remainingSeconds = savedDuration == 0 ? 0 : savedDuration * 60
         }
@@ -101,6 +114,11 @@ final class AppState: ObservableObject {
         }
         if defaults.object(forKey: "volume") != nil {
             volume = defaults.double(forKey: "volume")
+        }
+        playbackClock.reset(seconds: remainingSeconds)
+        if let data = defaults.data(forKey: "yixiu.practiceJournal.v1"),
+           let entries = try? JSONDecoder().decode([PracticeEntry].self, from: data) {
+            practiceJournal = PracticeEntry.sanitized(entries).filter { MeditationScene(rawValue: $0.sceneID) != nil }
         }
 
         audio.onShouldPause = { [weak self] in
@@ -152,6 +170,7 @@ final class AppState: ObservableObject {
         }
         if duration != 0, remainingSeconds == 0 {
             remainingSeconds = duration * 60
+            playbackClock.reset(seconds: remainingSeconds)
         }
 
         do {
@@ -174,6 +193,8 @@ final class AppState: ObservableObject {
     }
 
     func pause() {
+        playbackClock.pause(now: now())
+        remainingSeconds = playbackClock.secondsRemaining(now: now())
         audio.stop()
         timer?.invalidate()
         timer = nil
@@ -214,7 +235,7 @@ final class AppState: ObservableObject {
     }
 
     func selectDuration(_ minutes: Int) {
-        guard [0, 15, 30, 60].contains(minutes) else { return }
+        guard [0, 5, 15, 30, 60].contains(minutes) else { return }
         if let enforcedAccessLevel,
            !SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: enforcedAccessLevel) {
             return
@@ -238,6 +259,7 @@ final class AppState: ObservableObject {
     func resetCompletedSession() {
         sessionCompleted = false
         remainingSeconds = duration == 0 ? 0 : duration * 60
+        playbackClock.reset(seconds: remainingSeconds)
     }
 
     func recordRecentScene(_ target: MeditationScene) {
@@ -252,7 +274,14 @@ final class AppState: ObservableObject {
         }
     }
 
-    func recordCompletedSession(isFocus: Bool = false) {
+    func recordCompletedSession(isFocus: Bool = false, seconds: Int? = nil, sceneID: String? = nil) {
+        let entry = PracticeEntry(sceneID: sceneID ?? scene.rawValue,
+                                  seconds: seconds ?? duration * 60,
+                                  kind: isFocus ? .breathing : .listening)
+        practiceJournal = PracticeEntry.sanitized([entry] + practiceJournal)
+        if let data = try? JSONEncoder().encode(practiceJournal) {
+            defaults.set(data, forKey: "yixiu.practiceJournal.v1")
+        }
         increment(EngagementKey.completedSessions)
         if isFocus {
             increment(EngagementKey.completedFocusSessions)
@@ -274,22 +303,55 @@ final class AppState: ObservableObject {
     private func startTimer() {
         timer?.invalidate()
         timer = nil
-        guard duration != 0 else { return }
+        guard duration != 0, !isFocusActive else { return }
+        playbackClock.start(now: now())
 
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
             Task { @MainActor in
-                guard let self else { return }
-                if self.remainingSeconds > 1 {
-                    self.remainingSeconds -= 1
-                    self.audio.setVolume(Float(self.volume) * self.fadeFactor)
-                    self.syncNowPlaying()
-                } else {
-                    self.remainingSeconds = 0
-                    self.pause()
-                    self.recordCompletedSession()
-                    self.sessionCompleted = true
-                }
+                self?.reconcilePlayback()
             }
+        }
+    }
+
+    func reconcilePlayback() {
+        guard isPlaying, duration != 0, !isFocusActive else { return }
+        let remaining = playbackClock.secondsRemaining(now: now())
+        guard remaining != remainingSeconds else { return }
+        remainingSeconds = remaining
+        if remaining == 0 {
+            pause()
+            recordCompletedSession()
+            sessionCompleted = true
+        } else {
+            audio.setVolume(Float(volume) * fadeFactor)
+            syncNowPlaying()
+        }
+    }
+
+    func startQuickListening(scene: MeditationScene, minutes: Int) {
+        guard canAccessScene(scene) else { return }
+        if let enforcedAccessLevel,
+           !SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: enforcedAccessLevel) { return }
+        pause()
+        selectDuration(minutes)
+        selectScene(scene, autoplay: false)
+        activeTab = .listen
+        play()
+    }
+
+    func prepareFocus(minutes: Int = 1) {
+        focusDuration = minutes
+        activeTab = .focus
+        focusRequestToken += 1
+    }
+
+    func replay(_ entry: PracticeEntry) {
+        guard let target = MeditationScene(rawValue: entry.sceneID), canAccessScene(target) else { return }
+        if entry.kind == .breathing {
+            selectScene(target, autoplay: false)
+            prepareFocus(minutes: entry.seconds / 60)
+        } else {
+            startQuickListening(scene: target, minutes: entry.seconds / 60)
         }
     }
 

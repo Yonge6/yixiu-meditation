@@ -11,6 +11,11 @@
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>一休冥想</string>
+	<key>CFBundleURLTypes</key>
+	<array><dict>
+		<key>CFBundleURLName</key><string>com.health.yixiu.practice</string>
+		<key>CFBundleURLSchemes</key><array><string>yixiu</string></array>
+	</dict></array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
