@@ -66,10 +66,6 @@ struct FocusView: View {
                     .yixiuSecondary(11)
                     .padding(.top, 38)
 
-                if status == .idle || status == .complete {
-                    quickPractices.padding(.top, 20).padding(.bottom, 26)
-                }
-
                 Text(appState.language.text(zh: "水之呼吸", en: "Water Breathing"))
                     .font(
                         appState.language == .zh
@@ -127,6 +123,10 @@ struct FocusView: View {
                 .font(YixiuTheme.sans(11))
                 .foregroundStyle(YixiuTheme.mist.opacity(0.58))
                 .padding(.top, 23)
+
+                if status == .idle || status == .complete {
+                    quickPractices.padding(.top, 30)
+                }
 
                 Spacer(minLength: 92)
                 }
@@ -351,52 +351,49 @@ struct FocusView: View {
     }
 
     private var quickPractices: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(appState.language.text(zh: "留一点时间，给自己", en: "A little time, just for you"))
-                .font(appState.language == .zh ? YixiuTheme.chineseDisplay(27) : YixiuTheme.englishSerif(28))
-                .foregroundStyle(YixiuTheme.moon)
-                .padding(.bottom, 6)
-            quickPractice(.rain, title: appState.language.text(zh: "睡前，慢下来", en: "Let the day settle"),
-                          detail: appState.language.text(zh: "15 分钟 · 屋檐雨", en: "15 MIN · RAIN ON EAVES"), icon: "moon") {
+        VStack(spacing: 12) {
+            Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7).padding(.bottom, 10)
+            Text(appState.language.text(zh: "换一种放松方式", en: "Another way to unwind"))
+                .font(YixiuTheme.sans(11))
+                .foregroundStyle(YixiuTheme.mist)
+            HStack(alignment: .top, spacing: 12) {
+            quickPractice(title: appState.language.text(zh: "睡前放松", en: "Bedtime"), minutes: 15) {
                 appState.startQuickListening(scene: .rain, minutes: 15)
             }
-            quickPractice(.stream, title: appState.language.text(zh: "忙碌之间，呼吸", en: "A pause between things"),
-                          detail: appState.language.text(zh: "1 分钟 · 溪流呼吸", en: "1 MIN · BREATHE WITH THE STREAM"), icon: "wind") {
+            quickPractice(title: appState.language.text(zh: "片刻呼吸", en: "Breathe"), minutes: 1) {
                 appState.pause()
                 appState.selectScene(.stream, autoplay: false)
                 appState.focusDuration = 1
                 appState.focusSoundEnabled = true
                 beginSession()
             }
-            quickPractice(.birds, title: appState.language.text(zh: "清晨，轻轻开始", en: "Begin a little lighter"),
-                          detail: appState.language.text(zh: "5 分钟 · 晨林鸟语", en: "5 MIN · MORNING BIRDS"), icon: "sun.horizon") {
+            quickPractice(title: appState.language.text(zh: "清晨唤醒", en: "Morning"), minutes: 5) {
                 appState.startQuickListening(scene: .birds, minutes: 5)
             }
+            }
         }
+        .frame(maxWidth: 420)
     }
 
-    private func quickPractice(_ scene: MeditationScene, title: String, detail: String, icon: String,
+    private func quickPractice(title: String, minutes: Int,
                                action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            HStack(spacing: 14) {
-                Image(scene.assetName).resizable().scaledToFill()
-                    .frame(width: 66, height: 76).clipped()
-                    .overlay(alignment: .bottomLeading) {
-                        Image(systemName: icon).font(.system(size: 13)).padding(8)
-                    }
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(title).font(YixiuTheme.sans(15, weight: .medium))
-                    Text(detail).font(YixiuTheme.sans(10)).tracking(0.7).foregroundStyle(YixiuTheme.mist)
+            VStack(spacing: 7) {
+                Image(systemName: "play").font(.system(size: 14)).foregroundStyle(YixiuTheme.aquaStrong)
+                VStack(spacing: 4) {
+                    Text(title).font(YixiuTheme.sans(12, weight: .medium))
+                    Text("\(minutes) \(appState.language == .zh ? "分钟" : "MIN")")
+                        .font(YixiuTheme.sans(10)).foregroundStyle(YixiuTheme.mist)
                 }
-                Spacer(minLength: 0)
-                Image(systemName: "play.fill").font(.system(size: 14)).foregroundStyle(YixiuTheme.aquaStrong).padding(.trailing, 16)
             }
             .foregroundStyle(YixiuTheme.moon)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, minHeight: 84)
             .background(YixiuTheme.deepWater.opacity(0.72))
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .overlay(RoundedRectangle(cornerRadius: 16).stroke(YixiuTheme.hairline, lineWidth: 0.7))
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.center)
         }.buttonStyle(.plain)
     }
 }

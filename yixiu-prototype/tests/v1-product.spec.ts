@@ -352,20 +352,23 @@ test("runs and pauses the one-minute water breathing practice", async ({ page })
   await expect(page.getByRole("button", { name: "继续呼吸" })).toBeVisible();
 });
 
-test("offers a persistent three-minute focus session with optional nature sound", async ({ page }) => {
+test("keeps longer focus gated and persists optional nature sound", async ({ page }) => {
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
   await page.getByRole("button", { name: "3 分钟" }).click();
-  await expect(page.getByText("03:00", { exact: true })).toBeVisible();
+  const membership = page.getByRole("dialog", { name: "升级一休 Plus" });
+  await expect(membership).toBeVisible();
+  await membership.getByRole("button", { name: "关闭", exact: true }).last().click();
+  await expect(page.getByText("01:00", { exact: true })).toBeVisible();
 
   const natureSound = page.getByRole("switch", { name: "自然声" });
   await natureSound.click();
   await expect(natureSound).toHaveAttribute("aria-checked", "true");
-  await page.getByRole("button", { name: "开始 3 分钟" }).click();
+  await page.getByRole("button", { name: "开始 1 分钟" }).click();
   await expect(page.getByRole("button", { name: "暂停呼吸" })).toBeVisible();
 
   await page.reload();
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
-  await expect(page.getByRole("button", { name: "3 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "1 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("switch", { name: "自然声" })).toHaveAttribute("aria-checked", "true");
 });
 
@@ -399,12 +402,12 @@ test("keeps recent listening in My and restores it after reload", async ({ page 
 test("updates and restores local settings", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();
-  await page.getByRole("button", { name: "60 分钟" }).click();
+  await page.getByRole("button", { name: "15 分钟", exact: true }).click();
   await page.getByRole("switch", { name: "结束提示音" }).click();
   await page.reload();
   await page.getByRole("button", { name: "我的 ME" }).click();
 
-  await expect(page.getByRole("button", { name: "60 分钟" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "15 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("switch", { name: "结束提示音" })).toHaveAttribute("aria-checked", "true");
 });
 
@@ -640,7 +643,7 @@ test("plays free meditation music and gates a Plus track", async ({ page }) => {
 
   const gate = page.getByRole("dialog", { name: "升级一休 Plus" });
   await expect(gate).toBeVisible();
-  await expect(gate).toContainText("5 种自然声和 2 首冥想音乐");
+  await expect(gate).toContainText("5 种自然声、2 首冥想音乐");
   await expect(gate.getByRole("link", { name: /在 App Store 查看一休 Plus/ })).toHaveAttribute("href", /ct=yixiu_h5_music_plus_20260830/);
   await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "stillWater");
 });

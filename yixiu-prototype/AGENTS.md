@@ -2,6 +2,10 @@
 
 ## Yixiu Product Direction
 
+- Approved compact Focus correction (2026-09-05) supersedes the earlier three-row design: put three equal-width, minimum-84px shortcuts below breathing controls/safety in one row, with 12px gaps, play icons, short names and durations, no large images. Hide while running/paused. Match native/H5 hierarchy. H5 has free access only until genuine entitlement sync exists; show locked 3/5/10-minute Focus and 60/unlimited listening options, matching native free policy. Never claim browser Apple membership or prices.
+
+- Focus must scroll vertically on iPad portrait/landscape and reduced browser viewports. Never allow the tablet flex column to shrink the breathing orbit or settings below their content height. Regression checks must verify actual scroll gestures, vertical non-overlap and access to the start/pause controls above the fixed bottom navigation, not just horizontal bounds.
+
 - User correction (2026-09-05): use a consistent 12px gap between adjacent Me cards and between the three quick-practice rows, in H5 and native App. H5 Focus must expose 1/3/5/10 minutes; keep existing native StoreKit gates unchanged. Quick-practice actions use a play triangle, never a share/external-link icon.
 
 - For 1.10, keep the Sounds player immersive; add the user-approved three quick practices on Focus and a gentle device-local completion journal on Me. Refine typography, water imagery, spacing and contrast without adding Human Design, streak pressure or a dashboard to the home player.

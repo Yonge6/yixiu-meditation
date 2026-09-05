@@ -98,7 +98,7 @@ struct PlusPaywallView: View {
             Divider().overlay(YixiuTheme.hairline)
             benefit("timer", zh: "60 分钟与不限时聆听", en: "60-minute and unlimited listening")
             Divider().overlay(YixiuTheme.hairline)
-            benefit("circle.circle", zh: "5 / 10 分钟水之呼吸", en: "5 / 10-minute water breathing")
+            benefit("circle.circle", zh: "3 / 5 / 10 分钟水之呼吸", en: "3 / 5 / 10-minute water breathing")
             Divider().overlay(YixiuTheme.hairline)
             benefit("sparkles", zh: "未来混音与日常静心练习", en: "Future mixes and daily practices")
         }

@@ -11,6 +11,7 @@ import {
   ExternalLinkIcon,
   HeartFilledIcon,
   HeartIcon,
+  LockClosedIcon,
   PauseIcon,
   PersonIcon,
   PlayIcon,
@@ -22,6 +23,7 @@ import {
 } from "@radix-ui/react-icons";
 import QRCode from "qrcode";
 import { usePracticeJournal, weekDays, type PracticeEntry } from "./practiceJournal";
+import { canUseFreeFocus, canUseFreeTimer } from "./accessPolicy";
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
@@ -793,10 +795,12 @@ export default function Prototype() {
   const journal = usePracticeJournal(sceneOrder);
   const [language, setLanguage] = useStoredState<Language>("yixiu.language", preferredLanguage(), linkedLanguage());
   const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene());
-  const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30);
+  const [savedDuration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30);
+  const duration: DurationOption = canUseFreeTimer(savedDuration) ? savedDuration : 30;
   const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", []);
   const [recentScenes, setRecentScenes] = useStoredState<SceneId[]>("yixiu.recentScenes", []);
-  const [focusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1);
+  const [savedFocusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1);
+  const focusDuration: FocusDuration = canUseFreeFocus(savedFocusDuration) ? savedFocusDuration : 1;
   const [focusSoundEnabled, setFocusSoundEnabled] = useStoredState<boolean>("yixiu.focusSoundEnabled", false);
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
   const [backgroundPlayback, setBackgroundPlayback] = useStoredState<boolean>("yixiu.backgroundPlayback", true);
@@ -1166,6 +1170,7 @@ export default function Prototype() {
   };
 
   const selectDuration = (minutes: DurationOption) => {
+    if (!canUseFreeTimer(minutes)) { setTimerOpen(false); setUpgradeOpen(true); return; }
     setDuration(minutes);
     setRemainingSeconds(minutes === 0 ? 0 : minutes * 60);
     setTimerOpen(false);
@@ -1281,6 +1286,7 @@ export default function Prototype() {
   }, [active, isPlaying, language, nextScene, previousScene]);
 
   const beginBreathing = () => {
+    if (!canUseFreeFocus(focusDuration)) { setUpgradeOpen(true); return; }
     breathingSceneRef.current = active.id;
     breathingOriginalPlaybackRef.current = isPlaying;
     setIsPlaying(focusSoundEnabled);
@@ -1308,6 +1314,7 @@ export default function Prototype() {
 
   const startQuickPractice = (sceneId: SceneId, minutes: DurationOption | FocusDuration, kind: PracticeEntry["kind"]) => {
     if (!freeSceneIds.has(sceneId)) { setUpgradeOpen(true); return; }
+    if (!(kind === "breathing" ? canUseFreeFocus(minutes) : canUseFreeTimer(minutes))) { setUpgradeOpen(true); return; }
     setActiveScene(sceneId);
     recordRecentScene(sceneId);
     setWisdomOpen(false);
@@ -1643,7 +1650,7 @@ export default function Prototype() {
                 <section className="yixiu-drawer-subview drawer-timer">
                   <p className="yixiu-drawer-lead">{language === "zh" ? "到时后声音会逐渐淡出。" : "The sound fades gently when time is up."}</p>
                   <div className="duration-options settings-duration">
-                    {durations.map((minutes) => <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => { setDuration(minutes); setRemainingSeconds(minutes === 0 ? 0 : minutes * 60); }}>{minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}</button>)}
+                    {durations.map((minutes) => <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => selectDuration(minutes)}>{minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}{!canUseFreeTimer(minutes) && <LockClosedIcon className="entitlement-lock" aria-label={language === "zh" ? "需升级" : "Upgrade required"} />}</button>)}
                   </div>
                 </section>
               ) : (
@@ -1741,22 +1748,6 @@ export default function Prototype() {
       {activeTab === "focus" ? (
         <section className="focus-screen" data-practicing={breathingStatus === "running" || breathingStatus === "paused"} aria-label={language === "zh" ? "水之呼吸" : "Water breathing"}>
           <div className="section-kicker">{language === "zh" ? "静心 · FOCUS" : "FOCUS · 静心"}</div>
-          {breathingStatus === "idle" || breathingStatus === "complete" ? (
-            <section className="daily-practices" aria-label={language === "zh" ? "三个日常练习" : "Three daily practices"}>
-              <p className="daily-heading">{language === "zh" ? "留一点时间，给自己" : "A little time, just for you"}</p>
-              {([
-                { scene: "rain", minutes: 15, kind: "listening", zh: "睡前，慢下来", en: "Let the day settle", detailZh: "15 分钟 · 屋檐雨", detailEn: "15 MIN · RAIN ON EAVES", mark: "01" },
-                { scene: "stream", minutes: 1, kind: "breathing", zh: "忙碌之间，呼吸", en: "A pause between things", detailZh: "1 分钟 · 溪流呼吸", detailEn: "1 MIN · BREATHE WITH THE STREAM", mark: "02" },
-                { scene: "birds", minutes: 5, kind: "listening", zh: "清晨，轻轻开始", en: "Begin a little lighter", detailZh: "5 分钟 · 晨林鸟语", detailEn: "5 MIN · MORNING BIRDS", mark: "03" },
-              ] as const).map(practice => (
-                <button className={`daily-practice practice-${practice.scene}`} type="button" key={practice.scene} onClick={() => startQuickPractice(practice.scene, practice.minutes, practice.kind)}>
-                  <span className="practice-image"><img src={scenes[practice.scene].image} alt="" /><small>{practice.mark}</small></span>
-                  <span className="practice-copy"><strong>{language === "zh" ? practice.zh : practice.en}</strong><small>{language === "zh" ? practice.detailZh : practice.detailEn}</small></span>
-                  <PlayIcon className="practice-play-icon" aria-hidden="true" />
-                </button>
-              ))}
-            </section>
-          ) : null}
           <h1>{language === "zh" ? "水之呼吸" : "Water Breathing"}</h1>
           <p className="section-intro">{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</p>
 
@@ -1765,10 +1756,12 @@ export default function Prototype() {
               {focusDurations.map((minutes) => (
                 <button key={minutes} type="button" className={focusDuration === minutes ? "is-active" : ""} aria-pressed={focusDuration === minutes} onClick={() => {
                   if (breathingStatus === "running" || breathingStatus === "paused") return;
+                  if (!canUseFreeFocus(minutes)) { setUpgradeOpen(true); return; }
                   setFocusDuration(minutes);
                   resetBreathingTimer();
                 }}>
                   {minutes} {language === "zh" ? "分钟" : "MIN"}
+                  {!canUseFreeFocus(minutes) && <LockClosedIcon className="entitlement-lock" aria-label={language === "zh" ? "需升级" : "Upgrade required"} />}
                 </button>
               ))}
             </div>
@@ -1811,6 +1804,23 @@ export default function Prototype() {
           )}
 
           <p className="safety-note">{language === "zh" ? "顺其自然；如有不适，请暂停。" : "Let it be easy. Pause if you feel uncomfortable."}</p>
+          {breathingStatus === "idle" || breathingStatus === "complete" ? (
+            <section className="daily-practices" aria-label={language === "zh" ? "三个日常练习" : "Three daily practices"}>
+              <p className="daily-heading">{language === "zh" ? "换一种放松方式" : "Another way to unwind"}</p>
+              <div className="daily-practice-grid">
+                {([
+                  { scene: "rain", minutes: 15, kind: "listening", zh: "睡前放松", en: "Bedtime" },
+                  { scene: "stream", minutes: 1, kind: "breathing", zh: "片刻呼吸", en: "Breathe" },
+                  { scene: "birds", minutes: 5, kind: "listening", zh: "清晨唤醒", en: "Morning" },
+                ] as const).map(practice => (
+                  <button className={`daily-practice practice-${practice.scene}`} type="button" key={practice.scene} onClick={() => startQuickPractice(practice.scene, practice.minutes, practice.kind)}>
+                    <PlayIcon className="practice-play-icon" aria-hidden="true" />
+                    <span className="practice-copy"><strong>{language === "zh" ? practice.zh : practice.en}</strong><small>{practice.minutes} {language === "zh" ? "分钟" : "MIN"}</small></span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : null}
         </section>
       ) : null}
 
@@ -1899,6 +1909,13 @@ export default function Prototype() {
                   </section>
                 ) : null}
 
+                <section className="me-card membership-card">
+                  <button className="setting-row" type="button" onClick={() => setUpgradeOpen(true)}>
+                    <span><strong>{language === "zh" ? "一休会员" : "Yixiu membership"}</strong><small>{language === "zh" ? "免费体验 · 在 App 中管理订阅" : "Free access · Manage subscriptions in the app"}</small></span>
+                    <span className="scene-access-badge is-free">FREE</span>
+                  </button>
+                </section>
+
                 <section className="me-card">
                   <div className="setting-title">
                     <strong>{language === "zh" ? "默认定时" : "Default timer"}</strong>
@@ -1908,6 +1925,7 @@ export default function Prototype() {
                     {durations.map((minutes) => (
                       <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => selectDuration(minutes)}>
                         {minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}
+                        {!canUseFreeTimer(minutes) && <LockClosedIcon className="entitlement-lock" aria-label={language === "zh" ? "需升级" : "Upgrade required"} />}
                       </button>
                     ))}
                   </div>
@@ -2056,6 +2074,7 @@ export default function Prototype() {
             <button key={minutes} type="button" className={duration === minutes ? "is-active" : ""} aria-pressed={duration === minutes} onClick={() => selectDuration(minutes)}>
               <strong>{minutes === 0 ? "∞" : minutes}</strong>
               <span>{minutes === 0 ? (language === "zh" ? "不限时" : "UNLIMITED") : (language === "zh" ? "分钟" : "MIN")}</span>
+              {!canUseFreeTimer(minutes) && <LockClosedIcon className="entitlement-lock" aria-label={language === "zh" ? "需升级" : "Upgrade required"} />}
             </button>
           ))}
         </section>
@@ -2103,8 +2122,9 @@ export default function Prototype() {
           <section>
             <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
-            <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
+            <h2>{language === "zh" ? "让安静持续生长" : "Let quiet keep growing"}</h2>
+            <p>{language === "zh" ? "免费体验：5 种自然声、2 首冥想音乐、1 分钟呼吸，以及 5 / 15 / 30 分钟聆听。" : "Free access: 5 nature sounds, 2 meditation tracks, 1-minute breathing and 5 / 15 / 30-minute listening."}</p>
+            <p>{language === "zh" ? "在 App 中升级 Plus，可解锁全部 24 种声音、3 / 5 / 10 分钟呼吸、60 分钟与不限时聆听。已有会员或老用户，请在 App 中恢复购买。" : "Upgrade to Plus in the app for all 24 sounds, 3 / 5 / 10-minute breathing, and 60-minute or unlimited listening. Existing members and legacy users can restore purchases in the app."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);
               recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id });
@@ -2112,7 +2132,7 @@ export default function Prototype() {
               {language === "zh" ? "在 App Store 查看一休 Plus" : "View Yixiu Plus on the App Store"}
               <ExternalLinkIcon />
             </a>
-            <em>{language === "zh" ? "H5 无需账号；会员权益由 App Store 安全管理。" : "No H5 account is required. Membership is managed securely by the App Store."}</em>
+            <em>{language === "zh" ? "H5 尚不支持同步 Apple 订阅，当前仅提供免费体验。会员权益和价格以 App 内 Apple 验证及显示为准。" : "H5 does not sync Apple subscriptions and currently provides free access only. Membership and prices are verified and displayed by Apple in the app."}</em>
           </section>
         </div>
       ) : null}
