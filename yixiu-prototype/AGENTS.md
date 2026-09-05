@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- For 1.10, keep the Sounds player immersive; add the user-approved three quick practices on Focus and a gentle device-local completion journal on Me. Refine typography, water imagery, spacing and contrast without adding Human Design, streak pressure or a dashboard to the home player.
+
 - The selected visual direction is now “深水沉浸播放器”, based on `../design/ideation-2026-08-09/yixiu-selected-deep-water-player.png`. It supersedes the rejected pale-ivory “如水晨光” home direction.
 - The app must support Simplified Chinese and English, with a visible `中 / EN` language control.
 - Use real moonlit water photography, deep teal/navy, reflective light, restrained ripple accents, and strong low-light contrast as the main visual language.
