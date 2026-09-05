@@ -60,6 +60,8 @@ type ShareCardPreview = {
   imageUrl: string;
   fileName: string;
   shareUrl: string;
+  scene: Scene;
+  payload: ShareData;
 };
 
 type SwipeStart = {
@@ -426,6 +428,56 @@ function useStoredState<T>(key: string, fallback: T, linkedValue: T | null = nul
   return [value, setValue] as const;
 }
 
+// Callback frequency is not elapsed time: background tabs may skip many ticks.
+function useWallClockTimer(running: boolean, totalSeconds: number, onComplete: () => void) {
+  const [remaining, setRemaining] = useState(totalSeconds);
+  const [revision, setRevision] = useState(0);
+  const timer = useRef({ remainingMs: totalSeconds * 1000, totalSeconds, generation: 0 });
+  const completion = useRef(onComplete);
+  completion.current = onComplete;
+
+  const reset = (seconds = totalSeconds) => {
+    timer.current = { remainingMs: seconds * 1000, totalSeconds, generation: timer.current.generation + 1 };
+    setRemaining(seconds);
+    setRevision(value => value + 1);
+  };
+
+  useEffect(() => {
+    if (timer.current.totalSeconds !== totalSeconds) {
+      timer.current = { remainingMs: totalSeconds * 1000, totalSeconds, generation: timer.current.generation + 1 };
+      setRemaining(totalSeconds);
+    }
+    if (!running || totalSeconds === 0) return;
+    const generation = timer.current.generation;
+    const deadline = Date.now() + timer.current.remainingMs;
+    let completed = false;
+    const tick = () => {
+      if (completed || generation !== timer.current.generation) return;
+      const milliseconds = Math.max(0, deadline - Date.now());
+      timer.current.remainingMs = milliseconds;
+      setRemaining(Math.ceil(milliseconds / 1000));
+      if (milliseconds === 0) {
+        completed = true;
+        completion.current();
+      }
+    };
+    const interval = window.setInterval(tick, 250);
+    document.addEventListener("visibilitychange", tick);
+    window.addEventListener("pageshow", tick);
+    tick();
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", tick);
+      window.removeEventListener("pageshow", tick);
+      if (generation === timer.current.generation) {
+        timer.current.remainingMs = Math.max(0, deadline - Date.now());
+      }
+    };
+  }, [running, totalSeconds, revision]);
+
+  return [remaining, reset] as const;
+}
+
 function WaterWavesIcon() {
   return (
     <svg className="water-waves-icon" viewBox="0 0 28 24" aria-hidden="true">
@@ -576,8 +628,14 @@ function loadShareImage(source: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.decoding = "async";
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error(`Unable to load share-card image: ${source}`));
+    const timeout = window.setTimeout(() => {
+      image.onload = null;
+      image.onerror = null;
+      image.src = "";
+      reject(new Error("Share-card image timed out"));
+    }, 15000);
+    image.onload = () => { window.clearTimeout(timeout); resolve(image); };
+    image.onerror = () => { window.clearTimeout(timeout); reject(new Error(`Unable to load share-card image: ${source}`)); };
     image.src = source;
   });
 }
@@ -596,7 +654,13 @@ function roundedRect(
 }
 
 async function createSceneShareCard(scene: Scene, language: Language, shareUrl: string) {
-  await document.fonts.ready;
+  // Do not leave the share button locked indefinitely on a stalled font request.
+  await new Promise<void>((resolve) => {
+    const timeout = window.setTimeout(resolve, 3000);
+    void document.fonts.ready.then(() => { window.clearTimeout(timeout); resolve(); }, () => {
+      window.clearTimeout(timeout); resolve();
+    });
+  });
   const source = await loadShareImage(scene.image);
   const canvas = document.createElement("canvas");
   canvas.width = 1080;
@@ -739,7 +803,6 @@ export default function Prototype() {
   const [sceneCategory, setSceneCategory] = useState<SceneCategory>("all");
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(72);
-  const [remainingSeconds, setRemainingSeconds] = useState(duration === 0 ? 0 : duration * 60);
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("home");
   const [timerOpen, setTimerOpen] = useState(false);
@@ -751,10 +814,12 @@ export default function Prototype() {
   const [wechatCopyState, setWechatCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [shareCardPreview, setShareCardPreview] = useState<ShareCardPreview | null>(null);
   const [shareCardCopyState, setShareCardCopyState] = useState<"idle" | "copied" | "error">("idle");
+  const [shareState, setShareState] = useState<"idle" | "creating" | "error">("idle");
+  const [shareImageFailed, setShareImageFailed] = useState(false);
+  const shareBusyRef = useRef(false);
   const [instagramGuideOpen, setInstagramGuideOpen] = useState(() => isInstagramProfileReferral());
   const [wisdomIndex, setWisdomIndex] = useState(0);
   const [breathingStatus, setBreathingStatus] = useState<BreathingStatus>("idle");
-  const [breathingElapsed, setBreathingElapsed] = useState(0);
   const [infoPanel, setInfoPanel] = useState<InfoPanel>(null);
   const swipeStartRef = useRef<SwipeStart | null>(null);
   const meBackSwipeRef = useRef<SwipeStart | null>(null);
@@ -778,8 +843,20 @@ export default function Prototype() {
   const nextScene = activeIndex < sceneOrder.length - 1 ? scenes[sceneOrder[activeIndex + 1]] : null;
   const swipePreviewScene = swipeOffset < 0 ? nextScene : previousScene;
   const isFavorite = favorites.includes(active.id);
+  const [remainingSeconds, setRemainingSeconds] = useWallClockTimer(isPlaying, duration * 60, () => {
+    setIsPlaying(false);
+    setWisdomIndex(index => (index + 1) % wisdoms.length);
+    setWisdomOpen(true);
+    recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
+  });
   const fadeFactor = duration === 0 || remainingSeconds > 20 ? 1 : Math.max(remainingSeconds / 20, 0);
   const breathingTotalSeconds = focusDuration * 60;
+  const [breathingRemaining, resetBreathingTimer] = useWallClockTimer(breathingStatus === "running", breathingTotalSeconds, () => {
+    setBreathingStatus("complete");
+    setIsPlaying(breathingOriginalPlaybackRef.current);
+    recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
+  });
+  const breathingElapsed = breathingTotalSeconds - breathingRemaining;
   const filteredSceneOrder = scenesByCategory[sceneCategory];
 
   useAmbientSound(active.id, isPlaying, volume, fadeFactor);
@@ -802,47 +879,10 @@ export default function Prototype() {
   }, [active, nextScene, previousScene]);
 
   useEffect(() => {
-    setRemainingSeconds(duration === 0 ? 0 : duration * 60);
-  }, [duration]);
-
-  useEffect(() => {
     if (!downloadFeedback) return;
     const timeout = window.setTimeout(() => setDownloadFeedback(false), 2200);
     return () => window.clearTimeout(timeout);
   }, [downloadFeedback]);
-
-  useEffect(() => {
-    if (!isPlaying || duration === 0) return;
-    const interval = window.setInterval(() => {
-      setRemainingSeconds((current) => {
-        if (current > 1) return current - 1;
-        window.clearInterval(interval);
-        setIsPlaying(false);
-        setWisdomIndex((index) => (index + 1) % wisdoms.length);
-        setWisdomOpen(true);
-        recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
-        return 0;
-      });
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [active.id, duration, isPlaying]);
-
-  useEffect(() => {
-    if (breathingStatus !== "running") return;
-    const interval = window.setInterval(() => {
-      setBreathingElapsed((current) => {
-        if (current >= breathingTotalSeconds - 1) {
-          setBreathingStatus("complete");
-          setIsPlaying(breathingOriginalPlaybackRef.current);
-          recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
-          window.clearInterval(interval);
-          return breathingTotalSeconds;
-        }
-        return current + 1;
-      });
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
@@ -931,6 +971,9 @@ export default function Prototype() {
   };
 
   const shareScene = async () => {
+    if (shareBusyRef.current) return;
+    shareBusyRef.current = true;
+    setShareState("creating");
     const title = language === "zh"
       ? `一休 · ${active.zh}｜如水而行`
       : `Yixiu · ${active.en} | Be water, my friend.`;
@@ -956,16 +999,36 @@ export default function Prototype() {
       }
 
       setShareCardCopyState("idle");
-      setShareCardPreview({ imageUrl: URL.createObjectURL(file), fileName: file.name, shareUrl: url });
+      setShareCardPreview({ imageUrl: URL.createObjectURL(file), fileName: file.name, shareUrl: url, scene: active, payload });
       recordGrowthEvent("yixiu_scene_share", { shared_scene: active.id, share_method: "card_preview" });
     } catch (error) {
       console.error("Unable to share the current Yixiu scene", error);
+      setShareState("error");
+    } finally {
+      shareBusyRef.current = false;
+      setShareState(current => current === "error" ? current : "idle");
+    }
+  };
+
+  // A fresh explicit tap retains user activation after slow image/font loading.
+  const sharePreparedImage = async () => {
+    if (!shareCardPreview || shareBusyRef.current) return;
+    shareBusyRef.current = true;
+    setShareImageFailed(false);
+    try {
+      await navigator.share(shareCardPreview.payload);
+      recordGrowthEvent("yixiu_scene_share", { shared_scene: shareCardPreview.scene.id, share_method: "system_png_retry" });
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) setShareImageFailed(true);
+    } finally {
+      shareBusyRef.current = false;
     }
   };
 
   const closeShareCard = () => {
     setShareCardPreview(null);
     setShareCardCopyState("idle");
+    setShareImageFailed(false);
   };
 
   const copyShareCardLink = async () => {
@@ -1214,14 +1277,14 @@ export default function Prototype() {
   const beginBreathing = () => {
     breathingOriginalPlaybackRef.current = isPlaying;
     setIsPlaying(focusSoundEnabled);
-    setBreathingElapsed(0);
+    resetBreathingTimer();
     setBreathingStatus("running");
     recordGrowthEvent("yixiu_focus_start", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
   };
 
   const resetBreathing = () => {
     setIsPlaying(breathingOriginalPlaybackRef.current);
-    setBreathingElapsed(0);
+    resetBreathingTimer();
     setBreathingStatus("idle");
   };
 
@@ -1307,6 +1370,8 @@ export default function Prototype() {
             type="button"
             aria-label={language === "zh" ? `分享${active.zh}` : `Share ${active.en}`}
             onClick={shareScene}
+            disabled={shareState === "creating"}
+            aria-busy={shareState === "creating"}
           >
             <UploadIcon />
           </button>
@@ -1507,13 +1572,13 @@ export default function Prototype() {
                   </div>
                   <div className="breathing-readout" aria-live="polite"><strong>{breathingPhaseCopy}</strong><span>{formatSeconds(Math.max(60 - breathingElapsed, 0))}</span></div>
                   {breathingStatus === "idle" || breathingStatus === "complete" ? (
-                    <button className="focus-primary" type="button" onClick={() => { setBreathingElapsed(0); setBreathingStatus("running"); }}>
+                    <button className="focus-primary" type="button" onClick={() => { resetBreathingTimer(); setBreathingStatus("running"); }}>
                       {breathingStatus === "complete" ? (language === "zh" ? "再来一次" : "Begin again") : (language === "zh" ? "开始 1 分钟" : "Start 1 minute")}
                     </button>
                   ) : (
                     <div className="focus-actions">
                       <button type="button" onClick={() => setBreathingStatus((current) => current === "running" ? "paused" : "running")}>{breathingStatus === "running" ? <PauseIcon /> : <PlayIcon />}<span>{breathingStatus === "running" ? (language === "zh" ? "暂停" : "Pause") : (language === "zh" ? "继续" : "Continue")}</span></button>
-                      <button type="button" onClick={() => { setBreathingElapsed(0); setBreathingStatus("idle"); }}>{language === "zh" ? "重新开始" : "Restart"}</button>
+                      <button type="button" onClick={() => { resetBreathingTimer(); setBreathingStatus("idle"); }}>{language === "zh" ? "重新开始" : "Restart"}</button>
                     </div>
                   )}
                   <p className="safety-note">{language === "zh" ? "顺其自然；如有不适，请暂停。" : "Let it be easy. Pause if you feel uncomfortable."}</p>
@@ -1641,7 +1706,7 @@ export default function Prototype() {
                 <button key={minutes} type="button" className={focusDuration === minutes ? "is-active" : ""} aria-pressed={focusDuration === minutes} onClick={() => {
                   if (breathingStatus === "running" || breathingStatus === "paused") return;
                   setFocusDuration(minutes);
-                  setBreathingElapsed(0);
+                  resetBreathingTimer();
                 }}>
                   {minutes} {language === "zh" ? "分钟" : "MIN"}
                 </button>
@@ -1966,12 +2031,20 @@ export default function Prototype() {
         </div>
       ) : null}
 
+      {shareState !== "idle" ? (
+        <div className="share-feedback" role={shareState === "error" ? "alert" : "status"}>
+          {shareState === "creating"
+            ? (language === "zh" ? "正在生成分享图…" : "Creating your share image…")
+            : (language === "zh" ? "分享图生成失败，请检查网络后再点分享。" : "Couldn't create the image. Check your connection and tap Share again.")}
+        </div>
+      ) : null}
+
       {shareCardPreview ? (
         <div
           className="share-card-dialog"
           role="dialog"
           aria-modal="true"
-          aria-label={language === "zh" ? `分享${active.zh}` : `Share ${active.en}`}
+          aria-label={language === "zh" ? `分享${shareCardPreview.scene.zh}` : `Share ${shareCardPreview.scene.en}`}
         >
           <button className="share-card-backdrop" type="button" aria-label={language === "zh" ? "关闭分享图" : "Close share card"} onClick={closeShareCard} />
           <section>
@@ -1980,12 +2053,16 @@ export default function Prototype() {
               <small>{language === "zh" ? "分享这一刻" : "SHARE THIS MOMENT"}</small>
               <h2>{language === "zh" ? "长按图片，分享到微信" : "Save or share the image"}</h2>
               <p>{language === "zh" ? "二维码已放在右下角。微信内可长按保存，再发给朋友或朋友圈。" : "The QR code in the lower-right opens this exact scene."}</p>
+              {shareImageFailed ? <p role="alert">{language === "zh" ? "系统分享暂不可用，请保存图片后分享。" : "System sharing is unavailable. Save the image to share it."}</p> : null}
             </div>
             <img
               src={shareCardPreview.imageUrl}
-              alt={language === "zh" ? `一休${active.zh}分享图，右下角含二维码` : `Yixiu ${active.en} share card with a QR code in the lower-right`}
+              alt={language === "zh" ? `一休${shareCardPreview.scene.zh}分享图，右下角含二维码` : `Yixiu ${shareCardPreview.scene.en} share card with a QR code in the lower-right`}
             />
             <div className="share-card-actions">
+              {typeof navigator.share === "function" && navigator.canShare?.(shareCardPreview.payload) ? (
+                <button type="button" onClick={sharePreparedImage}>{language === "zh" ? "分享图片" : "Share image"}</button>
+              ) : null}
               <a href={shareCardPreview.imageUrl} download={shareCardPreview.fileName}>
                 {language === "zh" ? "保存分享图" : "Save image"}
               </a>

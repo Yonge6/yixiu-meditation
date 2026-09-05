@@ -12,6 +12,7 @@ public struct DailyReminderCopy: Equatable, Sendable {
 
 public struct DailyReminderSchedule: Equatable, Sendable {
     public static let identifier = "com.health.yixiu.daily-quiet-reminder"
+    public static let recurringIdentifier = "\(identifier).recurring"
     public static let scheduledDayCount = 30
     public static let defaultHour = 21
     public static let defaultMinute = 30
@@ -30,6 +31,11 @@ public struct DailyReminderSchedule: Equatable, Sendable {
 
     public func identifier(dayOffset: Int) -> String {
         "\(Self.identifier).\(dayOffset)"
+    }
+
+    /// Retained for migration from the finite queue in 1.9 (21).
+    public var legacyIdentifiers: [String] {
+        (0..<Self.scheduledDayCount).map(identifier(dayOffset:))
     }
 
     public func fireDate(dayOffset: Int, after startDate: Date, calendar: Calendar = .current) -> Date? {

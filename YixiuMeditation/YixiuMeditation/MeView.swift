@@ -536,6 +536,7 @@ struct MeView: View {
                 ))
                 .labelsHidden()
                 .tint(YixiuTheme.aquaStrong)
+                .disabled(dailyReminder.isUpdating)
             }
             .frame(minHeight: 66)
 
@@ -558,6 +559,7 @@ struct MeView: View {
                     .labelsHidden()
                     .datePickerStyle(.compact)
                     .tint(YixiuTheme.aquaStrong)
+                    .disabled(dailyReminder.isUpdating)
                 }
                 .frame(minHeight: 58)
             } else if dailyReminder.isDenied {
@@ -578,6 +580,21 @@ struct MeView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+            }
+            if dailyReminder.isUpdating {
+                ProgressView(language.text(zh: "正在更新提醒…", en: "Updating reminder…"))
+                    .font(YixiuTheme.sans(12))
+                    .tint(YixiuTheme.aqua)
+                    .padding(.vertical, 12)
+            } else if dailyReminder.hasScheduleError {
+                Text(language.text(
+                    zh: "提醒未能更新，原有设置已保留。请稍后重试。",
+                    en: "Couldn't update the reminder. Previous settings were kept. Please try again."
+                ))
+                .font(YixiuTheme.sans(12))
+                .foregroundStyle(YixiuTheme.mist)
+                .padding(.vertical, 12)
+                .accessibilityAddTraits(.updatesFrequently)
             }
         }
         .padding(.horizontal, 17)

@@ -4,6 +4,21 @@ import Testing
 
 @Suite("Daily reminder schedule")
 struct DailyReminderScheduleTests {
+    @Test("Recurring reminder has no finite date or timezone and migrates only Yixiu reminders")
+    func recurringRequest() {
+        let schedule = DailyReminderSchedule(hour: 8, minute: 15)
+        #expect(DailyReminderSchedule.recurringIdentifier == "com.health.yixiu.daily-quiet-reminder.recurring")
+        #expect(schedule.dateComponents.hour == 8)
+        #expect(schedule.dateComponents.minute == 15)
+        #expect(schedule.dateComponents.year == nil)
+        #expect(schedule.dateComponents.month == nil)
+        #expect(schedule.dateComponents.day == nil)
+        #expect(schedule.dateComponents.timeZone == nil)
+        #expect(schedule.legacyIdentifiers.count == 30)
+        #expect(Set(schedule.legacyIdentifiers).count == 30)
+        #expect(!schedule.legacyIdentifiers.contains(DailyReminderSchedule.recurringIdentifier))
+    }
+
     @Test("The default reminder is 21:30")
     func defaultTime() {
         let schedule = DailyReminderSchedule()

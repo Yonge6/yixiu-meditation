@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct YixiuMeditationApp: App {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var appState = AppState()
     @StateObject private var subscriptionStore = SubscriptionStore()
     @StateObject private var dailyReminder = DailyReminderManager()
@@ -30,6 +31,11 @@ struct YixiuMeditationApp: App {
                 }
                 .onChange(of: appState.language) { _, language in
                     Task { await dailyReminder.rescheduleForLanguage(language.rawValue) }
+                }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .active {
+                        Task { await dailyReminder.refresh(languageCode: appState.language.rawValue) }
+                    }
                 }
         }
     }
