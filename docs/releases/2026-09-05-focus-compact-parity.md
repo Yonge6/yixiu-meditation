@@ -30,3 +30,21 @@
 - `origin/main` read back as `7170000cd6fbc2a806cdf4f07c3a3abe5588c630`.
 - Existing production HTML SHA-256: `93a76d9e6adfd681761bcf59382f7bf9e67dc47e3b9763b94f80eea8561f8fde` (previous spacing correction), unchanged before packaging. Server has 15 GB free.
 - Retain the established Yixiu-only Nginx deployment, not a Sites migration.
+
+## Verified production release
+
+- Source: `6389638` (`fix: compact Focus shortcuts and align H5 membership gates`).
+- URL: https://yixiu.wonderelian.com/
+- Package: `/tmp/yixiu-20260905-focus-compact.tar.gz`, 140454639 bytes; SHA-256 `5bc9a913fdf7892b546e3a4a6dac12545fe346178f09b7bb87a9171f0f7e523e`.
+- Receipt: `DEPLOY_OK_YIXIU_20260905-6389638-focus-compact-1628`.
+- Recovery backup: `/srv/wonderelian/backups/yixiu-20260905-6389638-focus-compact-1628`.
+- Nginx and existing route/source checks passed. Public downloads of HTML and both resources compare byte-for-byte equal to the validated build:
+
+| Resource | SHA-256 |
+| --- | --- |
+| `/index.html` | `892a8fe81ef31dcfc9174fe4164dcaa472538c299f99e69e0a1479b3278adb87` |
+| `/assets/index-yoQp6ted.js` | `2faa2111140566b3f3c87fa952fa840569de23fceb77cbb041fdb0c6592f3e4e` |
+| `/assets/index-Clt8uxVM.css` | `f52f9dc22985572d196315dc0e58d66be6d11801c0cb9cd9d9a007c07f068608` |
+
+- Desktop Chrome production readback confirms breathing/settings/controls precede the three short-named presets, and 3/5/10-minute choices announce upgrade requirements. Left the updated Focus tab open as the deliverable. No physical iPad verification is claimed.
+- App remains 1.10 (23), with the matching source and successful Release simulator build; this does not update an already installed phone binary or an App Store version.
