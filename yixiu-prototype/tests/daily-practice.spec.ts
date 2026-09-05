@@ -94,10 +94,47 @@ test("storage denial leaves the app usable and gives an honest journal notice", 
   await expect(page.locator(".practice-journal").getByRole("status")).toContainText("Storage unavailable");
 });
 
+for (const minutes of [5, 10]) {
+  test(`Focus offers, completes and restores the ${minutes}-minute practice`, async ({ page }) => {
+    await page.clock.install();
+    await page.getByRole("button", { name: "Focus 静心" }).click();
+    await expect(page.locator(".focus-duration-options button")).toHaveCount(4);
+    await page.locator(".focus-duration-options").getByRole("button", { name: `${minutes} MIN`, exact: true }).click();
+    await expect(page.locator(".breathing-readout span")).toHaveText(`${String(minutes).padStart(2, "0")}:00`);
+    await page.getByRole("button", { name: `Start ${minutes} minutes`, exact: true }).click();
+    await page.clock.fastForward(minutes * 60_000);
+    await page.getByRole("button", { name: "Me 我的" }).click();
+    await expect(page.locator(".journal-heading strong")).toHaveText(String(minutes));
+    await page.reload();
+    await page.getByRole("button", { name: "Me 我的" }).click();
+    await expect(page.locator(".journal-entry")).toHaveCount(1);
+    await page.getByRole("button", { name: "Practice again: Water Breathing" }).click();
+    await expect(page.locator(".breathing-readout span")).toHaveText(`${String(minutes).padStart(2, "0")}:00`);
+  });
+}
+
+test("cards share a 12px gap and quick practices use play icons", async ({ page }) => {
+  await page.getByRole("button", { name: "Focus 静心" }).click();
+  await expect(page.locator(".daily-practice > .practice-play-icon")).toHaveCount(3);
+  const quick = await page.locator(".daily-practice").evaluateAll(nodes => nodes.map(node => {
+    const box = node.getBoundingClientRect(); return { top: box.top, bottom: box.bottom };
+  }));
+  expect(quick[1].top - quick[0].bottom).toBeCloseTo(12, 0);
+  expect(quick[2].top - quick[1].bottom).toBeCloseTo(12, 0);
+  await page.getByRole("button", { name: "Me 我的" }).click();
+  const cards = await page.locator(".me-scroll > section").evaluateAll(nodes => nodes.slice(0, 5).map(node => {
+    const box = node.getBoundingClientRect(); return { top: box.top, bottom: box.bottom };
+  }));
+  for (let index = 1; index < cards.length; index++) expect(cards[index].top - cards[index - 1].bottom).toBeCloseTo(12, 0);
+});
+
 for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 1024, height: 1366 }, { width: 1366, height: 1024 }]) {
   test(`daily UI stays within ${viewport.width} by ${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.getByRole("button", { name: "Focus 静心" }).click();
+    const preferences = await page.locator(".focus-duration-options").boundingBox();
+    expect(preferences!.x).toBeGreaterThanOrEqual(0);
+    expect(preferences!.x + preferences!.width).toBeLessThanOrEqual(viewport.width);
     const cards = page.locator(".daily-practice");
     for (const card of await cards.all()) {
       const box = await card.boundingBox();

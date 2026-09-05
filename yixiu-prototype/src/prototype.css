@@ -1345,7 +1345,7 @@ img[data-image-scene="tide"] {
 .focus-screen { overflow-y: auto; overscroll-behavior: contain; }
 .daily-practices { width: min(100%, 560px); margin: 23px auto 30px; text-align: left; }
 .daily-heading { margin: 0 0 18px; color: #eef4ee; font-family: var(--serif); font-size: clamp(24px, 5.8vw, 30px); line-height: 1.45; letter-spacing: 0.01em; }
-.daily-practice { display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 10px; padding: 0 16px 0 0 !important; overflow: hidden; border: 1px solid rgba(171, 218, 216, .2) !important; border-radius: 16px !important; background: rgba(2, 24, 32, .86) !important; text-align: left; transition: border-color .2s, background .2s; }
+.daily-practice { display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 12px; padding: 0 16px 0 0 !important; overflow: hidden; border: 1px solid rgba(171, 218, 216, .2) !important; border-radius: 16px !important; background: rgba(2, 24, 32, .86) !important; text-align: left; transition: border-color .2s, background .2s; }
 .daily-practice:hover { border-color: rgba(145, 229, 217, .65) !important; background: rgba(9, 46, 52, .96) !important; }
 .practice-image { position: relative; flex: 0 0 66px; height: 78px; overflow: hidden; }
 .practice-image img { width: 100%; height: 100%; object-fit: cover; }
@@ -1364,7 +1364,7 @@ img[data-image-scene="tide"] {
 .journal-heading p { display: flex; align-items: baseline; gap: 9px; margin: 8px 0 0; }
 .journal-heading strong { color: #eef4ee; font-family: var(--serif); font-size: 46px; font-weight: 400; line-height: 1.1; }
 .journal-heading span { color: #b2ccc9; font-size: 12px; }
-.journal-heading > svg { width: 32px; height: 32px; color: #96d7cd; }
+.journal-heading > svg { width: 32px; height: 32px; color: #96d7cd; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
 .journal-week { display: grid; grid-template-columns: repeat(7, 1fr); margin: 24px 0 20px; padding-bottom: 22px; border-bottom: 1px solid rgba(171, 218, 216, .18); }
 .journal-week > span { display: flex; align-items: center; flex-direction: column; gap: 10px; }
 .journal-week i { width: 8px; height: 8px; border-radius: 50%; background: #426065; }
@@ -1418,10 +1418,13 @@ img[data-image-scene="tide"] {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  flex-direction: column;
 }
 
 .focus-duration-options {
   display: flex;
+  box-sizing: border-box;
+  width: min(100%, 286px);
   padding: 3px;
   border: 1px solid rgba(163, 225, 230, 0.2);
   border-radius: 999px;
@@ -1437,8 +1440,10 @@ img[data-image-scene="tide"] {
 }
 
 .focus-duration-options button {
-  min-width: 58px;
-  padding: 0 10px;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 6px;
 }
 
 .focus-duration-options button.is-active {
@@ -1448,6 +1453,9 @@ img[data-image-scene="tide"] {
 
 .focus-sound-toggle {
   display: inline-flex;
+  width: min(100%, 294px);
+  min-height: 44px;
+  justify-content: center;
   padding: 0 12px;
   align-items: center;
   gap: 6px;
@@ -1627,6 +1635,13 @@ img[data-image-scene="tide"] {
   box-sizing: border-box;
   min-width: 0;
   max-width: 100%;
+}
+
+/* One spacing rule owns adjacent cards, including the newly added journal. */
+.me-scroll > section,
+.me-scroll > .me-app-download {
+  margin-top: 0;
+  margin-bottom: 12px;
 }
 
 .me-scroll::-webkit-scrollbar {

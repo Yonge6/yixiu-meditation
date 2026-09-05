@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- User correction (2026-09-05): use a consistent 12px gap between adjacent Me cards and between the three quick-practice rows, in H5 and native App. H5 Focus must expose 1/3/5/10 minutes; keep existing native StoreKit gates unchanged. Quick-practice actions use a play triangle, never a share/external-link icon.
+
 - For 1.10, keep the Sounds player immersive; add the user-approved three quick practices on Focus and a gentle device-local completion journal on Me. Refine typography, water imagery, spacing and contrast without adding Human Design, streak pressure or a dashboard to the home player.
 
 - The selected visual direction is now “深水沉浸播放器”, based on `../design/ideation-2026-08-09/yixiu-selected-deep-water-player.png`. It supersedes the rejected pale-ivory “如水晨光” home direction.

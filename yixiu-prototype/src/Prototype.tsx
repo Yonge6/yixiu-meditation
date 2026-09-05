@@ -51,7 +51,7 @@ type SceneId =
   | "sunlitShore"
   | "oceanPassage";
 type DurationOption = 5 | 15 | 30 | 60 | 0;
-type FocusDuration = 1 | 3;
+type FocusDuration = 1 | 3 | 5 | 10;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
 type SceneCategory = "all" | "nature" | "meditation" | "sleep" | "focus" | "morning" | "relax";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
@@ -370,7 +370,7 @@ const sceneOrder: SceneId[] = [
   "oceanPassage",
 ];
 const durations: DurationOption[] = [5, 15, 30, 60, 0];
-const focusDurations: FocusDuration[] = [1, 3];
+const focusDurations: FocusDuration[] = [1, 3, 5, 10];
 const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
@@ -1752,7 +1752,7 @@ export default function Prototype() {
                 <button className={`daily-practice practice-${practice.scene}`} type="button" key={practice.scene} onClick={() => startQuickPractice(practice.scene, practice.minutes, practice.kind)}>
                   <span className="practice-image"><img src={scenes[practice.scene].image} alt="" /><small>{practice.mark}</small></span>
                   <span className="practice-copy"><strong>{language === "zh" ? practice.zh : practice.en}</strong><small>{language === "zh" ? practice.detailZh : practice.detailEn}</small></span>
-                  <ExternalLinkIcon aria-hidden="true" />
+                  <PlayIcon className="practice-play-icon" aria-hidden="true" />
                 </button>
               ))}
             </section>

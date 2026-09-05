@@ -17,7 +17,7 @@ export function decodeJournal(value: unknown, sceneIds: readonly string[]): Prac
     if (!entry || typeof entry !== "object" || typeof entry.id !== "string" || !entry.id || ids.has(entry.id)
       || typeof entry.completedAt !== "number" || !Number.isFinite(entry.completedAt) || entry.completedAt <= 0
       || !sceneIds.includes(entry.sceneId)
-      || !(entry.kind === "listening" ? [300, 900, 1800, 3600] : entry.kind === "breathing" ? [60, 180] : []).includes(entry.seconds)) return false;
+      || !(entry.kind === "listening" ? [300, 900, 1800, 3600] : entry.kind === "breathing" ? [60, 180, 300, 600] : []).includes(entry.seconds)) return false;
     ids.add(entry.id);
     return true;
   }).sort((a, b) => b.completedAt - a.completedAt).slice(0, 200);

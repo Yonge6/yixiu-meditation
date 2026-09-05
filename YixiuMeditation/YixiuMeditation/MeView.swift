@@ -100,7 +100,7 @@ struct MeView: View {
                     .padding(.top, 20)
 
                 soundSpaceCard
-                    .padding(.top, 16)
+                    .padding(.top, 12)
 
                 membershipCard
                     .padding(.top, 12)
