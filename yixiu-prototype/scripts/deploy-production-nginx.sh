@@ -147,7 +147,8 @@ grep -F '/discover.js?v=20260829-global-share-prompt' "$site_path/sleep-sounds/i
 grep -F 'data-dark-screen-toggle' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$site_path/sleep-sounds/index.html" >/dev/null
-grep -F 'Keep rain playing on iPhone' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'Use the sleep timer on iPhone' "$site_path/sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-value="sleep_cta_timer_lock_v1"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'data-share-label="Send this rain to someone"' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'Know someone who needs a quieter night?' "$site_path/sleep-sounds/index.html" >/dev/null
@@ -323,7 +324,8 @@ grep -F '/discover.css?v=20260829-sleep-share' "$deploy_target/sleep-sounds/inde
 grep -F '/discover.js?v=20260829-global-share-prompt' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="sleep_landing_dark_screen"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-dark-screen-overlay' "$deploy_target/sleep-sounds/index.html" >/dev/null
-grep -F 'Keep rain playing on iPhone' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'Use the sleep timer on iPhone' "$deploy_target/sleep-sounds/index.html" >/dev/null
+grep -F 'data-analytics-value="sleep_cta_timer_lock_v1"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-ensure-visible="true"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'data-share-label="Send this rain to someone"' "$deploy_target/sleep-sounds/index.html" >/dev/null
 grep -F 'Know someone who needs a quieter night?' "$deploy_target/sleep-sounds/index.html" >/dev/null
@@ -445,7 +447,11 @@ curl --compressed -fsS \
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/sleep-sounds/ \
-  | grep -F 'Keep rain playing on iPhone' >/dev/null
+  | grep -F 'Use the sleep timer on iPhone' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/sleep-sounds/ \
+  | grep -F 'data-analytics-value="sleep_cta_timer_lock_v1"' >/dev/null
 curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/best-sleep-sounds/ \

@@ -51,7 +51,7 @@ test("focus landing gives high-intent visitors an attributed path to the convert
 
 test("all search landings expose a preview, trust message and matched iPhone path", async ({ page }) => {
   for (const item of [
-    { path: "/sleep-sounds/index.html", preview: "Play Window Rain", download: "Keep rain playing on iPhone", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
+    { path: "/sleep-sounds/index.html", preview: "Play Window Rain", download: "Use the sleep timer on iPhone", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/rain-sounds-when-iphone-locked/index.html", preview: "Play Rain for Lock Screen", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/underwater-white-noise-for-sleep/index.html", preview: "Play Underwater White Noise", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
     { path: "/ocean-waves-for-sleeping/index.html", preview: "Play Ocean Waves", ppid: "67cb8784-2b16-4849-b940-90fdf4d99752" },
@@ -293,10 +293,12 @@ test("rain sleep preview reveals its matched download and attributed Pinterest p
 
   const preview = page.locator('button[data-analytics-placement="sleep_landing_preview"]');
   await expect(preview).toHaveAccessibleName("Play Window Rain");
-  await expect(page.getByRole("link", { name: "Keep rain playing on iPhone" })).toHaveAttribute(
+  const primaryDownload = page.getByRole("link", { name: "Use the sleep timer on iPhone" });
+  await expect(primaryDownload).toHaveAttribute(
     "data-analytics-placement",
     "sleep_landing",
   );
+  await expect(primaryDownload).toHaveAttribute("data-analytics-value", "sleep_cta_timer_lock_v1");
   await preview.click();
 
   await expect(preview).toHaveAttribute("aria-pressed", "true");
@@ -306,11 +308,13 @@ test("rain sleep preview reveals its matched download and attributed Pinterest p
   await expect(afterPreview).toContainText("Want to lock your iPhone without stopping the rain?");
   await expect(afterPreview).toContainText("Know someone who needs a quieter night?");
   await expect(afterPreview.getByRole("button", { name: "Send this rain to someone" })).toBeVisible();
-  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu." })).toHaveAttribute(
+  const afterPreviewDownload = afterPreview.getByRole("link", { name: "Continue with timer + lock-screen playback." });
+  await expect(afterPreviewDownload).toHaveAttribute(
     "data-analytics-placement",
     "sleep_after_preview",
   );
-  await expect(afterPreview.getByRole("link", { name: "Continue in Yixiu." })).toHaveAttribute(
+  await expect(afterPreviewDownload).toHaveAttribute("data-analytics-value", "sleep_cta_timer_lock_v1");
+  await expect(afterPreviewDownload).toHaveAttribute(
     "href",
     /ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8$/,
   );
