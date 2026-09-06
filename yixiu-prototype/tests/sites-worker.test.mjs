@@ -1514,7 +1514,8 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /discover\.js\?v=20260829-global-share-prompt/);
   assert.match(script, /data-analytics-placement="underwater_white_noise_dark_screen"/);
   assert.match(script, /https:\/\/yixiu\.wonderelian\.com\/underwater-white-noise-for-sleep\//);
-  assert.match(script, /Keep rain playing on iPhone/);
+  assert.match(script, /Use the sleep timer on iPhone/);
+  assert.match(script, /data-analytics-value="sleep_cta_timer_lock_v1"/);
   assert.match(script, /data-ensure-visible="true"/);
   assert.match(script, /grep -F 'dataset\.ensureVisible'/);
   assert.match(script, /discover\.css\?v=20260829-sleep-share/);
