@@ -18,6 +18,16 @@ enum SubscriptionAccessPolicySmoke {
             precondition(SubscriptionAccessPolicy.canAccess(scene: scene, level: .legacy) == legacyExpected)
         }
 
-        print("Subscription access policy smoke test passed (24 items, free 5+2, legacy 14+2, Plus 24).")
+        for minutes in [1, 3, 5, 10] {
+            precondition(SubscriptionAccessPolicy.canUseFocus(minutes: minutes, level: .free) == (minutes == 1))
+            precondition(SubscriptionAccessPolicy.canUseFocus(minutes: minutes, level: .legacy) == [1, 3].contains(minutes))
+            precondition(SubscriptionAccessPolicy.canUseFocus(minutes: minutes, level: .plus))
+        }
+        for minutes in [0, 5, 15, 30, 60] {
+            precondition(SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: .free) == [5, 15, 30].contains(minutes))
+            precondition(SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: .legacy))
+            precondition(SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: .plus))
+        }
+        print("Subscription access policy smoke passed: 24 sounds and free/legacy/Plus focus and timer matrix.")
     }
 }

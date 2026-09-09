@@ -4,7 +4,9 @@ struct ListenView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var timerOpen = false
+    @State private var showPlusAfterTimer = false
     @State private var libraryOpen = false
     @State private var paywallOpen = false
     @State private var sharePayload: SceneSharePayload?
@@ -18,63 +20,55 @@ struct ListenView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                background
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .clipped()
-                    .allowsHitTesting(false)
-
                 Color.clear
                     .contentShape(Rectangle())
                     .gesture(sceneSwipeGesture(width: geometry.size.width))
                     .accessibilityHidden(true)
 
-                header
-                    .frame(width: min(geometry.size.width, 720))
-                    .position(
-                        x: geometry.size.width / 2,
-                        y: max(geometry.safeAreaInsets.top + 30, 84)
-                    )
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        header
+                        Spacer(minLength: isExpanded(geometry.size) ? 12 : 90)
+                        // AnyLayout changes geometry without replacing the player subtree.
+                        playerLayout(geometry.size).callAsFunction {
+                            sceneIdentity
+                                .frame(maxWidth: .infinity)
+                                .padding(.horizontal, 20)
+                                .offset(x: sceneDragOffset * 0.12)
+                                .opacity(1 - sceneSwipeProgress * 0.55)
+                                .contentShape(Rectangle())
+                                .gesture(sceneSwipeGesture(width: geometry.size.width))
 
-                sceneIdentity
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.53)
-                    .offset(x: sceneDragOffset * 0.12)
-                    .opacity(1 - sceneSwipeProgress * 0.55)
-                    .allowsHitTesting(false)
-
-                if timerOpen {
-                    timerPanel
-                        .frame(maxWidth: 520)
-                        .padding(.horizontal, 18)
-                        .position(x: geometry.size.width / 2, y: geometry.size.height * 0.615)
-                        .transition(.scale(scale: 0.96).combined(with: .opacity))
-                } else {
-                    durationButton
-                        .position(x: geometry.size.width / 2, y: geometry.size.height * 0.64)
-                }
-
-                transport
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.73)
-
-                volume
-                    .position(x: geometry.size.width / 2, y: geometry.size.height * 0.84)
-
-                Text(language.text(zh: "上滑浏览全部声音", en: "SWIPE UP FOR ALL SOUNDS"))
-                    .font(YixiuTheme.sans(9, weight: .medium))
-                    .tracking(1.2)
-                    .foregroundStyle(YixiuTheme.mist.opacity(0.62))
-                    .position(x: geometry.size.width / 2, y: geometry.size.height - 108)
-                    .allowsHitTesting(false)
-
-                if let audioError = appState.audioError {
-                    Text(audioError)
-                        .font(YixiuTheme.sans(12))
-                        .foregroundStyle(YixiuTheme.moon)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 10)
-                        .background(Capsule().fill(YixiuTheme.deepWater.opacity(0.92)))
-                        .padding(.horizontal, 30)
-                        .position(x: geometry.size.width / 2, y: geometry.size.height - 118)
+                            VStack(spacing: 22) {
+                                durationButton
+                                transport
+                                volume
+                                Button { libraryOpen = true } label: {
+                                    Label(language.text(zh: "浏览全部声音", en: "Explore all sounds"), systemImage: "square.grid.2x2")
+                                        .font(YixiuTheme.sans(12, weight: .medium))
+                                        .foregroundStyle(YixiuTheme.moon)
+                                        .padding(.horizontal, 18)
+                                        .frame(minHeight: 44)
+                                        .background(Capsule().fill(YixiuTheme.deepWater.opacity(0.5)))
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .frame(maxWidth: isExpanded(geometry.size) ? 400 : 480)
+                        }
+                        Spacer(minLength: 12)
+                        if let audioError = appState.audioError {
+                            Text(audioError)
+                                .font(YixiuTheme.sans(12))
+                                .foregroundStyle(YixiuTheme.moon)
+                                .multilineTextAlignment(.center)
+                                .padding(12)
+                                .background(RoundedRectangle(cornerRadius: 16).fill(YixiuTheme.deepWater.opacity(0.92)))
+                        }
+                    }
+                    .padding(.vertical, 16)
+                    .frame(maxWidth: 1040)
+                    .frame(minHeight: geometry.size.height)
+                    .frame(maxWidth: .infinity)
                 }
 
                 if appState.sessionCompleted {
@@ -84,7 +78,38 @@ struct ListenView: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
         }
-        .ignoresSafeArea()
+        .background {
+            GeometryReader { geometry in
+                background
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+            }
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
+        }
+        .sheet(isPresented: $timerOpen, onDismiss: {
+            if showPlusAfterTimer {
+                showPlusAfterTimer = false
+                paywallOpen = true
+            }
+        }) {
+            VStack(spacing: 24) {
+                Text(language.text(zh: "留一点时间，给自己", en: "A little time for yourself"))
+                    .font(YixiuTheme.chineseDisplay(22))
+                    .foregroundStyle(YixiuTheme.moon)
+                    .multilineTextAlignment(.center)
+                timerPanel
+                Button(language.text(zh: "完成", en: "Done")) { timerOpen = false }
+                    .font(YixiuTheme.sans(14, weight: .medium))
+                    .foregroundStyle(YixiuTheme.aquaStrong)
+                    .frame(minHeight: 44)
+            }
+                .padding(24)
+                .frame(maxWidth: 520)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(YixiuTheme.deepWater)
+        }
         .sheet(isPresented: $libraryOpen) {
             SoundLibraryView()
                 .presentationDetents([.large])
@@ -110,6 +135,14 @@ struct ListenView: View {
         } message: {
             Text(language.text(zh: "请稍后再试。", en: "Please try again in a moment."))
         }
+    }
+
+    private func isExpanded(_ size: CGSize) -> Bool {
+        size.width >= 680 && !dynamicTypeSize.isAccessibilitySize
+    }
+
+    private func playerLayout(_ size: CGSize) -> AnyLayout {
+        isExpanded(size) ? AnyLayout(HStackLayout(spacing: 16)) : AnyLayout(VStackLayout(spacing: 28))
     }
 
     private var background: some View {
@@ -154,7 +187,7 @@ struct ListenView: View {
                 }
 
                 Color(red: 0, green: 17 / 255, blue: 25 / 255)
-                    .opacity(appState.scene.isBright ? 0.035 : (appState.scene.isNight ? 0.09 : 0.055))
+                    .opacity(appState.scene.isBright ? 0.30 : (appState.scene.isNight ? 0.09 : 0.20))
 
                 LinearGradient(
                     colors: [
@@ -352,7 +385,7 @@ struct ListenView: View {
             Text(language.secondary(zh: appState.scene.zhName, en: appState.scene.enName.uppercased()))
                 .font(language == .zh ? YixiuTheme.englishSerif(13) : YixiuTheme.chineseDisplay(17))
                 .tracking(language == .zh ? 5 : 3)
-                .foregroundStyle(YixiuTheme.mist)
+                .foregroundStyle(YixiuTheme.moon.opacity(0.88))
                 .padding(.top, 10)
 
             HStack(spacing: 11) {
@@ -363,11 +396,13 @@ struct ListenView: View {
             }
             .font(YixiuTheme.englishSerif(11))
             .tracking(1.4)
-            .foregroundStyle(YixiuTheme.mist)
+            .foregroundStyle(YixiuTheme.moon.opacity(0.88))
             .padding(.top, 16)
         }
         .foregroundStyle(YixiuTheme.moon)
-        .shadow(color: .black.opacity(0.62), radius: 14, y: 3)
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
+        .shadow(color: .black.opacity(0.8), radius: 6, y: 2)
     }
 
     private var transport: some View {
@@ -464,19 +499,21 @@ struct ListenView: View {
             Text(appState.isPlaying ? appState.formattedRemaining : appState.durationLabel)
             .font(YixiuTheme.chineseDisplay(17))
             .tracking(1.2)
-            .foregroundStyle(YixiuTheme.mist)
+            .foregroundStyle(YixiuTheme.moon)
             .frame(minWidth: 150, minHeight: 44)
+            .padding(.horizontal, 12)
+            .background(Capsule().fill(YixiuTheme.deepWater.opacity(0.5)))
         }
         .buttonStyle(.plain)
     }
 
     private var timerPanel: some View {
         HStack(spacing: 7) {
-            ForEach([15, 30, 60, 0], id: \.self) { minutes in
+            ForEach([5, 15, 30, 60, 0], id: \.self) { minutes in
                 Button {
                     guard subscriptionStore.canUseTimer(minutes) else {
+                        showPlusAfterTimer = true
                         timerOpen = false
-                        paywallOpen = true
                         return
                     }
                     appState.selectDuration(minutes)
@@ -579,13 +616,15 @@ struct SoundLibraryView: View {
                         .padding(.horizontal, 1)
                     }
 
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 11) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
                         ForEach(filteredScenes) { scene in
                             sceneCard(scene)
                         }
                     }
                 }
                 .padding(18)
+                .frame(maxWidth: 1040)
+                .frame(maxWidth: .infinity)
             }
             .background(YixiuTheme.deepWater)
             .navigationTitle(language.text(zh: "声音库", en: "Sound Library"))

@@ -4,10 +4,13 @@ struct FocusView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var status: BreathingStatus = .idle
     @State private var elapsed = 0
     @State private var originalAudioWasPlaying = false
     @State private var paywallOpen = false
+    @State private var clock = PracticeCountdown(seconds: 60)
+    @State private var practiceSceneID = "stream"
 
     private var totalSeconds: Int { appState.focusDuration * 60 }
 
@@ -40,28 +43,12 @@ struct FocusView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image("MorningLake")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .clipped()
-                    .ignoresSafeArea()
-
-                Color(red: 0, green: 18 / 255, blue: 26 / 255)
-                    .opacity(0.42)
-                    .ignoresSafeArea()
-
-                LinearGradient(
-                    colors: [YixiuTheme.deepWater.opacity(0.14), YixiuTheme.deepWater.opacity(0.94)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
-
+                ScrollView(showsIndicators: false) {
+                VStack(spacing: 28) {
+                focusLayout(geometry.size).callAsFunction {
                 VStack(spacing: 0) {
                 Text(appState.language.text(zh: "静心 · FOCUS", en: "FOCUS · 静心"))
-                    .yixiuSecondary(9)
-                    .padding(.top, 76)
+                    .yixiuSecondary(11)
 
                 Text(appState.language.text(zh: "水之呼吸", en: "Water Breathing"))
                     .font(
@@ -80,7 +67,10 @@ struct FocusView: View {
 
                 focusPreferences
                     .padding(.top, 18)
+                }
+                .frame(maxWidth: .infinity)
 
+                VStack(spacing: 0) {
                 ZStack {
                     Circle()
                         .stroke(YixiuTheme.aqua.opacity(0.28), lineWidth: 1)
@@ -94,9 +84,9 @@ struct FocusView: View {
                         .overlay(Circle().stroke(YixiuTheme.aquaStrong.opacity(0.7), lineWidth: 1))
                         .shadow(color: YixiuTheme.aqua.opacity(0.2), radius: 34)
                 }
-                .scaleEffect(phaseScale)
+                .scaleEffect(phaseScale * (geometry.size.height < 500 ? 0.65 : 1))
                 .animation(reduceMotion ? nil : .easeInOut(duration: phase == "exhale" ? 6 : 4), value: phase)
-                .frame(height: 230)
+                .frame(height: geometry.size.height < 500 ? 144 : 230)
                 .padding(.top, 12)
 
                 Text(phaseCopy)
@@ -109,9 +99,10 @@ struct FocusView: View {
                     .tracking(2)
                     .foregroundStyle(YixiuTheme.mist)
                     .padding(.top, 7)
+                    .accessibilityIdentifier("focus-countdown")
 
                 controls
-                    .padding(.top, 32)
+                    .padding(.top, geometry.size.height < 500 ? 16 : 32)
 
                 Text(appState.language.text(
                     zh: "顺其自然；如有不适，请暂停。",
@@ -119,16 +110,39 @@ struct FocusView: View {
                 ))
                 .font(YixiuTheme.sans(11))
                 .foregroundStyle(YixiuTheme.mist.opacity(0.58))
-                .padding(.top, 23)
+                .padding(.top, geometry.size.height < 500 ? 12 : 23)
+                }
+                .frame(maxWidth: .infinity)
+                }
 
-                Spacer(minLength: 92)
+                if status == .idle || status == .complete {
+                    quickPractices
+                }
                 }
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
-                .frame(width: min(geometry.size.width, 680))
+                .padding(24)
+                .frame(maxWidth: 960)
+                .frame(minHeight: geometry.size.height)
+                .frame(maxWidth: .infinity)
+                }
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .clipped()
+        }
+        .background {
+            GeometryReader { geometry in
+                Image("MorningLake")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+                    .overlay(Color(red: 0, green: 18 / 255, blue: 26 / 255).opacity(0.42))
+                    .overlay(LinearGradient(
+                        colors: [YixiuTheme.deepWater.opacity(0.14), YixiuTheme.deepWater.opacity(0.94)],
+                        startPoint: .top, endPoint: .bottom
+                    ))
+            }
+            .ignoresSafeArea()
         }
         .task(id: status) {
             guard status == .running else { return }
@@ -137,21 +151,25 @@ struct FocusView: View {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
                 guard status == .running, !Task.isCancelled else { return }
 
-                elapsed += 1
+                elapsed = totalSeconds - clock.secondsRemaining()
                 if elapsed >= totalSeconds {
                     status = .complete
+                    clock.pause()
+                    appState.recordCompletedSession(isFocus: true, seconds: totalSeconds, sceneID: practiceSceneID)
                     restoreOriginalPlayback()
-                    appState.recordCompletedSession(isFocus: true)
                     return
                 }
             }
         }
         .onDisappear {
             if status == .running || status == .paused {
+                clock.pause()
+                elapsed = totalSeconds - clock.secondsRemaining()
                 restoreOriginalPlayback()
                 status = .paused
             }
         }
+        .onChange(of: appState.focusRequestToken) { _, _ in resetSession() }
         .sensoryFeedback(.selection, trigger: phase)
         .sheet(isPresented: $paywallOpen) {
             PlusPaywallView()
@@ -159,6 +177,12 @@ struct FocusView: View {
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
         }
+    }
+
+    private func focusLayout(_ size: CGSize) -> AnyLayout {
+        size.width >= 620 && !dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(HStackLayout(spacing: 32))
+            : AnyLayout(VStackLayout(spacing: 12))
     }
 
     private var focusPreferences: some View {
@@ -177,7 +201,7 @@ struct FocusView: View {
                         Text("\(minutes) \(appState.language == .zh ? "分钟" : "MIN")")
                             .font(.system(size: 10, weight: .medium))
                             .foregroundStyle(appState.focusDuration == minutes ? YixiuTheme.deepWater : YixiuTheme.mist)
-                            .frame(width: 53, height: 34)
+                            .frame(width: 53, height: 44)
                             .background(
                                 Capsule().fill(appState.focusDuration == minutes ? YixiuTheme.aquaStrong : .clear)
                             )
@@ -208,7 +232,7 @@ struct FocusView: View {
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(appState.focusSoundEnabled ? YixiuTheme.aquaStrong : YixiuTheme.mist)
                 .padding(.horizontal, 12)
-                .frame(width: 220, height: 38)
+                .frame(width: 220, height: 44)
                 .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
                 .overlay(
                     Capsule().stroke(
@@ -246,7 +270,16 @@ struct FocusView: View {
         case .running, .paused:
             HStack(spacing: 12) {
                 Button {
-                    status = status == .running ? .paused : .running
+                    if status == .running {
+                        clock.pause()
+                        elapsed = totalSeconds - clock.secondsRemaining()
+                        status = .paused
+                        restoreOriginalPlayback()
+                    } else {
+                        acquireFocusAudio()
+                        clock.start()
+                        status = .running
+                    }
                 } label: {
                     Label(
                         status == .running
@@ -283,24 +316,34 @@ struct FocusView: View {
             paywallOpen = true
             return
         }
+        acquireFocusAudio()
+        practiceSceneID = appState.scene.rawValue
+        clock.reset(seconds: totalSeconds)
+        clock.start()
+        elapsed = 0
+        status = .running
+    }
+
+    private func acquireFocusAudio() {
+        guard !appState.isFocusActive else { return }
         originalAudioWasPlaying = appState.isPlaying
+        appState.isFocusActive = true
         if appState.focusSoundEnabled {
             if !appState.isPlaying { appState.play() }
         } else if appState.isPlaying {
             appState.pause()
         }
-        elapsed = 0
-        status = .running
     }
 
     private func resetSession() {
         restoreOriginalPlayback()
+        clock.reset(seconds: totalSeconds)
         elapsed = 0
         status = .idle
     }
 
     private func syncFocusSound() {
-        guard status == .running || status == .paused else { return }
+        guard status == .running else { return }
 
         if appState.focusSoundEnabled, !appState.isPlaying {
             appState.play()
@@ -310,10 +353,59 @@ struct FocusView: View {
     }
 
     private func restoreOriginalPlayback() {
+        guard appState.isFocusActive else { return }
         if originalAudioWasPlaying, !appState.isPlaying {
             appState.play()
         } else if !originalAudioWasPlaying, appState.isPlaying {
             appState.pause()
         }
+        appState.isFocusActive = false
+    }
+
+    private var quickPractices: some View {
+        VStack(spacing: 12) {
+            Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7).padding(.bottom, 10)
+            Text(appState.language.text(zh: "换一种放松方式", en: "Another way to unwind"))
+                .font(YixiuTheme.sans(11))
+                .foregroundStyle(YixiuTheme.mist)
+            HStack(alignment: .top, spacing: 12) {
+            quickPractice(title: appState.language.text(zh: "睡前放松", en: "Bedtime"), minutes: 15) {
+                appState.startQuickListening(scene: .rain, minutes: 15)
+            }
+            quickPractice(title: appState.language.text(zh: "片刻呼吸", en: "Breathe"), minutes: 1) {
+                appState.pause()
+                appState.selectScene(.stream, autoplay: false)
+                appState.focusDuration = 1
+                appState.focusSoundEnabled = true
+                beginSession()
+            }
+            quickPractice(title: appState.language.text(zh: "清晨唤醒", en: "Morning"), minutes: 5) {
+                appState.startQuickListening(scene: .birds, minutes: 5)
+            }
+            }
+        }
+        .frame(maxWidth: 420)
+    }
+
+    private func quickPractice(title: String, minutes: Int,
+                               action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 7) {
+                Image(systemName: "play").font(.system(size: 14)).foregroundStyle(YixiuTheme.aquaStrong)
+                VStack(spacing: 4) {
+                    Text(title).font(YixiuTheme.sans(12, weight: .medium))
+                    Text("\(minutes) \(appState.language == .zh ? "分钟" : "MIN")")
+                        .font(YixiuTheme.sans(10)).foregroundStyle(YixiuTheme.mist)
+                }
+            }
+            .foregroundStyle(YixiuTheme.moon)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, minHeight: 84)
+            .background(YixiuTheme.deepWater.opacity(0.72))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(YixiuTheme.hairline, lineWidth: 0.7))
+            .multilineTextAlignment(.center)
+        }.buttonStyle(.plain)
     }
 }

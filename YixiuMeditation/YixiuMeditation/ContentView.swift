@@ -8,17 +8,14 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $appState.activeTab) {
             ListenView()
-                .ignoresSafeArea()
                 .tag(RootTab.listen)
                 .tabItem { tabLabel(for: .listen) }
 
             FocusView()
-                .ignoresSafeArea()
                 .tag(RootTab.focus)
                 .tabItem { tabLabel(for: .focus) }
 
             MeView()
-                .ignoresSafeArea()
                 .tag(RootTab.me)
                 .tabItem { tabLabel(for: .me) }
         }

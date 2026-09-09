@@ -42,7 +42,7 @@ enum SubscriptionAccessPolicy {
     }
 
     static func canUseTimer(minutes: Int, level: YixiuAccessLevel) -> Bool {
-        [15, 30].contains(minutes) || level != .free
+        [5, 15, 30].contains(minutes) || level != .free
     }
 
     static func canUseFocus(minutes: Int, level: YixiuAccessLevel) -> Bool {
