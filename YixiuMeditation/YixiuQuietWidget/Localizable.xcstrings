@@ -1,6 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Return to your sound" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "回到上次的声音" } } } },
     "Breathe in · Hold · Breathe out" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "吸气 · 停留 · 呼气" } } } },
     "Complete" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已完成" } } } },
     "Done" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } } } },
