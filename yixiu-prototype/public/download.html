@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#031923" />
+    <meta name="robots" content="noindex,follow" />
+    <title>下载一休 App</title>
+    <link rel="stylesheet" href="/download.css" />
+    <script defer src="/analytics.js"></script>
+    <script defer src="/download.js"></script>
+  </head>
+  <body>
+    <main class="download-shell">
+      <div class="menu-pointer" id="browser-pointer" aria-hidden="true" hidden>
+        <span>···</span>
+        <i>↗</i>
+      </div>
+
+      <section class="download-card" aria-labelledby="download-title">
+        <div class="brand-mark" aria-hidden="true"><span></span></div>
+        <p class="eyebrow">一休 · YIXIU</p>
+        <h1 id="download-title">正在前往 App Store</h1>
+        <p class="description" id="download-description">即将打开一休 App 下载页。</p>
+
+        <section class="wechat-guide" id="wechat-guide" aria-label="在默认浏览器中打开" hidden>
+          <ol>
+            <li id="guide-menu">点击微信右上角 ···</li>
+            <li id="guide-browser">选择“在默认浏览器中打开”</li>
+          </ol>
+          <p id="guide-result">默认浏览器打开后，将自动前往 App Store，无需再次点击下载。</p>
+        </section>
+
+        <a
+          id="app-store-link"
+          class="primary-action"
+          href="https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&amp;pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8"
+          data-analytics-event="yixiu_download_click"
+          data-analytics-placement="wechat_handoff"
+        >打开 App Store</a>
+        <button id="copy-link" class="secondary-action" type="button" hidden>复制 App Store 链接</button>
+        <p class="feedback" id="copy-feedback" role="status" aria-live="polite"></p>
+        <p class="fallback-note" id="fallback-note">如未自动跳转，请点击上方按钮。</p>
+        <a id="back-to-yixiu" class="back-link" href="/">返回一休</a>
+      </section>
+    </main>
+    <noscript><p class="noscript">请点击“打开 App Store”。微信内请先使用右上角菜单在默认浏览器中打开此页。</p></noscript>
+  </body>
+</html>

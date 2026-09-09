@@ -747,8 +747,6 @@ export default function Prototype() {
   const [videoChannelOpen, setVideoChannelOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [downloadFeedback, setDownloadFeedback] = useState(false);
-  const [wechatDownloadUrl, setWechatDownloadUrl] = useState<string | null>(null);
-  const [wechatCopyState, setWechatCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [shareCardPreview, setShareCardPreview] = useState<ShareCardPreview | null>(null);
   const [shareCardCopyState, setShareCardCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [instagramGuideOpen, setInstagramGuideOpen] = useState(() => isInstagramProfileReferral());
@@ -987,22 +985,13 @@ export default function Prototype() {
 
     event.preventDefault();
     const placement = event.currentTarget.dataset.analyticsPlacement ?? "unknown";
+    const handoffUrl = new URL("/download.html", window.location.origin);
+    handoffUrl.searchParams.set("lang", language);
+    handoffUrl.searchParams.set("placement", placement);
+    handoffUrl.searchParams.set("target", event.currentTarget.href);
     setUpgradeOpen(false);
-    setWechatDownloadUrl(event.currentTarget.href);
-    setWechatCopyState("idle");
-    recordGrowthEvent("yixiu_wechat_app_store_guide_view", { placement });
-  };
-
-  const copyWechatAppStoreLink = async () => {
-    if (!wechatDownloadUrl) return;
-    try {
-      await copyTextToClipboard(wechatDownloadUrl);
-      setWechatCopyState("copied");
-      recordGrowthEvent("yixiu_wechat_app_store_link_copy");
-    } catch (error) {
-      console.error("Unable to copy the Yixiu App Store link", error);
-      setWechatCopyState("error");
-    }
+    recordGrowthEvent("yixiu_wechat_download_handoff", { placement });
+    window.location.assign(handoffUrl.href);
   };
 
   const startSceneSwipe = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -1997,40 +1986,6 @@ export default function Prototype() {
                     : (language === "zh" ? "复制链接" : "Copy link")}
               </button>
             </div>
-          </section>
-        </div>
-      ) : null}
-
-      {wechatDownloadUrl ? (
-        <div className="wechat-browser-guide" role="dialog" aria-modal="true" aria-label={language === "zh" ? "在默认浏览器中打开" : "Open in your default browser"}>
-          <button
-            className="wechat-browser-guide-backdrop"
-            type="button"
-            aria-label={language === "zh" ? "关闭" : "Close"}
-            onClick={() => setWechatDownloadUrl(null)}
-          />
-          <div className="wechat-browser-guide-pointer" aria-hidden="true">
-            <span>···</span>
-            <i>↗</i>
-          </div>
-          <section>
-            <button className="wechat-browser-guide-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setWechatDownloadUrl(null)}><Cross2Icon /></button>
-            <small>WECHAT</small>
-            <h2>{language === "zh" ? "微信暂时无法直接打开 App Store" : "Open Yixiu in your default browser"}</h2>
-            <p>{language === "zh" ? "请点击右上角 ···，选择“在默认浏览器中打开”，然后再次点击下载。" : "Tap ··· in the top-right, choose “Open in Default Browser,” then tap download again."}</p>
-            <div className="wechat-browser-guide-actions">
-              <button type="button" className="is-primary" onClick={() => setWechatDownloadUrl(null)}>{language === "zh" ? "知道了" : "Got it"}</button>
-              <button type="button" className="is-secondary" onClick={copyWechatAppStoreLink}>
-                {wechatCopyState === "copied"
-                  ? (language === "zh" ? "链接已复制" : "Link copied")
-                  : wechatCopyState === "error"
-                    ? (language === "zh" ? "复制失败，请重试" : "Couldn’t copy — try again")
-                    : (language === "zh" ? "复制 App Store 链接" : "Copy App Store link")}
-              </button>
-            </div>
-            <p className="wechat-browser-guide-status" role="status" aria-live="polite">
-              {wechatCopyState === "copied" ? (language === "zh" ? "可粘贴到 Safari 打开" : "Paste it into Safari to open") : ""}
-            </p>
           </section>
         </div>
       ) : null}

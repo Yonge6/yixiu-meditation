@@ -76,6 +76,9 @@ test -f "$site_path/llms.txt"
 test -f "$site_path/sitemap.xml"
 test -f "$site_path/analytics.js"
 test -f "$site_path/discover.js"
+test -f "$site_path/download.html"
+test -f "$site_path/download.css"
+test -f "$site_path/download.js"
 test -f "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt"
 test -f "$site_path/assets/yixiu/window-rain.webp"
 test -f "$site_path/assets/yixiu/sunny-valley.webp"
@@ -107,6 +110,9 @@ test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="desc
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$site_path/index.html" >/dev/null
+grep -F '在默认浏览器中打开' "$site_path/download.html" >/dev/null
+grep -F 'https://apps.apple.com/app/id1461182261' "$site_path/download.js" >/dev/null
+grep -F 'window.location.replace(storeUrl)' "$site_path/download.js" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/sleep-sounds/index.html" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/best-sleep-sounds/index.html" >/dev/null
 grep -F 'data-analytics-placement="best_sleep_sounds_after_preview"' "$site_path/best-sleep-sounds/index.html" >/dev/null
@@ -294,6 +300,10 @@ fi
 
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$deploy_target/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$deploy_target/index.html" >/dev/null
+test -f "$deploy_target/download.css"
+grep -F '在默认浏览器中打开' "$deploy_target/download.html" >/dev/null
+grep -F 'https://apps.apple.com/app/id1461182261' "$deploy_target/download.js" >/dev/null
+grep -F 'window.location.replace(storeUrl)' "$deploy_target/download.js" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
 test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.5"' {} + | wc -l)" -eq 26
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$deploy_target/index.html" >/dev/null
@@ -394,6 +404,15 @@ curl --compressed -fsS \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
   https://yixiu.wonderelian.com/ \
   | grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' >/dev/null
+curl --compressed -fsS \
+  -A 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 MicroMessenger/8.0.51' \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/download.html \
+  | grep -F '在默认浏览器中打开' >/dev/null
+curl --compressed -fsS \
+  --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
+  https://yixiu.wonderelian.com/download.js \
+  | grep -F 'window.location.replace(storeUrl)' >/dev/null
 curl --compressed -fsS \
   -A 'OAI-SearchBot/1.0; +https://openai.com/searchbot' \
   --resolve 'yixiu.wonderelian.com:443:127.0.0.1' \
