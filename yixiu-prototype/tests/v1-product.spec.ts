@@ -342,9 +342,9 @@ test("opens the full sound library with an upward gesture", async ({ page }) => 
   await expect(library).toBeHidden();
 });
 
-test("runs and pauses the one-minute water breathing practice", async ({ page }) => {
+test("runs and pauses breathing in the current scene", async ({ page }) => {
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
-  await expect(page.getByRole("heading", { name: "水之呼吸" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
 
   await page.getByRole("button", { name: "开始 1 分钟" }).click();
   await expect(page.getByText("吸气", { exact: true })).toBeVisible();
@@ -357,7 +357,7 @@ test("offers a persistent three-minute focus session with optional nature sound"
   await page.getByRole("button", { name: "3 分钟" }).click();
   await expect(page.getByText("03:00", { exact: true })).toBeVisible();
 
-  const natureSound = page.getByRole("switch", { name: "自然声" });
+  const natureSound = page.getByRole("switch", { name: "场景声音：大海" });
   await natureSound.click();
   await expect(natureSound).toHaveAttribute("aria-checked", "true");
   await page.getByRole("button", { name: "开始 3 分钟" }).click();
@@ -366,7 +366,7 @@ test("offers a persistent three-minute focus session with optional nature sound"
   await page.reload();
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
   await expect(page.getByRole("button", { name: "3 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByRole("switch", { name: "自然声" })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("switch", { name: "场景声音：大海" })).toHaveAttribute("aria-checked", "true");
 });
 
 test("filters the sound library by use and serves lightweight thumbnails", async ({ page }) => {

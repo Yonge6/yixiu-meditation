@@ -35,6 +35,13 @@ final class HomeInteractionUITests: XCTestCase {
                        "Expected \(name); actual title: \(title.label)", file: file, line: line)
     }
 
+    private func selectTab(_ name: String) {
+        // iPadOS exposes floating tabs as cells, not a TabBar container.
+        let tab = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", name)).firstMatch
+        XCTAssertTrue(tab.waitForExistence(timeout: 3))
+        tab.tap()
+    }
+
     func testPortraitGesturesAndLowControls() {
         expectScene("Ocean Waves")
         let play = app.buttons["Play"]
@@ -95,6 +102,42 @@ final class HomeInteractionUITests: XCTestCase {
         expectScene("Rain on Eaves")
         title.swipeRight()
         expectScene("Ocean Waves")
+    }
+
+    func testFocusFollowsSelectedSceneAndPreservesPlayback() {
+        drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
+        expectScene("Rain on Eaves")
+        selectTab("Focus")
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Rain on Eaves")
+        let sound = app.buttons["focus.sceneSound"]
+        XCTAssertEqual(sound.label, "Scene sound: Rain on Eaves")
+        capture("focus-rain-shared-scene")
+        selectTab("Sounds")
+        XCTAssertTrue(app.buttons["Play"].exists)
+        app.buttons["Play"].tap()
+        selectTab("Focus")
+        if sound.value as? String != "On" { sound.tap() }
+        app.buttons["focus.start"].tap()
+        selectTab("Sounds")
+        XCTAssertTrue(app.buttons["Pause"].exists)
+        drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
+        expectScene("Spring Creek")
+        selectTab("Focus")
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Spring Creek")
+        XCTAssertTrue(app.buttons["focus.start"].exists)
+    }
+
+    func testQuickBreathingKeepsHomeScene() {
+        selectTab("Focus")
+        let breathe = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Breathe")).firstMatch
+        for _ in 0..<5 where !breathe.isHittable { app.swipeUp() }
+        XCTAssertTrue(breathe.isHittable)
+        breathe.tap()
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Ocean Waves")
+        XCTAssertEqual(app.buttons["focus.sceneSound"].value as? String, "On")
+        selectTab("Sounds")
+        expectScene("Ocean Waves")
+        XCTAssertTrue(app.buttons["Play"].exists)
     }
 
     func testExplicitReviewButtonOpensExternalStoreOrShowsFailure() {

@@ -17,3 +17,11 @@ assert.match(me, /https:\/\/apps\.apple\.com\/app\/id1461182261\?action=write-re
 assert.match(me, /if !accepted \{ reviewOpenFailed = true \}/);
 assert.match(source('ContentView'), /requestReview\(\)/);
 console.log('PASS: home layout/gesture and explicit review-link guardrails');
+
+const focus = source('FocusView');
+assert.match(focus, /Image\(appState\.scene\.assetName\)/);
+assert.match(focus, /zh: appState\.scene\.zhName, en: appState\.scene\.enName/);
+assert.doesNotMatch(focus, /Image\("MorningLake"\)|Water Breathing|selectScene\(\.stream/);
+assert.match(focus, /practiceSceneID = appState\.scene\.rawValue/);
+assert.match(focus, /if !appState\.isPlaying \{ appState\.play\(\) \}/);
+console.log('PASS: Focus shares scene artwork, title, audio and record identity');

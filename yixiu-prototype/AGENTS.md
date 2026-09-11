@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- Focus shares the Sounds tab's selected scene: localized name, background artwork and audio. Preserve explicit silence and playback continuity on tab changes; do not substitute a fixed lake or stream scene.
+
 - The selected visual direction is now “深水沉浸播放器”, based on `../design/ideation-2026-08-09/yixiu-selected-deep-water-player.png`. It supersedes the rejected pale-ivory “如水晨光” home direction.
 - The app must support Simplified Chinese and English, with a visible `中 / EN` language control.
 - Use real moonlit water photography, deep teal/navy, reflective light, restrained ripple accents, and strong low-light contrast as the main visual language.

@@ -764,6 +764,7 @@ export default function Prototype() {
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const breathingOriginalPlaybackRef = useRef(false);
+  const breathingSceneRef = useRef(activeScene);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [swipeProgress, setSwipeProgress] = useState(0);
   const [swipeSettling, setSwipeSettling] = useState(false);
@@ -771,6 +772,7 @@ export default function Prototype() {
   const [meBackDragging, setMeBackDragging] = useState(false);
 
   const active = scenes[activeScene] ?? scenes.ocean;
+  const activeSceneName = language === "zh" ? active.zh : active.en;
   const activeIndex = sceneOrder.indexOf(active.id);
   const previousScene = activeIndex > 0 ? scenes[sceneOrder[activeIndex - 1]] : null;
   const nextScene = activeIndex < sceneOrder.length - 1 ? scenes[sceneOrder[activeIndex + 1]] : null;
@@ -848,6 +850,14 @@ export default function Prototype() {
       setBreathingStatus("paused");
     }
   }, [activeTab, breathingStatus]);
+
+  useEffect(() => {
+    if (breathingSceneRef.current !== active.id) {
+      breathingSceneRef.current = active.id;
+      setBreathingElapsed(0);
+      setBreathingStatus("idle");
+    }
+  }, [active.id]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -1201,6 +1211,11 @@ export default function Prototype() {
   }, [active, isPlaying, language, nextScene, previousScene]);
 
   const beginBreathing = () => {
+    if (focusSoundEnabled && !freeSceneIds.has(active.id)) {
+      setUpgradeOpen(true);
+      return;
+    }
+    breathingSceneRef.current = active.id;
     breathingOriginalPlaybackRef.current = isPlaying;
     setIsPlaying(focusSoundEnabled);
     setBreathingElapsed(0);
@@ -1209,9 +1224,34 @@ export default function Prototype() {
   };
 
   const resetBreathing = () => {
-    setIsPlaying(breathingOriginalPlaybackRef.current);
+    if (breathingStatus === "running") setIsPlaying(breathingOriginalPlaybackRef.current);
     setBreathingElapsed(0);
     setBreathingStatus("idle");
+  };
+
+  const toggleBreathing = () => {
+    if (breathingStatus === "running") {
+      setIsPlaying(breathingOriginalPlaybackRef.current);
+      setBreathingStatus("paused");
+    } else {
+      if (focusSoundEnabled && !freeSceneIds.has(active.id)) {
+        setUpgradeOpen(true);
+        return;
+      }
+      breathingOriginalPlaybackRef.current = isPlaying;
+      setIsPlaying(focusSoundEnabled);
+      setBreathingStatus("running");
+    }
+  };
+
+  const toggleFocusSound = () => {
+    const enabled = !focusSoundEnabled;
+    if (enabled && !freeSceneIds.has(active.id)) {
+      setUpgradeOpen(true);
+      return;
+    }
+    setFocusSoundEnabled(enabled);
+    if (breathingStatus === "running") setIsPlaying(enabled);
   };
 
   const breathingCycleSecond = breathingElapsed % 12;
@@ -1233,7 +1273,7 @@ export default function Prototype() {
   const drawerTitle = {
     home: language === "zh" ? "你的空间" : "Your space",
     library: language === "zh" ? "声音库" : "Sound library",
-    focus: language === "zh" ? "水之呼吸" : "Water breathing",
+    focus: activeSceneName,
     me: language === "zh" ? "我的一休" : "My Yixiu",
     timer: language === "zh" ? "默认定时" : "Default timer",
     philosophy: language === "zh" ? "产品哲学" : "Our philosophy",
@@ -1264,8 +1304,8 @@ export default function Prototype() {
       ) : null}
       <img
         className="ocean-backdrop scene-current-backdrop"
-        src={activeTab === "focus" ? scenes.lake.image : activeTab === "me" ? scenes.tide.image : active.image}
-        data-image-scene={activeTab === "focus" ? "lake" : activeTab === "me" ? "tide" : active.id}
+        src={activeTab === "me" ? scenes.tide.image : active.image}
+        data-image-scene={activeTab === "me" ? "tide" : active.id}
         alt=""
         draggable={false}
         style={activeTab === "sounds" ? {
@@ -1416,7 +1456,7 @@ export default function Prototype() {
                     </button>
                     <button type="button" onClick={() => { setIsPlaying(false); setDrawerView("focus"); }}>
                       <span className="yixiu-drawer-nav-icon">息</span>
-                      <span><strong>{language === "zh" ? "水之呼吸" : "Water breathing"}</strong><small>{language === "zh" ? "一段 1 分钟的静心练习" : "A one-minute focus practice"}</small></span>
+                      <span><strong>{activeSceneName}</strong><small>{language === "zh" ? "一段 1 分钟的静心练习" : "A one-minute focus practice"}</small></span>
                       <ChevronRightIcon />
                     </button>
                     <button type="button" onClick={() => { setIsPlaying(false); setDrawerView("me"); }}>
@@ -1488,7 +1528,7 @@ export default function Prototype() {
                   </div>
                 </section>
               ) : drawerView === "focus" ? (
-                <section className="yixiu-drawer-subview drawer-focus" aria-label={language === "zh" ? "水之呼吸" : "Water breathing"}>
+                <section className="yixiu-drawer-subview drawer-focus" aria-label={activeSceneName}>
                   <span className="section-kicker">{language === "zh" ? "静心 · FOCUS" : "FOCUS · 静心"}</span>
                   <h3>{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</h3>
                   <div className={`breathing-orbit phase-${breathingPhase} status-${breathingStatus}`} aria-hidden="true">
@@ -1619,9 +1659,9 @@ export default function Prototype() {
       ) : null}
 
       {activeTab === "focus" ? (
-        <section className="focus-screen" aria-label={language === "zh" ? "水之呼吸" : "Water breathing"}>
+        <section className="focus-screen" aria-label={activeSceneName}>
           <div className="section-kicker">{language === "zh" ? "静心 · FOCUS" : "FOCUS · 静心"}</div>
-          <h1>{language === "zh" ? "水之呼吸" : "Water Breathing"}</h1>
+          <h1>{activeSceneName}</h1>
           <p className="section-intro">{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</p>
 
           <div className="focus-preferences" aria-label={language === "zh" ? "静心设置" : "Focus settings"}>
@@ -1636,9 +1676,9 @@ export default function Prototype() {
                 </button>
               ))}
             </div>
-            <button className={`focus-sound-toggle ${focusSoundEnabled ? "is-active" : ""}`} type="button" role="switch" aria-checked={focusSoundEnabled} onClick={() => setFocusSoundEnabled((current) => !current)}>
+            <button className={`focus-sound-toggle ${focusSoundEnabled ? "is-active" : ""}`} type="button" role="switch" aria-label={language === "zh" ? `场景声音：${activeSceneName}` : `Scene sound: ${activeSceneName}`} aria-checked={focusSoundEnabled} onClick={toggleFocusSound}>
               <WaterWavesIcon />
-              <span>{language === "zh" ? "自然声" : "Nature sound"}</span>
+              <span>{activeSceneName}</span>
             </button>
           </div>
 
@@ -1661,7 +1701,7 @@ export default function Prototype() {
             </button>
           ) : (
             <div className="focus-actions">
-              <button type="button" aria-label={breathingStatus === "running" ? (language === "zh" ? "暂停呼吸" : "Pause breathing") : (language === "zh" ? "继续呼吸" : "Continue breathing")} onClick={() => setBreathingStatus((current) => current === "running" ? "paused" : "running")}>
+              <button type="button" aria-label={breathingStatus === "running" ? (language === "zh" ? "暂停呼吸" : "Pause breathing") : (language === "zh" ? "继续呼吸" : "Continue breathing")} onClick={toggleBreathing}>
                 {breathingStatus === "running" ? <PauseIcon /> : <PlayIcon />}
                 <span>{breathingStatus === "running" ? (language === "zh" ? "暂停" : "Pause") : (language === "zh" ? "继续" : "Continue")}</span>
               </button>
