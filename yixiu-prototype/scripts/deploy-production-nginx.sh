@@ -278,6 +278,12 @@ grep -F 'https://yixiu.wonderelian.com/1-minute-meditation-music/' "$site_path/s
 grep -F 'https://yixiu.wonderelian.com/20-minute-meditation-music/' "$site_path/sitemap.xml" >/dev/null
 grep -F 'https://yixiu.wonderelian.com/free-online-sound-machine/' "$site_path/sitemap.xml" >/dev/null
 
+# Do not publish an older bundle that silently drops native-parity features.
+grep -FR '20260911-native-parity' "$site_path/assets" >/dev/null
+grep -FR 'yixiu.practiceJournal.v1' "$site_path/assets" >/dev/null
+grep -FR 'quick-practice-grid' "$site_path/assets" >/dev/null
+grep -FR 'web-membership' "$site_path/assets" >/dev/null
+
 cp -a "$deploy_target/." "$deploy_backup/"
 rsync -a "$site_path/" "$deploy_target/"
 
@@ -581,4 +587,5 @@ curl --compressed -fsS \
   https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/ \
   | grep -F 'data-preview-timer' >/dev/null
 
+grep -FR '20260911-native-parity' "$deploy_target/assets" >/dev/null
 echo "DEPLOY_OK_YIXIU_${release_id}"
