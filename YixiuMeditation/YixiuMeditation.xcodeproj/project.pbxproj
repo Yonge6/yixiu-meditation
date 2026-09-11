@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D20000000000000000000001 = {isa = PBXBuildFile; fileRef = D10000000000000000000001; };
 		C20000000000000000000001 /* PracticeJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000001 /* PracticeJournal.swift */; };
 		A20000000000000000000001 /* YixiuMeditationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* YixiuMeditationApp.swift */; };
 		A20000000000000000000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* Models.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D70000000000000000000001 = {isa = PBXContainerItemProxy; containerPortal = A60000000000000000000001; proxyType = 1; remoteGlobalIDString = A50000000000000000000001; remoteInfo = YixiuMeditation; };
 		B70000000000000000000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A60000000000000000000001 /* Project object */;
@@ -68,6 +70,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D10000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/HomeInteractionUITests.swift; sourceTree = SOURCE_ROOT; };
+		D10000000000000000000002 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = HomeInteractionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C10000000000000000000001 /* PracticeJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeJournal.swift; sourceTree = "<group>"; };
 		A10000000000000000000001 /* YixiuMeditationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YixiuMeditationApp.swift; sourceTree = "<group>"; };
 		A10000000000000000000002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
@@ -107,6 +111,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D30000000000000000000001 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		A30000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -127,6 +132,7 @@
 		A40000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
+				D10000000000000000000001 /* HomeInteractionUITests.swift */,
 				A40000000000000000000002 /* YixiuMeditation */,
 				B40000000000000000000001 /* YixiuQuietWidget */,
 				B40000000000000000000002 /* Shared */,
@@ -165,6 +171,7 @@
 		A40000000000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				D10000000000000000000002 /* HomeInteractionUITests.xctest */,
 				A1000000000000000000000B /* YixiuMeditation.app */,
 				B10000000000000000000001 /* YixiuQuietWidget.appex */,
 			);
@@ -212,6 +219,17 @@
 /* End PBXVariantGroup section */
 
 /* Begin PBXNativeTarget section */
+		D50000000000000000000001 /* HomeInteractionUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D90000000000000000000001;
+			buildPhases = (D30000000000000000000002, D30000000000000000000001);
+			buildRules = ();
+			dependencies = (D70000000000000000000002);
+			name = HomeInteractionUITests;
+			productName = HomeInteractionUITests;
+			productReference = D10000000000000000000002;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		A50000000000000000000001 /* YixiuMeditation */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A90000000000000000000002 /* Build configuration list for PBXNativeTarget "YixiuMeditation" */;
@@ -258,6 +276,7 @@
 				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
+					D50000000000000000000001 = { CreatedOnToolsVersion = 26.6; TestTargetID = A50000000000000000000001; };
 					A50000000000000000000001 = {
 						CreatedOnToolsVersion = 26.6;
 					};
@@ -280,6 +299,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				D50000000000000000000001 /* HomeInteractionUITests */,
 				A50000000000000000000001 /* YixiuMeditation */,
 				B50000000000000000000001 /* YixiuQuietWidget */,
 			);
@@ -309,6 +329,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D30000000000000000000002 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (D20000000000000000000001); runOnlyForDeploymentPostprocessing = 0; };
 		A30000000000000000000002 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -354,6 +375,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D70000000000000000000002 = {isa = PBXTargetDependency; target = A50000000000000000000001; targetProxy = D70000000000000000000001; };
 		B70000000000000000000002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B50000000000000000000001 /* YixiuQuietWidget */;
@@ -362,6 +384,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		D80000000000000000000001 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu.HomeInteractionUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = YixiuMeditation;
+			};
+			name = Debug;
+		};
 		A80000000000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -589,6 +625,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D90000000000000000000001 = {isa = XCConfigurationList; buildConfigurations = (D80000000000000000000001); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
 		A90000000000000000000001 /* Build configuration list for PBXProject "YixiuMeditation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -36,7 +36,9 @@ jobs:
         run: npm ci
 
       - name: Verify protected mobile runtime
-        run: npm run check:runtime
+        run: |
+          npm run check:runtime
+          npm run test:practice
 
       - name: Type-check and build GitHub Pages bundle
         run: |

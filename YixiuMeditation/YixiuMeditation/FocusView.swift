@@ -10,9 +10,12 @@ struct FocusView: View {
     @State private var originalAudioWasPlaying = false
     @State private var paywallOpen = false
     @State private var clock = PracticeCountdown(seconds: 60)
-    @State private var practiceSceneID = "stream"
+    @State private var practiceSceneID = ""
 
     private var totalSeconds: Int { appState.focusDuration * 60 }
+    private var sceneName: String {
+        appState.language.text(zh: appState.scene.zhName, en: appState.scene.enName)
+    }
 
     private var phase: String {
         if status == .complete { return "complete" }
@@ -50,7 +53,7 @@ struct FocusView: View {
                 Text(appState.language.text(zh: "静心 · FOCUS", en: "FOCUS · 静心"))
                     .yixiuSecondary(11)
 
-                Text(appState.language.text(zh: "水之呼吸", en: "Water Breathing"))
+                Text(sceneName)
                     .font(
                         appState.language == .zh
                             ? YixiuTheme.chineseDisplay(32)
@@ -58,6 +61,7 @@ struct FocusView: View {
                     )
                     .foregroundStyle(YixiuTheme.moon)
                     .padding(.top, 12)
+                    .accessibilityIdentifier("focus.sceneTitle")
 
                 Text(appState.language.text(zh: "吸气，停驻，流动", en: "Breathe in, pause, flow"))
                     .font(YixiuTheme.chineseDisplay(14))
@@ -131,7 +135,7 @@ struct FocusView: View {
         }
         .background {
             GeometryReader { geometry in
-                Image("MorningLake")
+                Image(appState.scene.assetName)
                     .resizable()
                     .scaledToFill()
                     .frame(width: geometry.size.width, height: geometry.size.height)
@@ -170,6 +174,12 @@ struct FocusView: View {
             }
         }
         .onChange(of: appState.focusRequestToken) { _, _ in resetSession() }
+        .onChange(of: appState.scene) { _, newScene in
+            // A practice must not resume under a different scene than its record.
+            if (status == .running || status == .paused), practiceSceneID != newScene.rawValue {
+                resetSession()
+            }
+        }
         .sensoryFeedback(.selection, trigger: phase)
         .sheet(isPresented: $paywallOpen) {
             PlusPaywallView()
@@ -226,10 +236,12 @@ struct FocusView: View {
                 syncFocusSound()
             } label: {
                 Label(
-                    appState.language.text(zh: "自然声", en: "Nature sound"),
+                    sceneName,
                     systemImage: "water.waves"
                 )
                 .font(.system(size: 10, weight: .medium))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
                 .foregroundStyle(appState.focusSoundEnabled ? YixiuTheme.aquaStrong : YixiuTheme.mist)
                 .padding(.horizontal, 12)
                 .frame(width: 220, height: 44)
@@ -242,6 +254,11 @@ struct FocusView: View {
                 )
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("focus.sceneSound")
+            .accessibilityLabel(appState.language.text(zh: "场景声音：\(sceneName)", en: "Scene sound: \(sceneName)"))
+            .accessibilityValue(appState.focusSoundEnabled
+                ? appState.language.text(zh: "开启", en: "On")
+                : appState.language.text(zh: "关闭", en: "Off"))
         }
         .opacity(status == .running || status == .paused ? 0.58 : 1)
     }
@@ -266,6 +283,7 @@ struct FocusView: View {
                     .shadow(color: .black.opacity(0.22), radius: 18, y: 10)
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("focus.start")
 
         case .running, .paused:
             HStack(spacing: 12) {
@@ -373,8 +391,6 @@ struct FocusView: View {
                 appState.startQuickListening(scene: .rain, minutes: 15)
             }
             quickPractice(title: appState.language.text(zh: "片刻呼吸", en: "Breathe"), minutes: 1) {
-                appState.pause()
-                appState.selectScene(.stream, autoplay: false)
                 appState.focusDuration = 1
                 appState.focusSoundEnabled = true
                 beginSession()

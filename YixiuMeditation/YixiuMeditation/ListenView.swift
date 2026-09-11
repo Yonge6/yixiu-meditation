@@ -1,4 +1,51 @@
 import SwiftUI
+import UIKit
+
+// A SwiftUI DragGesture in scroll content can claim vertical movement before
+// the scroll view. This surface rejects vertical pans before recognition and
+// is used only over the non-interactive scene artwork/title in scrolling mode.
+private struct HorizontalSceneSwipeSurface: UIViewRepresentable {
+    let onSwipe: (Int) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(onSwipe: onSwipe) }
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isAccessibilityElement = false
+        let pan = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(_:)))
+        pan.delegate = context.coordinator
+        view.addGestureRecognizer(pan)
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        context.coordinator.onSwipe = onSwipe
+    }
+
+    final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        var onSwipe: (Int) -> Void
+        init(onSwipe: @escaping (Int) -> Void) { self.onSwipe = onSwipe }
+
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            guard let pan = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+            let movement = pan.translation(in: pan.view)
+            return abs(movement.x) > abs(movement.y) * 1.2
+        }
+
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                               shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            true
+        }
+
+        @objc func handlePan(_ pan: UIPanGestureRecognizer) {
+            guard pan.state == .ended else { return }
+            let movement = pan.translation(in: pan.view)
+            guard abs(movement.x) >= 48, abs(movement.x) > abs(movement.y) * 1.2 else { return }
+            onSwipe(movement.x < 0 ? 1 : -1)
+        }
+    }
+}
 
 struct ListenView: View {
     @EnvironmentObject private var appState: AppState
@@ -25,50 +72,17 @@ struct ListenView: View {
                     .gesture(sceneSwipeGesture(width: geometry.size.width))
                     .accessibilityHidden(true)
 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 20) {
-                        header
-                        Spacer(minLength: isExpanded(geometry.size) ? 12 : 90)
-                        // AnyLayout changes geometry without replacing the player subtree.
-                        playerLayout(geometry.size).callAsFunction {
-                            sceneIdentity
-                                .frame(maxWidth: .infinity)
-                                .padding(.horizontal, 20)
-                                .offset(x: sceneDragOffset * 0.12)
-                                .opacity(1 - sceneSwipeProgress * 0.55)
-                                .contentShape(Rectangle())
-                                .gesture(sceneSwipeGesture(width: geometry.size.width))
-
-                            VStack(spacing: 22) {
-                                durationButton
-                                transport
-                                volume
-                                Button { libraryOpen = true } label: {
-                                    Label(language.text(zh: "浏览全部声音", en: "Explore all sounds"), systemImage: "square.grid.2x2")
-                                        .font(YixiuTheme.sans(12, weight: .medium))
-                                        .foregroundStyle(YixiuTheme.moon)
-                                        .padding(.horizontal, 18)
-                                        .frame(minHeight: 44)
-                                        .background(Capsule().fill(YixiuTheme.deepWater.opacity(0.5)))
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            .frame(maxWidth: isExpanded(geometry.size) ? 400 : 480)
-                        }
-                        Spacer(minLength: 12)
-                        if let audioError = appState.audioError {
-                            Text(audioError)
-                                .font(YixiuTheme.sans(12))
-                                .foregroundStyle(YixiuTheme.moon)
-                                .multilineTextAlignment(.center)
-                                .padding(12)
-                                .background(RoundedRectangle(cornerRadius: 16).fill(YixiuTheme.deepWater.opacity(0.92)))
-                        }
+                ViewThatFits(in: .vertical) {
+                    playerPage(geometry.size)
+                        .frame(maxHeight: .infinity)
+                    // Only short windows / large text need scrolling. An always-on
+                    // ScrollView intercepts the scene canvas's vertical gesture.
+                    ScrollView(showsIndicators: false) {
+                        playerPage(geometry.size, scrolls: true)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(.vertical, 16)
-                    .frame(maxWidth: 1040)
-                    .frame(minHeight: geometry.size.height)
-                    .frame(maxWidth: .infinity)
+                    .safeAreaPadding(.bottom, 20)
+                    .accessibilityIdentifier("listen.scrollFallback")
                 }
 
                 if appState.sessionCompleted {
@@ -135,6 +149,69 @@ struct ListenView: View {
         } message: {
             Text(language.text(zh: "请稍后再试。", en: "Please try again in a moment."))
         }
+    }
+
+    private func playerPage(_ size: CGSize, scrolls: Bool = false) -> some View {
+        VStack(spacing: 20) {
+            header
+            sceneCanvas(width: size.width, opensLibrary: !scrolls)
+                .frame(minHeight: isExpanded(size) ? 12 : 90,
+                       maxHeight: scrolls ? (isExpanded(size) ? 12 : 90) : .infinity)
+            // AnyLayout keeps the wide layout while the upper canvas absorbs
+            // spare height, anchoring portrait controls just above the tab bar.
+            playerLayout(size).callAsFunction {
+                sceneIdentity
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 20)
+                    .offset(x: sceneDragOffset * 0.12)
+                    .opacity(1 - sceneSwipeProgress * 0.55)
+                    .contentShape(Rectangle())
+                    .gesture(sceneSwipeGesture(width: size.width), including: scrolls ? .none : .all)
+                    .overlay {
+                        if scrolls { HorizontalSceneSwipeSurface(onSwipe: moveScene) }
+                    }
+
+                VStack(spacing: 22) {
+                    durationButton
+                    transport
+                    volume
+                    Button { libraryOpen = true } label: {
+                        Label(language.text(zh: "浏览全部声音", en: "Explore all sounds"), systemImage: "square.grid.2x2")
+                            .font(YixiuTheme.sans(12, weight: .medium))
+                            .foregroundStyle(YixiuTheme.moon)
+                            .padding(.horizontal, 18)
+                            .frame(minHeight: 44)
+                            .background(Capsule().fill(YixiuTheme.deepWater.opacity(0.5)))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("listen.library")
+                }
+                .frame(maxWidth: isExpanded(size) ? 400 : 480)
+            }
+            Color.clear.frame(height: 12)
+            if let audioError = appState.audioError {
+                Text(audioError)
+                    .font(YixiuTheme.sans(12))
+                    .foregroundStyle(YixiuTheme.moon)
+                    .multilineTextAlignment(.center)
+                    .padding(12)
+                    .background(RoundedRectangle(cornerRadius: 16).fill(YixiuTheme.deepWater.opacity(0.92)))
+            }
+        }
+        .padding(.vertical, 16)
+        .frame(maxWidth: 1040)
+        .frame(maxWidth: .infinity)
+    }
+
+    private func sceneCanvas(width: CGFloat, opensLibrary: Bool) -> some View {
+        Color.clear
+            .contentShape(Rectangle())
+            .gesture(sceneSwipeGesture(width: width), including: opensLibrary ? .all : .none)
+            .overlay {
+                if !opensLibrary { HorizontalSceneSwipeSurface(onSwipe: moveScene) }
+            }
+            .accessibilityIdentifier("listen.sceneCanvas")
+            .accessibilityHidden(true)
     }
 
     private func isExpanded(_ size: CGSize) -> Bool {
@@ -236,6 +313,7 @@ struct ListenView: View {
                 sceneSwipeProgress = min(abs(sceneDragOffset) / max(width * 0.42, 1), 1)
             }
             .onEnded { value in
+                guard !sceneSwipeSettling else { return }
                 let horizontal = value.translation.width
                 let vertical = value.translation.height
 
@@ -374,6 +452,7 @@ struct ListenView: View {
     private var sceneIdentity: some View {
         VStack(spacing: 0) {
             Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
+                .accessibilityIdentifier("listen.sceneTitle")
                 .font(
                     language == .zh
                         ? YixiuTheme.chineseDisplay(appState.scene.zhName.count > 4 ? 39 : 47)

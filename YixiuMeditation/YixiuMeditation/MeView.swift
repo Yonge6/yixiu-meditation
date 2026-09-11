@@ -14,12 +14,12 @@ struct MeView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @EnvironmentObject private var dailyReminder: DailyReminderManager
-    @Environment(\.requestReview) private var requestReview
     @Environment(\.openURL) private var openURL
     @State private var page: MePage = .home
     @State private var libraryOpen = false
     @State private var videoChannelOpen = false
     @State private var paywallOpen = false
+    @State private var reviewOpenFailed = false
     @GestureState private var detailBackOffset: CGFloat = 0
 
     private var language: AppLanguage { appState.language }
@@ -67,6 +67,14 @@ struct MeView: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
+        }
+        .alert(language.text(zh: "暂时无法打开 App Store", en: "Could not open the App Store"), isPresented: $reviewOpenFailed) {
+            Button(language.text(zh: "打开 App Store", en: "Open App Store")) {
+                openURL(URL(string: "https://apps.apple.com/app/id1461182261")!)
+            }
+            Button(language.text(zh: "取消", en: "Cancel"), role: .cancel) {}
+        } message: {
+            Text(language.text(zh: "请检查网络连接，或前往 App Store 搜索一休，在产品页撰写评价。", en: "Check your connection, or find Yixiu in the App Store and write a review on its product page."))
         }
     }
 
@@ -720,7 +728,11 @@ struct MeView: View {
             )
             Divider().overlay(YixiuTheme.hairline)
             Button {
-                requestReview()
+                // An explicit rating button must not rely on StoreKit's
+                // discretionary prompt (which may never be presented).
+                openURL(URL(string: "https://apps.apple.com/app/id1461182261?action=write-review")!) { accepted in
+                    if !accepted { reviewOpenFailed = true }
+                }
             } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "star")
@@ -746,6 +758,7 @@ struct MeView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("me.writeReview")
         }
         .padding(.horizontal, 16)
         .yixiuPanel()

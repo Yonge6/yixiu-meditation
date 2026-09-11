@@ -342,9 +342,9 @@ test("opens the full sound library with an upward gesture", async ({ page }) => 
   await expect(library).toBeHidden();
 });
 
-test("runs and pauses the one-minute water breathing practice", async ({ page }) => {
+test("runs and pauses breathing in the current scene", async ({ page }) => {
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
-  await expect(page.getByRole("heading", { name: "水之呼吸" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
 
   await page.getByRole("button", { name: "开始 1 分钟" }).click();
   await expect(page.getByText("吸气", { exact: true })).toBeVisible();
@@ -352,21 +352,24 @@ test("runs and pauses the one-minute water breathing practice", async ({ page })
   await expect(page.getByRole("button", { name: "继续呼吸" })).toBeVisible();
 });
 
-test("offers a persistent three-minute focus session with optional nature sound", async ({ page }) => {
+test("persists optional scene sound while keeping extended Focus gated", async ({ page }) => {
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
   await page.getByRole("button", { name: "3 分钟" }).click();
-  await expect(page.getByText("03:00", { exact: true })).toBeVisible();
+  const upgrade = page.getByRole("dialog", { name: "升级一休 Plus" });
+  await expect(upgrade).toBeVisible();
+  await upgrade.locator(".plus-upgrade-close").click();
+  await expect(page.getByText("01:00", { exact: true })).toBeVisible();
 
-  const natureSound = page.getByRole("switch", { name: "自然声" });
+  const natureSound = page.getByRole("switch", { name: "场景声音：大海" });
   await natureSound.click();
   await expect(natureSound).toHaveAttribute("aria-checked", "true");
-  await page.getByRole("button", { name: "开始 3 分钟" }).click();
+  await page.getByRole("button", { name: "开始 1 分钟" }).click();
   await expect(page.getByRole("button", { name: "暂停呼吸" })).toBeVisible();
 
   await page.reload();
   await page.getByRole("button", { name: "静心 FOCUS" }).click();
-  await expect(page.getByRole("button", { name: "3 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByRole("switch", { name: "自然声" })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("button", { name: "1 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("switch", { name: "场景声音：大海" })).toHaveAttribute("aria-checked", "true");
 });
 
 test("filters the sound library by use and serves lightweight thumbnails", async ({ page }) => {
@@ -399,12 +402,12 @@ test("keeps recent listening in My and restores it after reload", async ({ page 
 test("updates and restores local settings", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();
-  await page.getByRole("button", { name: "60 分钟" }).click();
+  await page.getByRole("button", { name: "5 分钟", exact: true }).click();
   await page.getByRole("switch", { name: "结束提示音" }).click();
   await page.reload();
   await page.getByRole("button", { name: "我的 ME" }).click();
 
-  await expect(page.getByRole("button", { name: "60 分钟" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "5 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("switch", { name: "结束提示音" })).toHaveAttribute("aria-checked", "true");
 });
 

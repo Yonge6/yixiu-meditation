@@ -11,6 +11,7 @@ import {
   ExternalLinkIcon,
   HeartFilledIcon,
   HeartIcon,
+  LockClosedIcon,
   PauseIcon,
   PersonIcon,
   PlayIcon,
@@ -21,6 +22,7 @@ import {
   UploadIcon,
 } from "@radix-ui/react-icons";
 import QRCode from "qrcode";
+import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
@@ -49,8 +51,8 @@ type SceneId =
   | "oasisRest"
   | "sunlitShore"
   | "oceanPassage";
-type DurationOption = 15 | 30 | 60 | 0;
-type FocusDuration = 1 | 3;
+type DurationOption = 5 | 15 | 30 | 60 | 0;
+type FocusDuration = 1 | 3 | 5 | 10;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
 type SceneCategory = "all" | "nature" | "meditation" | "sleep" | "focus" | "morning" | "relax";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
@@ -366,8 +368,8 @@ const sceneOrder: SceneId[] = [
   "sunlitShore",
   "oceanPassage",
 ];
-const durations: DurationOption[] = [15, 30, 60, 0];
-const focusDurations: FocusDuration[] = [1, 3];
+const durations: DurationOption[] = [5, 15, 30, 60, 0];
+const focusDurations: FocusDuration[] = [1, 3, 5, 10];
 const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
@@ -408,19 +410,19 @@ const wisdoms = [
   { zh: "柔软不是退让，而是另一种力量。", en: "Softness is not surrender. It is another kind of strength." },
 ];
 
-function useStoredState<T>(key: string, fallback: T, linkedValue: T | null = null) {
+function useStoredState<T>(key: string, fallback: T, linkedValue: T | null = null, validate?: (value: unknown) => T) {
   const [value, setValue] = useState<T>(() => {
     if (linkedValue !== null) return linkedValue;
     try {
       const stored = window.localStorage.getItem(key);
-      return stored === null ? fallback : JSON.parse(stored) as T;
+      return stored === null ? fallback : validate ? validate(JSON.parse(stored)) : JSON.parse(stored) as T;
     } catch {
       return fallback;
     }
   });
 
   useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    try { window.localStorage.setItem(key, JSON.stringify(value)); } catch { /* Private browsing may disable persistence; keep this session usable. */ }
   }, [key, value]);
 
   return [value, setValue] as const;
@@ -726,10 +728,11 @@ function preferredLanguage(): Language {
 export default function Prototype() {
   const [language, setLanguage] = useStoredState<Language>("yixiu.language", preferredLanguage(), linkedLanguage());
   const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene());
-  const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30);
+  const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30, null, value => typeof value === "number" && canUseWebTimer(value) ? value as DurationOption : 30);
   const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", []);
   const [recentScenes, setRecentScenes] = useStoredState<SceneId[]>("yixiu.recentScenes", []);
-  const [focusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1);
+  const [focusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1, null, value => typeof value === "number" && canUseWebFocus(value) ? value as FocusDuration : 1);
+  const [journal, setJournal] = useStoredState<PracticeEntry[]>("yixiu.practiceJournal.v1", [], null, value => validateJournal(value, sceneOrder));
   const [focusSoundEnabled, setFocusSoundEnabled] = useStoredState<boolean>("yixiu.focusSoundEnabled", false);
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
   const [backgroundPlayback, setBackgroundPlayback] = useStoredState<boolean>("yixiu.backgroundPlayback", true);
@@ -764,6 +767,12 @@ export default function Prototype() {
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const breathingOriginalPlaybackRef = useRef(false);
+  const breathingSceneRef = useRef(activeScene);
+  const listeningClockRef = useRef(new PracticeClock());
+  const focusClockRef = useRef(new PracticeClock());
+  const listeningSessionRef = useRef("");
+  const focusSessionRef = useRef("");
+  const week = weekSummary(journal);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [swipeProgress, setSwipeProgress] = useState(0);
   const [swipeSettling, setSwipeSettling] = useState(false);
@@ -771,6 +780,7 @@ export default function Prototype() {
   const [meBackDragging, setMeBackDragging] = useState(false);
 
   const active = scenes[activeScene] ?? scenes.ocean;
+  const activeSceneName = language === "zh" ? active.zh : active.en;
   const activeIndex = sceneOrder.indexOf(active.id);
   const previousScene = activeIndex > 0 ? scenes[sceneOrder[activeIndex - 1]] : null;
   const nextScene = activeIndex < sceneOrder.length - 1 ? scenes[sceneOrder[activeIndex + 1]] : null;
@@ -800,8 +810,10 @@ export default function Prototype() {
   }, [active, nextScene, previousScene]);
 
   useEffect(() => {
+    listeningClockRef.current.reset(duration * 60);
+    listeningSessionRef.current = crypto.randomUUID();
     setRemainingSeconds(duration === 0 ? 0 : duration * 60);
-  }, [duration]);
+  }, [duration, active.id]);
 
   useEffect(() => {
     if (!downloadFeedback) return;
@@ -810,37 +822,55 @@ export default function Prototype() {
   }, [downloadFeedback]);
 
   useEffect(() => {
-    if (!isPlaying || duration === 0) return;
-    const interval = window.setInterval(() => {
-      setRemainingSeconds((current) => {
-        if (current > 1) return current - 1;
-        window.clearInterval(interval);
-        setIsPlaying(false);
-        setWisdomIndex((index) => (index + 1) % wisdoms.length);
-        setWisdomOpen(true);
-        recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
-        return 0;
-      });
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [active.id, duration, isPlaying]);
+    if (!isPlaying || duration === 0 || breathingStatus === "running") return;
+    const clock = listeningClockRef.current;
+    if (clock.remaining() === 0) {
+      clock.reset(duration * 60);
+      listeningSessionRef.current = crypto.randomUUID();
+    }
+    clock.start();
+    let completed = false;
+    const tick = () => {
+      const remaining = clock.remaining();
+      setRemainingSeconds(remaining);
+      if (remaining > 0 || completed) return;
+      completed = true;
+      clock.pause();
+      const entry: PracticeEntry = { id: listeningSessionRef.current, sceneID: active.id, kind: "listening", seconds: duration * 60, completedAt: Date.now() };
+      setJournal(current => validateJournal([entry, ...current], sceneOrder));
+      setIsPlaying(false);
+      setWisdomIndex(index => (index + 1) % wisdoms.length);
+      setWisdomOpen(true);
+      recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
+    };
+    tick();
+    const interval = window.setInterval(tick, 250);
+    document.addEventListener("visibilitychange", tick);
+    return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
+  }, [active.id, duration, isPlaying, breathingStatus, setJournal]);
 
   useEffect(() => {
     if (breathingStatus !== "running") return;
-    const interval = window.setInterval(() => {
-      setBreathingElapsed((current) => {
-        if (current >= breathingTotalSeconds - 1) {
-          setBreathingStatus("complete");
-          setIsPlaying(breathingOriginalPlaybackRef.current);
-          recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
-          window.clearInterval(interval);
-          return breathingTotalSeconds;
-        }
-        return current + 1;
-      });
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled]);
+    const clock = focusClockRef.current;
+    clock.start();
+    let completed = false;
+    const tick = () => {
+      const remaining = clock.remaining();
+      setBreathingElapsed(breathingTotalSeconds - remaining);
+      if (remaining > 0 || completed) return;
+      completed = true;
+      clock.pause();
+      const entry: PracticeEntry = { id: focusSessionRef.current, sceneID: breathingSceneRef.current, kind: "breathing", seconds: breathingTotalSeconds, completedAt: Date.now() };
+      setJournal(current => validateJournal([entry, ...current], sceneOrder));
+      setBreathingStatus("complete");
+      setIsPlaying(breathingOriginalPlaybackRef.current);
+      recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
+    };
+    tick();
+    const interval = window.setInterval(tick, 250);
+    document.addEventListener("visibilitychange", tick);
+    return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
+  }, [breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, setJournal]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
@@ -848,6 +878,14 @@ export default function Prototype() {
       setBreathingStatus("paused");
     }
   }, [activeTab, breathingStatus]);
+
+  useEffect(() => {
+    if (breathingSceneRef.current !== active.id) {
+      breathingSceneRef.current = active.id;
+      setBreathingElapsed(0);
+      setBreathingStatus("idle");
+    }
+  }, [active.id]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -1086,6 +1124,10 @@ export default function Prototype() {
   };
 
   const selectDuration = (minutes: DurationOption) => {
+    if (!canUseWebTimer(minutes)) { setUpgradeOpen(true); return; }
+    listeningClockRef.current.reset(minutes * 60);
+    listeningSessionRef.current = crypto.randomUUID();
+    if (isPlaying && breathingStatus !== "running") listeningClockRef.current.start();
     setDuration(minutes);
     setRemainingSeconds(minutes === 0 ? 0 : minutes * 60);
     setTimerOpen(false);
@@ -1200,18 +1242,72 @@ export default function Prototype() {
     };
   }, [active, isPlaying, language, nextScene, previousScene]);
 
-  const beginBreathing = () => {
+  const beginBreathing = (withSound = focusSoundEnabled) => {
+    if (!canUseWebFocus(focusDuration)) { setUpgradeOpen(true); return; }
+    if (withSound && !freeSceneIds.has(active.id)) {
+      setUpgradeOpen(true);
+      return;
+    }
+    breathingSceneRef.current = active.id;
+    focusClockRef.current.reset(focusDuration * 60);
+    focusSessionRef.current = crypto.randomUUID();
     breathingOriginalPlaybackRef.current = isPlaying;
-    setIsPlaying(focusSoundEnabled);
+    setIsPlaying(withSound);
     setBreathingElapsed(0);
     setBreathingStatus("running");
-    recordGrowthEvent("yixiu_focus_start", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
+    recordGrowthEvent("yixiu_focus_start", { focus_minutes: focusDuration, nature_sound: withSound });
   };
 
   const resetBreathing = () => {
-    setIsPlaying(breathingOriginalPlaybackRef.current);
+    focusClockRef.current.reset(focusDuration * 60);
+    if (breathingStatus === "running") setIsPlaying(breathingOriginalPlaybackRef.current);
     setBreathingElapsed(0);
     setBreathingStatus("idle");
+  };
+
+  const toggleBreathing = () => {
+    if (breathingStatus === "running") {
+      setIsPlaying(breathingOriginalPlaybackRef.current);
+      setBreathingStatus("paused");
+    } else {
+      if (focusSoundEnabled && !freeSceneIds.has(active.id)) {
+        setUpgradeOpen(true);
+        return;
+      }
+      breathingOriginalPlaybackRef.current = isPlaying;
+      setIsPlaying(focusSoundEnabled);
+      setBreathingStatus("running");
+    }
+  };
+
+  const toggleFocusSound = () => {
+    const enabled = !focusSoundEnabled;
+    if (enabled && !freeSceneIds.has(active.id)) {
+      setUpgradeOpen(true);
+      return;
+    }
+    setFocusSoundEnabled(enabled);
+    if (breathingStatus === "running") setIsPlaying(enabled);
+  };
+
+  const startQuickListening = (scene: SceneId, minutes: 5 | 15) => {
+    resetBreathing();
+    selectDuration(minutes);
+    selectScene(scene);
+  };
+
+  const repeatPractice = (entry: PracticeEntry) => {
+    if (entry.kind === "breathing") {
+      if (!canUseWebFocus(entry.seconds / 60) || !freeSceneIds.has(entry.sceneID as SceneId)) { setUpgradeOpen(true); return; }
+      resetBreathing();
+      setActiveScene(entry.sceneID as SceneId);
+      setFocusDuration(entry.seconds / 60 as FocusDuration);
+      setActiveTab("focus");
+    } else {
+      if (!canUseWebTimer(entry.seconds / 60) || !freeSceneIds.has(entry.sceneID as SceneId)) { setUpgradeOpen(true); return; }
+      selectDuration(entry.seconds / 60 as DurationOption);
+      selectScene(entry.sceneID as SceneId);
+    }
   };
 
   const breathingCycleSecond = breathingElapsed % 12;
@@ -1233,7 +1329,7 @@ export default function Prototype() {
   const drawerTitle = {
     home: language === "zh" ? "你的空间" : "Your space",
     library: language === "zh" ? "声音库" : "Sound library",
-    focus: language === "zh" ? "水之呼吸" : "Water breathing",
+    focus: activeSceneName,
     me: language === "zh" ? "我的一休" : "My Yixiu",
     timer: language === "zh" ? "默认定时" : "Default timer",
     philosophy: language === "zh" ? "产品哲学" : "Our philosophy",
@@ -1245,6 +1341,7 @@ export default function Prototype() {
   return (
     <main
       className={`yixiu-app ${isPlaying ? "is-audio-playing" : ""} ${swipeOffset !== 0 ? "is-scene-dragging" : ""} ${swipeSettling ? "is-swipe-settling" : ""}`}
+      data-ui-version="20260911-native-parity"
       data-language={language}
       data-scene={active.id}
       data-tab={activeTab}
@@ -1264,8 +1361,8 @@ export default function Prototype() {
       ) : null}
       <img
         className="ocean-backdrop scene-current-backdrop"
-        src={activeTab === "focus" ? scenes.lake.image : activeTab === "me" ? scenes.tide.image : active.image}
-        data-image-scene={activeTab === "focus" ? "lake" : activeTab === "me" ? "tide" : active.id}
+        src={activeTab === "me" ? scenes.tide.image : active.image}
+        data-image-scene={activeTab === "me" ? "tide" : active.id}
         alt=""
         draggable={false}
         style={activeTab === "sounds" ? {
@@ -1416,7 +1513,7 @@ export default function Prototype() {
                     </button>
                     <button type="button" onClick={() => { setIsPlaying(false); setDrawerView("focus"); }}>
                       <span className="yixiu-drawer-nav-icon">息</span>
-                      <span><strong>{language === "zh" ? "水之呼吸" : "Water breathing"}</strong><small>{language === "zh" ? "一段 1 分钟的静心练习" : "A one-minute focus practice"}</small></span>
+                      <span><strong>{activeSceneName}</strong><small>{language === "zh" ? "一段 1 分钟的静心练习" : "A one-minute focus practice"}</small></span>
                       <ChevronRightIcon />
                     </button>
                     <button type="button" onClick={() => { setIsPlaying(false); setDrawerView("me"); }}>
@@ -1488,7 +1585,7 @@ export default function Prototype() {
                   </div>
                 </section>
               ) : drawerView === "focus" ? (
-                <section className="yixiu-drawer-subview drawer-focus" aria-label={language === "zh" ? "水之呼吸" : "Water breathing"}>
+                <section className="yixiu-drawer-subview drawer-focus" aria-label={activeSceneName}>
                   <span className="section-kicker">{language === "zh" ? "静心 · FOCUS" : "FOCUS · 静心"}</span>
                   <h3>{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</h3>
                   <div className={`breathing-orbit phase-${breathingPhase} status-${breathingStatus}`} aria-hidden="true">
@@ -1523,7 +1620,7 @@ export default function Prototype() {
                 <section className="yixiu-drawer-subview drawer-timer">
                   <p className="yixiu-drawer-lead">{language === "zh" ? "到时后声音会逐渐淡出。" : "The sound fades gently when time is up."}</p>
                   <div className="duration-options settings-duration">
-                    {durations.map((minutes) => <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => { setDuration(minutes); setRemainingSeconds(minutes === 0 ? 0 : minutes * 60); }}>{minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}</button>)}
+                    {durations.map((minutes) => <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => selectDuration(minutes)}>{minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}{!canUseWebTimer(minutes) && <LockClosedIcon aria-hidden="true" />}</button>)}
                   </div>
                 </section>
               ) : (
@@ -1619,9 +1716,10 @@ export default function Prototype() {
       ) : null}
 
       {activeTab === "focus" ? (
-        <section className="focus-screen" aria-label={language === "zh" ? "水之呼吸" : "Water breathing"}>
+        <section className="focus-screen" aria-label={activeSceneName}>
+          <div className="focus-main"><div className="focus-heading">
           <div className="section-kicker">{language === "zh" ? "静心 · FOCUS" : "FOCUS · 静心"}</div>
-          <h1>{language === "zh" ? "水之呼吸" : "Water Breathing"}</h1>
+          <h1>{activeSceneName}</h1>
           <p className="section-intro">{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</p>
 
           <div className="focus-preferences" aria-label={language === "zh" ? "静心设置" : "Focus settings"}>
@@ -1629,19 +1727,22 @@ export default function Prototype() {
               {focusDurations.map((minutes) => (
                 <button key={minutes} type="button" className={focusDuration === minutes ? "is-active" : ""} aria-pressed={focusDuration === minutes} onClick={() => {
                   if (breathingStatus === "running" || breathingStatus === "paused") return;
+                  if (!canUseWebFocus(minutes)) { setUpgradeOpen(true); return; }
                   setFocusDuration(minutes);
                   setBreathingElapsed(0);
                 }}>
                   {minutes} {language === "zh" ? "分钟" : "MIN"}
+                  {!canUseWebFocus(minutes) && <LockClosedIcon aria-hidden="true" />}
                 </button>
               ))}
             </div>
-            <button className={`focus-sound-toggle ${focusSoundEnabled ? "is-active" : ""}`} type="button" role="switch" aria-checked={focusSoundEnabled} onClick={() => setFocusSoundEnabled((current) => !current)}>
+            <button className={`focus-sound-toggle ${focusSoundEnabled ? "is-active" : ""}`} type="button" role="switch" aria-label={language === "zh" ? `场景声音：${activeSceneName}` : `Scene sound: ${activeSceneName}`} aria-checked={focusSoundEnabled} onClick={toggleFocusSound}>
               <WaterWavesIcon />
-              <span>{language === "zh" ? "自然声" : "Nature sound"}</span>
+              <span>{activeSceneName}</span>
             </button>
           </div>
 
+          </div><div className="focus-exercise">
           <div className={`breathing-orbit phase-${breathingPhase} status-${breathingStatus}`} aria-hidden="true">
             <span className="ripple ripple-one" />
             <span className="ripple ripple-two" />
@@ -1654,14 +1755,14 @@ export default function Prototype() {
           </div>
 
           {breathingStatus === "idle" || breathingStatus === "complete" ? (
-            <button className="focus-primary" type="button" onClick={beginBreathing}>
+            <button className="focus-primary" type="button" onClick={() => beginBreathing()}>
               {breathingStatus === "complete"
                 ? (language === "zh" ? "再来一次" : "Begin again")
                 : (language === "zh" ? `开始 ${focusDuration} 分钟` : `Start ${focusDuration} minute${focusDuration === 1 ? "" : "s"}`)}
             </button>
           ) : (
             <div className="focus-actions">
-              <button type="button" aria-label={breathingStatus === "running" ? (language === "zh" ? "暂停呼吸" : "Pause breathing") : (language === "zh" ? "继续呼吸" : "Continue breathing")} onClick={() => setBreathingStatus((current) => current === "running" ? "paused" : "running")}>
+              <button type="button" aria-label={breathingStatus === "running" ? (language === "zh" ? "暂停呼吸" : "Pause breathing") : (language === "zh" ? "继续呼吸" : "Continue breathing")} onClick={toggleBreathing}>
                 {breathingStatus === "running" ? <PauseIcon /> : <PlayIcon />}
                 <span>{breathingStatus === "running" ? (language === "zh" ? "暂停" : "Pause") : (language === "zh" ? "继续" : "Continue")}</span>
               </button>
@@ -1672,6 +1773,15 @@ export default function Prototype() {
           )}
 
           <p className="safety-note">{language === "zh" ? "顺其自然；如有不适，请暂停。" : "Let it be easy. Pause if you feel uncomfortable."}</p>
+          </div></div>
+          {(breathingStatus === "idle" || breathingStatus === "complete") && <section className="quick-practices" aria-label={language === "zh" ? "快捷练习" : "Quick practices"}>
+            <p>{language === "zh" ? "换一种放松方式" : "Another way to unwind"}</p>
+            <div className="quick-practice-grid">
+              <button type="button" onClick={() => startQuickListening("rain", 15)}><PlayIcon /><strong>{language === "zh" ? "睡前放松" : "Bedtime"}</strong><small>15 {language === "zh" ? "分钟" : "MIN"}</small></button>
+              <button type="button" onClick={() => { setFocusSoundEnabled(true); beginBreathing(true); }}><PlayIcon /><strong>{language === "zh" ? "片刻呼吸" : "Breathe"}</strong><small>1 {language === "zh" ? "分钟" : "MIN"}</small></button>
+              <button type="button" onClick={() => startQuickListening("birds", 5)}><PlayIcon /><strong>{language === "zh" ? "清晨唤醒" : "Morning"}</strong><small>5 {language === "zh" ? "分钟" : "MIN"}</small></button>
+            </div>
+          </section>}
         </section>
       ) : null}
 
@@ -1683,6 +1793,12 @@ export default function Prototype() {
               <h1>{language === "zh" ? "回到自己的节奏" : "Return to your own rhythm"}</h1>
 
               <div className="me-scroll">
+                <section className="me-card practice-journal" aria-label={language === "zh" ? "练习记录" : "Practice journal"}>
+                  <div className="journal-heading"><div><small>{language === "zh" ? "留给自己的时间" : "TIME TO YOURSELF"}</small><p><strong data-testid="week-minutes">{week.minutes}</strong><span>{language === "zh" ? "分钟 · 本周" : "min · this week"}</span></p></div><WaterWavesIcon /></div>
+                  <div className="journal-week">{week.days.map((day, index) => <div key={day.getTime()} aria-label={`${day.toLocaleDateString(language === "zh" ? "zh-CN" : "en-US")} · ${week.practiced[index] ? (language === "zh" ? "有完成练习" : "Practice completed") : (language === "zh" ? "暂无记录" : "No practice recorded")}`}><i className={week.practiced[index] ? "is-complete" : ""} /><span>{day.toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", { weekday: "narrow" })}</span></div>)}</div>
+                  <div className="journal-entries">{journal.length ? journal.slice(0, 3).map(entry => <button key={entry.id} type="button" onClick={() => repeatPractice(entry)} aria-label={`${language === "zh" ? "再次练习" : "Repeat"} ${language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}`}><span><strong>{language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}</strong><small>{entry.seconds / 60} {language === "zh" ? "分钟" : "MIN"} · {entry.kind === "breathing" ? (language === "zh" ? "静心" : "Focus") : (language === "zh" ? "聆听" : "Listening")} · {new Date(entry.completedAt).toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", {month:"short", day:"numeric"})}</small></span><PlayIcon /></button>) : <p>{language === "zh" ? "不必连续，每次回来都算数。\n完成一次练习，时间会留在这里。" : "No streak to keep. Every return matters.\nYour completed practices will appear here."}</p>}</div>
+                  <small className="journal-privacy">{language === "zh" ? "仅保存在此浏览器 · 不上传 · 最多 200 条" : "In this browser only · Not uploaded · Up to 200 entries"}</small>
+                </section>
                 <section className="me-sound-space">
                   <img src={active.image} data-image-scene={active.id} alt="" />
                   <div className="me-sound-space-shade" />
@@ -1692,6 +1808,13 @@ export default function Prototype() {
                     <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 10 首冥想音乐" : "Now listening · 14 nature sounds + 10 meditation tracks"}</span>
                     <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
                   </div>
+                </section>
+
+                <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
+                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 2 首冥想音乐" : "5 nature sounds + 2 meditation tracks"}</small></div><PremiumGemIcon /></div>
+                  <p>{language === "zh" ? "免费静心 1 分钟，聆听定时 5 / 15 / 30 分钟。Plus 可在 App 中使用更长练习与全部声音。" : "Free: 1-minute Focus and 5 / 15 / 30-minute timers. Plus offers longer practices and every sound in the app."}</p>
+                  <button type="button" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
+                  <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
                 </section>
 
                 <section className="me-card favorites-card">
@@ -1746,6 +1869,7 @@ export default function Prototype() {
                     {durations.map((minutes) => (
                       <button key={minutes} type="button" aria-pressed={duration === minutes} className={duration === minutes ? "is-active" : ""} onClick={() => selectDuration(minutes)}>
                         {minutes === 0 ? (language === "zh" ? "不限时" : "∞") : `${minutes} ${language === "zh" ? "分钟" : "MIN"}`}
+                        {!canUseWebTimer(minutes) && <LockClosedIcon aria-hidden="true" />}
                       </button>
                     ))}
                   </div>
@@ -1894,6 +2018,7 @@ export default function Prototype() {
             <button key={minutes} type="button" className={duration === minutes ? "is-active" : ""} aria-pressed={duration === minutes} onClick={() => selectDuration(minutes)}>
               <strong>{minutes === 0 ? "∞" : minutes}</strong>
               <span>{minutes === 0 ? (language === "zh" ? "不限时" : "UNLIMITED") : (language === "zh" ? "分钟" : "MIN")}</span>
+              {!canUseWebTimer(minutes) && <LockClosedIcon aria-hidden="true" />}
             </button>
           ))}
         </section>
@@ -1943,6 +2068,7 @@ export default function Prototype() {
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
             <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
+            <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);
               recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id });
