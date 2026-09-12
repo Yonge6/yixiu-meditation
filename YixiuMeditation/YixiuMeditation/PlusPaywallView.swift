@@ -96,7 +96,7 @@ struct PlusPaywallView: View {
 
     private var benefits: some View {
         VStack(spacing: 0) {
-            benefit("waveform", zh: "全部 14 种自然声与 10 首冥想音乐", en: "All 14 nature sounds and 10 meditation tracks")
+            benefit("waveform", zh: "全部 14 种自然声与 13 首冥想音乐", en: "All 14 nature sounds and 13 meditation tracks")
             Divider().overlay(YixiuTheme.hairline)
             benefit("timer", zh: "60 分钟与不限时聆听", en: "60-minute and unlimited listening")
             Divider().overlay(YixiuTheme.hairline)

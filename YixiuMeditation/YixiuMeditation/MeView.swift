@@ -181,7 +181,7 @@ struct MeView: View {
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 14 种自然声 + 10 首冥想音乐", en: "Now listening · 14 nature sounds + 10 meditation tracks"))
+                Text(language.text(zh: "正在聆听 · 14 种自然声 + 13 首冥想音乐", en: "Now listening · 14 nature sounds + 13 meditation tracks"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
@@ -370,8 +370,8 @@ struct MeView: View {
     private var membershipSubtitle: String {
         if subscriptionStore.isInternalPlusExperience {
             return language.text(
-                zh: "内部体验版 · 全部 24 种声音已解锁",
-                en: "Internal preview · All 24 sounds unlocked"
+                zh: "内部体验版 · 全部 27 种声音已解锁",
+                en: "Internal preview · All 27 sounds unlocked"
             )
         }
         switch subscriptionStore.accessLevel {
@@ -934,6 +934,24 @@ struct MeView: View {
 
                 Link(destination: URL(string: "https://opengameart.org/content/indie-meditations-free-music-pack")!) {
                     actionLinkLabel("OpenGameArt · YannZ", icon: "music.note.list")
+                }
+
+                Text(language.text(
+                    zh: "云间漂浮、柔光午憩、深水安歇的原曲分别为 Cylinder Seven、Cylinder Eight、Cylinder Nine，收录于 Chris Zabriskie 的 Cylinders。© 2014 Chris Zabriskie；出版：You've Been a Wonderful Laugh Track（ASCAP）。按 CC BY 4.0 使用；一休增加场景名称、转码为 AAC、降低电平并添加淡入淡出，未改变曲速。作者不为一休背书；这些音频的 CC 授权权利不受一休会员设置影响。",
+                    en: "Cloud Drift, Soft Light Rest and Deep Water Rest are Cylinder Seven, Cylinder Eight and Cylinder Nine from Cylinders by Chris Zabriskie. © 2014 Chris Zabriskie; published by You've Been a Wonderful Laugh Track (ASCAP). Used under CC BY 4.0, with Yixiu scene names, AAC conversion, reduced level and fades; tempo unchanged. No artist endorsement is implied. Yixiu membership does not restrict your CC license rights to these recordings."
+                ))
+                .font(YixiuTheme.sans(14))
+                .lineSpacing(7)
+                .foregroundStyle(YixiuTheme.mist)
+
+                Link(destination: URL(string: "https://chriszabriskie.com/cylinders/")!) {
+                    actionLinkLabel("Cylinders · Chris Zabriskie", icon: "music.note")
+                }
+                Link(destination: URL(string: "https://creativecommons.org/licenses/by/4.0/")!) {
+                    actionLinkLabel("Creative Commons · CC BY 4.0", icon: "doc.text")
+                }
+                Link(destination: URL(string: "https://yixiu.wonderelian.com/music-credits.html")!) {
+                    actionLinkLabel(language.text(zh: "原曲与可下载音频", en: "Original tracks & audio downloads"), icon: "arrow.down.circle")
                 }
 
                 Link(destination: URL(string: "https://mixkit.co/license/")!) {

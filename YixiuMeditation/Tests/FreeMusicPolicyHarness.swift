@@ -16,6 +16,14 @@ struct FreeMusicPolicyHarness {
         }
         precondition(SubscriptionAccessPolicy.freeNatureScenes.count == 5)
         precondition(SubscriptionAccessPolicy.freeScenes.count == 8)
+        precondition(MeditationScene.allCases.count == 27)
+        precondition(MeditationScene.allCases.filter(\.isMeditationMusic).count == 13)
+        for scene in [MeditationScene.cloudDrift, .softLightRest, .deepWaterRest] {
+            precondition(scene.matches(.meditation) && scene.matches(.sleep) && scene.matches(.relax))
+            precondition(!scene.matches(.nature))
+            precondition(scene.audioSubdirectory == "Audio/Meditation")
+            precondition(scene.shareURL(language: .zh).query!.contains("music=\(scene.rawValue)"))
+        }
         print("FREE_MUSIC_POLICY_PASS: exact three tracks, five nature sounds, legacy nature rights and Plus preserved")
     }
 }

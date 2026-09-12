@@ -1,5 +1,27 @@
 # Yixiu audio source ledger
 
+## Ambient additions — 2026-09-12
+
+Original music: **Cylinder Seven, Cylinder Eight, Cylinder Nine**, from *Cylinders*, written, produced and performed by **Chris Zabriskie**. © 2014 Chris Zabriskie; published by **You've Been a Wonderful Laugh Track (ASCAP)**. The [author's album page](https://chriszabriskie.com/cylinders/) explicitly links [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); verified 2026-09-12. [Official Bandcamp album](https://chriszabriskie.bandcamp.com/album/cylinders) provides original titles and individual name-your-price downloads.
+
+Changes: Yixiu bilingual scene names, AAC 160 kbps target / 44.1 kHz stereo encoding, downward-only gain to -23 dBFS RMS before a 2-second fade-in and 4-second fade-out. No tempo change, no added speech or synthetic ambience. This is not a LUFS measurement. Original album artwork is not used; existing Yixiu MorningLake, SunnyValley and NightTide artwork is reused on both platforms. No artist endorsement implied.
+
+| Yixiu scene / file | Original title | Duration | Gain change | Final SHA-256 |
+| --- | --- | ---: | ---: | --- |
+| 云间漂浮 / Cloud Drift / `meditation/cloud-drift.m4a` | Cylinder Seven | 532.173 s | -6.948 dB | `ff0c1a3741068ea6c2811ba8fe09a00a03d4ab9d34d10aa8c759510b58059ac0` |
+| 柔光午憩 / Soft Light Rest / `meditation/soft-light-rest.m4a` | Cylinder Eight | 338.880 s | -8.055 dB | `11780f8702c10706364a6f3b34b30546277622046df230d98bd53e44ffdc8dc0` |
+| 深水安歇 / Deep Water Rest / `meditation/deep-water-rest.m4a` | Cylinder Nine | 322.827 s | -3.032 dB | `d1a35f8dac51ba4a6b994c6ef8d4c42736e629295200f9a91886d568c27f9a4f` |
+
+| Original download | Original SHA-256 |
+| --- | --- |
+| [Cylinder Seven MP3](https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/Chris_Zabriskie/Cylinders/Chris_Zabriskie_-_07_-_Cylinder_Seven.mp3) | `b065596eeca06a82aabc6a46cd7446e56d62ff5fa761abf92d8147a3c3adde96` |
+| [Cylinder Eight MP3](https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/Chris_Zabriskie/Cylinders/Chris_Zabriskie_-_08_-_Cylinder_Eight.mp3) | `4f980cf97608dd9f0c7dbed8a9742d0083584767b2e8338ac50514ca0700129a` |
+| [Cylinder Nine MP3](https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/Chris_Zabriskie/Cylinders/Chris_Zabriskie_-_09_-_Cylinder_Nine.mp3) | `108c6a8babb1d088787d59442412a5bb50506c787892e5f8099a2b714dc659b7` |
+
+Reproduce from complete originals with `node scripts/prepare-ambient-music.mjs <download-directory>` at the repository root (macOS afconvert required). Native and H5 contain byte-identical outputs. Complete provenance and ungated listening/download links are included in `public/music-credits.html` and linked in native/H5 Sources. Membership gates the curated app experience, not recipients' Creative Commons rights. Free music remains Oasis Rest, Ocean Passage and First Breath; these three additions are Plus in the library.
+
+## Nature recordings
+
 All files below are converted from Mixkit preview MP3s to AAC/M4A for reliable Safari and iOS playback. They are used under the [Mixkit Sound Effects Free License](https://mixkit.co/license/).
 
 | Local file | Mixkit item | Source ID | Duration |

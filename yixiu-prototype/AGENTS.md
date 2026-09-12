@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- The current library has 14 nature sounds and 13 meditation tracks. The three CC BY 4.0 Chris Zabriskie additions (Cloud Drift / Cylinder Seven, Soft Light Rest / Cylinder Eight, Deep Water Rest / Cylinder Nine) are Plus in the library and appear in Meditation, Sleep and Relax on both platforms. Keep `music-credits.html`, original titles, creator, license, modification notices and ungated CC audio downloads available. Membership must not impose additional restrictions on recipients' CC rights.
+
 - End bell defaults off. When enabled, natural listening or Focus completion plays the same single gentle bundled cue as native, independent of ambience fade-out and respecting playback volume. Pause/reset/early exit must not ring; never treat it as a guaranteed background OS alarm.
 
 - Keep native/H5 parity for Focus duration visibility (1/3/5/10), compact three-column quick practices below breathing, completed local practice records and Monday-based weekly totals. Use a consistent 16px gap between Me cards. Focus must scroll on phones, iPads and short landscape windows.
