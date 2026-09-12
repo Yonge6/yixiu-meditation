@@ -20,11 +20,13 @@
 ## Device status
 
 - Target: 永歌14PM / iPhone 14 Pro Max, paired CoreDevice ID E572C3AD-652D-5292-A8A7-387EE1F9F1E8, UDID 00008120-000A341C0E0BC01E.
-- Available at task start, but disconnected before installation. `devicectl device install app` failed with CoreDevice error 1011, device not found; immediate `devicectl list devices` readback shows unavailable. **Latest artifact has not yet been installed.** No uninstall or data reset performed.
-- Ready artifact: `/Volumes/LaCie/Yixiu-end-bell-20260912/DerivedData/Build/Products/Debug-iphoneos/YixiuMeditation.app`.
-- Resume after reconnection/unlock: recheck device, verify artifact signature/hash, install in place, launch `com.health.yixiu`, read installed app and process, then replace this pending status with actual evidence.
+- Initial installation failed with CoreDevice error 1011 while disconnected. After the user confirmed reconnection, fresh device readback showed available/paired. On 2026-09-12 at 13:37 Beijing time, installation **succeeded in place**, without uninstall or data reset.
+- Installed artifact from source commit `4ee40c0`: `/Volumes/LaCie/Yixiu-end-bell-20260912/DerivedData/Build/Products/Debug-iphoneos/YixiuMeditation.app`. Signature and quiet-hour SHA-256 were reverified before installation; Debug binary confirms all 28 sounds unlocked, quiet-hour and 60 min extended.
+- Launch succeeded without entitlement override arguments; device app readback confirmed `com.health.yixiu` 1.12 (25). Running-process readback confirmed PID 33101 (ephemeral), with executable in the newly installed bundle 447ED349-98DD-4D1A-BB55-096411CEFD15. This is device-only internal Plus, not Apple subscription or Store submission evidence.
 - No H5 production deployment, GitHub push or App Store submission/withdrawal in this task. Local H5 preview remains port 4199.
 
 ## Tool evidence
 
 `/tmp/yixiu-hour-web-build.log`, `/tmp/yixiu-hour-sites.log`, `/tmp/yixiu-hour-playwright.log`, `/tmp/yixiu-hour-practice.log`, `/tmp/yixiu-hour-swift-tests.log`, `/tmp/yixiu-hour-device-build.log`, `/tmp/yixiu-hour-bundle-audio.log`, `/tmp/yixiu-hour-device-install.json`.
+
+Successful retry: `/tmp/yixiu-hour-device-install-retry.json`, `/tmp/yixiu-hour-device-launch.json`, `/tmp/yixiu-hour-device-readback.json`, `/tmp/yixiu-hour-device-processes.json`.
