@@ -89,7 +89,14 @@ test -f "$site_path/assets/yixiu/spring-creek.webp"
 test -f "$site_path/assets/yixiu/study-sounds-comparison-pinterest.jpg"
 test -f "$site_path/assets/yixiu/meditation-duration-choice-pinterest.jpg"
 test -f "$site_path/assets/yixiu/audio/sunrise-river.m4a"
-test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 10
+test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 14
+test -f "$site_path/music-credits.html"
+test -f "$site_path/assets/yixiu/audio/end-bell.wav"
+for track in cloud-drift soft-light-rest deep-water-rest quiet-hour; do
+  test -f "$site_path/assets/yixiu/audio/meditation/$track.m4a"
+  grep -F "$track.m4a" "$site_path/music-credits.html" >/dev/null
+done
+printf '%s  %s\n' 'fc54aa9323b036c44b6a38871cc422361865fa6fedc9685a5705005a6d7eac74' "$site_path/assets/yixiu/audio/meditation/quiet-hour.m4a" | sha256sum -c -
 test "$(find "$site_path/assets/yixiu/meditation" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
 test -f "$site_path/assets/yixiu/audio/meditation/still-water.m4a"
 test -f "$site_path/assets/yixiu/audio/meditation/ocean-passage.m4a"
@@ -326,7 +333,10 @@ grep -FR 'instagram_profile_guide_white_noise_black_screen' "$deploy_target/asse
 grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$deploy_target/assets" >/dev/null
 grep -FR 'yixiu_h5_music_plus_20260830' "$deploy_target/assets" >/dev/null
 grep -FR 'still-water.m4a' "$deploy_target/assets" >/dev/null
-test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 10
+test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 14
+test -f "$deploy_target/music-credits.html"
+test -f "$deploy_target/assets/yixiu/audio/end-bell.wav"
+printf '%s  %s\n' 'fc54aa9323b036c44b6a38871cc422361865fa6fedc9685a5705005a6d7eac74' "$deploy_target/assets/yixiu/audio/meditation/quiet-hour.m4a" | sha256sum -c -
 test "$(find "$deploy_target/assets/yixiu/meditation" -maxdepth 1 -type f -name '*.jpg' ! -name 'still-water-mobile.jpg' | wc -l)" -eq 10
 grep -F 'data-analytics-placement="white_noise_studying_preview"' "$deploy_target/white-noise-for-studying/index.html" >/dev/null
 grep -F 'data-analytics-placement="forest_sleep_preview"' "$deploy_target/forest-sounds-for-sleep/index.html" >/dev/null

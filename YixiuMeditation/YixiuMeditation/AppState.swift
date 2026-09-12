@@ -29,7 +29,10 @@ final class AppState: ObservableObject {
         didSet { defaults.set(focusSoundEnabled, forKey: "focusSoundEnabled") }
     }
     @Published var endBell = false {
-        didSet { defaults.set(endBell, forKey: "endBell") }
+        didSet {
+            defaults.set(endBell, forKey: "endBell")
+            if !endBell { audio.stopEndBell() }
+        }
     }
     @Published var backgroundPlayback = true {
         didSet { defaults.set(backgroundPlayback, forKey: "backgroundPlayback") }
@@ -38,6 +41,7 @@ final class AppState: ObservableObject {
         didSet {
             defaults.set(volume, forKey: "volume")
             audio.setVolume(Float(volume) * fadeFactor)
+            audio.setEndBellVolume(Float(volume))
         }
     }
     @Published var isPlaying = false
@@ -262,6 +266,15 @@ final class AppState: ObservableObject {
         playbackClock.reset(seconds: remainingSeconds)
     }
 
+    func playCompletionBell() {
+        guard endBell else { return }
+        do {
+            try audio.playEndBell(volume: Float(volume))
+        } catch {
+            audioError = language.text(zh: "结束提示音暂时无法播放。", en: "The end bell could not be played.")
+        }
+    }
+
     func recordRecentScene(_ target: MeditationScene) {
         recentScenes = [target] + recentScenes.filter { $0 != target }.prefix(3)
     }
@@ -322,6 +335,7 @@ final class AppState: ObservableObject {
             pause()
             recordCompletedSession()
             sessionCompleted = true
+            playCompletionBell()
         } else {
             audio.setVolume(Float(volume) * fadeFactor)
             syncNowPlaying()

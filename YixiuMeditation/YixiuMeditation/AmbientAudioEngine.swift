@@ -17,6 +17,7 @@ enum AmbientAudioError: LocalizedError {
 
 final class AmbientAudioEngine {
     private var player: AVAudioPlayer?
+    private var endBellPlayer: AVAudioPlayer?
     private var fadingPlayer: AVAudioPlayer?
     private var fadeGeneration = 0
     private var notificationTokens: [NSObjectProtocol] = []
@@ -42,6 +43,7 @@ final class AmbientAudioEngine {
                     let rawType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
                     AVAudioSession.InterruptionType(rawValue: rawType) == .began
                 else { return }
+                self?.stopEndBell()
                 self?.onShouldPause?()
             }
         )
@@ -56,6 +58,7 @@ final class AmbientAudioEngine {
                     let rawReason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
                     AVAudioSession.RouteChangeReason(rawValue: rawReason) == .oldDeviceUnavailable
                 else { return }
+                self?.stopEndBell()
                 self?.onShouldPause?()
             }
         )
@@ -114,6 +117,32 @@ final class AmbientAudioEngine {
 
     func setVolume(_ volume: Float) {
         player?.volume = max(0, min(volume, 1))
+    }
+
+    func playEndBell(volume: Float) throws {
+        stopEndBell()
+        guard volume > 0 else { return }
+        let session = AVAudioSession.sharedInstance()
+        try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+        try session.setActive(true)
+        guard let url = Bundle.main.url(forResource: "end-bell", withExtension: "wav", subdirectory: "Audio") else {
+            throw AmbientAudioError.missingResource("end-bell")
+        }
+        let cue = try AVAudioPlayer(contentsOf: url)
+        cue.numberOfLoops = 0
+        cue.volume = max(0, min(volume, 1))
+        cue.prepareToPlay()
+        guard cue.play() else { throw AmbientAudioError.playbackFailed("end-bell") }
+        endBellPlayer = cue
+    }
+
+    func setEndBellVolume(_ volume: Float) {
+        endBellPlayer?.volume = max(0, min(volume, 1))
+    }
+
+    func stopEndBell() {
+        endBellPlayer?.stop()
+        endBellPlayer = nil
     }
 
     func stop() {

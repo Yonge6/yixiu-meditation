@@ -22,6 +22,7 @@ import {
   UploadIcon,
 } from "@radix-ui/react-icons";
 import QRCode from "qrcode";
+import { useEndBell } from "./useEndBell";
 import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
 type Language = "zh" | "en";
@@ -50,7 +51,11 @@ type SceneId =
   | "openMeadow"
   | "oasisRest"
   | "sunlitShore"
-  | "oceanPassage";
+  | "oceanPassage"
+  | "cloudDrift"
+  | "softLightRest"
+  | "deepWaterRest"
+  | "quietHour";
 type DurationOption = 5 | 15 | 30 | 60 | 0;
 type FocusDuration = 1 | 3 | 5 | 10;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
@@ -292,7 +297,7 @@ const scenes: Record<SceneId, Scene> = {
   },
   stillWater: {
     id: "stillWater", zh: "静水", en: "Still Water", useZh: "冥想 · 21 分钟", useEn: "Meditate · 21 min",
-    image: "/assets/yixiu/meditation/still-water.jpg", audio: "/assets/yixiu/audio/meditation/still-water.m4a", kind: "meditation", free: true,
+    image: "/assets/yixiu/meditation/still-water.jpg", audio: "/assets/yixiu/audio/meditation/still-water.m4a", kind: "meditation",
     filter: "lowpass", frequency: 520, level: 0.08,
   },
   deepCurrent: {
@@ -327,7 +332,7 @@ const scenes: Record<SceneId, Scene> = {
   },
   oasisRest: {
     id: "oasisRest", zh: "绿洲停歇", en: "Oasis Rest", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
-    image: "/assets/yixiu/meditation/oasis-rest.jpg", audio: "/assets/yixiu/audio/meditation/oasis-rest.m4a", kind: "meditation",
+    image: "/assets/yixiu/meditation/oasis-rest.jpg", audio: "/assets/yixiu/audio/meditation/oasis-rest.m4a", kind: "meditation", free: true,
     filter: "lowpass", frequency: 580, level: 0.08,
   },
   sunlitShore: {
@@ -337,8 +342,28 @@ const scenes: Record<SceneId, Scene> = {
   },
   oceanPassage: {
     id: "oceanPassage", zh: "海上行旅", en: "Ocean Passage", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
-    image: "/assets/yixiu/meditation/ocean-passage.jpg", audio: "/assets/yixiu/audio/meditation/ocean-passage.m4a", kind: "meditation",
+    image: "/assets/yixiu/meditation/ocean-passage.jpg", audio: "/assets/yixiu/audio/meditation/ocean-passage.m4a", kind: "meditation", free: true,
     filter: "lowpass", frequency: 560, level: 0.08,
+  },
+  cloudDrift: {
+    id: "cloudDrift", zh: "云间漂浮", en: "Cloud Drift", useZh: "氛围 · 8 分 52 秒", useEn: "Ambient · 8:52",
+    image: "/assets/yixiu/morning-lake.png", audio: "/assets/yixiu/audio/meditation/cloud-drift.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 520, level: 0.08,
+  },
+  softLightRest: {
+    id: "softLightRest", zh: "柔光午憩", en: "Soft Light Rest", useZh: "氛围 · 5 分 39 秒", useEn: "Ambient · 5:39",
+    image: "/assets/yixiu/sunny-valley.png", audio: "/assets/yixiu/audio/meditation/soft-light-rest.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 520, level: 0.08,
+  },
+  deepWaterRest: {
+    id: "deepWaterRest", zh: "深水安歇", en: "Deep Water Rest", useZh: "氛围 · 5 分 23 秒", useEn: "Ambient · 5:23",
+    image: "/assets/yixiu/night-tide.png", audio: "/assets/yixiu/audio/meditation/deep-water-rest.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 520, level: 0.08,
+  },
+  quietHour: {
+    id: "quietHour", zh: "午后留白", en: "Quiet Hour", useZh: "60 分钟延长版", useEn: "60 min extended",
+    image: "/assets/yixiu/morning-lake.png", audio: "/assets/yixiu/audio/meditation/quiet-hour.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 520, level: 0.08,
   },
 };
 
@@ -367,6 +392,10 @@ const sceneOrder: SceneId[] = [
   "oasisRest",
   "sunlitShore",
   "oceanPassage",
+  "cloudDrift",
+  "softLightRest",
+  "deepWaterRest",
+  "quietHour",
 ];
 const durations: DurationOption[] = [5, 15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3, 5, 10];
@@ -374,7 +403,7 @@ const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep"
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
 const musicPlusAppStoreUrl = "https://apps.apple.com/app/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
-const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", "stillWater", "firstBreath"]);
+const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", ...sceneOrder.filter(id => scenes[id].free)]);
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
   sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].kind === "meditation" ? scenes[sceneId].image : `/assets/yixiu/thumbs/${sceneId}.jpg`]),
@@ -384,11 +413,27 @@ const scenesByCategory: Record<SceneCategory, SceneId[]> = {
   all: sceneOrder,
   nature: sceneOrder.filter((sceneId) => scenes[sceneId].kind !== "meditation"),
   meditation: sceneOrder.filter((sceneId) => scenes[sceneId].kind === "meditation"),
-  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide"],
+  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "cloudDrift", "softLightRest", "deepWaterRest", "quietHour"],
   focus: ["rain", "birds", "stream", "bamboo", "falls", "underwater", "snow"],
   morning: ["spring", "birds", "lake", "valley"],
-  relax: ["ocean", "spring", "lake", "valley", "falls", "tide"],
+  relax: ["ocean", "spring", "lake", "valley", "falls", "tide", "cloudDrift", "softLightRest", "deepWaterRest", "quietHour"],
 };
+
+function AmbientMusicCredits({ language }: { language: Language }) {
+  return <>
+    <p>{language === "zh"
+      ? "午后留白是 HoliznaCC0 的 Too Brief A Time To Be Anything（CC0 1.0）的 60 分钟延长版。一休重复原曲中段，以 20 秒交叉淡化衔接，降低电平，加入 8 秒淡入和 12 秒淡出并转为 AAC，未改变曲速。不是原生一小时作品，也不代表作者为一休背书。"
+      : "Quiet Hour is a 60-minute extended edit of Too Brief A Time To Be Anything by HoliznaCC0 (CC0 1.0). Yixiu repeats a middle section with a 20-second crossfade, reduces the level, adds 8-second fade-in and 12-second fade-out, and converts to AAC without changing tempo. Not an original one-hour composition; no artist endorsement is implied."}</p>
+    <a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation/too-brief-a-time-to-be-anything/" target="_blank" rel="noreferrer">Too Brief A Time To Be Anything · HoliznaCC0</a>
+    <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">CC0 1.0</a>
+    <p>{language === "zh"
+      ? "云间漂浮、柔光午憩、深水安歇的原曲分别为 Cylinder Seven、Cylinder Eight、Cylinder Nine，收录于 Chris Zabriskie 的 Cylinders。© 2014 Chris Zabriskie；出版：You've Been a Wonderful Laugh Track（ASCAP）。按 CC BY 4.0 使用；一休增加场景名称、转码为 AAC、降低电平并添加淡入淡出，未改变曲速。作者不为一休背书；这些音频的 CC 授权权利不受一休会员设置影响。"
+      : "Cloud Drift, Soft Light Rest and Deep Water Rest are Cylinder Seven, Cylinder Eight and Cylinder Nine from Cylinders by Chris Zabriskie. © 2014 Chris Zabriskie; published by You've Been a Wonderful Laugh Track (ASCAP). Used under CC BY 4.0, with Yixiu scene names, AAC conversion, reduced level and fades; tempo unchanged. No artist endorsement is implied. Yixiu membership does not restrict your CC license rights to these recordings."}</p>
+    <a href="https://chriszabriskie.com/cylinders/" target="_blank" rel="noreferrer">Cylinders · Chris Zabriskie</a>
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Creative Commons · CC BY 4.0</a>
+    <a href="/music-credits.html">{language === "zh" ? "原曲与可下载音频" : "Original tracks & audio downloads"}</a>
+  </>;
+}
 
 function categoryLabel(category: SceneCategory, language: Language) {
   const labels: Record<SceneCategory, { zh: string; en: string }> = {
@@ -791,6 +836,7 @@ export default function Prototype() {
   const filteredSceneOrder = scenesByCategory[sceneCategory];
 
   useAmbientSound(active.id, isPlaying, volume, fadeFactor);
+  const playEndBell = useEndBell(endBell, volume);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -840,6 +886,7 @@ export default function Prototype() {
       setJournal(current => validateJournal([entry, ...current], sceneOrder));
       setIsPlaying(false);
       setWisdomIndex(index => (index + 1) % wisdoms.length);
+      playEndBell();
       setWisdomOpen(true);
       recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
     };
@@ -847,10 +894,10 @@ export default function Prototype() {
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [active.id, duration, isPlaying, breathingStatus, setJournal]);
+  }, [active.id, duration, isPlaying, breathingStatus, setJournal, playEndBell]);
 
   useEffect(() => {
-    if (breathingStatus !== "running") return;
+    if (breathingStatus !== "running" || activeTab !== "focus") return;
     const clock = focusClockRef.current;
     clock.start();
     let completed = false;
@@ -864,13 +911,14 @@ export default function Prototype() {
       setJournal(current => validateJournal([entry, ...current], sceneOrder));
       setBreathingStatus("complete");
       setIsPlaying(breathingOriginalPlaybackRef.current);
+      playEndBell();
       recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
     };
     tick();
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, setJournal]);
+  }, [activeTab, breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, setJournal, playEndBell]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
@@ -1496,7 +1544,7 @@ export default function Prototype() {
               {drawerView === "home" ? (
                 <>
                   <section className="yixiu-drawer-hero">
-                    <small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small>
+                    <small>{language === "zh" ? "14 种自然声 · 14 首冥想音乐" : "14 NATURE SOUNDS · 14 MEDITATION TRACKS"}</small>
                     <h3>{language === "zh" ? "让声音带你回到此刻" : "Let sound return you to now"}</h3>
                     <p>{language === "zh" ? `正在聆听的场景：${active.zh}` : `Current scene: ${active.en}`}</p>
                     <button type="button" onClick={() => setDrawerView("library")}>
@@ -1628,7 +1676,7 @@ export default function Prototype() {
                   <small>{drawerView === "philosophy" ? "BE WATER, MY FRIEND." : drawerView === "privacy" ? "PRIVACY" : drawerView === "sources" ? "FIELD RECORDINGS" : "SUPPORT"}</small>
                   <h3>{drawerView === "philosophy" ? (language === "zh" ? "真实自己，流动人生" : "True to yourself, flow with life") : drawerView === "privacy" ? (language === "zh" ? "安静，也包括不打扰你的数据" : "Quiet includes your data") : drawerView === "sources" ? (language === "zh" ? "每个场景，都有真实的声音" : "A real sound for every scene") : (language === "zh" ? "告诉我们你的感受" : "Tell us how it feels")}</h3>
                   <p>{drawerView === "philosophy" ? (language === "zh" ? "向内认识自己，向外如水而行。认识、接纳、成为并活出自己。" : "Know yourself within, then move through the world like water.") : drawerView === "privacy" ? (language === "zh" ? "无需账号。收藏、语言和时长只保存在当前设备；不会读取位置、照片、通讯录或健康数据。" : "No account is required. Preferences stay on this device; location, photos, contacts, and health data are not accessed.") : drawerView === "sources" ? (language === "zh" ? "自然声按 Mixkit 授权使用。长篇冥想音乐来自 HoliznaCC0（CC0 1.0）；短篇音乐由 Yanni Ziangos / YannZ 创作（CC BY 4.0）。" : "Nature sounds use the Mixkit license. Long meditation music is by HoliznaCC0 (CC0 1.0); short music is by Yanni Ziangos / YannZ (CC BY 4.0).") : (language === "zh" ? "如果声音无法播放、体验不顺或你希望加入新的自然声，请通过 wonderelian.com 联系我们。" : "For audio issues, rough edges, or new nature-sound requests, contact us through wonderelian.com.")}</p>
-                  {drawerView === "sources" ? <><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a></> : null}
+                  {drawerView === "sources" ? <><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a><AmbientMusicCredits language={language} /></> : null}
                   {drawerView === "support" ? <a href="https://wonderelian.com/" target="_blank" rel="noreferrer">wonderelian.com</a> : null}
                 </section>
               )}
@@ -1805,13 +1853,13 @@ export default function Prototype() {
                   <div className="me-sound-space-copy">
                     <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
                     <strong>{language === "zh" ? active.zh : active.en}</strong>
-                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 10 首冥想音乐" : "Now listening · 14 nature sounds + 10 meditation tracks"}</span>
+                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 14 首冥想音乐" : "Now listening · 14 nature sounds + 14 meditation tracks"}</span>
                     <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
                   </div>
                 </section>
 
                 <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
-                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 2 首冥想音乐" : "5 nature sounds + 2 meditation tracks"}</small></div><PremiumGemIcon /></div>
+                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 3 首冥想音乐" : "5 nature sounds + 3 meditation tracks"}</small></div><PremiumGemIcon /></div>
                   <p>{language === "zh" ? "免费静心 1 分钟，聆听定时 5 / 15 / 30 分钟。Plus 可在 App 中使用更长练习与全部声音。" : "Free: 1-minute Focus and 5 / 15 / 30-minute timers. Plus offers longer practices and every sound in the app."}</p>
                   <button type="button" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
                   <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
@@ -1973,7 +2021,7 @@ export default function Prototype() {
                 ) : meView === "privacy" ? (
                   <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
                 ) : meView === "sources" ? (
-                  <article className="me-article"><small>{language === "zh" ? "声音与音乐授权" : "AUDIO & MUSIC LICENSES"}</small><h2>{language === "zh" ? "每一次聆听，都尊重原创" : "Every listen respects its source"}</h2><p>{language === "zh" ? "自然环境录音按 Mixkit Sound Effects Free License 使用。" : "Nature field recordings are used under the Mixkit Sound Effects Free License."}</p><p>{language === "zh" ? "长篇冥想音乐由 HoliznaCC0 创作，按 CC0 1.0 使用；短篇音乐由 Yanni Ziangos（YannZ）创作，按 CC BY 4.0 使用。" : "Long meditation music is by HoliznaCC0 under CC0 1.0. Short music is by Yanni Ziangos (YannZ) under CC BY 4.0."}</p><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a></article>
+                  <article className="me-article"><small>{language === "zh" ? "声音与音乐授权" : "AUDIO & MUSIC LICENSES"}</small><h2>{language === "zh" ? "每一次聆听，都尊重原创" : "Every listen respects its source"}</h2><p>{language === "zh" ? "自然环境录音按 Mixkit Sound Effects Free License 使用。" : "Nature field recordings are used under the Mixkit Sound Effects Free License."}</p><p>{language === "zh" ? "长篇冥想音乐由 HoliznaCC0 创作，按 CC0 1.0 使用；短篇音乐由 Yanni Ziangos（YannZ）创作，按 CC BY 4.0 使用。" : "Long meditation music is by HoliznaCC0 under CC0 1.0. Short music is by Yanni Ziangos (YannZ) under CC BY 4.0."}</p><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a><AmbientMusicCredits language={language} /></article>
                 ) : (
                   <article className="me-article me-contact"><small>{language === "zh" ? "联系与反馈" : "CONTACT"}</small><h2>{language === "zh" ? "让一休更像你需要的样子" : "Help Yixiu become more useful to you"}</h2><p>{language === "zh" ? "如果声音无法播放、画面显示异常，或你希望加入新的自然声，请告诉我们设备、系统版本与声音名称。" : "If audio cannot play, a scene looks wrong, or you would like a new sound, tell us your device, system version and the sound name."}</p><div className="me-contact-list"><a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><span>WonderElian</span><strong>wonderelian.com</strong></a><a href="mailto:hustyy986@gmail.com?subject=Yixiu%20Feedback"><span>{language === "zh" ? "邮箱" : "Email"}</span><strong>hustyy986@gmail.com</strong></a><a href="https://xhslink.cn/m/3OF5qu7Peui" target="_blank" rel="noreferrer"><span>{language === "zh" ? "小红书" : "RED"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://v.douyin.com/d9L1thkye0Y/" target="_blank" rel="noreferrer"><span>{language === "zh" ? "抖音" : "Douyin"}</span><strong>{language === "zh" ? "打开主页" : "Open profile"}</strong></a><a href="https://x.com/yongyuan1?s=11" target="_blank" rel="noreferrer"><span>X</span><strong>@yongyuan1</strong></a><a href="https://www.tiktok.com/@wonderelian" target="_blank" rel="noreferrer"><span>TikTok</span><strong>@wonderelian</strong></a><button type="button" onClick={() => setVideoChannelOpen(true)}><span>{language === "zh" ? "视频号" : "WeChat Channels"}</span><strong>{language === "zh" ? "查看二维码" : "View QR code"}</strong></button></div></article>
                 )}
@@ -1994,7 +2042,7 @@ export default function Prototype() {
           <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
           <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
             <div className="sheet-handle" />
-            <header><div><small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
+            <header><div><small>{language === "zh" ? "14 种自然声 · 14 首冥想音乐" : "14 NATURE SOUNDS · 14 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
             <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
               {sceneCategories.map((category) => (
                 <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
@@ -2067,7 +2115,7 @@ export default function Prototype() {
             <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
+            <p>{language === "zh" ? "免费聆听 5 种自然声和 3 首冥想音乐：绿洲停歇、海上行旅、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 14 首冥想音乐。" : "Listen to 5 nature sounds and 3 meditation tracks for free: Oasis Rest, Ocean Passage and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 14 meditation tracks."}</p>
             <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);

@@ -2,8 +2,14 @@
 
 ## Yixiu Product Direction
 
+- Quiet Hour / 午后留白 (`quietHour`) is a 60-minute extended CC0 edit of HoliznaCC0's Too Brief A Time To Be Anything. Always show `60 分钟延长版 / 60 min extended`, keep native/H5 names/audio/MorningLake artwork aligned and expose it under Meditation/Sleep/Relax. It follows existing Plus library rules, not a new Free entitlement. Preserve the explicit edit notice and ungated CC0 download in music-credits.html.
+
+- The current library has 14 nature sounds and 14 meditation tracks. The three CC BY 4.0 Chris Zabriskie additions (Cloud Drift / Cylinder Seven, Soft Light Rest / Cylinder Eight, Deep Water Rest / Cylinder Nine) are Plus in the library and appear in Meditation, Sleep and Relax on both platforms. Keep `music-credits.html`, original titles, creator, license, modification notices and ungated CC audio downloads available. Membership must not impose additional restrictions on recipients' CC rights.
+
+- End bell defaults off. When enabled, natural listening or Focus completion plays the same single gentle bundled cue as native, independent of ambience fade-out and respecting playback volume. Pause/reset/early exit must not ring; never treat it as a guaranteed background OS alarm.
+
 - Keep native/H5 parity for Focus duration visibility (1/3/5/10), compact three-column quick practices below breathing, completed local practice records and Monday-based weekly totals. Use a consistent 16px gap between Me cards. Focus must scroll on phones, iPads and short landscape windows.
-- H5 is the unauthenticated Free experience: five nature sounds, two meditation tracks, 1-minute Focus, and 5/15/30-minute timers. Show locked extended choices and link to the app for Apple-verified Plus or legacy access; never infer a subscription from localStorage. Use actual elapsed-time clocks and record only completed practices, at most 200 locally, without upload.
+- H5 is the unauthenticated Free experience: five nature sounds, three meditation tracks (Oasis Rest, Ocean Passage, First Breath), 1-minute Focus, and 5/15/30-minute timers. Still Water is Plus in the library. Show locked extended choices and link to the app for Apple-verified Plus or legacy access; never infer a subscription from localStorage. Use actual elapsed-time clocks and record only completed practices, at most 200 locally, without upload.
 
 - Focus shares the Sounds tab's selected scene: localized name, background artwork and audio. Preserve explicit silence and playback continuity on tab changes; do not substitute a fixed lake or stream scene.
 

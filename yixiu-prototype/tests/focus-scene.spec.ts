@@ -47,17 +47,17 @@ test("Focus shares rain artwork and audio without restarting on tab switches", a
 });
 
 test("Focus follows music and preserves a paused home session", async ({ page }) => {
-  await page.goto("/?music=stillWater&lang=en");
+  await page.goto("/?music=oasisRest&lang=en");
   const image = await page.locator(".scene-current-backdrop").getAttribute("src");
   await page.getByRole("button", { name: "Focus 静心" }).click();
-  await expect(page.locator(".focus-screen h1")).toHaveText("Still Water");
+  await expect(page.locator(".focus-screen h1")).toHaveText("Oasis Rest");
   await expect(page.locator(".scene-current-backdrop")).toHaveAttribute("src", image!);
-  const sound = page.getByRole("switch", { name: "Scene sound: Still Water" });
+  const sound = page.getByRole("switch", { name: "Scene sound: Oasis Rest" });
   await expect(sound).toHaveAttribute("aria-checked", "false");
   expect(await page.evaluate(() => window.focusTestAudio.length)).toBe(0);
   await sound.click();
   await page.getByRole("button", { name: "Start 1 minute", exact: true }).click();
-  await expect.poll(() => page.evaluate(() => window.focusTestAudio.some(audio => !audio.paused && audio.src.endsWith("/meditation/still-water.m4a")))).toBe(true);
+  await expect.poll(() => page.evaluate(() => window.focusTestAudio.some(audio => !audio.paused && audio.src.endsWith("/meditation/oasis-rest.m4a")))).toBe(true);
   await page.getByRole("button", { name: "Pause breathing" }).click();
   await page.getByRole("button", { name: "Continue breathing" }).click();
   await page.getByRole("button", { name: "Sounds 声音" }).click();

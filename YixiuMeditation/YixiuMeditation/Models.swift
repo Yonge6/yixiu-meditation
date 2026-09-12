@@ -40,6 +40,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case oasisRest
     case sunlitShore
     case oceanPassage
+    case cloudDrift
+    case softLightRest
+    case deepWaterRest
+    case quietHour
 
     var id: String { rawValue }
 
@@ -69,6 +73,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .oasisRest: "绿洲停歇"
         case .sunlitShore: "日光浅岸"
         case .oceanPassage: "海上行旅"
+        case .cloudDrift: "云间漂浮"
+        case .softLightRest: "柔光午憩"
+        case .deepWaterRest: "深水安歇"
+        case .quietHour: "午后留白"
         }
     }
 
@@ -98,6 +106,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .oasisRest: "Oasis Rest"
         case .sunlitShore: "Sunlit Shore"
         case .oceanPassage: "Ocean Passage"
+        case .cloudDrift: "Cloud Drift"
+        case .softLightRest: "Soft Light Rest"
+        case .deepWaterRest: "Deep Water Rest"
+        case .quietHour: "Quiet Hour"
         }
     }
 
@@ -123,6 +135,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .quietOrbit: "冥想 · 21 分钟"
         case .dreamscape: "冥想 · 22 分钟"
         case .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage: "短时 · 88 秒"
+        case .cloudDrift: "氛围 · 8 分 52 秒"
+        case .softLightRest: "氛围 · 5 分 39 秒"
+        case .deepWaterRest: "氛围 · 5 分 23 秒"
+        case .quietHour: "60 分钟延长版"
         }
     }
 
@@ -148,6 +164,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .quietOrbit: "Meditate · 21 min"
         case .dreamscape: "Meditate · 22 min"
         case .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage: "Short · 88 sec"
+        case .cloudDrift: "Ambient · 8:52"
+        case .softLightRest: "Ambient · 5:39"
+        case .deepWaterRest: "Ambient · 5:23"
+        case .quietHour: "60 min extended"
         }
     }
 
@@ -177,6 +197,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .oasisRest: "MeditationOasisRest"
         case .sunlitShore: "MeditationSunlitShore"
         case .oceanPassage: "MeditationOceanPassage"
+        case .cloudDrift: "MorningLake"
+        case .softLightRest: "SunnyValley"
+        case .deepWaterRest: "NightTide"
+        case .quietHour: "MorningLake"
         }
     }
 
@@ -202,13 +226,18 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .oasisRest: "oasis-rest"
         case .sunlitShore: "sunlit-shore"
         case .oceanPassage: "ocean-passage"
+        case .cloudDrift: "cloud-drift"
+        case .softLightRest: "soft-light-rest"
+        case .deepWaterRest: "deep-water-rest"
+        case .quietHour: "quiet-hour"
         }
     }
 
     var isMeditationMusic: Bool {
         switch self {
         case .stillWater, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape,
-             .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage:
+             .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage,
+             .cloudDrift, .softLightRest, .deepWaterRest, .quietHour:
             true
         default:
             false
@@ -232,7 +261,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     var isBright: Bool {
         switch self {
         case .ocean, .spring, .birds, .stream, .lake, .valley, .bamboo, .falls, .snow,
-             .stillWater, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage:
+             .stillWater, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage, .cloudDrift, .softLightRest, .quietHour:
             true
         default:
             false
@@ -241,7 +270,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isNight: Bool {
         switch self {
-        case .window, .thunder, .underwater, .tide, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape:
+        case .window, .thunder, .underwater, .tide, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape, .deepWaterRest:
             true
         default:
             false
@@ -257,13 +286,13 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .meditation:
             isMeditationMusic
         case .sleep:
-            [.ocean, .rain, .window, .thunder, .snow, .tide].contains(self)
+            [.ocean, .rain, .window, .thunder, .snow, .tide, .cloudDrift, .softLightRest, .deepWaterRest, .quietHour].contains(self)
         case .focus:
             [.rain, .birds, .stream, .bamboo, .falls, .underwater, .snow].contains(self)
         case .morning:
             [.spring, .birds, .lake, .valley].contains(self)
         case .relax:
-            [.ocean, .spring, .lake, .valley, .falls, .tide].contains(self)
+            [.ocean, .spring, .lake, .valley, .falls, .tide, .cloudDrift, .softLightRest, .deepWaterRest, .quietHour].contains(self)
         }
     }
 
