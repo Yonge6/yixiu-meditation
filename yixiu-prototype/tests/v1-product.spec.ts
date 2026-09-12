@@ -628,14 +628,14 @@ test("lays out all twenty-four sounds and tracks in an even two-column library",
   expect(Math.abs(firstRow[0].top - firstRow[1].top)).toBeLessThan(1);
 });
 
-test("enforces exactly five free nature sounds and two free meditation tracks", async ({ page }) => {
+test("enforces exactly five free nature sounds and three free meditation tracks", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
 
   const library = page.getByRole("dialog", { name: "声音库" });
-  await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(7);
-  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(17);
-  await expect(library.locator(".scene-access-badge.is-plus [data-premium-gem]")).toHaveCount(17);
+  await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(8);
+  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(16);
+  await expect(library.locator(".scene-access-badge.is-plus [data-premium-gem]")).toHaveCount(16);
   await expect(library.getByText("PLUS", { exact: true })).toHaveCount(0);
 
   await library.getByRole("tab", { name: "自然声" }).click();
@@ -644,21 +644,21 @@ test("enforces exactly five free nature sounds and two free meditation tracks", 
 
   await library.getByRole("tab", { name: "冥想音乐" }).click();
   await expect(library.locator(".scene-grid article")).toHaveCount(10);
-  await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(2);
-  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(8);
+  await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(3);
+  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(7);
 });
 
 test("plays free meditation music and gates a Plus track", async ({ page }) => {
-  const freeRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/assets/yixiu/audio/meditation/still-water.m4a"));
+  const freeRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/assets/yixiu/audio/meditation/oasis-rest.m4a"));
   await page.getByRole("button", { name: "我的 ME" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
   const library = page.getByRole("dialog", { name: "声音库" });
   await library.getByRole("tab", { name: "冥想音乐" }).click();
-  await library.getByText("静水", { exact: true }).click();
+  await library.getByText("绿洲停歇", { exact: true }).click();
 
-  await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "stillWater");
-  await expect(page).toHaveURL(/music=stillWater/);
-  expect((await freeRequest).url()).toContain("still-water.m4a");
+  await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "oasisRest");
+  await expect(page).toHaveURL(/music=oasisRest/);
+  expect((await freeRequest).url()).toContain("oasis-rest.m4a");
 
   await page.getByRole("button", { name: "我的 ME" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
@@ -667,9 +667,9 @@ test("plays free meditation music and gates a Plus track", async ({ page }) => {
 
   const gate = page.getByRole("dialog", { name: "升级一休 Plus" });
   await expect(gate).toBeVisible();
-  await expect(gate).toContainText("5 种自然声和 2 首冥想音乐");
+  await expect(gate).toContainText("5 种自然声和 3 首冥想音乐");
   await expect(gate.getByRole("link", { name: /在 App Store 查看一休 Plus/ })).toHaveAttribute("href", /ct=yixiu_h5_music_plus_20260830/);
-  await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "stillWater");
+  await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "oasisRest");
 });
 
 test("opens and shares a meditation music deep link", async ({ page }) => {

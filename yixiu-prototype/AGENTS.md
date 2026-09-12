@@ -2,8 +2,10 @@
 
 ## Yixiu Product Direction
 
+- End bell defaults off. When enabled, natural listening or Focus completion plays the same single gentle bundled cue as native, independent of ambience fade-out and respecting playback volume. Pause/reset/early exit must not ring; never treat it as a guaranteed background OS alarm.
+
 - Keep native/H5 parity for Focus duration visibility (1/3/5/10), compact three-column quick practices below breathing, completed local practice records and Monday-based weekly totals. Use a consistent 16px gap between Me cards. Focus must scroll on phones, iPads and short landscape windows.
-- H5 is the unauthenticated Free experience: five nature sounds, two meditation tracks, 1-minute Focus, and 5/15/30-minute timers. Show locked extended choices and link to the app for Apple-verified Plus or legacy access; never infer a subscription from localStorage. Use actual elapsed-time clocks and record only completed practices, at most 200 locally, without upload.
+- H5 is the unauthenticated Free experience: five nature sounds, three meditation tracks (Oasis Rest, Ocean Passage, First Breath), 1-minute Focus, and 5/15/30-minute timers. Still Water is Plus in the library. Show locked extended choices and link to the app for Apple-verified Plus or legacy access; never infer a subscription from localStorage. Use actual elapsed-time clocks and record only completed practices, at most 200 locally, without upload.
 
 - Focus shares the Sounds tab's selected scene: localized name, background artwork and audio. Preserve explicit silence and playback continuity on tab changes; do not substitute a fixed lake or stream scene.
 

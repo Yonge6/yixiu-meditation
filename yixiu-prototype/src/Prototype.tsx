@@ -22,6 +22,7 @@ import {
   UploadIcon,
 } from "@radix-ui/react-icons";
 import QRCode from "qrcode";
+import { useEndBell } from "./useEndBell";
 import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
 type Language = "zh" | "en";
@@ -292,7 +293,7 @@ const scenes: Record<SceneId, Scene> = {
   },
   stillWater: {
     id: "stillWater", zh: "静水", en: "Still Water", useZh: "冥想 · 21 分钟", useEn: "Meditate · 21 min",
-    image: "/assets/yixiu/meditation/still-water.jpg", audio: "/assets/yixiu/audio/meditation/still-water.m4a", kind: "meditation", free: true,
+    image: "/assets/yixiu/meditation/still-water.jpg", audio: "/assets/yixiu/audio/meditation/still-water.m4a", kind: "meditation",
     filter: "lowpass", frequency: 520, level: 0.08,
   },
   deepCurrent: {
@@ -327,7 +328,7 @@ const scenes: Record<SceneId, Scene> = {
   },
   oasisRest: {
     id: "oasisRest", zh: "绿洲停歇", en: "Oasis Rest", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
-    image: "/assets/yixiu/meditation/oasis-rest.jpg", audio: "/assets/yixiu/audio/meditation/oasis-rest.m4a", kind: "meditation",
+    image: "/assets/yixiu/meditation/oasis-rest.jpg", audio: "/assets/yixiu/audio/meditation/oasis-rest.m4a", kind: "meditation", free: true,
     filter: "lowpass", frequency: 580, level: 0.08,
   },
   sunlitShore: {
@@ -337,7 +338,7 @@ const scenes: Record<SceneId, Scene> = {
   },
   oceanPassage: {
     id: "oceanPassage", zh: "海上行旅", en: "Ocean Passage", useZh: "短时 · 88 秒", useEn: "Short · 88 sec",
-    image: "/assets/yixiu/meditation/ocean-passage.jpg", audio: "/assets/yixiu/audio/meditation/ocean-passage.m4a", kind: "meditation",
+    image: "/assets/yixiu/meditation/ocean-passage.jpg", audio: "/assets/yixiu/audio/meditation/ocean-passage.m4a", kind: "meditation", free: true,
     filter: "lowpass", frequency: 560, level: 0.08,
   },
 };
@@ -374,7 +375,7 @@ const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep"
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
 const musicPlusAppStoreUrl = "https://apps.apple.com/app/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
-const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", "stillWater", "firstBreath"]);
+const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", ...sceneOrder.filter(id => scenes[id].free)]);
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
   sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].kind === "meditation" ? scenes[sceneId].image : `/assets/yixiu/thumbs/${sceneId}.jpg`]),
@@ -791,6 +792,7 @@ export default function Prototype() {
   const filteredSceneOrder = scenesByCategory[sceneCategory];
 
   useAmbientSound(active.id, isPlaying, volume, fadeFactor);
+  const playEndBell = useEndBell(endBell, volume);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -840,6 +842,7 @@ export default function Prototype() {
       setJournal(current => validateJournal([entry, ...current], sceneOrder));
       setIsPlaying(false);
       setWisdomIndex(index => (index + 1) % wisdoms.length);
+      playEndBell();
       setWisdomOpen(true);
       recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
     };
@@ -847,10 +850,10 @@ export default function Prototype() {
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [active.id, duration, isPlaying, breathingStatus, setJournal]);
+  }, [active.id, duration, isPlaying, breathingStatus, setJournal, playEndBell]);
 
   useEffect(() => {
-    if (breathingStatus !== "running") return;
+    if (breathingStatus !== "running" || activeTab !== "focus") return;
     const clock = focusClockRef.current;
     clock.start();
     let completed = false;
@@ -864,13 +867,14 @@ export default function Prototype() {
       setJournal(current => validateJournal([entry, ...current], sceneOrder));
       setBreathingStatus("complete");
       setIsPlaying(breathingOriginalPlaybackRef.current);
+      playEndBell();
       recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
     };
     tick();
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, setJournal]);
+  }, [activeTab, breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, setJournal, playEndBell]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
@@ -1811,7 +1815,7 @@ export default function Prototype() {
                 </section>
 
                 <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
-                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 2 首冥想音乐" : "5 nature sounds + 2 meditation tracks"}</small></div><PremiumGemIcon /></div>
+                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 3 首冥想音乐" : "5 nature sounds + 3 meditation tracks"}</small></div><PremiumGemIcon /></div>
                   <p>{language === "zh" ? "免费静心 1 分钟，聆听定时 5 / 15 / 30 分钟。Plus 可在 App 中使用更长练习与全部声音。" : "Free: 1-minute Focus and 5 / 15 / 30-minute timers. Plus offers longer practices and every sound in the app."}</p>
                   <button type="button" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
                   <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
@@ -2067,7 +2071,7 @@ export default function Prototype() {
             <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
+            <p>{language === "zh" ? "免费聆听 5 种自然声和 3 首冥想音乐：绿洲停歇、海上行旅、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 3 meditation tracks for free: Oasis Rest, Ocean Passage and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
             <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);

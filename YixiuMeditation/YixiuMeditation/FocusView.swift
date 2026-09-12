@@ -161,6 +161,7 @@ struct FocusView: View {
                     clock.pause()
                     appState.recordCompletedSession(isFocus: true, seconds: totalSeconds, sceneID: practiceSceneID)
                     restoreOriginalPlayback()
+                    appState.playCompletionBell()
                     return
                 }
             }

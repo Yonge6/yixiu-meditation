@@ -279,8 +279,8 @@ struct PlusPaywallView: View {
 
     private var legacyNote: some View {
         Text(language.text(
-            zh: "已拥有一休 1.2 或更早版本的用户，原有 14 种自然声与功能继续保留；2 首冥想音乐同样免费，其余新音乐属于 Plus。",
-            en: "If you owned Yixiu 1.2 or earlier, all 14 original nature sounds remain yours. Two meditation tracks are also free; the other new tracks require Plus."
+            zh: "已拥有一休 1.2 或更早版本的用户，原有 14 种自然声与功能继续保留；绿洲停歇、海上行旅、初息 3 首冥想音乐免费，其余新音乐属于 Plus。",
+            en: "If you owned Yixiu 1.2 or earlier, all 14 original nature sounds remain yours. Oasis Rest, Ocean Passage and First Breath are free; the other new tracks require Plus."
         ))
         .font(YixiuTheme.sans(11))
         .foregroundStyle(YixiuTheme.mist.opacity(0.78))
