@@ -48,7 +48,7 @@ test('all three additions appear in matching categories and remain Plus', async 
   await page.getByRole('button', { name: '我的 ME' }).click();
   await page.getByRole('button', { name: '浏览全部声音' }).click();
   const library = page.getByRole('dialog', { name: '声音库' });
-  await expect(library.locator('.scene-grid article')).toHaveCount(27);
+  await expect(library.locator('.scene-grid article')).toHaveCount(28);
   for (const category of ['冥想音乐', '睡眠', '放松']) {
     await library.getByRole('tab', { name: category, exact: true }).click();
     for (const track of tracks) {
@@ -60,7 +60,7 @@ test('all three additions appear in matching categories and remain Plus', async 
   await library.getByRole('button', { name: '切换到深水安歇', exact: true }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: '/tmp/yixiu-ambient-library.png' });
   await library.getByText('柔光午憩', { exact: true }).click();
-  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('13 首冥想音乐');
+  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('14 首冥想音乐');
   await expect(page.locator('.yixiu-app')).toHaveAttribute('data-scene', 'ocean');
 });
 
@@ -74,8 +74,8 @@ test('credits preserve original titles, license, changes and ungated downloads',
   await expect(page).toHaveURL(/music-credits.html/);
   await expect(page.getByRole('link', { name: 'CC BY 4.0', exact: true })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
   await expect(page.locator('main')).toContainText('2 秒淡入、4 秒淡出');
-  await expect(page.locator('audio')).toHaveCount(3);
-  await expect(page.locator('a[download]')).toHaveCount(3);
+  await expect(page.locator('audio')).toHaveCount(4);
+  await expect(page.locator('a[download]')).toHaveCount(4);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 

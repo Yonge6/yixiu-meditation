@@ -54,7 +54,8 @@ type SceneId =
   | "oceanPassage"
   | "cloudDrift"
   | "softLightRest"
-  | "deepWaterRest";
+  | "deepWaterRest"
+  | "quietHour";
 type DurationOption = 5 | 15 | 30 | 60 | 0;
 type FocusDuration = 1 | 3 | 5 | 10;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
@@ -359,6 +360,11 @@ const scenes: Record<SceneId, Scene> = {
     image: "/assets/yixiu/night-tide.png", audio: "/assets/yixiu/audio/meditation/deep-water-rest.m4a", kind: "meditation",
     filter: "lowpass", frequency: 520, level: 0.08,
   },
+  quietHour: {
+    id: "quietHour", zh: "午后留白", en: "Quiet Hour", useZh: "60 分钟延长版", useEn: "60 min extended",
+    image: "/assets/yixiu/morning-lake.png", audio: "/assets/yixiu/audio/meditation/quiet-hour.m4a", kind: "meditation",
+    filter: "lowpass", frequency: 520, level: 0.08,
+  },
 };
 
 const sceneOrder: SceneId[] = [
@@ -389,6 +395,7 @@ const sceneOrder: SceneId[] = [
   "cloudDrift",
   "softLightRest",
   "deepWaterRest",
+  "quietHour",
 ];
 const durations: DurationOption[] = [5, 15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3, 5, 10];
@@ -406,14 +413,19 @@ const scenesByCategory: Record<SceneCategory, SceneId[]> = {
   all: sceneOrder,
   nature: sceneOrder.filter((sceneId) => scenes[sceneId].kind !== "meditation"),
   meditation: sceneOrder.filter((sceneId) => scenes[sceneId].kind === "meditation"),
-  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "cloudDrift", "softLightRest", "deepWaterRest"],
+  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "cloudDrift", "softLightRest", "deepWaterRest", "quietHour"],
   focus: ["rain", "birds", "stream", "bamboo", "falls", "underwater", "snow"],
   morning: ["spring", "birds", "lake", "valley"],
-  relax: ["ocean", "spring", "lake", "valley", "falls", "tide", "cloudDrift", "softLightRest", "deepWaterRest"],
+  relax: ["ocean", "spring", "lake", "valley", "falls", "tide", "cloudDrift", "softLightRest", "deepWaterRest", "quietHour"],
 };
 
 function AmbientMusicCredits({ language }: { language: Language }) {
   return <>
+    <p>{language === "zh"
+      ? "午后留白是 HoliznaCC0 的 Too Brief A Time To Be Anything（CC0 1.0）的 60 分钟延长版。一休重复原曲中段，以 20 秒交叉淡化衔接，降低电平，加入 8 秒淡入和 12 秒淡出并转为 AAC，未改变曲速。不是原生一小时作品，也不代表作者为一休背书。"
+      : "Quiet Hour is a 60-minute extended edit of Too Brief A Time To Be Anything by HoliznaCC0 (CC0 1.0). Yixiu repeats a middle section with a 20-second crossfade, reduces the level, adds 8-second fade-in and 12-second fade-out, and converts to AAC without changing tempo. Not an original one-hour composition; no artist endorsement is implied."}</p>
+    <a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation/too-brief-a-time-to-be-anything/" target="_blank" rel="noreferrer">Too Brief A Time To Be Anything · HoliznaCC0</a>
+    <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">CC0 1.0</a>
     <p>{language === "zh"
       ? "云间漂浮、柔光午憩、深水安歇的原曲分别为 Cylinder Seven、Cylinder Eight、Cylinder Nine，收录于 Chris Zabriskie 的 Cylinders。© 2014 Chris Zabriskie；出版：You've Been a Wonderful Laugh Track（ASCAP）。按 CC BY 4.0 使用；一休增加场景名称、转码为 AAC、降低电平并添加淡入淡出，未改变曲速。作者不为一休背书；这些音频的 CC 授权权利不受一休会员设置影响。"
       : "Cloud Drift, Soft Light Rest and Deep Water Rest are Cylinder Seven, Cylinder Eight and Cylinder Nine from Cylinders by Chris Zabriskie. © 2014 Chris Zabriskie; published by You've Been a Wonderful Laugh Track (ASCAP). Used under CC BY 4.0, with Yixiu scene names, AAC conversion, reduced level and fades; tempo unchanged. No artist endorsement is implied. Yixiu membership does not restrict your CC license rights to these recordings."}</p>
@@ -1532,7 +1544,7 @@ export default function Prototype() {
               {drawerView === "home" ? (
                 <>
                   <section className="yixiu-drawer-hero">
-                    <small>{language === "zh" ? "14 种自然声 · 13 首冥想音乐" : "14 NATURE SOUNDS · 13 MEDITATION TRACKS"}</small>
+                    <small>{language === "zh" ? "14 种自然声 · 14 首冥想音乐" : "14 NATURE SOUNDS · 14 MEDITATION TRACKS"}</small>
                     <h3>{language === "zh" ? "让声音带你回到此刻" : "Let sound return you to now"}</h3>
                     <p>{language === "zh" ? `正在聆听的场景：${active.zh}` : `Current scene: ${active.en}`}</p>
                     <button type="button" onClick={() => setDrawerView("library")}>
@@ -1841,7 +1853,7 @@ export default function Prototype() {
                   <div className="me-sound-space-copy">
                     <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
                     <strong>{language === "zh" ? active.zh : active.en}</strong>
-                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 13 首冥想音乐" : "Now listening · 14 nature sounds + 13 meditation tracks"}</span>
+                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 14 首冥想音乐" : "Now listening · 14 nature sounds + 14 meditation tracks"}</span>
                     <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
                   </div>
                 </section>
@@ -2030,7 +2042,7 @@ export default function Prototype() {
           <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
           <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
             <div className="sheet-handle" />
-            <header><div><small>{language === "zh" ? "14 种自然声 · 13 首冥想音乐" : "14 NATURE SOUNDS · 13 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
+            <header><div><small>{language === "zh" ? "14 种自然声 · 14 首冥想音乐" : "14 NATURE SOUNDS · 14 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
             <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
               {sceneCategories.map((category) => (
                 <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
@@ -2103,7 +2115,7 @@ export default function Prototype() {
             <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 5 种自然声和 3 首冥想音乐：绿洲停歇、海上行旅、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 13 首冥想音乐。" : "Listen to 5 nature sounds and 3 meditation tracks for free: Oasis Rest, Ocean Passage and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 13 meditation tracks."}</p>
+            <p>{language === "zh" ? "免费聆听 5 种自然声和 3 首冥想音乐：绿洲停歇、海上行旅、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 14 首冥想音乐。" : "Listen to 5 nature sounds and 3 meditation tracks for free: Oasis Rest, Ocean Passage and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 14 meditation tracks."}</p>
             <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);

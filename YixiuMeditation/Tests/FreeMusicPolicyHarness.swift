@@ -16,9 +16,9 @@ struct FreeMusicPolicyHarness {
         }
         precondition(SubscriptionAccessPolicy.freeNatureScenes.count == 5)
         precondition(SubscriptionAccessPolicy.freeScenes.count == 8)
-        precondition(MeditationScene.allCases.count == 27)
-        precondition(MeditationScene.allCases.filter(\.isMeditationMusic).count == 13)
-        for scene in [MeditationScene.cloudDrift, .softLightRest, .deepWaterRest] {
+        precondition(MeditationScene.allCases.count == 28)
+        precondition(MeditationScene.allCases.filter(\.isMeditationMusic).count == 14)
+        for scene in [MeditationScene.cloudDrift, .softLightRest, .deepWaterRest, .quietHour] {
             precondition(scene.matches(.meditation) && scene.matches(.sleep) && scene.matches(.relax))
             precondition(!scene.matches(.nature))
             precondition(scene.audioSubdirectory == "Audio/Meditation")

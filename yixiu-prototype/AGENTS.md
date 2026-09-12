@@ -2,7 +2,9 @@
 
 ## Yixiu Product Direction
 
-- The current library has 14 nature sounds and 13 meditation tracks. The three CC BY 4.0 Chris Zabriskie additions (Cloud Drift / Cylinder Seven, Soft Light Rest / Cylinder Eight, Deep Water Rest / Cylinder Nine) are Plus in the library and appear in Meditation, Sleep and Relax on both platforms. Keep `music-credits.html`, original titles, creator, license, modification notices and ungated CC audio downloads available. Membership must not impose additional restrictions on recipients' CC rights.
+- Quiet Hour / 午后留白 (`quietHour`) is a 60-minute extended CC0 edit of HoliznaCC0's Too Brief A Time To Be Anything. Always show `60 分钟延长版 / 60 min extended`, keep native/H5 names/audio/MorningLake artwork aligned and expose it under Meditation/Sleep/Relax. It follows existing Plus library rules, not a new Free entitlement. Preserve the explicit edit notice and ungated CC0 download in music-credits.html.
+
+- The current library has 14 nature sounds and 14 meditation tracks. The three CC BY 4.0 Chris Zabriskie additions (Cloud Drift / Cylinder Seven, Soft Light Rest / Cylinder Eight, Deep Water Rest / Cylinder Nine) are Plus in the library and appear in Meditation, Sleep and Relax on both platforms. Keep `music-credits.html`, original titles, creator, license, modification notices and ungated CC audio downloads available. Membership must not impose additional restrictions on recipients' CC rights.
 
 - End bell defaults off. When enabled, natural listening or Focus completion plays the same single gentle bundled cue as native, independent of ambience fade-out and respecting playback volume. Pause/reset/early exit must not ring; never treat it as a guaranteed background OS alarm.
 

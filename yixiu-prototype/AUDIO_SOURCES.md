@@ -1,5 +1,14 @@
 # Yixiu audio source ledger
 
+## Quiet Hour — 2026-09-12
+
+- Scene: 午后留白 / Quiet Hour (`quietHour`), **60 分钟延长版 / 60 min extended**. New Plus library item on native/H5; the existing three Free tracks are unchanged. Public credits provide ungated playback/download and do not restrict CC0 rights.
+- Original: **Too Brief A Time To Be Anything**, **HoliznaCC0**, *Space - Sleep - Meditation*, FMA track 201977. [Single-track source](https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation/too-brief-a-time-to-be-anything/) explicitly links [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/); verified 2026-09-12. Not the inaccessible WeChat reference; no artist endorsement implied.
+- [Original MP3](https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/rQmaRN5y4omWKU3cn2kT3i8kSqyup26HFthRK9Fd.mp3): SHA-256 `161daca3df08017953dbe013bcdf5e59025900a055591b6d1e0a49c71703cd4f`; 48 kHz stereo, approximately 2,700 seconds. Initial partial HTTP transfer was completed with a successful range resume before decode/hash verification.
+- Reproducible edit: `node scripts/prepare-quiet-hour.mjs <original.mp3>`. Original 0–2680 seconds, crossfade output 2660–2680 into original 1200–1220, then continue original 1220–2140. Thus 2680 + 940 − 20 = 3600 seconds. Raised-cosine constant-sum 20-second crossfade; 8-second start / 12-second end fade; no tempo/pitch changes. No added voice or sound effects. Original artwork is not used; existing licensed MorningLake scene reused.
+- Downward-only gain: −7.530177 dB to target −23 dBFS RMS before endpoint fades (not a LUFS claim). PCM splice jumps 0.004608 / 0.005554; minimum internal 1-second RMS 0.027570; no internal digital silence detected. Signal checks cannot establish subjective musical preference.
+- Final AAC: 48 kHz stereo, 160 kbps target, **3600 seconds**, 73,616,309 bytes. Native/H5 byte-identical `quiet-hour.m4a`, SHA-256 `fc54aa9323b036c44b6a38871cc422361865fa6fedc9685a5705005a6d7eac74`.
+
 ## Ambient additions — 2026-09-12
 
 Original music: **Cylinder Seven, Cylinder Eight, Cylinder Nine**, from *Cylinders*, written, produced and performed by **Chris Zabriskie**. © 2014 Chris Zabriskie; published by **You've Been a Wonderful Laugh Track (ASCAP)**. The [author's album page](https://chriszabriskie.com/cylinders/) explicitly links [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); verified 2026-09-12. [Official Bandcamp album](https://chriszabriskie.bandcamp.com/album/cylinders) provides original titles and individual name-your-price downloads.

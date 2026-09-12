@@ -181,7 +181,7 @@ struct MeView: View {
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 14 种自然声 + 13 首冥想音乐", en: "Now listening · 14 nature sounds + 13 meditation tracks"))
+                Text(language.text(zh: "正在聆听 · 14 种自然声 + 14 首冥想音乐", en: "Now listening · 14 nature sounds + 14 meditation tracks"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
@@ -370,8 +370,8 @@ struct MeView: View {
     private var membershipSubtitle: String {
         if subscriptionStore.isInternalPlusExperience {
             return language.text(
-                zh: "内部体验版 · 全部 27 种声音已解锁",
-                en: "Internal preview · All 27 sounds unlocked"
+                zh: "内部体验版 · 全部 28 种声音已解锁",
+                en: "Internal preview · All 28 sounds unlocked"
             )
         }
         switch subscriptionStore.accessLevel {
@@ -930,6 +930,20 @@ struct MeView: View {
 
                 Link(destination: URL(string: "https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation")!) {
                     actionLinkLabel("Free Music Archive · HoliznaCC0", icon: "music.note")
+                }
+
+                Text(language.text(
+                    zh: "午后留白是 HoliznaCC0 的 Too Brief A Time To Be Anything（CC0 1.0）的 60 分钟延长版。一休重复原曲中段，以 20 秒交叉淡化衔接，降低电平，加入 8 秒淡入和 12 秒淡出并转为 AAC，未改变曲速。不是原生一小时作品，也不代表作者为一休背书。",
+                    en: "Quiet Hour is a 60-minute extended edit of Too Brief A Time To Be Anything by HoliznaCC0 (CC0 1.0). Yixiu repeats a middle section with a 20-second crossfade, reduces the level, adds 8-second fade-in and 12-second fade-out, and converts to AAC without changing tempo. Not an original one-hour composition; no artist endorsement is implied."
+                ))
+                .font(YixiuTheme.sans(14))
+                .lineSpacing(7)
+                .foregroundStyle(YixiuTheme.mist)
+                Link(destination: URL(string: "https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation/too-brief-a-time-to-be-anything/")!) {
+                    actionLinkLabel("Too Brief A Time To Be Anything · HoliznaCC0", icon: "music.note")
+                }
+                Link(destination: URL(string: "https://creativecommons.org/publicdomain/zero/1.0/")!) {
+                    actionLinkLabel("CC0 1.0", icon: "doc.text")
                 }
 
                 Link(destination: URL(string: "https://opengameart.org/content/indie-meditations-free-music-pack")!) {

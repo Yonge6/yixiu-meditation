@@ -337,7 +337,7 @@ test("opens the full sound library with an upward gesture", async ({ page }) => 
 
   const library = page.getByRole("dialog", { name: "声音库" });
   await expect(library).toBeVisible();
-  await expect(library.locator(".scene-grid article")).toHaveCount(27);
+  await expect(library.locator(".scene-grid article")).toHaveCount(28);
   await library.getByRole("button", { name: "完成" }).click();
   await expect(library).toBeHidden();
 });
@@ -378,7 +378,7 @@ test("filters the sound library by use and serves lightweight thumbnails", async
 
   const library = page.getByRole("dialog", { name: "声音库" });
   await library.getByRole("tab", { name: "睡眠" }).click();
-  await expect(library.locator(".scene-grid article")).toHaveCount(9);
+  await expect(library.locator(".scene-grid article")).toHaveCount(10);
   await library.getByRole("tab", { name: "清晨" }).click();
   await expect(library.locator(".scene-grid article")).toHaveCount(4);
   await expect(library.locator(".scene-grid img").first()).toHaveAttribute("src", /\/assets\/yixiu\/thumbs\/.+\.jpg$/);
@@ -610,12 +610,12 @@ test("loads a real morning-birds recording instead of generated noise", async ({
   expect((await request).url()).toContain("morning-birds.m4a");
 });
 
-test("lays out all twenty-seven sounds and tracks in an even two-column library", async ({ page }) => {
+test("lays out all twenty-eight sounds and tracks in an even two-column library", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
 
   const cards = page.locator(".scene-grid article");
-  await expect(cards).toHaveCount(27);
+  await expect(cards).toHaveCount(28);
   await expect(page.getByText("春日花溪", { exact: true })).toBeVisible();
   await expect(page.getByText("晨林鸟语", { exact: true })).toBeVisible();
 
@@ -634,8 +634,8 @@ test("enforces exactly five free nature sounds and three free meditation tracks"
 
   const library = page.getByRole("dialog", { name: "声音库" });
   await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(8);
-  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(19);
-  await expect(library.locator(".scene-access-badge.is-plus [data-premium-gem]")).toHaveCount(19);
+  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(20);
+  await expect(library.locator(".scene-access-badge.is-plus [data-premium-gem]")).toHaveCount(20);
   await expect(library.getByText("PLUS", { exact: true })).toHaveCount(0);
 
   await library.getByRole("tab", { name: "自然声" }).click();
@@ -643,9 +643,9 @@ test("enforces exactly five free nature sounds and three free meditation tracks"
   await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(5);
 
   await library.getByRole("tab", { name: "冥想音乐" }).click();
-  await expect(library.locator(".scene-grid article")).toHaveCount(13);
+  await expect(library.locator(".scene-grid article")).toHaveCount(14);
   await expect(library.locator(".scene-access-badge.is-free")).toHaveCount(3);
-  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(10);
+  await expect(library.locator(".scene-access-badge.is-plus")).toHaveCount(11);
 });
 
 test("plays free meditation music and gates a Plus track", async ({ page }) => {
