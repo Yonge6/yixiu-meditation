@@ -42,6 +42,7 @@ jobs:
 
       - name: Type-check and build GitHub Pages bundle
         run: |
+          npm run build:journal
           npx tsc
           npx vite build --base="/" --outDir=dist-gh
           node scripts/prepare-github-pages.mjs dist-gh "/"

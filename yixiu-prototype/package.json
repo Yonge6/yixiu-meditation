@@ -9,10 +9,12 @@
     "test:runtime": "playwright test",
     "test:sites": "node --test tests/sites-worker.test.mjs",
     "test:practice": "node --experimental-strip-types --test tests/practice-core.test.ts",
-    "predev": "npm run check:runtime",
+    "predev": "npm run check:runtime && npm run build:journal",
     "dev": "vite",
-    "prebuild": "npm run check:runtime",
-    "build": "tsc && vite build && node scripts/prepare-sites-build.mjs"
+    "prebuild": "npm run check:runtime && npm run build:journal",
+    "build": "tsc && vite build && node scripts/prepare-sites-build.mjs",
+    "build:journal": "node scripts/build-journal.mjs",
+    "test:journal": "playwright test --config=playwright.journal.config.ts"
   },
   "dependencies": {
     "@fontsource/noto-sans-sc": "^5.3.0",

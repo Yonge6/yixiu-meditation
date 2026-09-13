@@ -1,0 +1,37 @@
+.quiet-journal { color: #e7f3ef; font-family: "Noto Sans SC", system-ui, sans-serif; }
+.quiet-intro { color: #b7cfca; font-size: 15px; line-height: 1.9; margin: 0 0 22px; }
+.quiet-filters { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 22px; }
+.quiet-filters button { border: 1px solid #3b6266; background: transparent; color: #c5dcd6; padding: 9px 13px; border-radius: 24px; font: inherit; font-size: 13px; cursor: pointer; min-height: 40px; }
+.quiet-filters button[aria-pressed="true"] { background: #d7eee5; border-color: #d7eee5; color: #163d40; }
+.quiet-articles { display: grid; gap: 22px; }
+.quiet-card { display: block; padding: 0; text-align: left; color: inherit; background: #0c2b34; border: 1px solid #345158; border-radius: 18px; overflow: hidden; text-decoration: none; cursor: pointer; width: 100%; font: inherit; }
+.quiet-card img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.quiet-card-copy { display: grid; gap: 10px; padding: 20px; }
+.quiet-meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: #acd2c6; letter-spacing: .04em; }
+.quiet-card strong { font-family: "Noto Serif SC", Georgia, serif; font-size: 22px; font-weight: 400; line-height: 1.55; }
+.quiet-card-copy > span:not(.quiet-meta):not(.quiet-card-link) { font-size: 14px; color: #bacdc9; line-height: 1.8; }
+.quiet-card-link { margin-top: 4px; font-size: 12px; color: #d4eee2; }
+.quiet-article-image { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; margin-bottom: 22px; }
+.quiet-article h3, .quiet-article h1 { font-family: "Noto Serif SC", Georgia, serif; font-size: clamp(26px, 4vw, 36px); font-weight: 400; line-height: 1.5; margin: 15px 0; }
+.quiet-article h4, .quiet-article h2 { font-family: "Noto Serif SC", Georgia, serif; font-weight: 600; font-size: 18px; line-height: 1.7; margin: 28px 0 10px; }
+.quiet-article section p { color: #d0dfdb; font-size: 15px; line-height: 2; margin: 0; }
+.quiet-practice { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; border: 0; border-radius: 14px; background: #d5ebe2; color: #173c3d; padding: 17px 20px; margin-top: 32px; font: inherit; font-size: 15px; font-weight: 500; text-decoration: none; cursor: pointer; box-sizing: border-box; }
+.quiet-permalink { display: inline-block; padding: 16px 0; color: #b9d7ce; font-size: 13px; text-underline-offset: 4px; line-height: 1.7; }
+.quiet-date { font-size: 11px; color: #92b5ae; margin: 18px 0 0; }
+.quiet-journal button:focus-visible, .quiet-journal a:focus-visible { outline: 2px solid #d9f6b9; outline-offset: 4px; }
+.header-journal-button { width: 36px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; color: #e7f3ef; background: transparent; cursor: pointer; }
+.header-journal-button svg { width: 21px; height: 21px; }
+.yixiu-side-drawer.quiet-journal-drawer { width: min(92%, 480px); }
+.quiet-page { margin: 0; background: #061e27; color: #e7f3ef; font-family: "Noto Sans SC", system-ui, sans-serif; }
+.quiet-page * { box-sizing: border-box; }
+.quiet-page-header { max-width: 960px; padding: 24px; margin: auto; display: flex; gap: 20px; align-items: center; justify-content: space-between; border-bottom: 1px solid #29434b; }
+.quiet-page-header a { color: #c9e3d7; text-decoration: none; font-size: 13px; }
+.quiet-page-main { max-width: 960px; margin: auto; padding: 42px 24px 72px; }
+.quiet-page-main > h1 { font-family: "Noto Serif SC", Georgia, serif; font-weight: 400; font-size: clamp(30px, 5vw, 52px); margin: 12px 0 18px; }
+.quiet-page-main.quiet-article { max-width: 680px; }
+.quiet-page .quiet-articles { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+.quiet-page .quiet-card strong { font-size: 23px; }
+.quiet-page .quiet-article-image { max-height: 360px; }
+@media (max-width: 700px) { .quiet-page .quiet-articles { grid-template-columns: 1fr; } .quiet-page-main { padding-top: 30px; } }
+@media (max-width: 360px) { .header-actions { gap: 4px; } .header-journal-button { width: 30px; } .quiet-card-copy { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { .quiet-journal-drawer { animation: none; } }

@@ -61,6 +61,13 @@ test -f "$site_path/rain-sounds-for-studying/index.html"
 test -f "$site_path/white-noise-for-studying/index.html"
 test -f "$site_path/best-nature-sounds-for-studying/index.html"
 test -f "$site_path/guides/index.html"
+test -f "$site_path/journal/index.html"
+test -f "$site_path/journal/zh/index.html"
+test -f "$site_path/journal.css"
+test -f "$site_path/journal-links.js"
+journal_page_count="$(find "$site_path/journal" -type f -name index.html | wc -l)"
+test "$journal_page_count" -ge 8
+test "$(find "$site_path/journal" -type f -name index.html -exec grep -lF 'href="/llms.txt"' {} + | wc -l)" -eq "$journal_page_count"
 test -f "$site_path/free-online-sound-machine/index.html"
 test -f "$site_path/one-minute-reset/index.html"
 test -f "$site_path/nature-sounds-for-meditation/index.html"
@@ -113,7 +120,7 @@ grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
 test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.5"' {} + | wc -l)" -eq 26
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$site_path/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$site_path/index.html" >/dev/null
-test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 30
+test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq "$((30 + journal_page_count))"
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$site_path/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -F 'ppid=67cb8784-2b16-4849-b940-90fdf4d99752' "$site_path/index.html" >/dev/null
 grep -F 'pt=120014121&amp;ct=yixiu_h5_20260827&amp;mt=8' "$site_path/index.html" >/dev/null
@@ -321,7 +328,7 @@ grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
 test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.5"' {} + | wc -l)" -eq 26
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$deploy_target/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$deploy_target/index.html" >/dev/null
-test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq 30
+test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq "$((30 + journal_page_count))"
 grep -Fx '0d28a7f9686f4a45871ea685d741dc75' "$deploy_target/0d28a7f9686f4a45871ea685d741dc75.txt" >/dev/null
 grep -Fx '# Yixiu' "$deploy_target/llms.txt" >/dev/null
 grep -F 'https://apps.apple.com/app/id1461182261' "$deploy_target/llms.txt" >/dev/null
@@ -598,4 +605,6 @@ curl --compressed -fsS \
   | grep -F 'data-preview-timer' >/dev/null
 
 grep -FR '20260911-native-parity' "$deploy_target/assets" >/dev/null
+curl --compressed -fsS --resolve 'yixiu.wonderelian.com:443:127.0.0.1' https://yixiu.wonderelian.com/journal/zh/ | grep -F '一休日常' >/dev/null
+test "$(find "$deploy_target/journal" -type f -name index.html | wc -l)" -eq "$journal_page_count"
 echo "DEPLOY_OK_YIXIU_${release_id}"
