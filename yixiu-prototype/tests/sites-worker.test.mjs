@@ -77,7 +77,7 @@ test("root page exposes truthful software application structured data", async ()
   assert.equal(website.url, "https://yixiu.wonderelian.com/");
   assert.equal(software.name, "Yixiu: White Noise & Sleep");
   assert.equal(software.operatingSystem, "iOS");
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.equal(software.offers.price, "0");
   assert.match(software.downloadUrl, /id1461182261$/);
   assert.ok(software.featureList.includes("14 nature soundscapes"));
@@ -99,8 +99,8 @@ test("root page exposes a useful no-JavaScript Yixiu entry point", async () => {
 
   assert.ok(fallback, "root should expose a semantic fallback before JavaScript runs");
   assert.match(fallback, /<h1>Free nature sounds for sleep, focus and study<\/h1>/);
-  assert.match(fallback, /fourteen real nature-sound recordings/);
-  assert.match(fallback, /no music, no talking, no account and no ads/);
+  assert.match(fallback, /five free nature sounds and three free meditation tracks/);
+  assert.match(fallback, /no account, has no ads/);
   assert.match(fallback, /href="\/sleep-sounds\/"/);
   assert.match(fallback, /href="\/focus-sounds\/"/);
   assert.match(fallback, /href="\/best-sleep-sounds\/"/);
@@ -149,7 +149,7 @@ test("every public Yixiu application schema matches the official App Store versi
     const software = graph.find((entry) => entry["@type"] === "SoftwareApplication");
 
     assert.ok(software, `${url.pathname} should expose SoftwareApplication data`);
-    assert.equal(software.softwareVersion, "1.5", url.pathname);
+    assert.equal(software.softwareVersion, "1.13", url.pathname);
   }
 });
 
@@ -316,7 +316,7 @@ test("sleep intent page keeps its search promise, visible FAQ, and conversion pa
   assert.equal(image.height, 1672);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.ok(hero.size < 100_000);
   assert.match(html, /href="\/discover\.css\?v=20260829-sleep-share"/);
   assert.match(html, /src="\/discover\.js\?v=20260829-global-share-prompt"/);
@@ -785,7 +785,7 @@ test("white noise study page serves the real focus recording and an honest conve
   assert.equal(image.height, 1672);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.ok(hero.size < 100_000);
   assert.ok(audio.size > 40_000);
   assert.match(image.contentUrl, /underwater-echo\.png$/);
@@ -836,7 +836,7 @@ test("nature sounds meditation page serves four real recordings, a timer, and a 
   assert.equal(image.height, 1137);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.ok(hero.size < 100_000);
   assert.match(image.contentUrl, /spring-creek\.webp$/);
   assert.match(audio.contentUrl, /sunrise-river\.m4a$/);
@@ -897,7 +897,7 @@ test("20-minute meditation music page serves the complete Still Water track with
   assert.equal(audio.byArtist.name, "HoliznaCC0");
   assert.equal(audio.isAccessibleForFree, true);
   assert.match(audio.license, /creativecommons\.org\/publicdomain\/zero\/1\.0/);
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.match(software.downloadUrl, /id1461182261\?pt=120014121&ct=yixiu_h5_still_water_20260830&mt=8$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/meditation\/still-water\.m4a"/);
   assert.match(html, /data-analytics-placement="still_water_meditation_after_preview"/);
@@ -947,7 +947,7 @@ test("1-minute meditation music page serves the complete First Breath track with
   assert.equal(audio.byArtist.alternateName, "YannZ");
   assert.equal(audio.isAccessibleForFree, true);
   assert.match(audio.license, /creativecommons\.org\/licenses\/by\/4\.0/);
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.match(software.downloadUrl, /id1461182261\?pt=120014121&ct=yixiu_h5_first_breath_20260830&mt=8$/);
   assert.match(html, /data-audio-preview="\/assets\/yixiu\/audio\/meditation\/first-breath\.m4a"/);
   assert.match(html, /data-analytics-placement="first_breath_meditation_after_preview"/);
@@ -1062,7 +1062,7 @@ test("free online sound machine serves 10 real recordings with a truthful timer 
   assert.equal(itemList.itemListElement.length, 10);
   assert.equal(itemList.itemListElement[3].url, "https://yixiu.wonderelian.com/thunderstorm-sounds-for-sleep/");
   assert.equal(itemList.itemListElement[6].url, "https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/");
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.equal(faq.mainEntity.length, 5);
   const noiseGeneratorFaq = faq.mainEntity.find((entry) => entry.name === "Is this the same as a free online noise generator?");
   assert.equal(noiseGeneratorFaq.acceptedAnswer.text, "It can serve the same everyday purpose, but Yixiu plays recorded rain, water, wind, birds, thunder and underwater white noise instead of generating an adjustable electronic tone or frequency.");
@@ -1244,7 +1244,7 @@ test("underwater white noise black screen page keeps its search promise, real re
   assert.equal(image.height, 1672);
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.ok(hero.size < 100_000);
   assert.match(image.contentUrl, /underwater-echo\.png$/);
   assert.match(html, /href="\/discover\.css\?v=20260829-white-noise-dark-screen"/);
@@ -1427,7 +1427,7 @@ test("wind sleep page serves real mountain wind and keeps its no-music bedtime p
   assert.equal(image.representativeOfPage, true);
   assert.equal(software.image["@id"], image["@id"]);
   assert.match(image.contentUrl, /snow-wind-pinterest-2x3\.jpg$/);
-  assert.equal(software.softwareVersion, "1.5");
+  assert.equal(software.softwareVersion, "1.13");
   assert.equal(video.uploadDate, "2026-08-26");
   assert.equal(video.duration, "PT21S");
   assert.match(video.thumbnailUrl, /iMG8YanRAnA\/maxresdefault\.jpg$/);
@@ -1561,7 +1561,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /assets\/yixiu\/audio\/meditation\/first-breath\.m4a/);
   assert.match(script, /ct=yixiu_h5_first_breath_20260830/);
   assert.match(script, /data-analytics-placement=\"first_breath_meditation_after_preview\"/);
-  assert.equal((script.match(/softwareVersion[^\n]+1\\\.5[^\n]+-eq 26/g) ?? []).length, 2);
+  assert.equal((script.match(/softwareVersion[^\n]+1\\\.13[^\n]+-eq 26/g) ?? []).length, 2);
   assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+30 \+ journal_page_count/g) ?? []).length, 2);
   assert.equal((script.match(/global-share-prompt[^\n]+-eq 22/g) ?? []).length, 2);
   assert.equal((script.match(/quiet-pass-progress[^\n]+-eq 2/g) ?? []).length, 2);

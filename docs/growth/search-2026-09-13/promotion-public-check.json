@@ -1,0 +1,14 @@
+[
+  {
+    "country": "cn",
+    "http": 200,
+    "promotion_present": false,
+    "url": "https://apps.apple.com/cn/app/%E4%B8%80%E4%BC%91%E5%86%A5%E6%83%B3-%E7%99%BD%E5%99%AA%E9%9F%B3%E4%B8%8E%E9%9D%99%E5%BF%83/id1461182261?uo=4"
+  },
+  {
+    "country": "us",
+    "http": 200,
+    "promotion_present": false,
+    "url": "https://apps.apple.com/us/app/yixiu-white-noise-sleep/id1461182261?uo=4"
+  }
+]

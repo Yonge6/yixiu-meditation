@@ -1,6 +1,24 @@
 import { expect, test } from "@playwright/test";
 import entries from "../src/data/quiet-journal.json" with { type: "json" };
 
+test("product guide exposes verifiable free access without unlocking Plus", async ({ page }) => {
+  await page.goto("/?lang=zh&scene=ocean");
+  await page.getByRole("button", { name: "打开一休日常" }).click();
+  const drawer = page.getByRole("dialog", { name: "一休日常" });
+  await drawer.getByRole("button", { name: "使用指南", exact: true }).click();
+  await drawer.locator(".quiet-card").filter({ hasText: "一休免费版能做什么？" }).click();
+  await expect(drawer.getByRole("link", { name: "一休 App Store 官方介绍" })).toHaveAttribute("href", "https://apps.apple.com/app/id1461182261");
+  await drawer.getByRole("button", { name: "先听一段免费大海声" }).click();
+  await expect(page.locator(".yixiu-app")).toHaveAttribute("data-scene", "ocean");
+  await expect(page.locator(".yixiu-app")).toHaveClass(/is-audio-playing/);
+  await page.goto("/journal/yixiu-free-and-plus-guide/");
+  await expect(page.getByRole("heading", { name: "What does Yixiu Plus add?" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Keep reading" }).getByRole("link")).toHaveCount(2);
+  const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() || "{}");
+  expect(schema.citation).toContain("https://apps.apple.com/app/id1461182261");
+  await expect(page.getByRole("link", { name: "Official Yixiu App Store listing" })).toHaveAttribute("href", schema.citation[0]);
+});
+
 test("journal navigation preserves playback, closes with Escape and restores focus", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/?lang=zh&scene=ocean");
