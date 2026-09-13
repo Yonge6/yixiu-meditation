@@ -5,6 +5,7 @@ import "@fontsource/noto-serif-sc/400.css";
 import "@fontsource/noto-serif-sc/600.css";
 import {
   ArrowLeftIcon,
+  ReaderIcon,
   ChevronRightIcon,
   ClockIcon,
   Cross2Icon,
@@ -22,6 +23,7 @@ import {
   UploadIcon,
 } from "@radix-ui/react-icons";
 import QRCode from "qrcode";
+import { QuietJournal, type QuietArticle } from "./QuietJournal";
 import { useEndBell } from "./useEndBell";
 import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
@@ -61,7 +63,7 @@ type FocusDuration = 1 | 3 | 5 | 10;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
 type SceneCategory = "all" | "nature" | "meditation" | "sleep" | "focus" | "morning" | "relax";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
-type DrawerView = "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
+type DrawerView = "journal" | "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
 type MeView = "home" | "about" | "privacy" | "sources" | "support";
 type ShareCardPreview = {
   imageUrl: string;
@@ -781,7 +783,7 @@ export default function Prototype() {
   const [focusSoundEnabled, setFocusSoundEnabled] = useStoredState<boolean>("yixiu.focusSoundEnabled", false);
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
   const [backgroundPlayback, setBackgroundPlayback] = useStoredState<boolean>("yixiu.backgroundPlayback", true);
-  const [activeTab, setActiveTab] = useState<RootTab>("sounds");
+  const [activeTab, setActiveTab] = useState<RootTab>(() => new URLSearchParams(window.location.search).get("tab") === "focus" ? "focus" : "sounds");
   const [meView, setMeView] = useState<MeView>("home");
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [sceneCategory, setSceneCategory] = useState<SceneCategory>("all");
@@ -790,6 +792,7 @@ export default function Prototype() {
   const [remainingSeconds, setRemainingSeconds] = useState(duration === 0 ? 0 : duration * 60);
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("home");
+  const [journalArticleId, setJournalArticleId] = useState<string | null>(null);
   const [timerOpen, setTimerOpen] = useState(false);
   const [wisdomOpen, setWisdomOpen] = useState(false);
   const [videoChannelOpen, setVideoChannelOpen] = useState(false);
@@ -843,8 +846,10 @@ export default function Prototype() {
     url.searchParams.delete(active.kind === "meditation" ? "scene" : "music");
     url.searchParams.set(active.kind === "meditation" ? "music" : "scene", active.id);
     url.searchParams.set("lang", language);
+    if (activeTab === "focus") url.searchParams.set("tab", "focus");
+    else url.searchParams.delete("tab");
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  }, [active.id, language]);
+  }, [active.id, language, activeTab]);
 
   useEffect(() => {
     [previousScene, active, nextScene].forEach((scene) => {
@@ -938,6 +943,7 @@ export default function Prototype() {
   useEffect(() => {
     if (!menuOpen) return;
     const previousOverflow = document.body.style.overflow;
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     document.body.style.overflow = "hidden";
     window.requestAnimationFrame(() => drawerCloseRef.current?.focus());
 
@@ -967,14 +973,15 @@ export default function Prototype() {
     return () => {
       document.removeEventListener("keydown", handleDrawerKeys);
       document.body.style.overflow = previousOverflow;
-      menuButtonRef.current?.focus();
+      (trigger?.isConnected ? trigger : menuButtonRef.current)?.focus();
     };
   }, [menuOpen]);
 
   useEffect(() => {
     if (!menuOpen) return;
     drawerScrollRef.current?.scrollTo({ top: 0, behavior: "auto" });
-  }, [drawerView, menuOpen]);
+    drawerCloseRef.current?.focus();
+  }, [drawerView, menuOpen, journalArticleId]);
 
   useEffect(() => () => {
     if (swipeSettleTimerRef.current !== null) {
@@ -1374,7 +1381,24 @@ export default function Prototype() {
     complete: language === "zh" ? "完成" : "Complete",
   }[breathingPhase];
 
+  const openQuietJournal = () => {
+    setJournalArticleId(null);
+    setDrawerView("journal");
+    setMenuOpen(true);
+  };
+
+  const practiceFromJournal = (article: QuietArticle) => {
+    setMenuOpen(false);
+    if (article.action === "focus") {
+      setFocusDuration(1);
+      setActiveTab("focus");
+    } else {
+      selectScene(article.scene as SceneId);
+    }
+  };
+
   const drawerTitle = {
+    journal: language === "zh" ? "一休日常" : "Quiet Journal",
     home: language === "zh" ? "你的空间" : "Your space",
     library: language === "zh" ? "声音库" : "Sound library",
     focus: activeSceneName,
@@ -1426,6 +1450,7 @@ export default function Prototype() {
           <small>{language === "zh" ? "YIXIU" : "一休"}</small>
         </div>
         <div className="header-actions">
+          <button ref={menuButtonRef} className="header-journal-button" type="button" aria-label={language === "zh" ? "打开一休日常" : "Open Quiet Journal"} aria-haspopup="dialog" aria-expanded={menuOpen && drawerView === "journal"} data-analytics-event="yixiu_journal_open" data-analytics-placement="player_header" onClick={openQuietJournal}><ReaderIcon /></button>
           <a
             className="header-download-link"
             href={sleepAppStoreUrl}
@@ -1519,16 +1544,16 @@ export default function Prototype() {
             aria-label={language === "zh" ? "关闭菜单" : "Close menu"}
             onClick={() => setMenuOpen(false)}
           />
-          <aside ref={drawerRef} className="yixiu-side-drawer" role="dialog" aria-modal="true" aria-labelledby="yixiu-drawer-title">
+          <aside ref={drawerRef} className={`yixiu-side-drawer ${drawerView === "journal" ? "quiet-journal-drawer" : ""}`} role="dialog" aria-modal="true" aria-labelledby="yixiu-drawer-title">
             <header className="yixiu-drawer-header">
-              {drawerView === "home" ? (
+              {drawerView === "home" || (drawerView === "journal" && !journalArticleId) ? (
                 <span className="yixiu-drawer-orbit" aria-hidden="true"><WaterWavesIcon /></span>
               ) : (
                 <button
                   className="yixiu-drawer-back"
                   type="button"
                   aria-label={language === "zh" ? "返回" : "Back"}
-                  onClick={() => setDrawerView("home")}
+                  onClick={() => drawerView === "journal" ? setJournalArticleId(null) : setDrawerView("home")}
                 >
                   <ArrowLeftIcon />
                 </button>
@@ -1541,7 +1566,9 @@ export default function Prototype() {
             </header>
 
             <div className="yixiu-drawer-scroll" ref={drawerScrollRef}>
-              {drawerView === "home" ? (
+              {drawerView === "journal" ? (
+                <QuietJournal language={language} articleId={journalArticleId} onArticle={setJournalArticleId} onPractice={practiceFromJournal} />
+              ) : drawerView === "home" ? (
                 <>
                   <section className="yixiu-drawer-hero">
                     <small>{language === "zh" ? "14 种自然声 · 14 首冥想音乐" : "14 NATURE SOUNDS · 14 MEDITATION TRACKS"}</small>
@@ -1954,6 +1981,11 @@ export default function Prototype() {
                 <p className={`download-feedback ${downloadFeedback ? "is-visible" : ""}`} role="status" aria-live="polite">
                   {language === "zh" ? "正在打开 App Store…" : "Opening the App Store…"}
                 </p>
+
+                <p className="me-group-label">{language === "zh" ? "日常片刻" : "EVERYDAY MOMENTS"}</p>
+                <section className="trust-links" aria-label={language === "zh" ? "一休日常栏目" : "Quiet Journal column"}>
+                  <button type="button" aria-haspopup="dialog" data-analytics-event="yixiu_journal_open" data-analytics-placement="me" onClick={openQuietJournal}><span><strong>{language === "zh" ? "一休日常" : "Quiet Journal"}</strong><small>{language === "zh" ? "睡前、专注与片刻放松" : "Notes for rest, focus and a small pause"}</small></span><ChevronRightIcon /></button>
+                </section>
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>

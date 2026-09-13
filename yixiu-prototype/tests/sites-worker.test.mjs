@@ -116,7 +116,8 @@ test("every sitemap HTML page points agents to the covering llms.txt", async () 
   const urls = [...sitemap.matchAll(/<loc>(https:\/\/yixiu\.wonderelian\.com\/[^<]*)<\/loc>/g)]
     .map((match) => new URL(match[1]));
 
-  assert.equal(urls.length, 27);
+  const journal = JSON.parse(await readFile(new URL("../src/data/quiet-journal.json", import.meta.url), "utf8"));
+  assert.equal(urls.length, 27 + 2 * (journal.length + 1));
   for (const url of urls) {
     const pagePath = url.pathname === "/"
       ? "../index.html"
@@ -134,7 +135,7 @@ test("every public Yixiu application schema matches the official App Store versi
   const sitemap = await readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   const urls = [...sitemap.matchAll(/<loc>(https:\/\/yixiu\.wonderelian\.com\/[^<]*)<\/loc>/g)]
     .map((match) => new URL(match[1]))
-    .filter((url) => url.pathname !== "/privacy.html");
+    .filter((url) => url.pathname !== "/privacy.html" && !url.pathname.startsWith("/journal/"));
 
   assert.equal(urls.length, 26);
   for (const url of urls) {
@@ -158,7 +159,8 @@ test("every shareable sitemap page exposes a complete large-image social card", 
     .map((match) => new URL(match[1]))
     .filter((url) => url.pathname !== "/privacy.html");
 
-  assert.equal(urls.length, 26);
+  const journal = JSON.parse(await readFile(new URL("../src/data/quiet-journal.json", import.meta.url), "utf8"));
+  assert.equal(urls.length, 26 + 2 * (journal.length + 1));
   for (const url of urls) {
     const pagePath = url.pathname === "/"
       ? "../index.html"
@@ -1560,7 +1562,7 @@ test("production deploy acceptance checks the HTTPS origin instead of its redire
   assert.match(script, /ct=yixiu_h5_first_breath_20260830/);
   assert.match(script, /data-analytics-placement=\"first_breath_meditation_after_preview\"/);
   assert.equal((script.match(/softwareVersion[^\n]+1\\\.5[^\n]+-eq 26/g) ?? []).length, 2);
-  assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+-eq 30/g) ?? []).length, 2);
+  assert.equal((script.match(/describedby[^\n]+llms\.txt[^\n]+30 \+ journal_page_count/g) ?? []).length, 2);
   assert.equal((script.match(/global-share-prompt[^\n]+-eq 22/g) ?? []).length, 2);
   assert.equal((script.match(/quiet-pass-progress[^\n]+-eq 2/g) ?? []).length, 2);
   assert.match(script, /meditation-duration-choice-pinterest\.jpg/);

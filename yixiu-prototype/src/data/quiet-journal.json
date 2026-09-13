@@ -1,0 +1,187 @@
+[
+  {
+    "slug": "a-rainy-end-to-the-day",
+    "date": "2026-09-13",
+    "category": "sleep",
+    "scene": "rain",
+    "image": "/assets/yixiu/rain.jpg",
+    "action": "listen",
+    "sourceContentIds": [
+      "202609_sleep_a1"
+    ],
+    "zh": {
+      "title": "睡前，给今天留一个雨声的结尾",
+      "summary": "不用再完成一件事。选一段雨声，为今晚留出几分钟。",
+      "category": "睡前",
+      "readTime": "2 分钟阅读",
+      "cta": "听一段屋檐雨",
+      "sections": [
+        {
+          "title": "先把下一件事放一放",
+          "body": "还在屏幕里切换时，不妨先停在这里。把明天要记得的一件事写下来，再选一段声音。你不需要把今晚变成新的自律任务，也不用要求自己马上入睡。"
+        },
+        {
+          "title": "从一段雨声开始",
+          "body": "一休的「屋檐雨」可以在网页免费试听。点下方按钮后，从舒适的小音量开始；声音只需要成为房间的一部分，不必盖过所有环境声。如果不喜欢雨声，换成大海也可以。"
+        },
+        {
+          "title": "给这一段留一个结束点",
+          "body": "在播放器点时长，选择 5、15 或 30 分钟。到时声音会逐渐结束。想先试试看，就从 5 分钟开始；随时暂停，也算完整的一次休息。"
+        },
+        {
+          "title": "网页试听，App 留在身边",
+          "body": "H5 无需账号。若想在 iPhone 上继续使用，可以打开一休 App，检查后台播放设置并选择计时。App 有免费内容和可选 Plus 权益；不需要先订阅，才能决定这段声音是否适合自己。"
+        }
+      ]
+    },
+    "en": {
+      "title": "A rainy end to the day",
+      "summary": "One less thing to finish. A little rain, and a few minutes of your own.",
+      "category": "Before bed",
+      "readTime": "2 min read",
+      "cta": "Listen to Rain on Eaves",
+      "sections": [
+        {
+          "title": "Leave the next thing for tomorrow",
+          "body": "If you are still moving between tabs, pause here. Write down one thing you want to remember tomorrow, then choose a sound. Tonight does not need another task to complete, or a deadline for falling asleep."
+        },
+        {
+          "title": "Start with a little rain",
+          "body": "Rain on Eaves is a free selection in Yixiu's web experience. Use the button below and start at a comfortable low volume. Let it be part of the room rather than something that has to cover every sound. If rain is not for you, try Ocean Waves."
+        },
+        {
+          "title": "Give this moment an ending",
+          "body": "Tap the duration in the player and choose 5, 15 or 30 minutes. The sound winds down when the timer ends. Start with five minutes if you are just trying it; you can pause whenever you want."
+        },
+        {
+          "title": "Try the web, keep the app close",
+          "body": "The web experience needs no account. If you want to continue on iPhone, open Yixiu, check background playback and choose a timer. The app has free selections and optional Plus features. You can listen first before deciding what fits your routine."
+        }
+      ]
+    },
+    "imageWidth": 941,
+    "imageHeight": 1672
+  },
+  {
+    "slug": "one-sound-one-page",
+    "date": "2026-09-13",
+    "category": "focus",
+    "scene": "ocean",
+    "image": "/assets/yixiu/deep-ocean-hero.png",
+    "action": "listen",
+    "sourceContentIds": [],
+    "zh": {
+      "title": "一段声音，只陪眼前这一页",
+      "summary": "阅读或写作开始前，先把要做的事情缩小一点。",
+      "category": "专注",
+      "readTime": "2 分钟阅读",
+      "cta": "用海浪陪伴阅读",
+      "sections": [
+        {
+          "title": "先选一件小事",
+          "body": "不必一口气读完一本书，也不必马上完成整篇文章。先定一个具体的开始：读两页、写三行，或整理一小段笔记。把其他任务放到这一段之后。"
+        },
+        {
+          "title": "让声音陪着，而不是领着你走",
+          "body": "一休的「大海」是网页中的免费声音。先试着听一小段，再决定是否适合这次阅读。有些人喜欢海浪起伏，有些人更愿意听雨声，也有人更适合安静；不用替自己找标准答案。"
+        },
+        {
+          "title": "用 15 分钟试一次",
+          "body": "在播放器选择 15 分钟，然后回到手边的书或文档。网页没有账号要求，电脑和非 iPhone 设备也可以直接使用。若声音反而分散注意力，把音量调低，或者暂停。"
+        },
+        {
+          "title": "留下真正适合你的那一个",
+          "body": "如果喜欢当前声音，可以点亮心形收藏。网页偏好保存在当前浏览器，换设备不会自动同步。下次回来时，选一个熟悉的声音，再开始眼前这一页。"
+        }
+      ]
+    },
+    "en": {
+      "title": "One sound, one page",
+      "summary": "Before reading or writing, make the next step a little smaller.",
+      "category": "Focus",
+      "readTime": "2 min read",
+      "cta": "Read with Ocean Waves",
+      "sections": [
+        {
+          "title": "Choose one small thing",
+          "body": "You do not have to finish the book or write the whole article now. Choose a specific beginning: two pages, three lines, or a short set of notes. Leave the other tasks until this small stretch is over."
+        },
+        {
+          "title": "Let the sound accompany you",
+          "body": "Ocean Waves is a free sound in Yixiu on the web. Listen briefly and decide whether it fits this reading session. You might prefer its rise and fall, a little rain, or silence. There is no single right answer."
+        },
+        {
+          "title": "Try fifteen minutes",
+          "body": "Choose a 15-minute timer in the player, then return to your book or document. The web experience needs no account and works as a listening option on computers and non-iPhone devices too. If the sound draws your attention away, lower the volume or pause."
+        },
+        {
+          "title": "Keep what works for you",
+          "body": "Tap the heart if you would like to keep the current sound in your favorites. Web preferences stay in this browser and do not automatically follow you to another device. Next time, choose a familiar sound and begin with the page in front of you."
+        }
+      ]
+    },
+    "imageWidth": 941,
+    "imageHeight": 1672
+  },
+  {
+    "slug": "a-minute-between-things",
+    "date": "2026-09-13",
+    "category": "reset",
+    "scene": "ocean",
+    "image": "/assets/yixiu/meditation/first-breath.jpg",
+    "action": "focus",
+    "sourceContentIds": [],
+    "zh": {
+      "title": "在两件事之间，留一分钟给自己",
+      "summary": "不必准备完整的练习。先从这一分钟开始。",
+      "category": "片刻放松",
+      "readTime": "1 分钟阅读",
+      "cta": "打开一分钟静心",
+      "sections": [
+        {
+          "title": "让上一件事先结束",
+          "body": "会议刚结束，消息又亮起时，可以先不急着进入下一件事。找一个舒服的姿势，让视线暂时离开屏幕。没有需要完成的成绩，也不需要记录给谁看。"
+        },
+        {
+          "title": "打开一分钟静心",
+          "body": "在一休「静心」页选择 1 分钟，准备好后再点开始。跟随画面只是一种提示，始终以自己舒服、自然的呼吸为准；不需要用力、憋气或追赶节奏。也可以只听一段声音。"
+        },
+        {
+          "title": "声音由你决定",
+          "body": "静心页沿用你当前选择的声音场景，声音开关可以单独控制。希望安静一些，就关闭声音；想有海浪陪伴，就保留它。网页的 1 分钟静心可以免费使用。"
+        },
+        {
+          "title": "结束后，回到一件小事",
+          "body": "这一分钟结束后，先选下一件最小的事情再继续。做完的练习记录只保存在当前设备；不用维持连续打卡，也不需要为了休息再添一个目标。"
+        }
+      ]
+    },
+    "en": {
+      "title": "A minute between things",
+      "summary": "You do not need a full routine. Start with this minute.",
+      "category": "A small pause",
+      "readTime": "1 min read",
+      "cta": "Open one-minute Focus",
+      "sections": [
+        {
+          "title": "Let the last thing end",
+          "body": "When a meeting ends and another message arrives, you can pause before moving on. Find a comfortable position and let your eyes leave the screen for a moment. There is no score to earn and nothing you need to prove."
+        },
+        {
+          "title": "Open one-minute Focus",
+          "body": "Choose one minute on Yixiu's Focus page and start when you are ready. The visual rhythm is only a prompt: keep your breathing comfortable and natural, without forcing, holding or trying to catch up. Simply listening to a sound is another option."
+        },
+        {
+          "title": "Choose whether to listen",
+          "body": "Focus uses your currently selected sound scene, with a separate sound switch. Leave it off if you want quiet, or keep the ocean nearby. The one-minute Focus practice is available for free on the web."
+        },
+        {
+          "title": "Return to one small thing",
+          "body": "When the minute ends, choose the smallest next step before continuing. Completed practice records stay on the current device. You do not need a streak or another goal in order to take a break."
+        }
+      ]
+    },
+    "imageWidth": 1024,
+    "imageHeight": 1536
+  }
+]

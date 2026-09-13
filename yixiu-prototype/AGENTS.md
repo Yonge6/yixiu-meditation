@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- 2026-09-13: User requested a content column in the H5 drawer. “一休日常 / Quiet Journal” opens a dedicated reading drawer from the player header book icon and a Me row, preserving the three bottom tabs and uninterrupted playback while reading. This is an explicit exception to the former no-right-drawer rule for this reading surface only; do not reactivate the retired settings drawer. Content source is `src/data/quiet-journal.json`; generate bilingual `/journal/` and `/journal/zh/` pages with `npm run build:journal`. Select useful evergreen social content, with bilingual copy and verified practice links, rather than mirroring every post. Keep stable slugs and public acceptance evidence.
+
 - Quiet Hour / 午后留白 (`quietHour`) is a 60-minute extended CC0 edit of HoliznaCC0's Too Brief A Time To Be Anything. Always show `60 分钟延长版 / 60 min extended`, keep native/H5 names/audio/MorningLake artwork aligned and expose it under Meditation/Sleep/Relax. It follows existing Plus library rules, not a new Free entitlement. Preserve the explicit edit notice and ungated CC0 download in music-credits.html.
 
 - The current library has 14 nature sounds and 14 meditation tracks. The three CC BY 4.0 Chris Zabriskie additions (Cloud Drift / Cylinder Seven, Soft Light Rest / Cylinder Eight, Deep Water Rest / Cylinder Nine) are Plus in the library and appear in Meditation, Sleep and Relax on both platforms. Keep `music-credits.html`, original titles, creator, license, modification notices and ungated CC audio downloads available. Membership must not impose additional restrictions on recipients' CC rights.

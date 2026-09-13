@@ -26,9 +26,10 @@ test("starts fresh visitors in English while preserving explicit Chinese links",
   await expect(page.getByRole("button", { name: "Switch to Chinese" })).toHaveText("中");
 
   const headerActions = page.locator(".header-actions > *");
-  await expect(headerActions).toHaveCount(3);
-  await expect(headerActions.nth(1)).toHaveAttribute("aria-label", "Share Ocean Waves");
-  await expect(headerActions.nth(2)).toHaveAttribute("aria-label", "Switch to Chinese");
+  await expect(headerActions).toHaveCount(4);
+  await expect(headerActions.nth(0)).toHaveAttribute("aria-label", "Open Quiet Journal");
+  await expect(headerActions.nth(2)).toHaveAttribute("aria-label", "Share Ocean Waves");
+  await expect(headerActions.nth(3)).toHaveAttribute("aria-label", "Switch to Chinese");
 
   await page.goto("/?lang=zh");
   await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
@@ -414,7 +415,7 @@ test("updates and restores local settings", async ({ page }) => {
 test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => {
   await page.getByRole("button", { name: "我的 ME" }).click();
   const groupLabels = page.locator(".me-group-label");
-  await expect(groupLabels).toHaveCount(2);
+  await expect(groupLabels).toHaveCount(3);
   expect(await groupLabels.first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("14px");
   expect(await page.locator(".card-heading strong").first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("20px");
   expect(await page.locator(".setting-row > span strong").first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("17px");
