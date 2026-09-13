@@ -1,5 +1,98 @@
 [
   {
+    "slug": "yixiu-free-and-plus-guide",
+    "date": "2026-09-13",
+    "category": "guide",
+    "scene": "ocean",
+    "image": "/assets/yixiu/deep-ocean-hero.png",
+    "imageWidth": 941,
+    "imageHeight": 1672,
+    "action": "listen",
+    "sourceContentIds": [],
+    "zh": {
+      "title": "一休免费版能做什么？网页与 Plus 使用指南",
+      "summary": "一休网页无需账号，可免费使用 5 种自然声、3 首冥想音乐、1 分钟静心和 5/15/30 分钟定时。这里把网页、iPhone App 和 Plus 的区别说清楚。",
+      "category": "使用指南",
+      "readTime": "3 分钟阅读",
+      "cta": "先听一段免费大海声",
+      "sections": [
+        {
+          "title": "打开网页，可以先听哪些声音？",
+          "body": "从大海、屋檐雨、春日花溪、晨林鸟语、山间溪流中任选一种，或试听绿洲停歇、海上行旅、初息三首冥想音乐。不需要创建账号，也不用先购买 Plus。声音只是一种可选的背景；是否喜欢，适合自己听过再决定。"
+        },
+        {
+          "title": "怎么选择播放时长？",
+          "body": "在首页点播放按钮上方的时长，选择 5、15 或 30 分钟。这些是免费定时选项；一分钟静心则在底部「静心」页面单独开始。自然声和音乐轨道有各自的素材长度，播放定时不代表每条素材本身就是同样长。"
+        },
+        {
+          "title": "Plus 多了什么？",
+          "body": "当前 iPhone 版的一休 Plus 解锁全部 14 种自然声和 14 首冥想音乐、60 分钟与不限时聆听，以及 3、5、10 分钟呼吸练习。网页版提供免登录的免费体验；Plus 权益在 iPhone App 中通过 Apple 购买和验证。价格与购买方式以设备上的 App Store 和应用内购买页面为准。"
+        },
+        {
+          "title": "网页能替代 iPhone 后台播放吗？",
+          "body": "浏览器里的暗屏显示与锁住 iPhone 屏幕是两件事，网页可能受浏览器后台策略影响。希望离开 App 或锁屏后继续听，可以使用 iPhone App，并检查「我的」中的后台播放设置。可选结束提示音默认关闭，它不替代手机系统闹钟。"
+        },
+        {
+          "title": "为什么以前购买的用户可能看到不同权益？",
+          "body": "在 1.2 或更早版本已拥有一休的用户，经验证后继续保留原有自然声和既有权益。这与新用户的免费范围不同；使用原来的 Apple 账号并查看恢复购买结果，不要仅凭网页上的显示判断历史购买是否丢失。"
+        },
+        {
+          "title": "从一个实际场景开始",
+          "body": "睡前想试一试，就选 5 分钟屋檐雨；阅读时可以先听一段大海；两件事之间只有一点空隙，就打开一分钟静心。无需完成连续打卡。本文功能依据为一休 1.13 的公开商店介绍与当前网页，后续功能变化时会同步修订。"
+        }
+      ],
+      "seoTitle": "一休免费版与 Plus 有什么区别？网页和 App 使用指南",
+      "metaDescription": "查看一休免费自然声、冥想音乐、定时与一分钟静心的范围，了解 iPhone Plus、后台播放及历史购买权益。附官方商店资料和网页体验入口。"
+    },
+    "en": {
+      "title": "Is Yixiu free? A guide to web listening and Plus",
+      "summary": "Yixiu’s web player needs no account. Start with five free nature sounds, three meditation tracks, one-minute Focus and 5/15/30-minute timers. Here is how the web player and iPhone Plus differ.",
+      "category": "Getting started",
+      "readTime": "3 min read",
+      "cta": "Try free ocean sounds",
+      "sections": [
+        {
+          "title": "What can I listen to for free?",
+          "body": "Choose Ocean, Rain on Eaves, Spring Creek, Morning Birds or Mountain Stream. The free meditation selections are Oasis Rest, Ocean Passage and First Breath. You do not need an account or a Plus purchase to try them. Sound is optional background; listen first and decide whether you enjoy it."
+        },
+        {
+          "title": "How do I set a timer?",
+          "body": "Tap the duration above the play button and choose 5, 15 or 30 minutes. These are the free listening timers. One-minute Focus starts separately in the bottom Focus tab. Each recording has its own source length: a listening timer does not mean every original recording has that duration."
+        },
+        {
+          "title": "What does Yixiu Plus add?",
+          "body": "In the current iPhone app, Plus unlocks all 14 nature sounds and 14 meditation tracks, 60-minute and unlimited listening, and 3-, 5- and 10-minute breathing. The web player provides the account-free experience. Plus is purchased and verified through Apple in the iPhone app. Check the App Store and the in-app purchase screen on your device for current pricing and purchase options."
+        },
+        {
+          "title": "Will the web player keep going when I lock my iPhone?",
+          "body": "A dark display inside an open browser is different from physically locking your iPhone. Browser background rules can affect web playback. For listening after leaving the app or locking the screen, use the iPhone app and check its background playback setting in My Yixiu. The optional end bell is off by default and does not replace a system alarm."
+        },
+        {
+          "title": "Why might an earlier owner have different access?",
+          "body": "Verified owners of Yixiu 1.2 or earlier retain their previous nature sounds and existing benefits. That differs from the new-user free selection. Use the original Apple account and check Restore Purchases; the web player alone cannot tell you whether an earlier purchase has been restored."
+        },
+        {
+          "title": "Start with the moment you have",
+          "body": "Try five minutes of rain before bed, ocean sounds while reading, or one-minute Focus between tasks. There is no streak to maintain. This guide reflects the public Yixiu 1.13 listing and the current web player; we will revise it when these features change."
+        }
+      ],
+      "seoTitle": "Is Yixiu Free? Web Features & Plus Explained | Yixiu",
+      "metaDescription": "Try five free nature sounds, three meditation tracks and simple timers. Compare Yixiu web features with iPhone Plus, background playback and earlier purchases."
+    },
+    "sources": [
+      {
+        "url": "https://apps.apple.com/app/id1461182261",
+        "zh": "一休 App Store 官方介绍",
+        "en": "Official Yixiu App Store listing"
+      },
+      {
+        "url": "https://yixiu.wonderelian.com/privacy.html",
+        "zh": "隐私政策",
+        "en": "Privacy policy"
+      }
+    ]
+  },
+  {
     "slug": "a-rainy-end-to-the-day",
     "date": "2026-09-13",
     "category": "sleep",
@@ -32,7 +125,9 @@
           "title": "网页试听，App 留在身边",
           "body": "H5 无需账号。若想在 iPhone 上继续使用，可以打开一休 App，检查后台播放设置并选择计时。App 有免费内容和可选 Plus 权益；不需要先订阅，才能决定这段声音是否适合自己。"
         }
-      ]
+      ],
+      "seoTitle": "睡前雨声怎么听？从五分钟开始的一休日常",
+      "metaDescription": "睡前想听一段雨声，可以从舒适的小音量和五分钟定时开始。这篇短文介绍一休网页免费试听屋檐雨、选择时长和转到 iPhone App 的方法。"
     },
     "en": {
       "title": "A rainy end to the day",
@@ -57,10 +152,13 @@
           "title": "Try the web, keep the app close",
           "body": "The web experience needs no account. If you want to continue on iPhone, open Yixiu, check background playback and choose a timer. The app has free selections and optional Plus features. You can listen first before deciding what fits your routine."
         }
-      ]
+      ],
+      "seoTitle": "Rain Sounds Before Bed: A Simple Evening Routine | Yixiu",
+      "metaDescription": "Try a simple rain-sound routine before bed. Start with low volume and a five-minute timer, listen free in your browser, and choose what feels comfortable."
     },
     "imageWidth": 941,
-    "imageHeight": 1672
+    "imageHeight": 1672,
+    "sources": []
   },
   {
     "slug": "one-sound-one-page",
@@ -93,7 +191,9 @@
           "title": "留下真正适合你的那一个",
           "body": "如果喜欢当前声音，可以点亮心形收藏。网页偏好保存在当前浏览器，换设备不会自动同步。下次回来时，选一个熟悉的声音，再开始眼前这一页。"
         }
-      ]
+      ],
+      "seoTitle": "阅读时怎么选择背景声音？从一页和一段海浪声开始",
+      "metaDescription": "阅读或写作开始前，先选一个小任务，再试一段大海声。了解如何用一休网页免费试听、调节音量和设置时长，找到适合自己的声音背景。"
     },
     "en": {
       "title": "One sound, one page",
@@ -118,10 +218,13 @@
           "title": "Keep what works for you",
           "body": "Tap the heart if you would like to keep the current sound in your favorites. Web preferences stay in this browser and do not automatically follow you to another device. Next time, choose a familiar sound and begin with the page in front of you."
         }
-      ]
+      ],
+      "seoTitle": "Ocean Sounds for Reading: Start with One Page | Yixiu",
+      "metaDescription": "Make your next reading or writing session small. Choose one task, try free ocean sounds at a comfortable volume, and set a short listening timer in Yixiu."
     },
     "imageWidth": 941,
-    "imageHeight": 1672
+    "imageHeight": 1672,
+    "sources": []
   },
   {
     "slug": "a-minute-between-things",
@@ -154,7 +257,9 @@
           "title": "结束后，回到一件小事",
           "body": "这一分钟结束后，先选下一件最小的事情再继续。做完的练习记录只保存在当前设备；不用维持连续打卡，也不需要为了休息再添一个目标。"
         }
-      ]
+      ],
+      "seoTitle": "两件事之间的一分钟呼吸：一休静心使用方法",
+      "metaDescription": "没有时间做完整练习，也可以从一分钟静心开始。了解一休网页的免费呼吸入口、可选背景声音和简单步骤，无需注册账号。"
     },
     "en": {
       "title": "A minute between things",
@@ -179,9 +284,12 @@
           "title": "Return to one small thing",
           "body": "When the minute ends, choose the smallest next step before continuing. Completed practice records stay on the current device. You do not need a streak or another goal in order to take a break."
         }
-      ]
+      ],
+      "seoTitle": "One-Minute Breathing Break Between Tasks | Yixiu",
+      "metaDescription": "Take a short pause between tasks with Yixiu’s free one-minute Focus. Read the steps, choose optional background sound, and begin without creating an account."
     },
     "imageWidth": 1024,
-    "imageHeight": 1536
+    "imageHeight": 1536,
+    "sources": []
   }
 ]

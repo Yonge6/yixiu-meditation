@@ -5,13 +5,13 @@
 .quiet-filters button[aria-pressed="true"] { background: #d7eee5; border-color: #d7eee5; color: #163d40; }
 .quiet-articles { display: grid; gap: 22px; }
 .quiet-card { display: block; padding: 0; text-align: left; color: inherit; background: #0c2b34; border: 1px solid #345158; border-radius: 18px; overflow: hidden; text-decoration: none; cursor: pointer; width: 100%; font: inherit; }
-.quiet-card img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.quiet-card img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; }
 .quiet-card-copy { display: grid; gap: 10px; padding: 20px; }
 .quiet-meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: #acd2c6; letter-spacing: .04em; }
 .quiet-card strong { font-family: "Noto Serif SC", Georgia, serif; font-size: 22px; font-weight: 400; line-height: 1.55; }
 .quiet-card-copy > span:not(.quiet-meta):not(.quiet-card-link) { font-size: 14px; color: #bacdc9; line-height: 1.8; }
 .quiet-card-link { margin-top: 4px; font-size: 12px; color: #d4eee2; }
-.quiet-article-image { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; margin-bottom: 22px; }
+.quiet-article-image { width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; margin-bottom: 22px; }
 .quiet-article h3, .quiet-article h1 { font-family: "Noto Serif SC", Georgia, serif; font-size: clamp(26px, 4vw, 36px); font-weight: 400; line-height: 1.5; margin: 15px 0; }
 .quiet-article h4, .quiet-article h2 { font-family: "Noto Serif SC", Georgia, serif; font-weight: 600; font-size: 18px; line-height: 1.7; margin: 28px 0 10px; }
 .quiet-article section p { color: #d0dfdb; font-size: 15px; line-height: 2; margin: 0; }
@@ -35,3 +35,8 @@
 @media (max-width: 700px) { .quiet-page .quiet-articles { grid-template-columns: 1fr; } .quiet-page-main { padding-top: 30px; } }
 @media (max-width: 360px) { .header-actions { gap: 4px; } .header-journal-button { width: 30px; } .quiet-card-copy { padding: 16px; } }
 @media (prefers-reduced-motion: reduce) { .quiet-journal-drawer { animation: none; } }
+
+.quiet-sources a { color: #c9e3d7; text-underline-offset: 4px; }
+.quiet-sources li { margin: 10px 0; line-height: 1.8; font-size: 14px; }
+.quiet-related { margin-top: 30px; border-top: 1px solid #345158; }
+.quiet-related .quiet-permalink { display: block; padding: 8px 0; }

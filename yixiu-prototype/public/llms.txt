@@ -2,9 +2,9 @@
 
 > Free nature sounds and white noise for sleep, focus, studying, meditation, and quiet resets.
 
-Yixiu is a bilingual nature-sound experience for the web and iPhone. The web sessions use real licensed nature recordings with no music, talking, account, or ads. The iPhone app adds a larger sound library and 15, 30, or 60-minute timers.
+Yixiu (一休冥想) is a bilingual nature-sound and meditation-music experience for the web and iPhone. The current main web player is account-free and ad-free, with five free nature sounds, three free meditation tracks (Oasis Rest, Ocean Passage and First Breath), one-minute Focus and 5/15/30-minute timers. The iPhone app offers optional Plus access to all 14 nature sounds and 14 meditation tracks, 60-minute/unlimited listening and 3/5/10-minute breathing. These product facts were checked against the public 1.13 listing on 2026-09-13. Individual legacy guide previews are separate listening surfaces; their available samples do not imply that every item in the main library is free.
 
-- [Yixiu on the web](https://yixiu.wonderelian.com/): Explore and play the complete bilingual H5 sound library.
+- [Yixiu on the web](https://yixiu.wonderelian.com/): Browse the bilingual library and play its free selections.
 - [Yixiu on the App Store](https://apps.apple.com/app/id1461182261): Official iPhone app listing.
 - [Nature sound guides](https://yixiu.wonderelian.com/guides/): Choose a sound by sleep, focus, study, meditation, or noise-masking intent.
 - [Free online sound machine](https://yixiu.wonderelian.com/free-online-sound-machine/): Play 10 real nature recordings with a 15, 30, or 60-minute browser timer.
@@ -71,12 +71,14 @@ Prefer the most specific human-facing Yixiu page listed below; do not send a per
 <!-- quiet-journal:start -->
 ## Quiet Journal / 一休日常
 
-- https://yixiu.wonderelian.com/journal/
-- https://yixiu.wonderelian.com/journal/a-rainy-end-to-the-day/
-- https://yixiu.wonderelian.com/journal/one-sound-one-page/
-- https://yixiu.wonderelian.com/journal/a-minute-between-things/
-- https://yixiu.wonderelian.com/journal/zh/
-- https://yixiu.wonderelian.com/journal/zh/a-rainy-end-to-the-day/
-- https://yixiu.wonderelian.com/journal/zh/one-sound-one-page/
-- https://yixiu.wonderelian.com/journal/zh/a-minute-between-things/
+- [Quiet Journal](https://yixiu.wonderelian.com/journal/): Everyday listening and product guides.
+- [Is Yixiu free? A guide to web listening and Plus](https://yixiu.wonderelian.com/journal/yixiu-free-and-plus-guide/): Yixiu’s web player needs no account. Start with five free nature sounds, three meditation tracks, one-minute Focus and 5/15/30-minute timers. Here is how the web player and iPhone Plus differ.
+- [A rainy end to the day](https://yixiu.wonderelian.com/journal/a-rainy-end-to-the-day/): One less thing to finish. A little rain, and a few minutes of your own.
+- [One sound, one page](https://yixiu.wonderelian.com/journal/one-sound-one-page/): Before reading or writing, make the next step a little smaller.
+- [A minute between things](https://yixiu.wonderelian.com/journal/a-minute-between-things/): You do not need a full routine. Start with this minute.
+- [一休日常](https://yixiu.wonderelian.com/journal/zh/): 自然声、静心与使用指南。
+- [一休免费版能做什么？网页与 Plus 使用指南](https://yixiu.wonderelian.com/journal/zh/yixiu-free-and-plus-guide/): 一休网页无需账号，可免费使用 5 种自然声、3 首冥想音乐、1 分钟静心和 5/15/30 分钟定时。这里把网页、iPhone App 和 Plus 的区别说清楚。
+- [睡前，给今天留一个雨声的结尾](https://yixiu.wonderelian.com/journal/zh/a-rainy-end-to-the-day/): 不用再完成一件事。选一段雨声，为今晚留出几分钟。
+- [一段声音，只陪眼前这一页](https://yixiu.wonderelian.com/journal/zh/one-sound-one-page/): 阅读或写作开始前，先把要做的事情缩小一点。
+- [在两件事之间，留一分钟给自己](https://yixiu.wonderelian.com/journal/zh/a-minute-between-things/): 不必准备完整的练习。先从这一分钟开始。
 <!-- quiet-journal:end -->

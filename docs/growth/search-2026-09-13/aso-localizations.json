@@ -1,0 +1,34 @@
+{
+  "status": "promotion_saved_keywords_pending_next_version",
+  "observed_version": "1.13",
+  "locales": {
+    "zh-Hans": {
+      "name": "一休冥想：白噪音与静心",
+      "subtitle": "助眠雨声·专注阅读·呼吸放松",
+      "promotionalText": "睡前听雨，阅读听海，忙碌间留一分钟呼吸。免费体验 5 种自然声、3 首冥想音乐与 5/15/30 分钟定时，无需账号、没有广告。更多声音与长时聆听可选一休 Plus。",
+      "previousPromotion": "新增「午后留白」60 分钟延长版与三首氛围音乐。绿洲停歇、海上行旅、初息免费聆听；在自己的节奏里，留一段安静。",
+      "currentKeywords": "雨声,海浪,溪流,鸟鸣,自然声,环境音,睡前,入睡,减压,计时器,背景播放,正念,学习,工作,午休",
+      "nextVersionKeywords": "海浪,溪流,鸟鸣,自然声,环境音,睡前,午休,正念,学习,工作,计时器,后台播放,氛围音乐,定时,睡眠,放空,休息,水声,雨天,阅读背景",
+      "characterCounts": {
+        "name": 11,
+        "subtitle": 14,
+        "promotionalText": 83,
+        "nextVersionKeywords": 68
+      }
+    },
+    "en-US": {
+      "name": "Yixiu: White Noise & Sleep",
+      "subtitle": "Nature Sounds, Focus & Breath",
+      "promotionalText": "Rain before bed. Ocean while reading. A minute to breathe. Try 5 nature sounds, 3 meditation tracks and simple timers free. No account or ads. More with Plus.",
+      "previousPromotion": "Meet Quiet Hour, a 60-minute extended ambient edit, plus three new tracks. Oasis Rest, Ocean Passage and First Breath are free to enjoy.",
+      "currentKeywords": "rain,ocean,stream,birds,thunder,timer,relaxation,meditation,reading,study,work,background,offline",
+      "nextVersionKeywords": "rain,ocean,stream,birds,timer,meditation,reading,study,relax,ambient,music,mindfulness,bedtime",
+      "characterCounts": {
+        "name": 26,
+        "subtitle": 29,
+        "promotionalText": 158,
+        "nextVersionKeywords": 94
+      }
+    }
+  }
+}

@@ -117,7 +117,7 @@ grep -FR 'yixiu_h5_music_plus_20260830' "$site_path/assets" >/dev/null
 grep -FR 'still-water.m4a' "$site_path/assets" >/dev/null
 grep -FR '14 NATURE SOUNDS' "$site_path/assets" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$site_path/index.html" >/dev/null
-test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.5"' {} + | wc -l)" -eq 26
+test "$(find "$site_path" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.13"' {} + | wc -l)" -eq 26
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$site_path/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$site_path/index.html" >/dev/null
 test "$(find "$site_path" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq "$((30 + journal_page_count))"
@@ -325,7 +325,7 @@ grep -F '在默认浏览器中打开' "$deploy_target/download.html" >/dev/null
 grep -F 'https://apps.apple.com/app/id1461182261' "$deploy_target/download.js" >/dev/null
 grep -F 'window.location.replace(storeUrl)' "$deploy_target/download.js" >/dev/null
 grep -F '"@type": "SoftwareApplication"' "$deploy_target/index.html" >/dev/null
-test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.5"' {} + | wc -l)" -eq 26
+test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lE '"softwareVersion"[[:space:]]*:[[:space:]]*"1\.13"' {} + | wc -l)" -eq 26
 grep -F '<h1>Free nature sounds for sleep, focus and study</h1>' "$deploy_target/index.html" >/dev/null
 grep -F '<link rel="describedby" href="/llms.txt" type="text/plain" />' "$deploy_target/index.html" >/dev/null
 test "$(find "$deploy_target" -type f -name '*.html' -exec grep -lF '<link rel="describedby" href="/llms.txt" type="text/plain" />' {} + | wc -l)" -eq "$((30 + journal_page_count))"

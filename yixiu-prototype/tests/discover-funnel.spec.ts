@@ -126,7 +126,7 @@ test("sleep comparison switches seven real recordings and reveals its matched iP
     "href",
     "https://yixiu.wonderelian.com/best-sleep-sounds/",
   );
-  await expect(page.locator("h1")).toHaveText("Which sleep sound feels easiest to leave alone?");
+  await expect(page.locator("h1")).toHaveText("Best sleep sounds: compare rain, ocean and more");
 
   const previewFiles = await page.locator("[data-audio-preview]").evaluateAll((elements) => (
     elements.map((element) => element.getAttribute("data-audio-preview"))

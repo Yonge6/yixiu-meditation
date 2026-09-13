@@ -12,10 +12,15 @@ const slugs = new Set();
 for (const entry of entries) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.slug) || slugs.has(entry.slug)) throw new Error("Invalid or duplicate journal slug");
   slugs.add(entry.slug);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date) || !["sleep", "focus", "reset"].includes(entry.category)) throw new Error("Invalid journal metadata");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date) || !["sleep", "focus", "reset", "guide"].includes(entry.category)) throw new Error("Invalid journal metadata");
   if (!["rain", "ocean", "spring", "birds", "stream", "firstBreath", "oasisRest", "oceanPassage"].includes(entry.scene)) throw new Error("Journal must link to a verified free scene");
   if (!["listen", "focus"].includes(entry.action) || !entry.image.startsWith("/assets/yixiu/") || entry.image.includes("..")) throw new Error("Invalid journal target");
   await access(path.join(publicDir, entry.image));
+  for (const source of entry.sources ?? []) {
+    const url = new URL(source.url);
+    if (url.protocol !== "https:" || !["yixiu.wonderelian.com", "apps.apple.com"].includes(url.hostname) || !source.zh || !source.en) throw new Error("Invalid journal reference");
+  }
+  if (!Number.isInteger(entry.imageWidth) || !Number.isInteger(entry.imageHeight) || entry.imageWidth <= 0 || entry.imageHeight <= 0) throw new Error("Invalid image dimensions");
   for (const lang of ["zh", "en"]) {
     const copy = entry[lang];
     if (!copy?.title || !copy.summary || !copy.category || !copy.readTime || !copy.cta || copy.sections?.length < 2 || copy.sections.some(section => !section.title || !section.body)) throw new Error("Journal needs complete bilingual copy");
@@ -26,15 +31,17 @@ function page(lang, entry) {
   const zh = lang === "zh";
   const name = zh ? "一休日常" : "Quiet Journal";
   const copy = entry?.[lang];
-  const title = copy ? `${copy.title} · ${name} | Yixiu` : `${name} · Yixiu`;
-  const description = copy?.summary ?? (zh ? "把安静放进日常。关于睡前、专注，和属于自己的片刻。" : "A little quiet in everyday life. Notes for rest, focus, and a moment of your own.");
+  const title = copy ? (copy.seoTitle || `${copy.title} · ${name} | Yixiu`) : `${name} · Yixiu`;
+  const description = copy?.metaDescription ?? copy?.summary ?? (zh ? "把安静放进日常。关于睡前、专注，和属于自己的片刻。" : "A little quiet in everyday life. Notes for rest, focus, and a moment of your own.");
   const pathname = route(lang, entry?.slug);
   const hero = entry ?? entries[0];
   const imageType = hero.image.endsWith(".png") ? "image/png" : "image/jpeg";
-  const cards = entries.map(item => `<a class="quiet-card" href="${route(lang, item.slug)}" data-journal-link data-analytics-event="yixiu_journal_read" data-analytics-value="${item.slug}"><img src="${escape(item.image)}" alt="" loading="lazy"><span class="quiet-card-copy"><span class="quiet-meta">${escape(item[lang].category)} · ${escape(item[lang].readTime)}</span><strong>${escape(item[lang].title)}</strong><span>${escape(item[lang].summary)}</span><span class="quiet-card-link">${zh ? "读一读" : "Read the note"} ↗</span></span></a>`).join("\n");
+  const cards = entries.map(item => `<a class="quiet-card" href="${route(lang, item.slug)}" data-journal-link data-analytics-event="yixiu_journal_read" data-analytics-value="${item.slug}"><img src="${escape(item.image)}" alt="" loading="lazy" width="${item.imageWidth}" height="${item.imageHeight}"><span class="quiet-card-copy"><span class="quiet-meta">${escape(item[lang].category)} · ${escape(item[lang].readTime)}</span><strong>${escape(item[lang].title)}</strong><span>${escape(item[lang].summary)}</span><span class="quiet-card-link">${zh ? "读一读" : "Read the note"} ↗</span></span></a>`).join("\n");
   const appQuery = entry ? new URLSearchParams({ scene: entry.scene, lang, ...(entry.action === "focus" ? { tab: "focus" } : {}) }) : null;
-  const body = entry ? `<a class="quiet-permalink" href="${route(lang)}" data-journal-link>← ${name}</a><img class="quiet-article-image" src="${escape(entry.image)}" alt=""><div class="quiet-meta"><span>${escape(copy.category)}</span><span>${escape(copy.readTime)}</span></div><h1>${escape(copy.title)}</h1><p class="quiet-intro">${escape(copy.summary)}</p>${copy.sections.map(section => `<section><h2>${escape(section.title)}</h2><p>${escape(section.body)}</p></section>`).join("")}<a class="quiet-practice" href="/?${escape(appQuery)}" data-journal-link data-analytics-event="yixiu_journal_practice" data-analytics-value="${entry.slug}">${escape(copy.cta)} <span aria-hidden="true">↗</span></a><p class="quiet-date">${zh ? "一休编辑" : "Yixiu Editorial"} · <time datetime="${entry.date}">${entry.date}</time></p>` : `<p class="quiet-meta">YIXIU · NOTES FOR EVERYDAY LIFE</p><h1>${name}</h1><p class="quiet-intro">${escape(description)}</p><div class="quiet-articles">${cards}</div>`;
-  const structured = entry ? { "@context": "https://schema.org", "@type": "Article", headline: copy.title, description, datePublished: entry.date, inLanguage: zh ? "zh-Hans" : "en", image: origin + entry.image, mainEntityOfPage: origin + pathname, author: { "@type": "Organization", name: "Yixiu Editorial", url: origin } } : { "@context": "https://schema.org", "@type": "CollectionPage", name, description, url: origin + pathname, inLanguage: zh ? "zh-Hans" : "en" };
+  const sources = entry?.sources?.length ? `<section class="quiet-sources"><h2>${zh ? "资料与核验" : "Sources and verification"}</h2><ul>${entry.sources.map(source => `<li><a href="${escape(source.url)}">${escape(source[lang])}</a></li>`).join("")}</ul></section>` : "";
+  const related = entry ? `<nav class="quiet-related" aria-label="${zh ? "继续阅读" : "Keep reading"}"><h2>${zh ? "继续阅读" : "Keep reading"}</h2>${entries.filter(item => item.slug !== entry.slug).slice(0, 2).map(item => `<a class="quiet-permalink" href="${route(lang, item.slug)}" data-journal-link>${escape(item[lang].title)} ↗</a>`).join("")}</nav>` : "";
+  const body = entry ? `<a class="quiet-permalink" href="${route(lang)}" data-journal-link>← ${name}</a><img class="quiet-article-image" src="${escape(entry.image)}" alt="" width="${entry.imageWidth}" height="${entry.imageHeight}"><div class="quiet-meta"><span>${escape(copy.category)}</span><span>${escape(copy.readTime)}</span></div><h1>${escape(copy.title)}</h1><p class="quiet-intro">${escape(copy.summary)}</p>${copy.sections.map(section => `<section><h2>${escape(section.title)}</h2><p>${escape(section.body)}</p></section>`).join("")}<a class="quiet-practice" href="/?${escape(appQuery)}" data-journal-link data-analytics-event="yixiu_journal_practice" data-analytics-value="${entry.slug}">${escape(copy.cta)} <span aria-hidden="true">↗</span></a>${sources}${related}<p class="quiet-date">${zh ? "一休编辑" : "Yixiu Editorial"} · <time datetime="${entry.date}">${entry.date}</time></p>` : `<p class="quiet-meta">YIXIU · NOTES FOR EVERYDAY LIFE</p><h1>${name}</h1><p class="quiet-intro">${escape(description)}</p><div class="quiet-articles">${cards}</div>`;
+  const structured = entry ? { "@context": "https://schema.org", "@type": "Article", headline: copy.title, description, datePublished: entry.date, inLanguage: zh ? "zh-Hans" : "en", image: origin + entry.image, mainEntityOfPage: origin + pathname, author: { "@type": "Organization", name: "Yixiu Editorial", url: origin + route(lang) }, publisher: { "@type": "Organization", name: "Yixiu", url: origin }, ...(entry.sources?.length ? { citation: entry.sources.map(source => source.url) } : {}) } : { "@context": "https://schema.org", "@type": "CollectionPage", name, description, url: origin + pathname, inLanguage: zh ? "zh-Hans" : "en" };
   return `<!doctype html>
 <html lang="${zh ? "zh-Hans" : "en"}">
 <head>
@@ -83,6 +90,6 @@ await writeFile(sitemapPath, sitemap);
 const llmsPath = path.join(publicDir, "llms.txt");
 let llms = await readFile(llmsPath, "utf8");
 llms = llms.replace(/\n<!-- quiet-journal:start -->[\s\S]*?<!-- quiet-journal:end -->\n?/g, "");
-llms += `\n<!-- quiet-journal:start -->\n## Quiet Journal / 一休日常\n\n${urls.map(url => `- ${url}`).join("\n")}\n<!-- quiet-journal:end -->\n`;
+llms += `\n<!-- quiet-journal:start -->\n## Quiet Journal / 一休日常\n\n${["en", "zh"].flatMap(lang => [`- [${lang === "zh" ? "一休日常" : "Quiet Journal"}](${origin + route(lang)}): ${lang === "zh" ? "自然声、静心与使用指南。" : "Everyday listening and product guides."}`, ...entries.map(item => `- [${item[lang].title}](${origin + route(lang, item.slug)}): ${item[lang].summary}`)]).join("\n")}\n<!-- quiet-journal:end -->\n`;
 await writeFile(llmsPath, llms);
 console.log(`Generated ${urls.length} bilingual journal pages from ${entries.length} articles.`);
