@@ -71,7 +71,7 @@ test("bilingual public article keeps attribution through language and practice l
   await expect(page.locator(".yixiu-app")).toHaveAttribute("data-tab", "sounds");
 });
 
-for (const size of [{ width: 320, height: 640 }, { width: 1440, height: 900 }]) {
+for (const size of [{ width: 320, height: 640 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, { width: 1440, height: 900 }]) {
   test(`journal remains readable at ${size.width}px`, async ({ page }) => {
     await page.setViewportSize(size);
     await page.goto("/?lang=en");
@@ -80,8 +80,21 @@ for (const size of [{ width: 320, height: 640 }, { width: 1440, height: 900 }]) 
     await expect(drawer).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
     await expect(drawer.locator(".quiet-card").first()).toBeVisible();
+    const thumbnail = await drawer.locator(".quiet-card img").first().boundingBox();
+    expect(thumbnail?.height).toBeLessThanOrEqual(90);
+    await drawer.locator(".quiet-card").filter({ hasText: "Is Yixiu free?" }).click();
+    const title = await drawer.locator("h3").boundingBox();
+    const cover = await drawer.locator(".quiet-article-cover").boundingBox();
+    const coverImage = await drawer.locator(".quiet-article-image").boundingBox();
+    expect(title!.y + title!.height).toBeLessThan(cover!.y);
+    expect(title!.y + title!.height).toBeLessThan(size.height);
+    expect(coverImage!.height).toBeLessThanOrEqual(192);
+    expect(Math.abs(coverImage!.height - cover!.height)).toBeLessThan(1);
+
     await page.goto("/journal/zh/");
     await expect(page.locator(".quiet-card")).toHaveCount(entries.length);
+    expect((await page.locator(".quiet-card img").first().boundingBox())!.height).toBeLessThanOrEqual(90);
+    await expect(page.locator('link[href="/journal.css?v=20260913-reading"]')).toHaveCount(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
   });
 }

@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- 2026-09-13 reading correction: Quiet Journal lists use compact landscape thumbnails beside text; article titles and summaries precede a bounded landscape cover. Never let portrait source dimensions determine rendered height. Keep body text at least 16px with comfortable leading and limit desktop reading width. Version the standalone journal stylesheet when changing layout so immutable browser caches cannot combine old CSS with new image attributes. Verify actual image dimensions in both drawer and standalone pages after deployment.
+
 - 2026-09-13: User requested a content column in the H5 drawer. “一休日常 / Quiet Journal” opens a dedicated reading drawer from the player header book icon and a Me row, preserving the three bottom tabs and uninterrupted playback while reading. This is an explicit exception to the former no-right-drawer rule for this reading surface only; do not reactivate the retired settings drawer. Content source is `src/data/quiet-journal.json`; generate bilingual `/journal/` and `/journal/zh/` pages with `npm run build:journal`. Select useful evergreen social content, with bilingual copy and verified practice links, rather than mirroring every post. Keep stable slugs and public acceptance evidence.
 
 - Quiet Hour / 午后留白 (`quietHour`) is a 60-minute extended CC0 edit of HoliznaCC0's Too Brief A Time To Be Anything. Always show `60 分钟延长版 / 60 min extended`, keep native/H5 names/audio/MorningLake artwork aligned and expose it under Meditation/Sleep/Relax. It follows existing Plus library rules, not a new Free entitlement. Preserve the explicit edit notice and ungated CC0 download in music-credits.html.
