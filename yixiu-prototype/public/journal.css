@@ -1,42 +1,58 @@
-.quiet-journal { color: #e7f3ef; font-family: "Noto Sans SC", system-ui, sans-serif; }
-.quiet-intro { color: #b7cfca; font-size: 15px; line-height: 1.9; margin: 0 0 22px; }
-.quiet-filters { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 22px; }
-.quiet-filters button { border: 1px solid #3b6266; background: transparent; color: #c5dcd6; padding: 9px 13px; border-radius: 24px; font: inherit; font-size: 13px; cursor: pointer; min-height: 40px; }
+.quiet-journal { color: #e7f3ef; font-family: "Noto Sans SC", system-ui, sans-serif; text-align: left; overflow-wrap: break-word; }
+.quiet-intro { color: #b7cfca; font-size: 15px; line-height: 1.8; margin: 0 0 20px; }
+.quiet-filters { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 12px; }
+.quiet-filters button { border: 1px solid #3b6266; background: transparent; color: #c5dcd6; padding: 8px 12px; border-radius: 24px; font: inherit; font-size: 13px; cursor: pointer; min-height: 40px; }
 .quiet-filters button[aria-pressed="true"] { background: #d7eee5; border-color: #d7eee5; color: #163d40; }
-.quiet-articles { display: grid; gap: 22px; }
-.quiet-card { display: block; padding: 0; text-align: left; color: inherit; background: #0c2b34; border: 1px solid #345158; border-radius: 18px; overflow: hidden; text-decoration: none; cursor: pointer; width: 100%; font: inherit; }
-.quiet-card img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; }
-.quiet-card-copy { display: grid; gap: 10px; padding: 20px; }
-.quiet-meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: #acd2c6; letter-spacing: .04em; }
-.quiet-card strong { font-family: "Noto Serif SC", Georgia, serif; font-size: 22px; font-weight: 400; line-height: 1.55; }
-.quiet-card-copy > span:not(.quiet-meta):not(.quiet-card-link) { font-size: 14px; color: #bacdc9; line-height: 1.8; }
-.quiet-card-link { margin-top: 4px; font-size: 12px; color: #d4eee2; }
-.quiet-article-image { width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; margin-bottom: 22px; }
-.quiet-article h3, .quiet-article h1 { font-family: "Noto Serif SC", Georgia, serif; font-size: clamp(26px, 4vw, 36px); font-weight: 400; line-height: 1.5; margin: 15px 0; }
-.quiet-article h4, .quiet-article h2 { font-family: "Noto Serif SC", Georgia, serif; font-weight: 600; font-size: 18px; line-height: 1.7; margin: 28px 0 10px; }
-.quiet-article section p { color: #d0dfdb; font-size: 15px; line-height: 2; margin: 0; }
-.quiet-practice { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; border: 0; border-radius: 14px; background: #d5ebe2; color: #173c3d; padding: 17px 20px; margin-top: 32px; font: inherit; font-size: 15px; font-weight: 500; text-decoration: none; cursor: pointer; box-sizing: border-box; }
-.quiet-permalink { display: inline-block; padding: 16px 0; color: #b9d7ce; font-size: 13px; text-underline-offset: 4px; line-height: 1.7; }
-.quiet-date { font-size: 11px; color: #92b5ae; margin: 18px 0 0; }
+.quiet-articles { display: grid; gap: 0; }
+.quiet-card { display: grid; grid-template-columns: minmax(0, 1fr) 96px; align-items: start; gap: 16px; padding: 22px 0; text-align: left; color: inherit; background: transparent; border: 0; border-bottom: 1px solid #29464d; border-radius: 0; text-decoration: none; cursor: pointer; width: 100%; font: inherit; }
+.quiet-card img { grid-column: 2; grid-row: 1; display: block; width: 96px; height: 72px; max-height: 72px; object-fit: cover; border-radius: 10px; margin-top: 4px; }
+.quiet-card-copy { grid-column: 1; grid-row: 1; display: grid; gap: 8px; min-width: 0; }
+.quiet-meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; line-height: 1.6; color: #acd2c6; }
+.quiet-card strong { font-family: "Noto Serif SC", Georgia, serif; font-size: 19px; font-weight: 500; line-height: 1.5; }
+.quiet-card-copy > span:not(.quiet-meta):not(.quiet-card-link) { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 14px; color: #bacdc9; line-height: 1.7; }
+.quiet-card-link { font-size: 12px; line-height: 1.5; color: #d4eee2; }
+.quiet-article-cover { position: relative; width: 100%; height: clamp(132px, 38vw, 192px); overflow: hidden; border-radius: 12px; margin: 22px 0 26px; background: #163d46; }
+.quiet-article-cover .quiet-article-image { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-height: 100%; object-fit: cover; margin: 0; }
+.quiet-article h3, .quiet-article h1 { font-family: "Noto Serif SC", Georgia, serif; font-size: 28px; font-weight: 500; line-height: 1.45; letter-spacing: -.015em; margin: 10px 0 14px; text-wrap: pretty; }
+.quiet-article > .quiet-intro { font-size: 16px; line-height: 1.8; margin-bottom: 0; }
+.quiet-article h4, .quiet-article h2 { font-family: "Noto Serif SC", Georgia, serif; font-weight: 600; font-size: 19px; line-height: 1.6; margin: 28px 0 12px; }
+.quiet-article section p { color: #d0dfdb; font-size: 16px; line-height: 1.9; margin: 0; }
+.quiet-practice { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; border: 0; border-radius: 14px; background: #d5ebe2; color: #173c3d; padding: 17px 20px; margin-top: 30px; font: inherit; font-size: 15px; font-weight: 500; text-decoration: none; cursor: pointer; box-sizing: border-box; }
+.quiet-permalink { display: inline-block; padding: 14px 0; color: #b9d7ce; font-size: 14px; text-underline-offset: 4px; line-height: 1.7; }
+.quiet-date { font-size: 12px; line-height: 1.7; color: #92b5ae; margin: 20px 0 0; }
 .quiet-journal button:focus-visible, .quiet-journal a:focus-visible { outline: 2px solid #d9f6b9; outline-offset: 4px; }
 .header-journal-button { width: 36px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; color: #e7f3ef; background: transparent; cursor: pointer; }
 .header-journal-button svg { width: 21px; height: 21px; }
-.yixiu-side-drawer.quiet-journal-drawer { width: min(92%, 480px); }
+.yixiu-side-drawer.quiet-journal-drawer { width: min(94%, 480px); }
 .quiet-page { margin: 0; background: #061e27; color: #e7f3ef; font-family: "Noto Sans SC", system-ui, sans-serif; }
 .quiet-page * { box-sizing: border-box; }
-.quiet-page-header { max-width: 960px; padding: 24px; margin: auto; display: flex; gap: 20px; align-items: center; justify-content: space-between; border-bottom: 1px solid #29434b; }
-.quiet-page-header a { color: #c9e3d7; text-decoration: none; font-size: 13px; }
-.quiet-page-main { max-width: 960px; margin: auto; padding: 42px 24px 72px; }
-.quiet-page-main > h1 { font-family: "Noto Serif SC", Georgia, serif; font-weight: 400; font-size: clamp(30px, 5vw, 52px); margin: 12px 0 18px; }
-.quiet-page-main.quiet-article { max-width: 680px; }
-.quiet-page .quiet-articles { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
-.quiet-page .quiet-card strong { font-size: 23px; }
-.quiet-page .quiet-article-image { max-height: 360px; }
-@media (max-width: 700px) { .quiet-page .quiet-articles { grid-template-columns: 1fr; } .quiet-page-main { padding-top: 30px; } }
-@media (max-width: 360px) { .header-actions { gap: 4px; } .header-journal-button { width: 30px; } .quiet-card-copy { padding: 16px; } }
-@media (prefers-reduced-motion: reduce) { .quiet-journal-drawer { animation: none; } }
-
+.quiet-page-header { max-width: 760px; padding: 20px 24px; margin: auto; display: flex; gap: 20px; align-items: center; justify-content: space-between; border-bottom: 1px solid #29434b; }
+.quiet-page-header a { color: #c9e3d7; text-decoration: none; font-size: 14px; }
+.quiet-page-main { max-width: 760px; margin: auto; padding: 32px 24px 64px; }
+.quiet-page-main > h1 { font-family: "Noto Serif SC", Georgia, serif; font-weight: 500; font-size: 36px; line-height: 1.4; margin: 10px 0 16px; }
+.quiet-page-main.quiet-article { max-width: 688px; padding-top: 12px; }
+.quiet-page-main.quiet-article > h1 { font-size: 32px; }
+.quiet-page .quiet-article-cover { height: clamp(144px, 36vw, 240px); }
+.quiet-page .quiet-card { grid-template-columns: minmax(0, 1fr) 120px; gap: 24px; }
+.quiet-page .quiet-card img { width: 120px; height: 90px; max-height: 90px; }
+.quiet-page .quiet-card strong { font-size: 22px; }
 .quiet-sources a { color: #c9e3d7; text-underline-offset: 4px; }
 .quiet-sources li { margin: 10px 0; line-height: 1.8; font-size: 14px; }
 .quiet-related { margin-top: 30px; border-top: 1px solid #345158; }
 .quiet-related .quiet-permalink { display: block; padding: 8px 0; }
+@media (max-width: 600px) {
+  .quiet-page-main { padding: 24px 20px 56px; }
+  .quiet-page-header { padding: 18px 20px; }
+  .quiet-page-main.quiet-article > h1 { font-size: 28px; }
+  .quiet-page .quiet-card { grid-template-columns: minmax(0, 1fr) 96px; gap: 16px; }
+  .quiet-page .quiet-card img { width: 96px; height: 72px; max-height: 72px; }
+  .quiet-page .quiet-card strong { font-size: 19px; }
+}
+@media (max-width: 360px) {
+  .header-actions { gap: 4px; } .header-journal-button { width: 30px; }
+  .quiet-card, .quiet-page .quiet-card { grid-template-columns: minmax(0, 1fr) 76px; gap: 12px; }
+  .quiet-card img, .quiet-page .quiet-card img { width: 76px; height: 64px; max-height: 64px; }
+  .quiet-card strong, .quiet-page .quiet-card strong { font-size: 18px; }
+  .quiet-article h3, .quiet-page-main.quiet-article > h1 { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) { .quiet-journal-drawer { animation: none; } }

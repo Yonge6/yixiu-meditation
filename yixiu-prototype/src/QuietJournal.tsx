@@ -18,9 +18,9 @@ export function QuietJournal({ language, articleId, onArticle, onPractice }: {
   if (article) {
     const copy = article[language];
     return <article className="quiet-journal quiet-article">
-      <img className="quiet-article-image" src={article.image} alt="" width={article.imageWidth} height={article.imageHeight} />
       <div className="quiet-meta"><span>{copy.category}</span><span>{copy.readTime}</span></div>
       <h3>{copy.title}</h3><p className="quiet-intro">{copy.summary}</p>
+      <div className="quiet-article-cover"><img className="quiet-article-image" src={article.image} alt="" width={article.imageWidth} height={article.imageHeight} /></div>
       {copy.sections.map(section => <section key={section.title}><h4>{section.title}</h4><p>{section.body}</p></section>)}
       <button className="quiet-practice" type="button" data-analytics-event="yixiu_journal_practice" data-analytics-value={article.slug} onClick={() => onPractice(article)}>{copy.cta}<span aria-hidden="true">↗</span></button>
       <a className="quiet-permalink" href={journalPath(language, article.slug)} target="_blank" rel="noreferrer" data-analytics-event="yixiu_journal_permalink" data-analytics-value={article.slug}>{language === "zh" ? "打开独立阅读页" : "Open reading page"} ↗</a>
