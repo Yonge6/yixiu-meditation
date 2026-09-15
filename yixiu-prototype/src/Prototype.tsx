@@ -387,14 +387,10 @@ const sceneOrder: SceneId[] = [
   "stillWater",
   "deepCurrent",
   "moonlitDrift",
-  "quietOrbit",
   "dreamscape",
   "firstBreath",
   "openMeadow",
   "oasisRest",
-  "sunlitShore",
-  "oceanPassage",
-  "cloudDrift",
   "softLightRest",
   "deepWaterRest",
   "quietHour",
@@ -415,10 +411,10 @@ const scenesByCategory: Record<SceneCategory, SceneId[]> = {
   all: sceneOrder,
   nature: sceneOrder.filter((sceneId) => scenes[sceneId].kind !== "meditation"),
   meditation: sceneOrder.filter((sceneId) => scenes[sceneId].kind === "meditation"),
-  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "cloudDrift", "softLightRest", "deepWaterRest", "quietHour"],
+  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "softLightRest", "deepWaterRest", "quietHour"],
   focus: ["rain", "birds", "stream", "bamboo", "falls", "underwater", "snow"],
   morning: ["spring", "birds", "lake", "valley"],
-  relax: ["ocean", "spring", "lake", "valley", "falls", "tide", "cloudDrift", "softLightRest", "deepWaterRest", "quietHour"],
+  relax: ["ocean", "spring", "lake", "valley", "falls", "tide", "softLightRest", "deepWaterRest", "quietHour"],
 };
 
 function AmbientMusicCredits({ language }: { language: Language }) {
@@ -743,7 +739,15 @@ async function copyTextToClipboard(value: string) {
 function linkedScene() {
   const query = new URLSearchParams(window.location.search);
   const sceneId = query.get("music") ?? query.get("scene");
-  return sceneId && sceneOrder.includes(sceneId as SceneId) ? sceneId as SceneId : null;
+  return sceneId ? availableScene(sceneId) : null;
+}
+
+function availableScene(value: unknown): SceneId {
+  return typeof value === "string" && sceneOrder.includes(value as SceneId) ? value as SceneId : "ocean";
+}
+
+function availableSceneList(value: unknown): SceneId[] {
+  return Array.isArray(value) ? [...new Set(value.filter((id): id is SceneId => typeof id === "string" && sceneOrder.includes(id as SceneId)))] : [];
 }
 
 function linkedLanguage() {
@@ -774,12 +778,12 @@ function preferredLanguage(): Language {
 
 export default function Prototype() {
   const [language, setLanguage] = useStoredState<Language>("yixiu.language", preferredLanguage(), linkedLanguage());
-  const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene());
+  const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene(), availableScene);
   const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30, null, value => typeof value === "number" && canUseWebTimer(value) ? value as DurationOption : 30);
-  const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", []);
-  const [recentScenes, setRecentScenes] = useStoredState<SceneId[]>("yixiu.recentScenes", []);
+  const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", [], null, availableSceneList);
+  const [recentScenes, setRecentScenes] = useStoredState<SceneId[]>("yixiu.recentScenes", [], null, availableSceneList);
   const [focusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1, null, value => typeof value === "number" && canUseWebFocus(value) ? value as FocusDuration : 1);
-  const [journal, setJournal] = useStoredState<PracticeEntry[]>("yixiu.practiceJournal.v1", [], null, value => validateJournal(value, sceneOrder));
+  const [journal, setJournal] = useStoredState<PracticeEntry[]>("yixiu.practiceJournal.v1", [], null, value => validateJournal(value, Object.keys(scenes)));
   const [focusSoundEnabled, setFocusSoundEnabled] = useStoredState<boolean>("yixiu.focusSoundEnabled", false);
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
   const [backgroundPlayback, setBackgroundPlayback] = useStoredState<boolean>("yixiu.backgroundPlayback", true);
@@ -888,7 +892,7 @@ export default function Prototype() {
       completed = true;
       clock.pause();
       const entry: PracticeEntry = { id: listeningSessionRef.current, sceneID: active.id, kind: "listening", seconds: duration * 60, completedAt: Date.now() };
-      setJournal(current => validateJournal([entry, ...current], sceneOrder));
+      setJournal(current => validateJournal([entry, ...current], Object.keys(scenes)));
       setIsPlaying(false);
       setWisdomIndex(index => (index + 1) % wisdoms.length);
       playEndBell();
@@ -913,7 +917,7 @@ export default function Prototype() {
       completed = true;
       clock.pause();
       const entry: PracticeEntry = { id: focusSessionRef.current, sceneID: breathingSceneRef.current, kind: "breathing", seconds: breathingTotalSeconds, completedAt: Date.now() };
-      setJournal(current => validateJournal([entry, ...current], sceneOrder));
+      setJournal(current => validateJournal([entry, ...current], Object.keys(scenes)));
       setBreathingStatus("complete");
       setIsPlaying(breathingOriginalPlaybackRef.current);
       playEndBell();
@@ -1248,6 +1252,7 @@ export default function Prototype() {
   };
 
   const selectScene = (sceneId: SceneId, play = true) => {
+    if (!sceneOrder.includes(sceneId)) return;
     if (!freeSceneIds.has(sceneId)) {
       setIsPlaying(false);
       setLibraryOpen(false);
@@ -1352,6 +1357,7 @@ export default function Prototype() {
   };
 
   const repeatPractice = (entry: PracticeEntry) => {
+    if (!sceneOrder.includes(entry.sceneID as SceneId)) return;
     if (entry.kind === "breathing") {
       if (!canUseWebFocus(entry.seconds / 60) || !freeSceneIds.has(entry.sceneID as SceneId)) { setUpgradeOpen(true); return; }
       resetBreathing();
@@ -1571,7 +1577,7 @@ export default function Prototype() {
               ) : drawerView === "home" ? (
                 <>
                   <section className="yixiu-drawer-hero">
-                    <small>{language === "zh" ? "14 种自然声 · 14 首冥想音乐" : "14 NATURE SOUNDS · 14 MEDITATION TRACKS"}</small>
+                    <small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small>
                     <h3>{language === "zh" ? "让声音带你回到此刻" : "Let sound return you to now"}</h3>
                     <p>{language === "zh" ? `正在聆听的场景：${active.zh}` : `Current scene: ${active.en}`}</p>
                     <button type="button" onClick={() => setDrawerView("library")}>
@@ -1871,7 +1877,7 @@ export default function Prototype() {
                 <section className="me-card practice-journal" aria-label={language === "zh" ? "练习记录" : "Practice journal"}>
                   <div className="journal-heading"><div><small>{language === "zh" ? "留给自己的时间" : "TIME TO YOURSELF"}</small><p><strong data-testid="week-minutes">{week.minutes}</strong><span>{language === "zh" ? "分钟 · 本周" : "min · this week"}</span></p></div><WaterWavesIcon /></div>
                   <div className="journal-week">{week.days.map((day, index) => <div key={day.getTime()} aria-label={`${day.toLocaleDateString(language === "zh" ? "zh-CN" : "en-US")} · ${week.practiced[index] ? (language === "zh" ? "有完成练习" : "Practice completed") : (language === "zh" ? "暂无记录" : "No practice recorded")}`}><i className={week.practiced[index] ? "is-complete" : ""} /><span>{day.toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", { weekday: "narrow" })}</span></div>)}</div>
-                  <div className="journal-entries">{journal.length ? journal.slice(0, 3).map(entry => <button key={entry.id} type="button" onClick={() => repeatPractice(entry)} aria-label={`${language === "zh" ? "再次练习" : "Repeat"} ${language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}`}><span><strong>{language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}</strong><small>{entry.seconds / 60} {language === "zh" ? "分钟" : "MIN"} · {entry.kind === "breathing" ? (language === "zh" ? "静心" : "Focus") : (language === "zh" ? "聆听" : "Listening")} · {new Date(entry.completedAt).toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", {month:"short", day:"numeric"})}</small></span><PlayIcon /></button>) : <p>{language === "zh" ? "不必连续，每次回来都算数。\n完成一次练习，时间会留在这里。" : "No streak to keep. Every return matters.\nYour completed practices will appear here."}</p>}</div>
+                  <div className="journal-entries">{journal.length ? journal.slice(0, 3).map(entry => <button key={entry.id} type="button" disabled={!sceneOrder.includes(entry.sceneID as SceneId)} title={!sceneOrder.includes(entry.sceneID as SceneId) ? (language === "zh" ? "此声音已移除，记录保留" : "Sound removed; record preserved") : undefined} onClick={() => repeatPractice(entry)} aria-label={`${language === "zh" ? "再次练习" : "Repeat"} ${language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}`}><span><strong>{language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}</strong><small>{entry.seconds / 60} {language === "zh" ? "分钟" : "MIN"} · {entry.kind === "breathing" ? (language === "zh" ? "静心" : "Focus") : (language === "zh" ? "聆听" : "Listening")} · {new Date(entry.completedAt).toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", {month:"short", day:"numeric"})}</small></span><PlayIcon /></button>) : <p>{language === "zh" ? "不必连续，每次回来都算数。\n完成一次练习，时间会留在这里。" : "No streak to keep. Every return matters.\nYour completed practices will appear here."}</p>}</div>
                   <small className="journal-privacy">{language === "zh" ? "仅保存在此浏览器 · 不上传 · 最多 200 条" : "In this browser only · Not uploaded · Up to 200 entries"}</small>
                 </section>
                 <section className="me-sound-space">
@@ -1880,13 +1886,13 @@ export default function Prototype() {
                   <div className="me-sound-space-copy">
                     <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
                     <strong>{language === "zh" ? active.zh : active.en}</strong>
-                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 14 首冥想音乐" : "Now listening · 14 nature sounds + 14 meditation tracks"}</span>
+                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 10 首冥想音乐" : "Now listening · 14 nature sounds + 10 meditation tracks"}</span>
                     <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
                   </div>
                 </section>
 
                 <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
-                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 3 首冥想音乐" : "5 nature sounds + 3 meditation tracks"}</small></div><PremiumGemIcon /></div>
+                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 2 首冥想音乐" : "5 nature sounds + 2 meditation tracks"}</small></div><PremiumGemIcon /></div>
                   <p>{language === "zh" ? "免费静心 1 分钟，聆听定时 5 / 15 / 30 分钟。Plus 可在 App 中使用更长练习与全部声音。" : "Free: 1-minute Focus and 5 / 15 / 30-minute timers. Plus offers longer practices and every sound in the app."}</p>
                   <button type="button" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
                   <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
@@ -2074,7 +2080,7 @@ export default function Prototype() {
           <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
           <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
             <div className="sheet-handle" />
-            <header><div><small>{language === "zh" ? "14 种自然声 · 14 首冥想音乐" : "14 NATURE SOUNDS · 14 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
+            <header><div><small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
             <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
               {sceneCategories.map((category) => (
                 <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
@@ -2147,7 +2153,7 @@ export default function Prototype() {
             <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 5 种自然声和 3 首冥想音乐：绿洲停歇、海上行旅、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 14 首冥想音乐。" : "Listen to 5 nature sounds and 3 meditation tracks for free: Oasis Rest, Ocean Passage and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 14 meditation tracks."}</p>
+            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐：绿洲停歇、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free: Oasis Rest and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
             <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);

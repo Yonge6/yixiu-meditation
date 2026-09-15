@@ -181,7 +181,7 @@ struct MeView: View {
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 14 种自然声 + 14 首冥想音乐", en: "Now listening · 14 nature sounds + 14 meditation tracks"))
+                Text(language.text(zh: "正在聆听 · 14 种自然声 + 10 首冥想音乐", en: "Now listening · 14 nature sounds + 10 meditation tracks"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
@@ -285,7 +285,8 @@ struct MeView: View {
             }.frame(minHeight: 48)
         }
         .buttonStyle(.plain)
-        .accessibilityHint(language.text(zh: "再次练习", en: "Practice again"))
+        .disabled(!scene.isAvailable)
+        .accessibilityHint(scene.isAvailable ? language.text(zh: "再次练习", en: "Practice again") : language.text(zh: "此声音已移除，记录保留", en: "Sound removed; practice record preserved"))
     }
 
     private var membershipCard: some View {
@@ -370,17 +371,17 @@ struct MeView: View {
     private var membershipSubtitle: String {
         if subscriptionStore.isInternalPlusExperience {
             return language.text(
-                zh: "内部体验版 · 全部 28 种声音已解锁",
-                en: "Internal preview · All 28 sounds unlocked"
+                zh: "内部体验版 · 全部 24 种声音已解锁",
+                en: "Internal preview · All 24 sounds unlocked"
             )
         }
         switch subscriptionStore.accessLevel {
         case .plus:
             return language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
         case .legacy:
-            return language.text(zh: "原有 14 种自然声继续保留，3 首冥想音乐免费", en: "Your 14 nature sounds remain, plus 3 free meditation tracks")
+            return language.text(zh: "原有 14 种自然声继续保留，2 首冥想音乐免费", en: "Your 14 nature sounds remain, plus 2 free meditation tracks")
         case .free:
-            return language.text(zh: "5 种自然声 + 3 首冥想音乐免费聆听", en: "5 nature sounds + 3 meditation tracks are free")
+            return language.text(zh: "5 种自然声 + 2 首冥想音乐免费聆听", en: "5 nature sounds + 2 meditation tracks are free")
         }
     }
 

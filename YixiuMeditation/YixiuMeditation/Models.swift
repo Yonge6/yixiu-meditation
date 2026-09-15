@@ -45,6 +45,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case deepWaterRest
     case quietHour
 
+    // Keep retired identifiers decodable for completed practice history only.
+    var isAvailable: Bool { ![Self.sunlitShore, .oceanPassage, .cloudDrift, .quietOrbit].contains(self) }
+    static var availableScenes: [Self] { allCases.filter(\.isAvailable) }
+
     var id: String { rawValue }
 
     var zhName: String {
@@ -278,7 +282,8 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     }
 
     func matches(_ category: SceneCategory) -> Bool {
-        switch category {
+        guard isAvailable else { return false }
+        return switch category {
         case .all:
             true
         case .nature:

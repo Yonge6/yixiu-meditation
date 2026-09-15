@@ -13,7 +13,7 @@ for (const entry of entries) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.slug) || slugs.has(entry.slug)) throw new Error("Invalid or duplicate journal slug");
   slugs.add(entry.slug);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date) || !["sleep", "focus", "reset", "guide"].includes(entry.category)) throw new Error("Invalid journal metadata");
-  if (!["rain", "ocean", "spring", "birds", "stream", "firstBreath", "oasisRest", "oceanPassage"].includes(entry.scene)) throw new Error("Journal must link to a verified free scene");
+  if (!["rain", "ocean", "spring", "birds", "stream", "firstBreath", "oasisRest"].includes(entry.scene)) throw new Error("Journal must link to a verified free scene");
   if (!["listen", "focus"].includes(entry.action) || !entry.image.startsWith("/assets/yixiu/") || entry.image.includes("..")) throw new Error("Invalid journal target");
   await access(path.join(publicDir, entry.image));
   for (const source of entry.sources ?? []) {

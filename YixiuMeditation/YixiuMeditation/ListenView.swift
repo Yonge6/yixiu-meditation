@@ -288,11 +288,11 @@ struct ListenView: View {
     }
 
     private var sceneSwipePreview: MeditationScene? {
-        guard let index = MeditationScene.allCases.firstIndex(of: appState.scene) else { return nil }
+        guard let index = MeditationScene.availableScenes.firstIndex(of: appState.scene) else { return nil }
         let direction = sceneDragOffset < 0 ? 1 : -1
         let previewIndex = index + direction
-        guard MeditationScene.allCases.indices.contains(previewIndex) else { return nil }
-        return MeditationScene.allCases[previewIndex]
+        guard MeditationScene.availableScenes.indices.contains(previewIndex) else { return nil }
+        return MeditationScene.availableScenes[previewIndex]
     }
 
     private func sceneSwipeGesture(width: CGFloat) -> some Gesture {
@@ -366,10 +366,10 @@ struct ListenView: View {
     }
 
     private func scene(in direction: Int) -> MeditationScene? {
-        guard let currentIndex = MeditationScene.allCases.firstIndex(of: appState.scene) else { return nil }
+        guard let currentIndex = MeditationScene.availableScenes.firstIndex(of: appState.scene) else { return nil }
         let targetIndex = currentIndex + direction
-        guard MeditationScene.allCases.indices.contains(targetIndex) else { return nil }
-        return MeditationScene.allCases[targetIndex]
+        guard MeditationScene.availableScenes.indices.contains(targetIndex) else { return nil }
+        return MeditationScene.availableScenes[targetIndex]
     }
 
     private func moveScene(_ direction: Int) {
@@ -663,7 +663,7 @@ struct SoundLibraryView: View {
 
     private var language: AppLanguage { appState.language }
     private var filteredScenes: [MeditationScene] {
-        MeditationScene.allCases.filter { $0.matches(selectedCategory) }
+        MeditationScene.availableScenes.filter { $0.matches(selectedCategory) }
     }
 
     var body: some View {
