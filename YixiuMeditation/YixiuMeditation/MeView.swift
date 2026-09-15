@@ -181,7 +181,7 @@ struct MeView: View {
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 14 种自然声 + 10 首冥想音乐", en: "Now listening · 14 nature sounds + 10 meditation tracks"))
+                Text(language.text(zh: "正在聆听 · 14 种自然声 + 20 首音乐（含 10 首古典）", en: "Now listening · 14 nature sounds + 20 music tracks (including 10 classical works)"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
@@ -371,8 +371,8 @@ struct MeView: View {
     private var membershipSubtitle: String {
         if subscriptionStore.isInternalPlusExperience {
             return language.text(
-                zh: "内部体验版 · 全部 24 种声音已解锁",
-                en: "Internal preview · All 24 sounds unlocked"
+                zh: "内部体验版 · 全部 34 种声音已解锁",
+                en: "Internal preview · All 34 sounds unlocked"
             )
         }
         switch subscriptionStore.accessLevel {

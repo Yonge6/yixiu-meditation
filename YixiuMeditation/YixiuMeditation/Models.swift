@@ -44,6 +44,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case softLightRest
     case deepWaterRest
     case quietHour
+    case clairDeLune
+    case nocturne
+    case gymnopedie
+    case canon
+    case moonlightSonata
+    case pathetique
+    case preludeC
+    case goldbergAria
+    case berceuse
+    case prelude17
 
     // Keep retired identifiers decodable for completed practice history only.
     var isAvailable: Bool { ![Self.sunlitShore, .oceanPassage, .cloudDrift, .quietOrbit].contains(self) }
@@ -53,6 +63,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var zhName: String {
         switch self {
+        case .clairDeLune: "月光"
+        case .nocturne: "降 E 大调夜曲"
+        case .gymnopedie: "第一号吉姆诺佩蒂"
+        case .canon: "D 大调卡农"
+        case .moonlightSonata: "月光奏鸣曲 · 第一乐章"
+        case .pathetique: "悲怆奏鸣曲 · 第二乐章"
+        case .preludeC: "C 大调前奏曲"
+        case .goldbergAria: "哥德堡变奏曲 · 咏叹调"
+        case .berceuse: "摇篮曲 · Op. 57"
+        case .prelude17: "降 A 大调前奏曲"
         case .ocean: "大海"
         case .rain: "屋檐雨"
         case .spring: "春日花溪"
@@ -86,6 +106,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var enName: String {
         switch self {
+        case .clairDeLune: "Clair de lune"
+        case .nocturne: "Nocturne Op. 9 No. 2"
+        case .gymnopedie: "Gymnopédie No. 1"
+        case .canon: "Canon in D"
+        case .moonlightSonata: "Moonlight Sonata · I"
+        case .pathetique: "Pathétique Sonata · II"
+        case .preludeC: "Prelude in C · BWV 846"
+        case .goldbergAria: "Goldberg Variations · Aria"
+        case .berceuse: "Berceuse · Op. 57"
+        case .prelude17: "Prelude Op. 28 No. 17"
         case .ocean: "Ocean Waves"
         case .rain: "Rain on Eaves"
         case .spring: "Spring Creek"
@@ -119,6 +149,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var useZh: String {
         switch self {
+        case .clairDeLune: "德彪西 · 5:04"
+        case .nocturne: "肖邦 · 4:19"
+        case .gymnopedie: "萨蒂 · 3:03"
+        case .canon: "帕赫贝尔 · 5:55"
+        case .moonlightSonata: "贝多芬 · 5:35"
+        case .pathetique: "贝多芬 · 4:58"
+        case .preludeC: "巴赫 · 2:42"
+        case .goldbergAria: "巴赫 · 4:59"
+        case .berceuse: "肖邦 · 5:13"
+        case .prelude17: "肖邦 · 2:59"
         case .ocean: "放松 · 睡眠"
         case .rain: "睡眠 · 阅读"
         case .spring: "清晨 · 舒展"
@@ -148,6 +188,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var useEn: String {
         switch self {
+        case .clairDeLune: "Claude Debussy · 5:04"
+        case .nocturne: "Frédéric Chopin · 4:19"
+        case .gymnopedie: "Erik Satie · 3:03"
+        case .canon: "Johann Pachelbel · 5:55"
+        case .moonlightSonata: "Ludwig van Beethoven · 5:35"
+        case .pathetique: "Ludwig van Beethoven · 4:58"
+        case .preludeC: "Johann Sebastian Bach · 2:42"
+        case .goldbergAria: "Johann Sebastian Bach · 4:59"
+        case .berceuse: "Frédéric Chopin · 5:13"
+        case .prelude17: "Frédéric Chopin · 2:59"
         case .ocean: "Relax · Sleep"
         case .rain: "Sleep · Read"
         case .spring: "Morning · Stretch"
@@ -177,6 +227,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var assetName: String {
         switch self {
+        case .clairDeLune: "ClassicalClairDeLune"
+        case .nocturne: "ClassicalNocturne"
+        case .gymnopedie: "ClassicalGymnopedie"
+        case .canon: "ClassicalCanon"
+        case .moonlightSonata: "ClassicalMoonlightSonata"
+        case .pathetique: "ClassicalPathetique"
+        case .preludeC: "ClassicalPreludeC"
+        case .goldbergAria: "ClassicalGoldbergAria"
+        case .berceuse: "ClassicalBerceuse"
+        case .prelude17: "ClassicalPrelude17"
         case .ocean: "DeepOceanHero"
         case .rain: "Rain"
         case .spring: "SpringCreek"
@@ -210,6 +270,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var audioResource: String {
         switch self {
+        case .clairDeLune: "clair-de-lune"
+        case .nocturne: "nocturne"
+        case .gymnopedie: "gymnopedie"
+        case .canon: "canon"
+        case .moonlightSonata: "moonlight-sonata"
+        case .pathetique: "pathetique"
+        case .preludeC: "prelude-c"
+        case .goldbergAria: "goldberg-aria"
+        case .berceuse: "berceuse"
+        case .prelude17: "prelude-17"
         case .ocean, .lake, .tide: "ocean-waves"
         case .rain, .bamboo, .window: "light-rain"
         case .spring: "sunrise-river"
@@ -239,6 +309,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isMeditationMusic: Bool {
         switch self {
+        case .clairDeLune, .nocturne, .gymnopedie, .canon, .moonlightSonata, .pathetique, .preludeC, .goldbergAria, .berceuse, .prelude17: true
         case .stillWater, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape,
              .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage,
              .cloudDrift, .softLightRest, .deepWaterRest, .quietHour:
@@ -286,6 +357,8 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         return switch category {
         case .all:
             true
+        case .classical:
+            ["clairDeLune","nocturne","gymnopedie","canon","moonlightSonata","pathetique","preludeC","goldbergAria","berceuse","prelude17"].contains(rawValue)
         case .nature:
             !isMeditationMusic
         case .meditation:
@@ -329,6 +402,7 @@ enum SceneCategory: String, CaseIterable, Identifiable {
     case all
     case nature
     case meditation
+    case classical
     case sleep
     case focus
     case morning
@@ -338,6 +412,7 @@ enum SceneCategory: String, CaseIterable, Identifiable {
 
     func title(language: AppLanguage) -> String {
         switch self {
+        case .classical: language.text(zh: "古典静听", en: "Classical")
         case .all: language.text(zh: "全部", en: "All")
         case .nature: language.text(zh: "自然声", en: "Nature")
         case .meditation: language.text(zh: "冥想音乐", en: "Meditation")

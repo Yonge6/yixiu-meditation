@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- 2026-09-15 Classical Ten: add ten approved classical works with distinct original painted landscapes, preserving the earlier four retired tracks and the two Free music entitlements. Active catalog: 14 nature + 20 music (10 classical). Classical filter and source-page full listening/download are ungated; no extra restrictions on CC rights. Native source uses the same audio and artwork. Do not claim the published App Store binary contains the collection before a verified App release.
+
 - 2026-09-15 audio curation supersedes the earlier catalog counts: retire Sunlit Shore, Ocean Passage, Cloud Drift and Quiet Orbit from active App/H5 catalogs, selection, saved favorites/recent lists and deep-link playback. Available library: 14 nature sounds + 10 meditation tracks; Free music: Oasis Rest and First Breath only. Preserve historical practice IDs and CC attribution/download archives, clearly marking retired recordings as archived. Do not infer new Free entitlements or install ASMR candidates before suitability review.
 
 - 2026-09-13 reading correction: Quiet Journal lists use compact landscape thumbnails beside text; article titles and summaries precede a bounded landscape cover. Never let portrait source dimensions determine rendered height. Keep body text at least 16px with comfortable leading and limit desktop reading width. Version the standalone journal stylesheet when changing layout so immutable browser caches cannot combine old CSS with new image attributes. Verify actual image dimensions in both drawer and standalone pages after deployment.

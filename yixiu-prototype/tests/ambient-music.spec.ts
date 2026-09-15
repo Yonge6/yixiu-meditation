@@ -47,7 +47,7 @@ test('remaining ambient additions appear in matching categories and remain Plus'
   await page.getByRole('button', { name: '我的 ME' }).click();
   await page.getByRole('button', { name: '浏览全部声音' }).click();
   const library = page.getByRole('dialog', { name: '声音库' });
-  await expect(library.locator('.scene-grid article')).toHaveCount(24);
+  await expect(library.locator('.scene-grid article')).toHaveCount(34);
   for (const category of ['冥想音乐', '睡眠', '放松']) {
     await library.getByRole('tab', { name: category, exact: true }).click();
     for (const track of tracks) {
@@ -59,7 +59,7 @@ test('remaining ambient additions appear in matching categories and remain Plus'
   await library.getByRole('button', { name: '切换到深水安歇', exact: true }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: '/tmp/yixiu-ambient-library.png' });
   await library.getByText('柔光午憩', { exact: true }).click();
-  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('10 首冥想音乐');
+  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('20 首音乐（含 10 首古典）');
   await expect(page.locator('.yixiu-app')).toHaveAttribute('data-scene', 'ocean');
 });
 
@@ -71,10 +71,10 @@ test('credits preserve original titles, license, changes and ungated downloads',
   await expect(page.locator('.me-article')).toContainText('Cylinder Seven');
   await page.getByRole('link', { name: '原曲与可下载音频' }).click();
   await expect(page).toHaveURL(/music-credits.html/);
-  await expect(page.getByRole('link', { name: 'CC BY 4.0', exact: true })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
+  await expect(page.getByRole('navigation', { name: '音乐来源与授权 / Sources and license' }).getByRole('link', { name: 'CC BY 4.0', exact: true })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
   await expect(page.locator('main')).toContainText('2 秒淡入、4 秒淡出');
-  await expect(page.locator('audio')).toHaveCount(4);
-  await expect(page.locator('a[download]')).toHaveCount(4);
+  await expect(page.locator('audio')).toHaveCount(14);
+  await expect(page.locator('a[download]')).toHaveCount(14);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 

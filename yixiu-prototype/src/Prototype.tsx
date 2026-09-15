@@ -27,9 +27,12 @@ import { QuietJournal, type QuietArticle } from "./QuietJournal";
 import { useEndBell } from "./useEndBell";
 import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
+import { classicalMusic } from "./data/classical-music";
+
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
 type SceneId =
+  | (typeof classicalMusic)[number]["id"]
   | "ocean"
   | "rain"
   | "spring"
@@ -61,7 +64,7 @@ type SceneId =
 type DurationOption = 5 | 15 | 30 | 60 | 0;
 type FocusDuration = 1 | 3 | 5 | 10;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
-type SceneCategory = "all" | "nature" | "meditation" | "sleep" | "focus" | "morning" | "relax";
+type SceneCategory = "all" | "nature" | "meditation" | "classical" | "sleep" | "focus" | "morning" | "relax";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
 type DrawerView = "journal" | "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
 type MeView = "home" | "about" | "privacy" | "sources" | "support";
@@ -96,7 +99,17 @@ type Scene = {
   lfoDepth?: number;
 };
 
+const classicalSceneIds = classicalMusic.map(track => track.id);
+const classicalScenes = Object.fromEntries(classicalMusic.map(track => [track.id, {
+  id: track.id, zh: track.zh, en: track.en,
+  useZh: track.composerZh + " · " + track.duration, useEn: track.composer + " · " + track.duration,
+  image: "/assets/yixiu/classical/" + track.slug + ".jpg",
+  audio: "/assets/yixiu/audio/meditation/" + track.slug + ".m4a",
+  kind: "meditation", filter: "lowpass", frequency: 20000, level: 0.08,
+}])) as Record<(typeof classicalMusic)[number]["id"], Scene>;
+
 const scenes: Record<SceneId, Scene> = {
+  ...classicalScenes,
   ocean: {
     id: "ocean",
     zh: "大海",
@@ -394,10 +407,11 @@ const sceneOrder: SceneId[] = [
   "softLightRest",
   "deepWaterRest",
   "quietHour",
+  ...classicalSceneIds,
 ];
 const durations: DurationOption[] = [5, 15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3, 5, 10];
-const sceneCategories: SceneCategory[] = ["all", "nature", "meditation", "sleep", "focus", "morning", "relax"];
+const sceneCategories: SceneCategory[] = ["all", "classical", "nature", "meditation", "sleep", "focus", "morning", "relax"];
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
 const musicPlusAppStoreUrl = "https://apps.apple.com/app/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
@@ -409,6 +423,7 @@ const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
 
 const scenesByCategory: Record<SceneCategory, SceneId[]> = {
   all: sceneOrder,
+  classical: classicalSceneIds,
   nature: sceneOrder.filter((sceneId) => scenes[sceneId].kind !== "meditation"),
   meditation: sceneOrder.filter((sceneId) => scenes[sceneId].kind === "meditation"),
   sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "softLightRest", "deepWaterRest", "quietHour"],
@@ -419,6 +434,8 @@ const scenesByCategory: Record<SceneCategory, SceneId[]> = {
 
 function AmbientMusicCredits({ language }: { language: Language }) {
   return <>
+    <p>{language === "zh" ? "古典静听：10 首名曲，按各自录音的 CC0、公共领域或 CC BY 许可使用。AAC 转码，曲速与音高不变。作者不为一休背书。" : "Classical: ten works, used under each recording’s CC0, public-domain dedication or CC BY license. AAC conversion; tempo and pitch unchanged. No artist endorsement."}</p>
+    <a href="/music-credits.html#classical">{language === "zh" ? "古典名曲 · 完整试听、演奏者与许可" : "Classical works · Full listening, performers & licenses"}</a>
     <p>{language === "zh"
       ? "午后留白是 HoliznaCC0 的 Too Brief A Time To Be Anything（CC0 1.0）的 60 分钟延长版。一休重复原曲中段，以 20 秒交叉淡化衔接，降低电平，加入 8 秒淡入和 12 秒淡出并转为 AAC，未改变曲速。不是原生一小时作品，也不代表作者为一休背书。"
       : "Quiet Hour is a 60-minute extended edit of Too Brief A Time To Be Anything by HoliznaCC0 (CC0 1.0). Yixiu repeats a middle section with a 20-second crossfade, reduces the level, adds 8-second fade-in and 12-second fade-out, and converts to AAC without changing tempo. Not an original one-hour composition; no artist endorsement is implied."}</p>
@@ -436,6 +453,7 @@ function AmbientMusicCredits({ language }: { language: Language }) {
 function categoryLabel(category: SceneCategory, language: Language) {
   const labels: Record<SceneCategory, { zh: string; en: string }> = {
     all: { zh: "全部", en: "All" },
+    classical: { zh: "古典静听", en: "Classical" },
     nature: { zh: "自然声", en: "Nature" },
     meditation: { zh: "冥想音乐", en: "Meditation" },
     sleep: { zh: "睡眠", en: "Sleep" },
@@ -1577,7 +1595,7 @@ export default function Prototype() {
               ) : drawerView === "home" ? (
                 <>
                   <section className="yixiu-drawer-hero">
-                    <small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small>
+                    <small>{language === "zh" ? "14 种自然声 · 20 首音乐（含 10 首古典）" : "14 NATURE SOUNDS · 20 MUSIC TRACKS"}</small>
                     <h3>{language === "zh" ? "让声音带你回到此刻" : "Let sound return you to now"}</h3>
                     <p>{language === "zh" ? `正在聆听的场景：${active.zh}` : `Current scene: ${active.en}`}</p>
                     <button type="button" onClick={() => setDrawerView("library")}>
@@ -1886,7 +1904,7 @@ export default function Prototype() {
                   <div className="me-sound-space-copy">
                     <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
                     <strong>{language === "zh" ? active.zh : active.en}</strong>
-                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 10 首冥想音乐" : "Now listening · 14 nature sounds + 10 meditation tracks"}</span>
+                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 20 首音乐（含 10 首古典）" : "Now listening · 14 nature sounds + 20 music tracks (including 10 classical works)"}</span>
                     <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
                   </div>
                 </section>
@@ -2080,7 +2098,7 @@ export default function Prototype() {
           <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
           <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
             <div className="sheet-handle" />
-            <header><div><small>{language === "zh" ? "14 种自然声 · 10 首冥想音乐" : "14 NATURE SOUNDS · 10 MEDITATION TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
+            <header><div><small>{language === "zh" ? "14 种自然声 · 20 首音乐（含 10 首古典）" : "14 NATURE SOUNDS · 20 MUSIC TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
             <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
               {sceneCategories.map((category) => (
                 <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
@@ -2088,6 +2106,7 @@ export default function Prototype() {
                 </button>
               ))}
             </div>
+            {sceneCategory === "classical" && <p className="classical-listening-note"><a href="/music-credits.html#classical">{language === "zh" ? "10 首名曲 · 免费完整试听与录音来源 ↗" : "10 works · Free full listening & recording credits ↗"}</a></p>}
             <div className="scene-grid">
               {filteredSceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
@@ -2153,7 +2172,7 @@ export default function Prototype() {
             <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐：绿洲停歇、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 10 首冥想音乐。" : "Listen to 5 nature sounds and 2 meditation tracks for free: Oasis Rest and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 10 meditation tracks."}</p>
+            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐：绿洲停歇、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 20 首音乐（含 10 首古典）。" : "Listen to 5 nature sounds and 2 meditation tracks for free: Oasis Rest and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 20 music tracks (including 10 classical works)."}</p>
             <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);
@@ -2162,7 +2181,8 @@ export default function Prototype() {
               {language === "zh" ? "在 App Store 查看一休 Plus" : "View Yixiu Plus on the App Store"}
               <ExternalLinkIcon />
             </a>
-            <em>{language === "zh" ? "H5 无需账号；会员权益由 App Store 安全管理。" : "No H5 account is required. Membership is managed securely by the App Store."}</em>
+            <a href="/music-credits.html#classical">{language === "zh" ? "10 首古典名曲 · 免费完整试听" : "10 classical works · Free full listening"}</a>
+            <em>{language === "zh" ? "古典名曲已在网页来源页提供；App 内新曲随后续更新提供。会员权益由 App Store 管理。" : "Classical recordings are available on the web credits page; the in-app collection arrives with an upcoming update. Membership is managed by the App Store."}</em>
           </section>
         </div>
       ) : null}

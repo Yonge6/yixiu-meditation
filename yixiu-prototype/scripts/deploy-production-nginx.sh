@@ -96,7 +96,9 @@ test -f "$site_path/assets/yixiu/spring-creek.webp"
 test -f "$site_path/assets/yixiu/study-sounds-comparison-pinterest.jpg"
 test -f "$site_path/assets/yixiu/meditation-duration-choice-pinterest.jpg"
 test -f "$site_path/assets/yixiu/audio/sunrise-river.m4a"
-test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 14
+test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 24
+test "$(find "$site_path/assets/yixiu/classical" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
+(cd "$site_path" && sha256sum -c classical-checksums.txt)
 test -f "$site_path/music-credits.html"
 test -f "$site_path/assets/yixiu/audio/end-bell.wav"
 for track in cloud-drift soft-light-rest deep-water-rest quiet-hour; do
@@ -340,7 +342,8 @@ grep -FR 'instagram_profile_guide_white_noise_black_screen' "$deploy_target/asse
 grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$deploy_target/assets" >/dev/null
 grep -FR 'yixiu_h5_music_plus_20260830' "$deploy_target/assets" >/dev/null
 grep -FR 'still-water.m4a' "$deploy_target/assets" >/dev/null
-test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 14
+test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 24
+(cd "$deploy_target" && sha256sum -c classical-checksums.txt)
 test -f "$deploy_target/music-credits.html"
 test -f "$deploy_target/assets/yixiu/audio/end-bell.wav"
 printf '%s  %s\n' 'fc54aa9323b036c44b6a38871cc422361865fa6fedc9685a5705005a6d7eac74' "$deploy_target/assets/yixiu/audio/meditation/quiet-hour.m4a" | sha256sum -c -
