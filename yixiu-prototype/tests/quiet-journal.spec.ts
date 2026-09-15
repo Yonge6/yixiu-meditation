@@ -1,6 +1,51 @@
 import { expect, test } from "@playwright/test";
 import entries from "../src/data/quiet-journal.json" with { type: "json" };
 
+test("journal contains fifteen complete bilingual notes across four categories", () => {
+  expect(entries).toHaveLength(15);
+  expect(new Set(entries.map(entry => entry.slug)).size).toBe(15);
+  for (const [category, count] of Object.entries({ sleep: 4, focus: 4, reset: 4, guide: 3 })) {
+    expect(entries.filter(entry => entry.category === category)).toHaveLength(count);
+  }
+  for (const entry of entries) for (const language of ["zh", "en"] as const) {
+    expect(entry[language].sections.length).toBeGreaterThanOrEqual(4);
+    expect(entry[language].sections.every(section => section.body.length > 45)).toBeTruthy();
+    expect(entry[language].seoTitle).toBeTruthy();
+    expect(entry[language].metaDescription).toBeTruthy();
+  }
+});
+
+test("every bilingual article has a real page, matching metadata and free practice target", async ({ request }) => {
+  for (const entry of entries) for (const language of ["zh", "en"] as const) {
+    const path = `/journal/${language === "zh" ? "zh/" : ""}${entry.slug}/`;
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html).toContain(`<h1>${entry[language].title}</h1>`);
+    expect(html).toContain(`rel="canonical" href="https://yixiu.wonderelian.com${path}"`);
+    expect(html).toContain(`hreflang="zh-Hans" href="https://yixiu.wonderelian.com/journal/zh/${entry.slug}/"`);
+    expect(html).toContain(`hreflang="en" href="https://yixiu.wonderelian.com/journal/${entry.slug}/"`);
+    expect(html).toContain(`scene=${entry.scene}&amp;lang=${language}`);
+    expect(html).toContain(entry.action === "focus" ? "&amp;tab=focus" : 'class="quiet-practice"');
+    expect((await request.get(entry.image)).status()).toBe(200);
+  }
+});
+
+test("fifteen-card drawer filters correctly and the final note remains reachable", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 600 });
+  await page.goto("/?lang=zh&scene=rain");
+  await page.getByRole("button", { name: "打开一休日常" }).click();
+  const drawer = page.getByRole("dialog", { name: "一休日常" });
+  for (const [label, category] of [["睡前", "sleep"], ["专注", "focus"], ["片刻", "reset"], ["使用指南", "guide"]]) {
+    await drawer.getByRole("button", { name: label, exact: true }).click();
+    await expect(drawer.locator(".quiet-card")).toHaveCount(entries.filter(entry => entry.category === category).length);
+  }
+  await drawer.getByRole("button", { name: "全部", exact: true }).click();
+  await expect(drawer.locator(".quiet-card")).toHaveCount(15);
+  await drawer.locator(".quiet-card").last().click();
+  await expect(drawer.locator("h3")).toHaveText(entries.at(-1)!.zh.title);
+});
+
 test("product guide exposes verifiable free access without unlocking Plus", async ({ page }) => {
   await page.goto("/?lang=zh&scene=ocean");
   await page.getByRole("button", { name: "打开一休日常" }).click();

@@ -1,5 +1,269 @@
 [
   {
+    "slug": "an-afternoon-without-a-sleep-target", "date": "2026-09-15", "category": "sleep", "scene": "oasisRest", "action": "listen",
+    "image": "/assets/yixiu/meditation/oasis-rest.jpg", "imageWidth": 1024, "imageHeight": 1536, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "午休，不必把睡着当作任务", "summary": "午间只有一点空隙，也可以先把工作放下。有没有睡着，不是这段休息的成绩。", "category": "睡前与午休", "readTime": "2 分钟阅读", "cta": "试听绿洲停歇",
+      "seoTitle": "午休听什么？留一段不必睡着的休息时间 | 一休日常", "metaDescription": "用一段免费绿洲停歇音乐开始午间休息。先安排回来工作的时间，再选择舒适音量；播放定时不是叫醒闹钟，休息也不需要以睡着为目标。",
+      "sections": [
+        {"title": "先安顿下一件事", "body": "如果脑中还在惦记下午的工作，先写一句回来后要做什么，例如「打开报价表，核对第二项」。把这句话留在桌上，再暂时合上文档。这样休息时不必反复排练整个下午。"},
+        {"title": "给空隙选一段背景", "body": "可以从免费的「绿洲停歇」开始，也可以什么都不播放。它是一首短篇音乐，不是原生一小时录音；播放器里的时长是聆听安排。先用小音量试一试，不喜欢就暂停，不用勉强适应。"},
+        {"title": "需要准时回来，就另设闹钟", "body": "若下午有会议，请用手机系统闹钟安排提醒，并确认自己的设置。音乐定时负责结束播放，可选结束提示音也不应当作可靠的叫醒工具。网页还可能受到浏览器后台策略影响。"},
+        {"title": "把结束也放轻一点", "body": "休息后看看窗外，坐稳，再回到刚才写下的那一步。没有睡着也不必补一次练习或延长播放。你只是给午间留出一点不处理工作的时间，不需要向任何人交出休息成果。"}
+      ]
+    },
+    "en": {
+      "title": "An afternoon without a sleep target", "summary": "A short lunch break can be a break from work, whether or not you fall asleep.", "category": "Before bed & midday rest", "readTime": "2 min read", "cta": "Try Oasis Rest",
+      "seoTitle": "A Midday Listening Break Without a Sleep Target | Yixiu", "metaDescription": "Try free Oasis Rest for a gentle midday pause. Leave a note for your return, choose a comfortable volume and use a separate alarm if you need to be back on time.",
+      "sections": [
+        {"title": "Leave yourself a next step", "body": "If afternoon work is still on your mind, write one concrete instruction for your return: open the estimate and check the second item. Leave the note on your desk and close the document. You do not have to rehearse the entire afternoon during your break."},
+        {"title": "Choose a little background", "body": "Try the free Oasis Rest track, or leave the room quiet. It is a short composition, not an original one-hour recording; the player timer sets your listening session. Begin at a low volume. If you do not enjoy it, pausing is a perfectly good choice."},
+        {"title": "Keep your alarm separate", "body": "If you have a meeting to return to, set and check a system alarm on your phone. The music timer ends playback, and the optional completion cue is not a dependable wake-up alarm. Browser background rules can also affect web playback."},
+        {"title": "Return without grading the break", "body": "Look outside for a moment, settle into your seat and return to the step you wrote down. There is no need to make up a practice because you did not sleep. You set aside a little time without work; there is no result to submit."}
+      ]
+    }
+  },
+  {
+    "slug": "make-room-beside-the-bed", "date": "2026-09-15", "category": "sleep", "scene": "rain", "action": "listen",
+    "image": "/assets/yixiu/rain.jpg", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "睡前，先整理床边的一小块地方", "summary": "不用重新布置整个房间。从放下手边的物件、选好声音和时长开始。", "category": "睡前", "readTime": "2 分钟阅读", "cta": "打开屋檐雨",
+      "seoTitle": "睡前的小准备：整理床边，再选一段雨声 | 一休日常", "metaDescription": "一份简单的床边准备：收好手边物件，提前选择雨声与定时，避免反复挑选。无需把休息变成新的整理任务。",
+      "sections": [
+        {"title": "只整理伸手可及的地方", "body": "把杯子放稳，把没读完的书夹好，把充电线放到不碍事的位置。只做眼前这几步就好，不必顺势开始整理整个房间。床边留下一点空间，比完成一张清单更重要。"},
+        {"title": "在放下屏幕前选好", "body": "如果今晚想听雨声，可以先打开「屋檐雨」，调到舒适的小音量，再选一个播放时长。免费网页支持 5、15、30 分钟。不要让挑选哪种声音，变成睡前另一轮没有终点的浏览。"},
+        {"title": "留意与别人共用的房间", "body": "若身边有人，先问问对方是否愿意听。声音不需要覆盖整个空间，也不必持续存在；如果两个人的偏好不同，今晚不放声音也可以。是否安静，由实际相处的感受决定。"},
+        {"title": "准备到这里就可以了", "body": "书没有读完，桌面没有完全收好，都可以留到明天。音乐只是一种可选陪伴，不保证入睡。把它调好以后，不必再检查自己是不是已经足够放松，随时暂停也没有关系。"}
+      ]
+    },
+    "en": {
+      "title": "Make a little room beside the bed", "summary": "No room makeover required. Put a few things away, choose a sound and give it an ending.", "category": "Before bed", "readTime": "2 min read", "cta": "Open Rain on Eaves",
+      "seoTitle": "A Small Bedside Setup Before Listening to Rain | Yixiu", "metaDescription": "Clear a small bedside space, choose rain and a short timer, and stop browsing. A simple evening setup without turning rest into another organizing project.",
+      "sections": [
+        {"title": "Only what is within reach", "body": "Set your cup somewhere steady, mark your page and move the charging cable out of the way. You can stop after these few things. This does not need to become a room-cleaning project or a checklist you must finish before resting."},
+        {"title": "Choose before putting the screen down", "body": "If you want rain tonight, open Rain on Eaves, set a comfortable low volume and choose a duration. The free web player offers 5, 15 and 30 minutes. Selecting the perfect sound does not need to become another endless browsing session."},
+        {"title": "Consider the shared room", "body": "If someone is nearby, ask whether they want to listen too. Sound does not have to fill the room or stay on throughout the evening. If your preferences differ, leaving it off tonight is an option, not a failed routine."},
+        {"title": "Enough preparation for now", "body": "The unfinished book and the rest of the desk can wait. Music is optional company, not a promise of sleep. Once you have chosen it, you do not have to keep checking whether you feel relaxed enough. Pause whenever you prefer."}
+      ]
+    }
+  },
+  {
+    "slug": "sound-does-not-need-to-last-all-night", "date": "2026-09-15", "category": "sleep", "scene": "ocean", "action": "listen",
+    "image": "/assets/yixiu/deep-ocean-hero.png", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "声音，不一定要陪你一整夜", "summary": "先决定今晚想让声音陪哪一段，而不是一开始就选最长时长。", "category": "睡前", "readTime": "2 分钟阅读", "cta": "从一段大海声开始",
+      "seoTitle": "睡前声音要放多久？先选适合今晚的一小段 | 一休日常", "metaDescription": "不必默认整夜播放。区分音乐素材长度、播放定时和手机闹钟，从一段免费大海声开始，按自己的感受调整聆听安排。",
+      "sections": [
+        {"title": "先问声音要陪哪一段", "body": "你可能只想在合上书、放下手机的时候听一会儿，也可能喜欢一直有背景声。先分清自己的需要，不必因为看见长时音轨，就认为应该听得更久。短一点不代表不完整。"},
+        {"title": "曲长和定时不是一回事", "body": "一首短篇音乐的素材长度，与播放器显示的会话时长不同。定时决定这一段聆听何时结束，不会把短曲变成原生长篇作品。想先试水，可以打开免费大海声，选择 5 分钟。"},
+        {"title": "长时需求另作安排", "body": "H5 免费定时是 5、15、30 分钟；App 中的 60 分钟和不限时属于 Plus。若需要锁屏后继续播放，还要检查 App 的后台播放设置。不要把浏览器暗屏等同于手机锁屏后的持续播放。"},
+        {"title": "把决定留给自己的感受", "body": "如果声音开始显得多余，就暂停；如果偏好改变，下次换另一种即可。播放长度不是练习等级，也不是睡眠成绩。需要准时起身时，另外设置系统闹钟，不依赖音乐结束来叫醒。"}
+      ]
+    },
+    "en": {
+      "title": "Sound does not need to last all night", "summary": "Choose the part of the evening you want company for, rather than starting with the longest timer.", "category": "Before bed", "readTime": "2 min read", "cta": "Begin with Ocean Waves",
+      "seoTitle": "How Long Should Your Evening Listening Last? | Yixiu", "metaDescription": "Choose a short evening listening session without defaulting to all-night playback. Understand track length, listening timers and separate wake-up alarms.",
+      "sections": [
+        {"title": "Which part of the evening?", "body": "Perhaps you only want a sound while closing your book and putting down your phone. Perhaps you prefer longer background listening. Start with that preference rather than assuming a long recording means you ought to listen longer. Short can be complete."},
+        {"title": "A recording is not a timer", "body": "The source length of a short composition differs from the session duration shown by the player. A timer controls when listening ends; it does not make the recording an original long-form work. Try free Ocean Waves with five minutes if you are exploring."},
+        {"title": "Plan longer listening separately", "body": "Free web timers are 5, 15 and 30 minutes. The app's 60-minute and unlimited options require Plus. For playback after locking your phone, check the app's background playback setting. A dark browser page is not the same as playback while the phone is locked."},
+        {"title": "Keep the choice yours", "body": "Pause when sound feels unnecessary, and choose something different next time if your preference changes. Duration is not a level to achieve or a sleep score. If you need to get up at a certain time, set a separate system alarm."}
+      ]
+    }
+  },
+  {
+    "slug": "begin-work-with-one-small-step", "date": "2026-09-15", "category": "focus", "scene": "stream", "action": "listen",
+    "image": "/assets/yixiu/stream.jpg", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "开工前，把第一步写得小一点", "summary": "「完成项目」太大。先写下打开哪个文件、改哪一句，再让一段溪流留在背景里。", "category": "专注", "readTime": "2 分钟阅读", "cta": "听溪流，开始第一步",
+      "seoTitle": "工作难开始时，先写一个小步骤 | 一休日常", "metaDescription": "从打开文件、修改一句话开始工作，用免费山间溪流和短定时作为可选背景。声音不替你完成任务，也不用追求完美的专注状态。",
+      "sections": [
+        {"title": "把结果改写成动作", "body": "「写完方案」可以先改成「打开文档，列出三个问题」。这一步要具体到可以马上动手，而不是换一种说法要求自己完成所有事情。把它写在纸上或文档开头，就暂时不再扩大范围。"},
+        {"title": "只留下这一步需要的东西", "body": "把这次不用的页面先放到一边，需要回看的链接记下来。不是要求桌面永远整齐，只是给眼前这一步留出位置。若一个问题暂时没有答案，可以标注待查，先完成能够确定的部分。"},
+        {"title": "让声音处在次要位置", "body": "一休「山间溪流」可在网页免费试听。先听一小段，确定不会吸引你反复切换场景，再选 15 分钟回到工作。声音只提供可选背景，不会替你完成任务；不合适时关掉即可。"},
+        {"title": "结束时留下接力点", "body": "这一段结束后，写下已经做到哪里，以及下一步最具体的动作。即使只改了一段，也能留下一个清楚的回来位置。无需立刻再开一轮计时，也不必因为进展很小而把刚才抹掉。"}
+      ]
+    },
+    "en": {
+      "title": "Begin work with one small step", "summary": "Finish the project is a large instruction. Open one file, change one sentence and let a stream stay in the background.", "category": "Focus", "readTime": "2 min read", "cta": "Begin with Mountain Stream",
+      "seoTitle": "Start Work with One Concrete Step | Yixiu Quiet Journal", "metaDescription": "Make starting work specific: open a file, list three questions and try a short timer. Free stream sounds are optional background, not a productivity promise.",
+      "sections": [
+        {"title": "Turn an outcome into an action", "body": "Replace finish the proposal with open the document and list three questions. Make the instruction small enough to act on now, not another way of asking for everything at once. Put it on paper or at the top of the document and leave the scope there."},
+        {"title": "Keep only what this step needs", "body": "Set aside unrelated pages and note any links you need later. Your desk does not have to stay tidy forever; you are making room for this action. Mark unresolved questions for later and work on the part you can address now."},
+        {"title": "Keep sound in a supporting role", "body": "Mountain Stream is free to try in Yixiu on the web. Listen briefly, choose fifteen minutes and return to work if it suits you. Sound is optional background, not something that completes the task for you. Turn it off if it becomes another distraction."},
+        {"title": "Leave a place to return to", "body": "At the end, note where you stopped and the next concrete action. Even one edited paragraph can leave a useful handover to your future self. There is no need to start another timer immediately or dismiss the work because it was small."}
+      ]
+    }
+  },
+  {
+    "slug": "a-break-that-is-not-another-feed", "date": "2026-09-15", "category": "focus", "scene": "birds", "action": "listen",
+    "image": "/assets/yixiu/morning-birds.png", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "工作间隙，先别打开另一个信息流", "summary": "想换换注意力时，可以离开座位、看看远处，而不是马上换一个应用继续看。", "category": "专注", "readTime": "2 分钟阅读", "cta": "试听晨林鸟语",
+      "seoTitle": "工作休息时做什么？试一次不刷信息流的间隙 | 一休日常", "metaDescription": "为工作间隙留一段不处理新消息的时间：记下停在哪里，离开屏幕，再决定要不要听一小段免费鸟鸣。",
+      "sections": [
+        {"title": "记下停在哪里", "body": "准备休息前，用一句话标出刚才做到的地方，例如「表格已核对到第四行」。不必整理成长篇笔记。给回来后的自己一个位置，就可以暂时不用把刚才的任务一直放在脑中。"},
+        {"title": "换一个实际的动作", "body": "起身接杯水，看看窗外，或慢慢走到房间另一边。选符合你当时环境的动作即可。不是要把休息做成训练，只是尝试不在同一块屏幕里，从工作内容切换到新的信息流。"},
+        {"title": "鸟鸣可以听，也可以不听", "body": "如果想要一点声音，试试免费的「晨林鸟语」。不用盯着画面，也不必辨认每一次鸟叫。若实际环境已经有喜欢的声音，就把播放器暂停，让这一小段留给身边的真实环境。"},
+        {"title": "回来先看那句话", "body": "回到座位时，先读刚才的接力提示，再决定继续还是调整任务。休息不是为了保证下一段一定高效；它首先是一段离开工作的时间。无需因为没有立刻进入状态，就否定刚才的停顿。"}
+      ]
+    },
+    "en": {
+      "title": "A break that is not another feed", "summary": "Changing your attention can mean leaving the chair, not just opening another app.", "category": "Focus", "readTime": "2 min read", "cta": "Try Morning Birds",
+      "seoTitle": "Take a Work Break Without Opening Another Feed | Yixiu", "metaDescription": "Leave a note about where you stopped, step away from the screen and choose optional birdsong. A simple work break without another stream of information.",
+      "sections": [
+        {"title": "Note where you stopped", "body": "Before leaving, write one sentence such as checked the table through row four. It does not need to become a detailed report. Give yourself a clear return point so that you do not have to keep rehearsing the task throughout the break."},
+        {"title": "Try a different physical action", "body": "Get some water, look outside or walk to another part of the room if that fits your situation. This is not an exercise assignment. You are trying a pause that does not simply replace work on one screen with a fresh feed on the same screen."},
+        {"title": "Birdsong is optional", "body": "Try free Morning Birds if you would like some sound. You do not need to watch the artwork or identify each call. If there are sounds you enjoy in the room already, pause the player and leave this moment to your actual surroundings."},
+        {"title": "Read your return note first", "body": "Back at your seat, read the note before deciding whether to continue or adjust the task. A break does not guarantee a productive next session. It is time away from work, and it does not become worthless if concentration takes a while to return."}
+      ]
+    }
+  },
+  {
+    "slug": "choose-background-sound-without-a-ranking", "date": "2026-09-15", "category": "focus", "scene": "ocean", "action": "listen",
+    "image": "/assets/yixiu/deep-ocean-hero.png", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "雨声、海浪还是音乐？不用选出冠军", "summary": "拿同一件小事试一试，留下合适的声音。今天的答案，不必成为永久偏好。", "category": "专注", "readTime": "2 分钟阅读", "cta": "先试听大海声",
+      "seoTitle": "如何选择阅读背景声？比较雨声、海浪与音乐 | 一休日常", "metaDescription": "用同一段文字和舒适音量比较背景声音，不追求所谓最佳频率。免费试听大海、屋檐雨与三首冥想音乐，也保留不播放的选择。",
+      "sections": [
+        {"title": "先选一个实际任务", "body": "拿一小段待读的文字，或一项简单整理工作来试。不要只看场景名字判断适不适合自己，也不用寻找对所有人都有效的最佳声音。真正要回答的是：它适合此刻手边这件事吗？"},
+        {"title": "一次只换一个条件", "body": "先用舒适音量听一段大海，再换屋檐雨，任务保持不变。没有必要把音量和计时也一起改掉。留意自己是否总想停下工作去听声音；如果是，试着调低，或换成安静。"},
+        {"title": "音乐也是另一种选择", "body": "网页中「绿洲停歇」「海上行旅」「初息」可以免费试听。旋律与自然声的感受不同，但不意味着哪一种更高级。若开始追着音乐听，就把它留到休息时，不必强行当作工作背景。"},
+        {"title": "保留一个今天的选择", "body": "找到合适的就先停止比较，收藏起来，回到原来的事情。以后环境和任务变了，再重新选择也可以。声音没有排名要完成；不播放，同样是比较之后得到的一个有效答案。"}
+      ]
+    },
+    "en": {
+      "title": "Rain, waves or music? No winner required", "summary": "Try sounds with the same small task. What fits today does not have to become a permanent preference.", "category": "Focus", "readTime": "2 min read", "cta": "Try Ocean Waves first",
+      "seoTitle": "Choose Background Sound for Reading Without a Ranking | Yixiu", "metaDescription": "Compare rain, waves and free music with one small task at a comfortable volume. Choose what fits today, including silence, without chasing a best-sound claim.",
+      "sections": [
+        {"title": "Use a real task", "body": "Try a short passage you need to read or a small organizing job. Scene names alone cannot tell you what you will enjoy, and you do not need a sound that works for everyone. Ask whether it fits the thing in front of you now."},
+        {"title": "Change one thing at a time", "body": "Listen to Ocean Waves at a comfortable volume, then try Rain on Eaves with the same task. There is no need to change volume and timer at the same time. Notice whether you keep abandoning the task to listen; lower the sound or try silence if you do."},
+        {"title": "Music is another option", "body": "Oasis Rest, Ocean Passage and First Breath are free to try on the web. Melody feels different from nature sound, but neither is a more advanced choice. If you want to follow the music closely, keep it for a break rather than forcing it into the background."},
+        {"title": "Keep one choice for today", "body": "Once something fits, stop comparing, save it as a favorite and return to the task. You can choose again when your surroundings or work change. There is no ranking to complete, and leaving the player off is a valid result of the comparison."}
+      ]
+    }
+  },
+  {
+    "slug": "a-morning-before-the-messages", "date": "2026-09-15", "category": "reset", "scene": "birds", "action": "listen",
+    "image": "/assets/yixiu/morning-birds.png", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "清晨，把第一小段时间留给自己", "summary": "不必比昨天更早起。只是在打开消息之前，先看看今天身边的光和声音。", "category": "片刻放松", "readTime": "2 分钟阅读", "cta": "让晨林鸟语陪一会儿",
+      "seoTitle": "清晨的小停顿：打开消息前，先听一会儿鸟鸣 | 一休日常", "metaDescription": "不用早起挑战或打卡，在打开消息之前留一小段自己的时间。看看窗外，选择可选的免费鸟鸣，再开始今天最具体的一件事。",
+      "sections": [
+        {"title": "不从早起挑战开始", "body": "这不是新的起床计划，也不用把闹钟往前拨。就在你已经起身的那个早晨，试着先不进入消息列表。哪怕只有换好衣服之前的一小会儿，也可以是属于自己的开头。"},
+        {"title": "看看今天真实的环境", "body": "留意窗外的天色、屋里的光，或者远处已经开始的日常声音。无需给感受取一个好听的名字，也不必拍照记录。今天阴天或晴天，都不需要被解释成某种心情指标。"},
+        {"title": "需要陪伴时再打开声音", "body": "可以试听免费的「晨林鸟语」，让它在准备早餐或整理桌面时轻轻放着。音量由你决定，身边已有喜欢的声音就不必再加一层。音乐和自然声是选择，不是开启一天的必需步骤。"},
+        {"title": "从一件具体的小事走出去", "body": "准备好了，再看看今天需要先做什么：带上钥匙、装好水杯，或回复一条确实需要处理的消息。没有完成固定晨间仪式也没关系；明天不重复，今天这小段时间仍然成立。"}
+      ]
+    },
+    "en": {
+      "title": "A morning before the messages", "summary": "No earlier alarm required. Notice the light and sounds around you before opening the message list.", "category": "A small pause", "readTime": "2 min read", "cta": "Spend a moment with Morning Birds",
+      "seoTitle": "A Small Morning Pause Before Checking Messages | Yixiu", "metaDescription": "Notice the morning you already have, with optional free birdsong and no early-rising challenge. Begin with one concrete thing rather than a perfect routine.",
+      "sections": [
+        {"title": "No early-rising challenge", "body": "This is not a new waking schedule, and you do not need to move your alarm earlier. In the morning you already have, try waiting a moment before opening messages. Even the time before getting dressed can be an opening of your own."},
+        {"title": "Notice the actual room", "body": "Look at the sky, the light indoors or the ordinary sounds beginning outside. You do not need to give the feeling a name or photograph it. A cloudy or bright morning does not have to stand for a particular mood."},
+        {"title": "Add sound only if you want it", "body": "Try free Morning Birds while preparing breakfast or clearing a small space on the desk. Choose your volume, or leave it off if you enjoy the sounds already there. Recorded sound is an option, not a requirement for starting the day."},
+        {"title": "Step into one concrete thing", "body": "When you are ready, choose what comes first: take your keys, fill your water bottle or answer a message that actually needs attention. There is no fixed ritual to complete. This morning's moment still counts even if you do not repeat it tomorrow."}
+      ]
+    }
+  },
+  {
+    "slug": "arrive-home-before-starting-again", "date": "2026-09-15", "category": "reset", "scene": "spring", "action": "listen",
+    "image": "/assets/yixiu/spring-creek.png", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "回到家，先让自己真的回来", "summary": "钥匙已经放下，注意力可能还留在路上。给进门和下一件事之间留一点空隙。", "category": "片刻放松", "readTime": "2 分钟阅读", "cta": "听一小段春日花溪",
+      "seoTitle": "回家后的小过渡：先放下手边的事情 | 一休日常", "metaDescription": "从放好钥匙、安顿随身物品开始，给回家留一个过渡。试一段免费春日花溪，再选择晚上的下一件小事，不必马上进入新任务。",
+      "sections": [
+        {"title": "先把随身的东西放稳", "body": "把钥匙放到常用的位置，脱下外套，安顿好需要处理的物品。只做必要的几件，不急着把整个晚上安排完。如果刚进门就有别的事情需要照顾，可以等出现空隙时再回来。"},
+        {"title": "给路上的事情一个落点", "body": "若还惦记着一条工作消息，可以记一句明天要确认什么，再把它暂时放下。不是要求自己瞬间切换心情，只是把需要记住的事放到一个具体位置，而不是在脑中不断重复。"},
+        {"title": "用一段声音做可选的过渡", "body": "免费的「春日花溪」可以陪你坐一会儿。先确认身边的人愿意听，再调到合适音量。也可以不用播放器，只听家里的声音。这个停顿不需要额外购买东西，也没有规定的姿势。"},
+        {"title": "再选今晚的一件事", "body": "接下来也许是做饭、洗漱或和家人说句话。先选最切合当下的一件，而不是立刻检查还有多少事没做完。回家的过渡可以很短，不需要完成一套流程，才算真正开始自己的晚上。"}
+      ]
+    },
+    "en": {
+      "title": "Arrive home before starting again", "summary": "Your keys are down, but your attention may still be on the journey. Leave a little room before the next thing.", "category": "A small pause", "readTime": "2 min read", "cta": "Listen to Spring Creek",
+      "seoTitle": "A Small Transition After Arriving Home | Yixiu", "metaDescription": "Put down your keys, leave a note for unfinished work and try optional free Spring Creek. A short transition before choosing the next part of your evening.",
+      "sections": [
+        {"title": "Set down what you carried", "body": "Put your keys in their usual place, take off your coat and settle anything that needs immediate attention. You do not have to plan the whole evening now. If someone needs you as you arrive, this pause can wait until a space opens."},
+        {"title": "Give unfinished thoughts a place", "body": "If a work message is still on your mind, write what you need to check tomorrow. This is not an instruction to change your mood instantly. You are giving the thing you want to remember a place outside a repeating mental conversation."},
+        {"title": "Choose an optional transition sound", "body": "Free Spring Creek can accompany a short sit. Check whether others nearby want to hear it and choose a suitable volume. Or leave the player off and listen to the home itself. The pause needs no purchase and no prescribed posture."},
+        {"title": "Choose one evening activity", "body": "Next might be cooking, washing or speaking with someone at home. Choose what fits now rather than counting everything unfinished. Arriving can be a very short transition. You do not have to complete a sequence before the evening can belong to you."}
+      ]
+    }
+  },
+  {
+    "slug": "rest-without-a-streak", "date": "2026-09-15", "category": "reset", "scene": "ocean", "action": "focus",
+    "image": "/assets/yixiu/meditation/first-breath.jpg", "imageWidth": 1024, "imageHeight": 1536, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "几天没练习，也可以从今天开始", "summary": "休息不需要补课。回来的一分钟，不必用来偿还前几天的空白。", "category": "片刻放松", "readTime": "2 分钟阅读", "cta": "开始今天的一分钟静心",
+      "seoTitle": "冥想中断几天怎么办？不补课，从一分钟开始 | 一休日常", "metaDescription": "不追求连续打卡，也不用补齐空白日期。了解一休免费一分钟静心与本地练习记录，让今天的休息只属于今天。",
+      "sections": [
+        {"title": "不用计算欠了多少次", "body": "几天没有打开一休，可能只是生活里有别的事。今天回来时，不必先补齐之前的时长，也不用给中断找一个足够好的理由。休息不是作业，没有累计到下次的欠款。"},
+        {"title": "选择今天实际拥有的时间", "body": "只有一分钟，就在「静心」选择免费的 1 分钟。准备好以后再开始，按自己自然舒适的呼吸来，不追赶画面，也不用用力憋气。如果不想跟随节奏，单纯坐一会儿同样可以。"},
+        {"title": "把记录当作线索", "body": "完成的练习会留在本地记录里，它可以帮助你回想最近留给自己的时间，但不是每天必须交出的分数。网页记录只在当前浏览器，不会自动跨设备同步；换浏览器后的空白不等于没有休息过。"},
+        {"title": "结束后不急着许诺明天", "body": "这一分钟结束，就回到今天接下来的事情。愿意明天再来很好，暂时不作计划也可以。无需趁着刚完成一次，就承诺一个很长的连续目标；今天这一小段已经不需要额外证明。"}
+      ]
+    },
+    "en": {
+      "title": "Rest without a streak", "summary": "A minute today does not have to repay the days you were away.", "category": "A small pause", "readTime": "2 min read", "cta": "Begin today's one-minute Focus",
+      "seoTitle": "Return to a Short Practice Without Rebuilding a Streak | Yixiu", "metaDescription": "Start again with free one-minute Focus, without making up missed sessions. Treat local practice records as a reference rather than a daily score.",
+      "sections": [
+        {"title": "Nothing to make up", "body": "If you have not opened Yixiu for a few days, other things may simply have needed your time. Returning does not require making up minutes or explaining the gap. Rest is not homework with a balance carried into the next session."},
+        {"title": "Use the time you actually have", "body": "Choose the free one-minute option in Focus if that is the time available. Start when ready and keep breathing naturally and comfortably, without chasing the animation or forcing a hold. If following a rhythm does not appeal, simply sit for a moment."},
+        {"title": "Read the record as a reference", "body": "Completed sessions stay in local records. They can remind you of time you set aside, but they are not a daily score to deliver. Web records belong to this browser and do not sync automatically across devices; an empty new browser does not erase your actual breaks."},
+        {"title": "No promise about tomorrow required", "body": "When the minute ends, return to the next part of today. You may want to come back tomorrow or leave it unplanned. Finishing a short practice does not require committing to a long streak. This moment needs no extra proof."}
+      ]
+    }
+  },
+  {
+    "slug": "keep-your-favorites-close", "date": "2026-09-15", "category": "guide", "scene": "oceanPassage", "action": "listen",
+    "image": "/assets/yixiu/meditation/ocean-passage.jpg", "imageWidth": 1024, "imageHeight": 1536, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "收藏喜欢的声音，下次少找一会儿", "summary": "心形可以记住偏好，但网页收藏只留在当前浏览器。先弄清它保存什么，再放心使用。", "category": "使用指南", "readTime": "2 分钟阅读", "cta": "试听并收藏海上行旅",
+      "seoTitle": "一休怎么收藏声音？网页收藏与本地记录说明", "metaDescription": "了解一休播放器心形收藏、我的收藏入口及本地保存范围。收藏不等于下载音频或开通 Plus，换设备不会自动同步。",
+      "sections": [
+        {"title": "先听，再点亮心形", "body": "选一个实际喜欢的声音，在播放器点亮心形即可收藏。可以先试听免费的「海上行旅」，不必把整个声音库都收进去。收藏的作用是让下次选择简单一点，不是形成一份必须听完的清单。"},
+        {"title": "从「我的」找回来", "body": "下次打开同一个浏览器，可以到「我的」查看收藏，选回喜欢的声音。想更换偏好时，在播放器再次点击心形即可取消。取消收藏只是移除这个偏好，不会删除一休的原始音频。"},
+        {"title": "网页没有云端同步", "body": "网页收藏和偏好保存在当前浏览器，不需要注册账号，也不会自动跟随你到另一台设备。清除站点数据或使用临时浏览环境可能让记录不再保留。它不是云端备份，重要偏好可以自己记下名称。"},
+        {"title": "收藏不改变使用权益", "body": "点亮心形不等于下载音频，也不会解锁 Plus 内容。网页仍是免费体验，Apple 购买与恢复需要在 App 内验证。如果换设备后看见不同的收藏列表，不必因此重新购买会员。"}
+      ]
+    },
+    "en": {
+      "title": "Keep your favorite sounds close", "summary": "The heart remembers a preference in this browser. It is not a cloud backup, a download or a Plus purchase.", "category": "Getting started", "readTime": "2 min read", "cta": "Try and favorite Ocean Passage",
+      "seoTitle": "How Yixiu Favorites Work on the Web | Yixiu", "metaDescription": "Use the heart to save favorite sounds and find them in My Yixiu. Learn what stays in your browser and why a favorite is not an audio download or Plus unlock.",
+      "sections": [
+        {"title": "Listen before tapping the heart", "body": "Choose a sound you actually enjoy, then tap the heart in the player. Free Ocean Passage is one option to try. You do not need to collect the entire library. Favorites are there to shorten the next decision, not create another listening checklist."},
+        {"title": "Find it in My Yixiu", "body": "Return in the same browser and open your favorites in My Yixiu to choose the sound again. Tap the player's heart once more to remove that preference. Removing a favorite does not delete the original recording from Yixiu."},
+        {"title": "Web preferences do not cloud-sync", "body": "Favorites and preferences stay in this browser without an account. They do not automatically follow you to another device. Clearing site data or using a temporary browsing session may remove them. This is not a cloud backup; note the names yourself if you want a separate reference."},
+        {"title": "A favorite does not change access", "body": "The heart is not an audio download and does not unlock Plus. The web player remains the free experience; Apple purchases and restoration are verified in the app. A different favorite list on another device is not a reason to buy membership again."}
+      ]
+    }
+  },
+  {
+    "slug": "listening-timer-focus-and-end-bell", "date": "2026-09-15", "category": "guide", "scene": "rain", "action": "listen",
+    "image": "/assets/yixiu/rain.jpg", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
+    "zh": {
+      "title": "播放定时、静心时长、结束提示音，怎么区分？", "summary": "三个设置各自负责不同的事。选对入口，就不用等着一个不会自动开始的练习。", "category": "使用指南", "readTime": "2 分钟阅读", "cta": "打开播放器设置定时",
+      "seoTitle": "一休定时与结束提示音怎么用？区分播放和静心时长", "metaDescription": "播放定时控制声音会话，静心时长控制呼吸练习，结束提示音默认关闭。了解一休免费选择及这些功能为什么不能替代系统闹钟。",
+      "sections": [
+        {"title": "播放定时在声音页", "body": "点播放按钮上方的时长，或点击时钟图标，选择这一段聆听的长度。H5 免费提供 5、15、30 分钟；60 分钟和不限时属于 App Plus。选择了时长以后，仍需开始播放，计时才服务于这段会话。"},
+        {"title": "静心有自己的开始按钮", "body": "底部「静心」的时长用于呼吸练习，与声音页的播放定时不是同一个设置。网页可以免费开始 1 分钟静心，较长选项会提示 App 权益。先选时长，再点开始；只切到静心页面不会替你完成练习。"},
+        {"title": "结束提示音是可选项", "body": "在「我的」中可打开结束提示音，它默认关闭。开启后，用于提示聆听或静心自然完成；主动暂停、重置或提前退出不应响起。声音是否能听清还取决于播放音量、设备和当前播放环境。"},
+        {"title": "准时提醒交给系统闹钟", "body": "定时和提示音都不是可靠的叫醒工具，尤其不要假设浏览器退到后台后仍会准点出声。若有必须按时参加的安排，请另外设置并检查手机系统闹钟。试听时可以先用短会话确认自己的偏好。"}
+      ]
+    },
+    "en": {
+      "title": "Listening timer, Focus duration or end bell?", "summary": "These three controls do different jobs. Choose the right one before starting your session.", "category": "Getting started", "readTime": "2 min read", "cta": "Open the player and choose a timer",
+      "seoTitle": "Yixiu Timers, Focus Duration and the Optional End Bell", "metaDescription": "Understand listening timers, the separate Focus practice and the default-off completion cue. Learn the free options and why they do not replace a system alarm.",
+      "sections": [
+        {"title": "Listening timers live in Sounds", "body": "Tap the duration above the play button or the clock icon to choose a session length. The free web options are 5, 15 and 30 minutes; 60 minutes and unlimited listening belong to app Plus. Choosing a duration still requires starting playback for the session."},
+        {"title": "Focus has a separate start button", "body": "The duration in the bottom Focus tab belongs to the breathing practice, not the Sounds listening timer. One minute is free on the web, while longer options explain app access. Select a duration and press Start; switching tabs alone does not complete a practice."},
+        {"title": "The end bell is optional", "body": "You can enable the end bell in My Yixiu; it is off by default. When enabled, it marks natural listening or Focus completion. Pausing, resetting or leaving early should not ring it. Audibility also depends on playback volume, the device and the current listening environment."},
+        {"title": "Use a system alarm for appointments", "body": "Neither the timer nor the cue is a reliable wake-up alarm. In particular, do not assume a background browser will sound at the required moment. Set and check a separate system alarm for anything time-critical, and use a short listening session to explore your preferences."}
+      ]
+    }
+  },
+  {
     "slug": "yixiu-free-and-plus-guide",
     "date": "2026-09-13",
     "category": "guide",
