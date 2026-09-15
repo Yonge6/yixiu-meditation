@@ -16,8 +16,9 @@ struct FreeMusicPolicyHarness {
         }
         precondition(SubscriptionAccessPolicy.freeNatureScenes.count == 5)
         precondition(SubscriptionAccessPolicy.freeScenes.count == 7)
-        precondition(MeditationScene.availableScenes.count == 24)
-        precondition(MeditationScene.availableScenes.filter(\.isMeditationMusic).count == 10)
+        precondition(MeditationScene.availableScenes.count == 34)
+        precondition(MeditationScene.availableScenes.filter(\.isMeditationMusic).count == 20)
+        precondition(MeditationScene.availableScenes.filter { $0.matches(.classical) }.count == 10)
         for scene in [MeditationScene.sunlitShore, .oceanPassage, .cloudDrift, .quietOrbit] {
             precondition(MeditationScene(rawValue: scene.rawValue) == scene)
             precondition(!scene.matches(.all))
@@ -31,6 +32,6 @@ struct FreeMusicPolicyHarness {
             precondition(scene.audioSubdirectory == "Audio/Meditation")
             precondition(scene.shareURL(language: .zh).query!.contains("music=\(scene.rawValue)"))
         }
-        print("FREE_MUSIC_POLICY_PASS: two free tracks, 24 available scenes, retired tracks denied, historical IDs preserved")
+        print("FREE_MUSIC_POLICY_PASS: two free tracks, 34 available scenes, ten classical works, retired tracks denied, historical IDs preserved")
     }
 }

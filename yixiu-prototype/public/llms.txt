@@ -2,7 +2,7 @@
 
 > Free nature sounds and white noise for sleep, focus, studying, meditation, and quiet resets.
 
-Yixiu (一休冥想) is a bilingual nature-sound and meditation-music experience for the web and iPhone. The current main web player is account-free and ad-free, with five free nature sounds, three free meditation tracks (Oasis Rest and First Breath), one-minute Focus and 5/15/30-minute timers. The iPhone app offers optional Plus access to all 14 nature sounds and 10 meditation tracks, 60-minute/unlimited listening and 3/5/10-minute breathing. These product facts were checked against the public 1.13 listing on 2026-09-13. Individual legacy guide previews are separate listening surfaces; their available samples do not imply that every item in the main library is free.
+Yixiu (一休冥想) is a bilingual nature-sound and music experience for the web and iPhone. The main web player is account-free, with five free nature sounds, two free music tracks (Oasis Rest and First Breath), one-minute Focus and 5/15/30-minute timers. The updated web catalog has 14 nature sounds and 20 music tracks, including ten classical works. All ten classical recordings have full free listening and downloads at /music-credits.html#classical under their individual open licenses. The corresponding native catalog is prepared for a future App update; installed and published App Store versions may differ. Plus purchases are verified by Apple in the app, never by browser storage. Separate source-page listening does not grant Plus in the main player.
 
 - [Yixiu on the web](https://yixiu.wonderelian.com/): Browse the bilingual library and play its free selections.
 - [Yixiu on the App Store](https://apps.apple.com/app/id1461182261): Official iPhone app listing.

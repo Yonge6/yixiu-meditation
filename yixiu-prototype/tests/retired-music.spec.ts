@@ -10,7 +10,7 @@ for (const scene of retired) test(`${scene} old links fall back without playback
   expect(audioRequests).toEqual([]);
 });
 
-test('saved removed scenes are sanitized and library contains 24 available sounds', async ({ page }) => {
+test('saved removed scenes are sanitized and library contains 34 available sounds', async ({ page }) => {
   await page.addInitScript(ids => {
     localStorage.setItem('yixiu.scene', JSON.stringify(ids[0]));
     localStorage.setItem('yixiu.favorites', JSON.stringify([...ids, 'rain']));
@@ -23,9 +23,9 @@ test('saved removed scenes are sanitized and library contains 24 available sound
   await page.getByRole('button', { name: '我的 ME' }).click();
   await page.getByRole('button', { name: '浏览全部声音' }).click();
   const library = page.getByRole('dialog', { name: '声音库' });
-  await expect(library.locator('.scene-grid article')).toHaveCount(24);
+  await expect(library.locator('.scene-grid article')).toHaveCount(34);
   for (const name of ['日光浅岸', '海上行旅', '云间漂浮', '静默星轨']) await expect(library).not.toContainText(name);
   await library.getByRole('tab', { name: '冥想音乐', exact: true }).click();
-  await expect(library.locator('.scene-grid article')).toHaveCount(10);
+  await expect(library.locator('.scene-grid article')).toHaveCount(20);
   await expect(library.locator('.scene-access-badge.is-free')).toHaveCount(2);
 });

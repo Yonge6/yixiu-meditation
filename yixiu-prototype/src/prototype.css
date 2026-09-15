@@ -3447,3 +3447,6 @@ img[data-image-scene="tide"] {
     transition-duration: 0.01ms !important;
   }
 }
+/* Classical collection uses existing library geometry and membership policy. */
+.classical-listening-note { margin: 4px 0 16px; font-size: 14px; line-height: 1.6; }
+.classical-listening-note a { color: #b9f5f7; text-underline-offset: 4px; }
