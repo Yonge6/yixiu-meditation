@@ -92,7 +92,7 @@ final class AppState: ObservableObject {
             let savedScene = defaults.string(forKey: "scene"),
             let restoredScene = MeditationScene(rawValue: savedScene)
         {
-            scene = restoredScene
+            scene = restoredScene.isAvailable ? restoredScene : .ocean
         }
 
         let savedDuration = defaults.integer(forKey: "duration")
@@ -103,8 +103,10 @@ final class AppState: ObservableObject {
 
         favorites = (defaults.stringArray(forKey: "favorites") ?? [])
             .compactMap(MeditationScene.init(rawValue:))
+            .filter(\.isAvailable)
         recentScenes = (defaults.stringArray(forKey: "recentScenes") ?? [])
             .compactMap(MeditationScene.init(rawValue:))
+            .filter(\.isAvailable)
         let savedFocusDuration = defaults.integer(forKey: "focusDuration")
         if [1, 3, 5, 10].contains(savedFocusDuration) {
             focusDuration = savedFocusDuration
@@ -227,15 +229,15 @@ final class AppState: ObservableObject {
     }
 
     func moveScene(_ direction: Int) {
-        guard let currentIndex = MeditationScene.allCases.firstIndex(of: scene) else { return }
+        guard let currentIndex = MeditationScene.availableScenes.firstIndex(of: scene) else { return }
         let nextIndex = currentIndex + direction
-        guard MeditationScene.allCases.indices.contains(nextIndex) else { return }
-        selectScene(MeditationScene.allCases[nextIndex], autoplay: isPlaying)
+        guard MeditationScene.availableScenes.indices.contains(nextIndex) else { return }
+        selectScene(MeditationScene.availableScenes[nextIndex], autoplay: isPlaying)
     }
 
     func canMoveScene(_ direction: Int) -> Bool {
-        guard let currentIndex = MeditationScene.allCases.firstIndex(of: scene) else { return false }
-        return MeditationScene.allCases.indices.contains(currentIndex + direction)
+        guard let currentIndex = MeditationScene.availableScenes.firstIndex(of: scene) else { return false }
+        return MeditationScene.availableScenes.indices.contains(currentIndex + direction)
     }
 
     func selectDuration(_ minutes: Int) {
@@ -309,6 +311,7 @@ final class AppState: ObservableObject {
     }
 
     private func canAccessScene(_ target: MeditationScene) -> Bool {
+        guard target.isAvailable else { return false }
         guard let enforcedAccessLevel else { return true }
         return SubscriptionAccessPolicy.canAccess(scene: target, level: enforcedAccessLevel)
     }

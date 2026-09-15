@@ -23,7 +23,7 @@ enum YixiuPlusPlan: String, CaseIterable, Identifiable {
 enum SubscriptionAccessPolicy {
     static let legacyCutoffVersion = "1.2"
     static let freeNatureScenes: Set<MeditationScene> = [.ocean, .rain, .spring, .birds, .stream]
-    static let freeMeditationScenes: Set<MeditationScene> = [.oasisRest, .oceanPassage, .firstBreath]
+    static let freeMeditationScenes: Set<MeditationScene> = [.oasisRest, .firstBreath]
     static let freeScenes = freeNatureScenes.union(freeMeditationScenes)
 
     static func isLegacyPurchase(originalAppVersion: String) -> Bool {
@@ -31,7 +31,8 @@ enum SubscriptionAccessPolicy {
     }
 
     static func canAccess(scene: MeditationScene, level: YixiuAccessLevel) -> Bool {
-        switch level {
+        guard scene.isAvailable else { return false }
+        return switch level {
         case .free:
             freeScenes.contains(scene)
         case .legacy:

@@ -3,7 +3,6 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const tracks = [
-  { id: 'cloudDrift', file: 'cloud-drift', zh: '云间漂浮', seconds: 532.173, hash: 'ff0c1a3741068ea6c2811ba8fe09a00a03d4ab9d34d10aa8c759510b58059ac0' },
   { id: 'softLightRest', file: 'soft-light-rest', zh: '柔光午憩', seconds: 338.88, hash: '11780f8702c10706364a6f3b34b30546277622046df230d98bd53e44ffdc8dc0' },
   { id: 'deepWaterRest', file: 'deep-water-rest', zh: '深水安歇', seconds: 322.827, hash: 'd1a35f8dac51ba4a6b994c6ef8d4c42736e629295200f9a91886d568c27f9a4f' },
 ];
@@ -42,13 +41,13 @@ test('ambient assets are identical in native/web and fully decode with gentle bo
   }
 });
 
-test('all three additions appear in matching categories and remain Plus', async ({ page }) => {
+test('remaining ambient additions appear in matching categories and remain Plus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?lang=zh');
   await page.getByRole('button', { name: '我的 ME' }).click();
   await page.getByRole('button', { name: '浏览全部声音' }).click();
   const library = page.getByRole('dialog', { name: '声音库' });
-  await expect(library.locator('.scene-grid article')).toHaveCount(28);
+  await expect(library.locator('.scene-grid article')).toHaveCount(24);
   for (const category of ['冥想音乐', '睡眠', '放松']) {
     await library.getByRole('tab', { name: category, exact: true }).click();
     for (const track of tracks) {
@@ -60,7 +59,7 @@ test('all three additions appear in matching categories and remain Plus', async 
   await library.getByRole('button', { name: '切换到深水安歇', exact: true }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: '/tmp/yixiu-ambient-library.png' });
   await library.getByText('柔光午憩', { exact: true }).click();
-  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('14 首冥想音乐');
+  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('10 首冥想音乐');
   await expect(page.locator('.yixiu-app')).toHaveAttribute('data-scene', 'ocean');
 });
 

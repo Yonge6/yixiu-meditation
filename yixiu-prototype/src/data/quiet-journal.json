@@ -124,11 +124,11 @@
     "image": "/assets/yixiu/deep-ocean-hero.png", "imageWidth": 941, "imageHeight": 1672, "sourceContentIds": [], "sources": [],
     "zh": {
       "title": "雨声、海浪还是音乐？不用选出冠军", "summary": "拿同一件小事试一试，留下合适的声音。今天的答案，不必成为永久偏好。", "category": "专注", "readTime": "2 分钟阅读", "cta": "先试听大海声",
-      "seoTitle": "如何选择阅读背景声？比较雨声、海浪与音乐 | 一休日常", "metaDescription": "用同一段文字和舒适音量比较背景声音，不追求所谓最佳频率。免费试听大海、屋檐雨与三首冥想音乐，也保留不播放的选择。",
+      "seoTitle": "如何选择阅读背景声？比较雨声、海浪与音乐 | 一休日常", "metaDescription": "用同一段文字和舒适音量比较背景声音，不追求所谓最佳频率。免费试听大海、屋檐雨与两首冥想音乐，也保留不播放的选择。",
       "sections": [
         {"title": "先选一个实际任务", "body": "拿一小段待读的文字，或一项简单整理工作来试。不要只看场景名字判断适不适合自己，也不用寻找对所有人都有效的最佳声音。真正要回答的是：它适合此刻手边这件事吗？"},
         {"title": "一次只换一个条件", "body": "先用舒适音量听一段大海，再换屋檐雨，任务保持不变。没有必要把音量和计时也一起改掉。留意自己是否总想停下工作去听声音；如果是，试着调低，或换成安静。"},
-        {"title": "音乐也是另一种选择", "body": "网页中「绿洲停歇」「海上行旅」「初息」可以免费试听。旋律与自然声的感受不同，但不意味着哪一种更高级。若开始追着音乐听，就把它留到休息时，不必强行当作工作背景。"},
+        {"title": "音乐也是另一种选择", "body": "网页中「绿洲停歇」「初息」可以免费试听。旋律与自然声的感受不同，但不意味着哪一种更高级。若开始追着音乐听，就把它留到休息时，不必强行当作工作背景。"},
         {"title": "保留一个今天的选择", "body": "找到合适的就先停止比较，收藏起来，回到原来的事情。以后环境和任务变了，再重新选择也可以。声音没有排名要完成；不播放，同样是比较之后得到的一个有效答案。"}
       ]
     },
@@ -138,7 +138,7 @@
       "sections": [
         {"title": "Use a real task", "body": "Try a short passage you need to read or a small organizing job. Scene names alone cannot tell you what you will enjoy, and you do not need a sound that works for everyone. Ask whether it fits the thing in front of you now."},
         {"title": "Change one thing at a time", "body": "Listen to Ocean Waves at a comfortable volume, then try Rain on Eaves with the same task. There is no need to change volume and timer at the same time. Notice whether you keep abandoning the task to listen; lower the sound or try silence if you do."},
-        {"title": "Music is another option", "body": "Oasis Rest, Ocean Passage and First Breath are free to try on the web. Melody feels different from nature sound, but neither is a more advanced choice. If you want to follow the music closely, keep it for a break rather than forcing it into the background."},
+        {"title": "Music is another option", "body": "Oasis Rest and First Breath are free to try on the web. Melody feels different from nature sound, but neither is a more advanced choice. If you want to follow the music closely, keep it for a break rather than forcing it into the background."},
         {"title": "Keep one choice for today", "body": "Once something fits, stop comparing, save it as a favorite and return to the task. You can choose again when your surroundings or work change. There is no ranking to complete, and leaving the player off is a valid result of the comparison."}
       ]
     }
@@ -216,23 +216,23 @@
     }
   },
   {
-    "slug": "keep-your-favorites-close", "date": "2026-09-15", "category": "guide", "scene": "oceanPassage", "action": "listen",
+    "slug": "keep-your-favorites-close", "date": "2026-09-15", "category": "guide", "scene": "firstBreath", "action": "listen",
     "image": "/assets/yixiu/meditation/ocean-passage.jpg", "imageWidth": 1024, "imageHeight": 1536, "sourceContentIds": [], "sources": [],
     "zh": {
-      "title": "收藏喜欢的声音，下次少找一会儿", "summary": "心形可以记住偏好，但网页收藏只留在当前浏览器。先弄清它保存什么，再放心使用。", "category": "使用指南", "readTime": "2 分钟阅读", "cta": "试听并收藏海上行旅",
+      "title": "收藏喜欢的声音，下次少找一会儿", "summary": "心形可以记住偏好，但网页收藏只留在当前浏览器。先弄清它保存什么，再放心使用。", "category": "使用指南", "readTime": "2 分钟阅读", "cta": "试听并收藏初息",
       "seoTitle": "一休怎么收藏声音？网页收藏与本地记录说明", "metaDescription": "了解一休播放器心形收藏、我的收藏入口及本地保存范围。收藏不等于下载音频或开通 Plus，换设备不会自动同步。",
       "sections": [
-        {"title": "先听，再点亮心形", "body": "选一个实际喜欢的声音，在播放器点亮心形即可收藏。可以先试听免费的「海上行旅」，不必把整个声音库都收进去。收藏的作用是让下次选择简单一点，不是形成一份必须听完的清单。"},
+        {"title": "先听，再点亮心形", "body": "选一个实际喜欢的声音，在播放器点亮心形即可收藏。可以先试听免费的「初息」，不必把整个声音库都收进去。收藏的作用是让下次选择简单一点，不是形成一份必须听完的清单。"},
         {"title": "从「我的」找回来", "body": "下次打开同一个浏览器，可以到「我的」查看收藏，选回喜欢的声音。想更换偏好时，在播放器再次点击心形即可取消。取消收藏只是移除这个偏好，不会删除一休的原始音频。"},
         {"title": "网页没有云端同步", "body": "网页收藏和偏好保存在当前浏览器，不需要注册账号，也不会自动跟随你到另一台设备。清除站点数据或使用临时浏览环境可能让记录不再保留。它不是云端备份，重要偏好可以自己记下名称。"},
         {"title": "收藏不改变使用权益", "body": "点亮心形不等于下载音频，也不会解锁 Plus 内容。网页仍是免费体验，Apple 购买与恢复需要在 App 内验证。如果换设备后看见不同的收藏列表，不必因此重新购买会员。"}
       ]
     },
     "en": {
-      "title": "Keep your favorite sounds close", "summary": "The heart remembers a preference in this browser. It is not a cloud backup, a download or a Plus purchase.", "category": "Getting started", "readTime": "2 min read", "cta": "Try and favorite Ocean Passage",
+      "title": "Keep your favorite sounds close", "summary": "The heart remembers a preference in this browser. It is not a cloud backup, a download or a Plus purchase.", "category": "Getting started", "readTime": "2 min read", "cta": "Try and favorite First Breath",
       "seoTitle": "How Yixiu Favorites Work on the Web | Yixiu", "metaDescription": "Use the heart to save favorite sounds and find them in My Yixiu. Learn what stays in your browser and why a favorite is not an audio download or Plus unlock.",
       "sections": [
-        {"title": "Listen before tapping the heart", "body": "Choose a sound you actually enjoy, then tap the heart in the player. Free Ocean Passage is one option to try. You do not need to collect the entire library. Favorites are there to shorten the next decision, not create another listening checklist."},
+        {"title": "Listen before tapping the heart", "body": "Choose a sound you actually enjoy, then tap the heart in the player. Free First Breath is one option to try. You do not need to collect the entire library. Favorites are there to shorten the next decision, not create another listening checklist."},
         {"title": "Find it in My Yixiu", "body": "Return in the same browser and open your favorites in My Yixiu to choose the sound again. Tap the player's heart once more to remove that preference. Removing a favorite does not delete the original recording from Yixiu."},
         {"title": "Web preferences do not cloud-sync", "body": "Favorites and preferences stay in this browser without an account. They do not automatically follow you to another device. Clearing site data or using a temporary browsing session may remove them. This is not a cloud backup; note the names yourself if you want a separate reference."},
         {"title": "A favorite does not change access", "body": "The heart is not an audio download and does not unlock Plus. The web player remains the free experience; Apple purchases and restoration are verified in the app. A different favorite list on another device is not a reason to buy membership again."}
@@ -275,14 +275,14 @@
     "sourceContentIds": [],
     "zh": {
       "title": "一休免费版能做什么？网页与 Plus 使用指南",
-      "summary": "一休网页无需账号，可免费使用 5 种自然声、3 首冥想音乐、1 分钟静心和 5/15/30 分钟定时。这里把网页、iPhone App 和 Plus 的区别说清楚。",
+      "summary": "一休网页无需账号，可免费使用 5 种自然声、2 首冥想音乐、1 分钟静心和 5/15/30 分钟定时。这里把网页、iPhone App 和 Plus 的区别说清楚。",
       "category": "使用指南",
       "readTime": "3 分钟阅读",
       "cta": "先听一段免费大海声",
       "sections": [
         {
           "title": "打开网页，可以先听哪些声音？",
-          "body": "从大海、屋檐雨、春日花溪、晨林鸟语、山间溪流中任选一种，或试听绿洲停歇、海上行旅、初息三首冥想音乐。不需要创建账号，也不用先购买 Plus。声音只是一种可选的背景；是否喜欢，适合自己听过再决定。"
+          "body": "从大海、屋檐雨、春日花溪、晨林鸟语、山间溪流中任选一种，或试听绿洲停歇、初息两首冥想音乐。不需要创建账号，也不用先购买 Plus。声音只是一种可选的背景；是否喜欢，适合自己听过再决定。"
         },
         {
           "title": "怎么选择播放时长？",
@@ -290,7 +290,7 @@
         },
         {
           "title": "Plus 多了什么？",
-          "body": "当前 iPhone 版的一休 Plus 解锁全部 14 种自然声和 14 首冥想音乐、60 分钟与不限时聆听，以及 3、5、10 分钟呼吸练习。网页版提供免登录的免费体验；Plus 权益在 iPhone App 中通过 Apple 购买和验证。价格与购买方式以设备上的 App Store 和应用内购买页面为准。"
+          "body": "一休新版 Plus 声音库包含 14 种自然声和 10 首冥想音乐（已安装版本的曲目可能不同）、60 分钟与不限时聆听，以及 3、5、10 分钟呼吸练习。网页版提供免登录的免费体验；Plus 权益在 iPhone App 中通过 Apple 购买和验证。价格与购买方式以设备上的 App Store 和应用内购买页面为准。"
         },
         {
           "title": "网页能替代 iPhone 后台播放吗？",
@@ -310,14 +310,14 @@
     },
     "en": {
       "title": "Is Yixiu free? A guide to web listening and Plus",
-      "summary": "Yixiu’s web player needs no account. Start with five free nature sounds, three meditation tracks, one-minute Focus and 5/15/30-minute timers. Here is how the web player and iPhone Plus differ.",
+      "summary": "Yixiu’s web player needs no account. Start with five free nature sounds, two meditation tracks, one-minute Focus and 5/15/30-minute timers. Here is how the web player and iPhone Plus differ.",
       "category": "Getting started",
       "readTime": "3 min read",
       "cta": "Try free ocean sounds",
       "sections": [
         {
           "title": "What can I listen to for free?",
-          "body": "Choose Ocean, Rain on Eaves, Spring Creek, Morning Birds or Mountain Stream. The free meditation selections are Oasis Rest, Ocean Passage and First Breath. You do not need an account or a Plus purchase to try them. Sound is optional background; listen first and decide whether you enjoy it."
+          "body": "Choose Ocean, Rain on Eaves, Spring Creek, Morning Birds or Mountain Stream. The free meditation selections are Oasis Rest and First Breath. You do not need an account or a Plus purchase to try them. Sound is optional background; listen first and decide whether you enjoy it."
         },
         {
           "title": "How do I set a timer?",
@@ -325,7 +325,7 @@
         },
         {
           "title": "What does Yixiu Plus add?",
-          "body": "In the current iPhone app, Plus unlocks all 14 nature sounds and 14 meditation tracks, 60-minute and unlimited listening, and 3-, 5- and 10-minute breathing. The web player provides the account-free experience. Plus is purchased and verified through Apple in the iPhone app. Check the App Store and the in-app purchase screen on your device for current pricing and purchase options."
+          "body": "The updated Plus catalog includes 14 nature sounds and 10 meditation tracks (installed versions may differ), 60-minute and unlimited listening, and 3-, 5- and 10-minute breathing. The web player provides the account-free experience. Plus is purchased and verified through Apple in the iPhone app. Check the App Store and the in-app purchase screen on your device for current pricing and purchase options."
         },
         {
           "title": "Will the web player keep going when I lock my iPhone?",
@@ -341,7 +341,7 @@
         }
       ],
       "seoTitle": "Is Yixiu Free? Web Features & Plus Explained | Yixiu",
-      "metaDescription": "Try five free nature sounds, three meditation tracks and simple timers. Compare Yixiu web features with iPhone Plus, background playback and earlier purchases."
+      "metaDescription": "Try five free nature sounds, two meditation tracks and simple timers. Compare Yixiu web features with iPhone Plus, background playback and earlier purchases."
     },
     "sources": [
       {

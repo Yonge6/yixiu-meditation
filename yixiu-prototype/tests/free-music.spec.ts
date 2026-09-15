@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 for (const [scene, title, file] of [
   ['oasisRest', '绿洲停歇', 'oasis-rest'],
-  ['oceanPassage', '海上行旅', 'ocean-passage'],
   ['firstBreath', '初息', 'first-breath'],
 ]) {
   test(`${title} is Free from a deep link and plays its own track`, async ({ page }) => {
