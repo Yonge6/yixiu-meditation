@@ -379,9 +379,9 @@ struct MeView: View {
         case .plus:
             return language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
         case .legacy:
-            return language.text(zh: "原有 14 种自然声继续保留，2 首冥想音乐免费", en: "Your 14 nature sounds remain, plus 2 free meditation tracks")
+            return language.text(zh: "原有 14 种自然声继续保留，7 首音乐免费（含 5 首古典）", en: "Your 14 nature sounds remain, plus 7 free music tracks (5 classical)")
         case .free:
-            return language.text(zh: "5 种自然声 + 2 首冥想音乐免费聆听", en: "5 nature sounds + 2 meditation tracks are free")
+            return language.text(zh: "10 种自然声 + 7 首音乐免费（含 5 首古典）", en: "10 nature sounds + 7 music tracks are free (5 classical)")
         }
     }
 

@@ -205,7 +205,7 @@ img[data-image-scene="tide"] {
 .player-header {
   position: absolute;
   z-index: 20;
-  top: max(62px, calc(env(safe-area-inset-top, 0px) + 30px));
+  top: max(46px, calc(env(safe-area-inset-top, 0px) + 14px));
   right: 24px;
   left: 24px;
   display: flex;
@@ -3050,7 +3050,7 @@ img[data-image-scene="tide"] {
   }
 
   .player-header {
-    top: max(32px, calc(env(safe-area-inset-top, 0px) + 24px));
+    top: max(16px, calc(env(safe-area-inset-top, 0px) + 8px));
     right: clamp(30px, 4vw, 72px);
     left: clamp(30px, 4vw, 72px);
   }
@@ -3301,7 +3301,7 @@ img[data-image-scene="tide"] {
   }
 
   .player-header {
-    top: 38px;
+    top: max(22px, calc(env(safe-area-inset-top, 0px) + 8px));
   }
 
   .scene-identity {
@@ -3448,5 +3448,3 @@ img[data-image-scene="tide"] {
   }
 }
 /* Classical collection uses existing library geometry and membership policy. */
-.classical-listening-note { margin: 4px 0 16px; font-size: 14px; line-height: 1.6; }
-.classical-listening-note a { color: #b9f5f7; text-underline-offset: 4px; }

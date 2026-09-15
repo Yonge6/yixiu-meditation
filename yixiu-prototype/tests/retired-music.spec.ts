@@ -27,5 +27,5 @@ test('saved removed scenes are sanitized and library contains 34 available sound
   for (const name of ['日光浅岸', '海上行旅', '云间漂浮', '静默星轨']) await expect(library).not.toContainText(name);
   await library.getByRole('tab', { name: '冥想音乐', exact: true }).click();
   await expect(library.locator('.scene-grid article')).toHaveCount(20);
-  await expect(library.locator('.scene-access-badge.is-free')).toHaveCount(2);
+  await expect(library.locator('.scene-access-badge.is-free')).toHaveCount(7);
 });

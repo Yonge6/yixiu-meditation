@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { classicalMusic } from '../src/data/classical-music';
+const freeClassical = new Set(["clairDeLune", "gymnopedie", "canon", "moonlightSonata", "preludeC"]);
 const manifest = JSON.parse(readFileSync('../docs/audio/classical-ten-sources.json', 'utf8'));
 
 test('ten complete recordings and artworks match native assets and verified hashes', async ({ page }) => {
@@ -43,21 +44,26 @@ for (const width of [390, 768]) test(`classical library has ten cards and scroll
   const library = page.getByRole('dialog', { name: '声音库' });
   await library.getByRole('tab', { name: '古典静听', exact: true }).click();
   await expect(library.locator('.scene-grid article')).toHaveCount(10);
-  await expect(library.locator('.scene-access-badge.is-plus')).toHaveCount(10);
+  await expect(library.locator('.scene-access-badge.is-plus')).toHaveCount(5);
   for (const track of classicalMusic) await expect(library.locator(`[data-scene-id="${track.id}"]`)).toHaveCount(1);
   await library.locator('[data-scene-id="prelude17"]').scrollIntoViewIfNeeded();
   await expect(library.locator('[data-scene-id="prelude17"]')).toBeInViewport();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: `/tmp/yixiu-classical-library-${width}.png` });
-  await library.getByRole('link', { name: /免费完整试听/ }).click();
-  await expect(page).toHaveURL(/music-credits.html#classical/);
+  await expect(library.locator('.classical-listening-note')).toHaveCount(0);
+  await expect(library.locator('.scene-access-badge.is-free')).toHaveCount(5);
 });
 
-for (const track of classicalMusic) test(`${track.id} share preserves artwork and Plus gate`, async ({ page }) => {
+for (const track of classicalMusic) test(`${track.id} share preserves artwork and assigned access`, async ({ page }) => {
   await page.goto(`/?music=${track.id}&lang=zh`);
   await expect(page.getByRole('heading', { name: track.zh, exact: true })).toBeVisible();
   await expect(page.locator('.yixiu-app')).toHaveAttribute('data-scene', track.id);
   await page.getByRole('button', { name: '播放', exact: true }).click();
+  if (freeClassical.has(track.id)) {
+    await expect(page.getByRole('button', { name: '暂停', exact: true })).toBeVisible();
+    await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toHaveCount(0);
+    return;
+  }
   await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toBeVisible();
   await expect(page.getByRole('link', { name: '10 首古典名曲 · 免费完整试听' })).toHaveAttribute('href', '/music-credits.html#classical');
 });
