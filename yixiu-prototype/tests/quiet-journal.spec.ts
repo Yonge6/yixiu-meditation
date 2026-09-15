@@ -34,7 +34,8 @@ test("every bilingual article has a real page, matching metadata and free practi
 test("fifteen-card drawer filters correctly and the final note remains reachable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 600 });
   await page.goto("/?lang=zh&scene=rain");
-  await page.getByRole("button", { name: "打开一休日常" }).click();
+  await page.getByRole("button", { name: "我的 ME", exact: true }).click();
+  await page.getByRole("button", { name: "一休日常 睡前、专注与片刻放松" }).click();
   const drawer = page.getByRole("dialog", { name: "一休日常" });
   for (const [label, category] of [["睡前", "sleep"], ["专注", "focus"], ["片刻", "reset"], ["使用指南", "guide"]]) {
     await drawer.getByRole("button", { name: label, exact: true }).click();
@@ -48,7 +49,8 @@ test("fifteen-card drawer filters correctly and the final note remains reachable
 
 test("product guide exposes verifiable free access without unlocking Plus", async ({ page }) => {
   await page.goto("/?lang=zh&scene=ocean");
-  await page.getByRole("button", { name: "打开一休日常" }).click();
+  await page.getByRole("button", { name: "我的 ME", exact: true }).click();
+  await page.getByRole("button", { name: "一休日常 睡前、专注与片刻放松" }).click();
   const drawer = page.getByRole("dialog", { name: "一休日常" });
   await drawer.getByRole("button", { name: "使用指南", exact: true }).click();
   await drawer.locator(".quiet-card").filter({ hasText: "一休免费版能做什么？" }).click();
@@ -69,7 +71,8 @@ test("journal navigation preserves playback, closes with Escape and restores foc
   await page.goto("/?lang=zh&scene=ocean");
   await page.locator(".primary-transport").click();
   await expect(page.locator(".yixiu-app")).toHaveClass(/is-audio-playing/);
-  const entry = page.getByRole("button", { name: "打开一休日常" });
+  await page.getByRole("button", { name: "我的 ME", exact: true }).click();
+  const entry = page.getByRole("button", { name: "一休日常 睡前、专注与片刻放松" });
   await entry.click();
   const drawer = page.getByRole("dialog", { name: "一休日常" });
   await expect(drawer.locator(".quiet-card")).toHaveCount(entries.length);
@@ -82,6 +85,7 @@ test("journal navigation preserves playback, closes with Escape and restores foc
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
   await expect(entry).toBeFocused();
+  await page.getByRole("button", { name: "声音 SOUNDS", exact: true }).click();
   await page.locator(".primary-transport").click();
 });
 
@@ -120,7 +124,8 @@ for (const size of [{ width: 320, height: 640 }, { width: 390, height: 844 }, { 
   test(`journal remains readable at ${size.width}px`, async ({ page }) => {
     await page.setViewportSize(size);
     await page.goto("/?lang=en");
-    await page.getByRole("button", { name: "Open Quiet Journal" }).click();
+    await page.getByRole("button", { name: "Me 我的", exact: true }).click();
+    await page.getByRole("button", { name: "Quiet Journal Notes for rest, focus and a small pause" }).click();
     const drawer = page.getByRole("dialog", { name: "Quiet Journal" });
     await expect(drawer).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();

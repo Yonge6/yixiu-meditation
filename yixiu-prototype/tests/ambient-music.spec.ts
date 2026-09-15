@@ -59,7 +59,7 @@ test('remaining ambient additions appear in matching categories and remain Plus'
   await library.getByRole('button', { name: '切换到深水安歇', exact: true }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: '/tmp/yixiu-ambient-library.png' });
   await library.getByText('柔光午憩', { exact: true }).click();
-  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('20 首音乐（含 10 首古典）');
+  await expect(page.getByRole('dialog', { name: '升级一休 Plus' })).toContainText('13 首音乐（含另外 5 首古典）');
   await expect(page.locator('.yixiu-app')).toHaveAttribute('data-scene', 'ocean');
 });
 

@@ -5,7 +5,6 @@ import "@fontsource/noto-serif-sc/400.css";
 import "@fontsource/noto-serif-sc/600.css";
 import {
   ArrowLeftIcon,
-  ReaderIcon,
   ChevronRightIcon,
   ClockIcon,
   Cross2Icon,
@@ -100,12 +99,13 @@ type Scene = {
 };
 
 const classicalSceneIds = classicalMusic.map(track => track.id);
+const freeClassicalSceneIds = new Set<SceneId>(["clairDeLune", "gymnopedie", "canon", "moonlightSonata", "preludeC"]);
 const classicalScenes = Object.fromEntries(classicalMusic.map(track => [track.id, {
   id: track.id, zh: track.zh, en: track.en,
   useZh: track.composerZh + " · " + track.duration, useEn: track.composer + " · " + track.duration,
   image: "/assets/yixiu/classical/" + track.slug + ".jpg",
   audio: "/assets/yixiu/audio/meditation/" + track.slug + ".m4a",
-  kind: "meditation", filter: "lowpass", frequency: 20000, level: 0.08,
+  kind: "meditation", free: freeClassicalSceneIds.has(track.id), filter: "lowpass", frequency: 20000, level: 0.08,
 }])) as Record<(typeof classicalMusic)[number]["id"], Scene>;
 
 const scenes: Record<SceneId, Scene> = {
@@ -415,7 +415,7 @@ const sceneCategories: SceneCategory[] = ["all", "classical", "nature", "meditat
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
 const musicPlusAppStoreUrl = "https://apps.apple.com/app/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
-const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", ...sceneOrder.filter(id => scenes[id].free)]);
+const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stream", "lake", "valley", "bamboo", "window", "tide", ...sceneOrder.filter(id => scenes[id].free)]);
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
   sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].kind === "meditation" ? scenes[sceneId].image : `/assets/yixiu/thumbs/${sceneId}.jpg`]),
@@ -1474,7 +1474,6 @@ export default function Prototype() {
           <small>{language === "zh" ? "YIXIU" : "一休"}</small>
         </div>
         <div className="header-actions">
-          <button ref={menuButtonRef} className="header-journal-button" type="button" aria-label={language === "zh" ? "打开一休日常" : "Open Quiet Journal"} aria-haspopup="dialog" aria-expanded={menuOpen && drawerView === "journal"} data-analytics-event="yixiu_journal_open" data-analytics-placement="player_header" onClick={openQuietJournal}><ReaderIcon /></button>
           <a
             className="header-download-link"
             href={sleepAppStoreUrl}
@@ -1910,7 +1909,7 @@ export default function Prototype() {
                 </section>
 
                 <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
-                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "5 种自然声 + 2 首冥想音乐" : "5 nature sounds + 2 meditation tracks"}</small></div><PremiumGemIcon /></div>
+                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "10 种自然声 + 7 首音乐（含 5 首古典）" : "10 nature sounds + 7 music tracks (5 classical)"}</small></div><PremiumGemIcon /></div>
                   <p>{language === "zh" ? "免费静心 1 分钟，聆听定时 5 / 15 / 30 分钟。Plus 可在 App 中使用更长练习与全部声音。" : "Free: 1-minute Focus and 5 / 15 / 30-minute timers. Plus offers longer practices and every sound in the app."}</p>
                   <button type="button" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
                   <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
@@ -2008,7 +2007,7 @@ export default function Prototype() {
 
                 <p className="me-group-label">{language === "zh" ? "日常片刻" : "EVERYDAY MOMENTS"}</p>
                 <section className="trust-links" aria-label={language === "zh" ? "一休日常栏目" : "Quiet Journal column"}>
-                  <button type="button" aria-haspopup="dialog" data-analytics-event="yixiu_journal_open" data-analytics-placement="me" onClick={openQuietJournal}><span><strong>{language === "zh" ? "一休日常" : "Quiet Journal"}</strong><small>{language === "zh" ? "睡前、专注与片刻放松" : "Notes for rest, focus and a small pause"}</small></span><ChevronRightIcon /></button>
+                  <button ref={menuButtonRef} type="button" aria-haspopup="dialog" data-analytics-event="yixiu_journal_open" data-analytics-placement="me" onClick={openQuietJournal}><span><strong>{language === "zh" ? "一休日常" : "Quiet Journal"}</strong><small>{language === "zh" ? "睡前、专注与片刻放松" : "Notes for rest, focus and a small pause"}</small></span><ChevronRightIcon /></button>
                 </section>
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
@@ -2106,7 +2105,6 @@ export default function Prototype() {
                 </button>
               ))}
             </div>
-            {sceneCategory === "classical" && <p className="classical-listening-note"><a href="/music-credits.html#classical">{language === "zh" ? "10 首名曲 · 免费完整试听与录音来源 ↗" : "10 works · Free full listening & recording credits ↗"}</a></p>}
             <div className="scene-grid">
               {filteredSceneOrder.map((sceneId) => {
                 const scene = scenes[sceneId];
@@ -2172,7 +2170,7 @@ export default function Prototype() {
             <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 5 种自然声和 2 首冥想音乐：绿洲停歇、初息。在 iPhone 上升级 Plus，解锁全部 14 种自然声和 20 首音乐（含 10 首古典）。" : "Listen to 5 nature sounds and 2 meditation tracks for free: Oasis Rest and First Breath. Upgrade on iPhone to unlock all 14 nature sounds and 20 music tracks (including 10 classical works)."}</p>
+            <p>{language === "zh" ? "免费聆听 10 种自然声、绿洲停歇与初息，以及 5 首古典名曲。其余 4 种自然声和 13 首音乐（含另外 5 首古典）属于 Plus。" : "Listen free to 10 nature sounds, Oasis Rest, First Breath and 5 classical works. The remaining 4 nature sounds and 13 music tracks (including 5 more classical works) are Plus."}</p>
             <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);
