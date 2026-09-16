@@ -38,3 +38,6 @@
 - User approved postponement and prioritized the 20%-price offer over trial stacking. Apple permits only one introductory offer per subscription group; offer-code stacking would add a redemption flow, so direct paid introductory pricing is selected.
 - Build 28 replaces hardcoded trial claims with StoreKit offer period, payment mode, localized price and account eligibility. Reload clears stale eligibility and failure clears products. Purchase is disabled during reload.
 - Release simulator build, source regression checks and FreeMusicPolicyHarness passed. Device Release archive completed; strict codesign verification passed. Upload is in progress, not yet submission evidence.
+- 2026-09-16 11:37:11 CST: Xcode reported Upload succeeded for 1.14 (28); package processing. This is not a review submission. Existing version editor still selects build 27 until 28 is processed and selected. Review notes for build 28 saved, prior screenshots retained.
+- PR247 merged to main e99dcd8827a74b9fa5a96193992eaa2dd7451da3. No internal preview/forced-access markers found in archived executable.
+- Existing thread heartbeat automation-4 updated to follow build processing, complete submission, and after release configure and verify the one-month introductory-price campaign. Do not repeat upload or submit build 27. No actual offer pricing has yet been saved.
