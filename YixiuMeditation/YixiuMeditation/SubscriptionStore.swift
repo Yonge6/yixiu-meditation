@@ -22,7 +22,12 @@ final class SubscriptionStore: ObservableObject {
     @Published private(set) var isBusy = false
     @Published private(set) var productsUnavailable = false
     @Published private(set) var isReady = false
-    @Published private(set) var annualTrialEligible = false
+    @Published private(set) var introEligiblePlans: Set<YixiuPlusPlan> = []
+
+    func introductoryOffer(for plan: YixiuPlusPlan) -> Product.SubscriptionOffer? {
+        guard introEligiblePlans.contains(plan), !isLoadingProducts, !productsUnavailable else { return nil }
+        return products[plan]?.subscription?.introductoryOffer
+    }
 
     var hasPlus: Bool { accessLevel == .plus }
     var hasLegacyAccess: Bool { accessLevel == .legacy }
@@ -98,6 +103,7 @@ final class SubscriptionStore: ObservableObject {
     func loadProducts() async {
         guard !isLoadingProducts else { return }
         isLoadingProducts = true
+        introEligiblePlans = []
         defer { isLoadingProducts = false }
 
         do {
@@ -105,14 +111,17 @@ final class SubscriptionStore: ObservableObject {
             products = Dictionary(uniqueKeysWithValues: YixiuPlusPlan.allCases.compactMap { plan in
                 loadedProducts.first(where: { $0.id == plan.productID }).map { (plan, $0) }
             })
-            if let subscription = products[.yearly]?.subscription {
-                annualTrialEligible = await subscription.isEligibleForIntroOffer
-            } else {
-                annualTrialEligible = false
+            for plan in YixiuPlusPlan.allCases {
+                if let subscription = products[plan]?.subscription,
+                   subscription.introductoryOffer != nil,
+                   await subscription.isEligibleForIntroOffer {
+                    introEligiblePlans.insert(plan)
+                }
             }
             productsUnavailable = products.count != YixiuPlusPlan.allCases.count
         } catch {
-            annualTrialEligible = false
+            introEligiblePlans = []
+            products = [:]
             productsUnavailable = true
         }
     }
