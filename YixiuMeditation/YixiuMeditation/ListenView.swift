@@ -288,11 +288,11 @@ struct ListenView: View {
     }
 
     private var sceneSwipePreview: MeditationScene? {
-        guard let index = MeditationScene.availableScenes.firstIndex(of: appState.scene) else { return nil }
+        guard let index = MeditationScene.homeScenes.firstIndex(of: appState.scene) else { return nil }
         let direction = sceneDragOffset < 0 ? 1 : -1
         let previewIndex = index + direction
-        guard MeditationScene.availableScenes.indices.contains(previewIndex) else { return nil }
-        return MeditationScene.availableScenes[previewIndex]
+        guard MeditationScene.homeScenes.indices.contains(previewIndex) else { return nil }
+        return MeditationScene.homeScenes[previewIndex]
     }
 
     private func sceneSwipeGesture(width: CGFloat) -> some Gesture {
@@ -366,10 +366,10 @@ struct ListenView: View {
     }
 
     private func scene(in direction: Int) -> MeditationScene? {
-        guard let currentIndex = MeditationScene.availableScenes.firstIndex(of: appState.scene) else { return nil }
+        guard let currentIndex = MeditationScene.homeScenes.firstIndex(of: appState.scene) else { return nil }
         let targetIndex = currentIndex + direction
-        guard MeditationScene.availableScenes.indices.contains(targetIndex) else { return nil }
-        return MeditationScene.availableScenes[targetIndex]
+        guard MeditationScene.homeScenes.indices.contains(targetIndex) else { return nil }
+        return MeditationScene.homeScenes[targetIndex]
     }
 
     private func moveScene(_ direction: Int) {
@@ -668,42 +668,46 @@ struct SoundLibraryView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 14) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 7) {
-                            ForEach(SceneCategory.allCases) { category in
-                                Button {
-                                    selectedCategory = category
-                                } label: {
-                                    Text(category.title(language: language))
-                                        .font(.system(size: 11, weight: .medium))
-                                        .foregroundStyle(selectedCategory == category ? YixiuTheme.deepWater : YixiuTheme.mist)
-                                        .padding(.horizontal, 15)
-                                        .frame(height: 34)
-                                        .background(
-                                            Capsule().fill(selectedCategory == category ? YixiuTheme.aquaStrong : YixiuTheme.deepWaterSoft.opacity(0.56))
-                                        )
-                                        .overlay(
-                                            Capsule().stroke(selectedCategory == category ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
-                                        )
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
+            VStack(spacing: 0) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 7) {
+                        ForEach(SceneCategory.allCases) { category in
+                            Button {
+                                selectedCategory = category
+                            } label: {
+                                Text(category.title(language: language))
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundStyle(selectedCategory == category ? YixiuTheme.deepWater : YixiuTheme.mist)
+                                    .padding(.horizontal, 15)
+                                    .frame(height: 34)
+                                    .background(
+                                        Capsule().fill(selectedCategory == category ? YixiuTheme.aquaStrong : YixiuTheme.deepWaterSoft.opacity(0.56))
+                                    )
+                                    .overlay(
+                                        Capsule().stroke(selectedCategory == category ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
+                                    )
                             }
+                            .buttonStyle(.plain)
+                            .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
                         }
-                        .padding(.horizontal, 1)
                     }
-
+                    .padding(.horizontal, 1)
+                }
+                .frame(height: 34)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 14)
+                .background(YixiuTheme.deepWater)
+                ScrollView {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
                         ForEach(filteredScenes) { scene in
                             sceneCard(scene)
                         }
                     }
+                    .padding(.horizontal, 18)
+                    .padding(.bottom, 18)
+                    .frame(maxWidth: 1040)
+                    .frame(maxWidth: .infinity)
                 }
-                .padding(18)
-                .frame(maxWidth: 1040)
-                .frame(maxWidth: .infinity)
             }
             .background(YixiuTheme.deepWater)
             .navigationTitle(language.text(zh: "声音库", en: "Sound Library"))

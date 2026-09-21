@@ -229,15 +229,15 @@ final class AppState: ObservableObject {
     }
 
     func moveScene(_ direction: Int) {
-        guard let currentIndex = MeditationScene.availableScenes.firstIndex(of: scene) else { return }
+        guard let currentIndex = MeditationScene.homeScenes.firstIndex(of: scene) else { return }
         let nextIndex = currentIndex + direction
-        guard MeditationScene.availableScenes.indices.contains(nextIndex) else { return }
-        selectScene(MeditationScene.availableScenes[nextIndex], autoplay: isPlaying)
+        guard MeditationScene.homeScenes.indices.contains(nextIndex) else { return }
+        selectScene(MeditationScene.homeScenes[nextIndex], autoplay: isPlaying)
     }
 
     func canMoveScene(_ direction: Int) -> Bool {
-        guard let currentIndex = MeditationScene.availableScenes.firstIndex(of: scene) else { return false }
-        return MeditationScene.availableScenes.indices.contains(currentIndex + direction)
+        guard let currentIndex = MeditationScene.homeScenes.firstIndex(of: scene) else { return false }
+        return MeditationScene.homeScenes.indices.contains(currentIndex + direction)
     }
 
     func selectDuration(_ minutes: Int) {

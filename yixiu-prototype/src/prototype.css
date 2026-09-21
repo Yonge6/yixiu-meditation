@@ -2519,6 +2519,8 @@ img[data-image-scene="tide"] {
 }
 
 .sound-library {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   z-index: 50;
   right: 0;
@@ -2544,6 +2546,7 @@ img[data-image-scene="tide"] {
 }
 
 .sound-library header {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2608,6 +2611,18 @@ img[data-image-scene="tide"] {
 
 .scene-grid::-webkit-scrollbar {
   display: none;
+}
+
+/* The sheet chrome stays pinned; only the cards scroll, at every viewport height. */
+.sound-library > .sheet-handle,
+.sound-library > .scene-category-tabs {
+  flex-shrink: 0;
+}
+.sound-library > .scene-grid {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  overscroll-behavior-y: contain;
 }
 
 .scene-grid article {
