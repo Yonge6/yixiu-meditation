@@ -32,3 +32,5 @@ Audio conversion: AAC 192 kbps, 44.1 kHz stereo, format conversion only. No loop
 - Browser tests: 81 passed. Coverage includes audio playback/durations/hashes, all classical deep links/access gates, Free-first previous/next and gestures, retired-track handling, open credits/downloads, and pinned filters at 390/768/1248 px.
 
 This is a source/build change, not evidence of production deployment, phone installation or App Store submission.
+
+2026-09-22 follow-up: the final native layout now passed a fresh signed Release device archive (1.15/29). See `../app-store/2026-09-22-yixiu-1.15-submission.md` for build, attribution-only publication and Apple submission status.
