@@ -28,6 +28,7 @@ Audio conversion: AAC 192 kbps, 44.1 kHz stereo, format conversion only. No loop
 - Sites tests: 45 passed.
 - Native FreeMusicPolicyHarness and SubscriptionAccessPolicySmoke passed.
 - Xcode Release simulator build succeeded, signing disabled and without internal Plus. All ten new recordings verified present in the built App bundle.
+- After that successful build, the native horizontal filter strip received an explicit 34-point height to avoid greedy vertical layout. The final incremental build and one retry stalled at the Xcode build-service preparation stage without a compiler diagnostic and were stopped. Final-state native rebuild remains unverified; do not treat the earlier successful binary as containing this last layout constraint.
 - Browser tests: 81 passed. Coverage includes audio playback/durations/hashes, all classical deep links/access gates, Free-first previous/next and gestures, retired-track handling, open credits/downloads, and pinned filters at 390/768/1248 px.
 
 This is a source/build change, not evidence of production deployment, phone installation or App Store submission.
