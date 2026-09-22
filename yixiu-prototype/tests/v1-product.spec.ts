@@ -572,7 +572,7 @@ test("keeps the current sound playing across Focus and My tabs", async ({ page }
   await expect(page.getByRole("button", { name: "暂停" })).toHaveAttribute("aria-pressed", "true");
 });
 
-test("keeps all three bottom tabs on one fixed baseline", async ({ page }) => {
+test("uses a conventional full-width web tab bar on mobile and desktop", async ({ page }) => {
   const tabs = page.locator(".bottom-nav button");
   const initialBoxes = await tabs.evaluateAll((buttons) => buttons.map((button) => {
     const box = button.getBoundingClientRect();
@@ -588,16 +588,44 @@ test("keeps all three bottom tabs on one fixed baseline", async ({ page }) => {
   }));
   expect(activeBoxes).toEqual(initialBoxes);
 
-  const tabBarStyle = await page.locator(".bottom-nav").evaluate((element) => {
+  const tabBarGeometry = await page.locator(".bottom-nav").evaluate((element) => {
+    const box = element.getBoundingClientRect();
     const style = getComputedStyle(element);
-    return { borderRadius: Number.parseFloat(style.borderRadius) };
+    return {
+      left: box.left,
+      right: box.right,
+      bottom: box.bottom,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      borderRadius: Number.parseFloat(style.borderRadius),
+    };
   });
   const activeStyle = await page.locator(".bottom-nav button.is-active").evaluate((element) => {
     const style = getComputedStyle(element);
-    return { backgroundImage: style.backgroundImage };
+    const indicatorStyle = getComputedStyle(element, "::before");
+    return {
+      backgroundColor: style.backgroundColor,
+      indicatorColor: indicatorStyle.backgroundColor,
+    };
   });
-  expect(tabBarStyle.borderRadius).toBeGreaterThanOrEqual(24);
-  expect(activeStyle.backgroundImage).not.toBe("none");
+  expect(tabBarGeometry.left).toBeCloseTo(0, 0);
+  expect(tabBarGeometry.right).toBeCloseTo(tabBarGeometry.viewportWidth, 0);
+  expect(tabBarGeometry.bottom).toBeCloseTo(tabBarGeometry.viewportHeight, 0);
+  expect(tabBarGeometry.borderRadius).toBe(0);
+  expect(initialBoxes[0]?.height).toBeGreaterThanOrEqual(56);
+  await expect.poll(async () => tabs.first().evaluate((element) => element.getBoundingClientRect().width)).toBeCloseTo(tabBarGeometry.viewportWidth / 3, 0);
+  expect(activeStyle.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+  expect(activeStyle.indicatorColor).not.toBe("rgba(0, 0, 0, 0)");
+
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const desktopGeometry = await page.locator(".bottom-nav").evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    return { left: box.left, right: box.right, width: window.innerWidth, bottom: box.bottom, height: window.innerHeight };
+  });
+  expect(desktopGeometry.left).toBeCloseTo(0, 0);
+  expect(desktopGeometry.right).toBeCloseTo(desktopGeometry.width, 0);
+  expect(desktopGeometry.bottom).toBeCloseTo(desktopGeometry.height, 0);
+  await expect.poll(async () => tabs.first().evaluate((element) => element.getBoundingClientRect().width)).toBeCloseTo(desktopGeometry.width / 3, 0);
 });
 
 test("loads a real morning-birds recording instead of generated noise", async ({ page }) => {
