@@ -181,7 +181,7 @@ struct MeView: View {
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 14 种自然声 + 20 首音乐（含 10 首古典）", en: "Now listening · 14 nature sounds + 20 music tracks (including 10 classical works)"))
+                Text(language.text(zh: "正在聆听 · 14 种自然声 + 30 首音乐（含 20 首古典）", en: "Now listening · 14 nature sounds + 30 music tracks (including 20 classical works)"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
@@ -371,17 +371,17 @@ struct MeView: View {
     private var membershipSubtitle: String {
         if subscriptionStore.isInternalPlusExperience {
             return language.text(
-                zh: "内部体验版 · 全部 34 种声音已解锁",
-                en: "Internal preview · All 34 sounds unlocked"
+                zh: "内部体验版 · 全部 44 种声音已解锁",
+                en: "Internal preview · All 44 sounds unlocked"
             )
         }
         switch subscriptionStore.accessLevel {
         case .plus:
             return language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
         case .legacy:
-            return language.text(zh: "原有 14 种自然声继续保留，7 首音乐免费（含 5 首古典）", en: "Your 14 nature sounds remain, plus 7 free music tracks (5 classical)")
+            return language.text(zh: "原有 14 种自然声继续保留，12 首音乐免费（含 10 首古典）", en: "Your 14 nature sounds remain, plus 12 free music tracks (10 classical)")
         case .free:
-            return language.text(zh: "10 种自然声 + 7 首音乐免费（含 5 首古典）", en: "10 nature sounds + 7 music tracks are free (5 classical)")
+            return language.text(zh: "10 种自然声 + 12 首音乐免费（含 10 首古典）", en: "10 nature sounds + 12 music tracks are free (10 classical)")
         }
     }
 
