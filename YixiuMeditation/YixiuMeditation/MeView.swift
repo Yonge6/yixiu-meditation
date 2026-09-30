@@ -896,16 +896,16 @@ struct MeView: View {
                 title: language.text(zh: "安静，也应该是私密的", en: "Quiet should remain private"),
                 paragraphs: [
                     language.text(
-                        zh: "一休无需账号。你选择的声音、收藏、语言、音量与定时时长，只保存在当前设备。",
-                        en: "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."
+                        zh: "一休无需账号。声音、收藏、语言、音量与定时的偏好设置保存在当前设备；只有自愿开启下方说明的使用统计后，相关操作才会参与汇总分析。",
+                        en: "Yixiu requires no account. Sound, favorites, language, volume and timer preferences are stored on this device. Related actions are included in aggregate analytics only if you opt in as described below."
                     ),
                     language.text(
                         zh: "练习手记仅在此设备保存最近 200 次完成练习的时间、时长、类型与声音，不上传或跨设备同步。卸载 App 会同时移除本地偏好与手记。",
                         en: "The journal keeps the date, duration, type and sound of up to 200 completed practices on this device. It is not uploaded or synced. Removing the app also removes local preferences and entries."
                     ),
                     language.text(
-                        zh: "使用统计默认关闭。自愿开启后，我们使用 Google Analytics for Firebase 统计播放时长、声音选择与功能使用；它使用随机安装标识，不采集广告标识、姓名、录音或练习手记。可随时在“我的”关闭。详情见网站隐私说明。",
-                        en: "Usage analytics is off by default. If you opt in, Google Analytics for Firebase measures listening duration, sound choices and feature use with a random installation identifier. No advertising IDs, names, recordings or journal history are collected. Disable anytime in Me; see our website privacy notice for details."
+                        zh: "使用统计默认关闭。自愿开启后，Google Analytics for Firebase 使用随机安装标识统计实际播放时长、声音选择、功能操作、播放错误与购买或订阅事件，以及设备类别和由网络连接推算的粗略地区。不会读取定位权限，也不采集广告标识、姓名、录音或练习手记。Apple 处理支付，我们不获取银行卡信息。可随时在“我的”关闭后续统计；此前汇总数据不会因此自动删除。详情见网站隐私说明。",
+                        en: "Usage analytics is off by default. If you opt in, Google Analytics for Firebase uses a random installation identifier to measure actual listening time, sound choices, feature use, playback errors and purchase or subscription events, plus device categories and a coarse region derived from the network connection. We do not access location services or collect advertising IDs, names, recordings or journal history. Apple handles payment; we do not receive card details. Turn off future collection anytime in Me; this does not automatically delete earlier aggregate data. See our website privacy notice for details."
                     )
                 ],
                 quote: language.text(zh: "少一些记录，多一些当下。", en: "Less tracking. More presence.")

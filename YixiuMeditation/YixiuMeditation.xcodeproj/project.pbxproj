@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+        E20000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E10000000000000000000004; };
 		E20000000000000000000004 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E10000000000000000000003; };
 		E20000000000000000000001 = {isa = PBXBuildFile; fileRef = E10000000000000000000001; };
 		E20000000000000000000002 = {isa = PBXBuildFile; fileRef = E10000000000000000000002; };
@@ -74,6 +75,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+        E10000000000000000000004 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E10000000000000000000003 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E10000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAnalytics.swift; sourceTree = "<group>"; };
 		E10000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeningProgress.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				E10000000000000000000003 /* GoogleService-Info.plist */,
+                E10000000000000000000004 /* PrivacyInfo.xcprivacy */,
 				E10000000000000000000001,
 				A10000000000000000000001 /* YixiuMeditationApp.swift */,
 				A10000000000000000000002 /* Models.swift */,
@@ -325,6 +328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E20000000000000000000004 /* GoogleService-Info.plist in Resources */,
+                E20000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */,
 				A2000000000000000000000A /* Assets.xcassets in Resources */,
 				A2000000000000000000000B /* Audio in Resources */,
 				A2000000000000000000000C /* Fonts in Resources */,
@@ -521,7 +525,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+                CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -538,7 +542,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+                MARKETING_VERSION = 1.16;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -555,7 +559,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+                CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
@@ -572,7 +576,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+                MARKETING_VERSION = 1.16;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -589,7 +593,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+                CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -599,7 +603,7 @@
 					"$(inherited)",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+                MARKETING_VERSION = 1.16;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu.YixiuQuietWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -616,7 +620,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+                CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = L855ZVM679;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -626,7 +630,7 @@
 					"$(inherited)",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+                MARKETING_VERSION = 1.16;
 				PRODUCT_BUNDLE_IDENTIFIER = com.health.yixiu.YixiuQuietWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
