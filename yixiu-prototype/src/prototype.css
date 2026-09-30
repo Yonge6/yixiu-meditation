@@ -3463,3 +3463,16 @@ img[data-image-scene="tide"] {
   }
 }
 /* Classical collection uses existing library geometry and membership policy. */
+.analytics-choice {
+  position: fixed; z-index: 80; left: 16px; right: 16px;
+  bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+  max-width: 480px; margin-inline: auto; padding: 18px;
+  border: 1px solid #44717a; border-radius: 16px; color: #e4f6f7;
+  background: #07232bf5; box-shadow: 0 8px 32px #0005;
+  font-size: 14px; line-height: 1.55;
+}
+.analytics-choice p { margin: 8px 0 14px; color: #b6ced1; }
+.analytics-choice a { color: #c1f5f3; text-decoration: underline; }
+.analytics-choice > div { display: flex; gap: 12px; }
+.analytics-choice button { flex: 1; min-height: 42px; border: 1px solid #64888f; border-radius: 8px; background: #153840; color: #e4f6f7; }
+.analytics-choice button:last-child { background: #b2eeee; color: #08252b; }

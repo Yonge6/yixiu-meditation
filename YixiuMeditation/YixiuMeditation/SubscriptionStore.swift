@@ -136,6 +136,7 @@ final class SubscriptionStore: ObservableObject {
         }
         guard let product = products[plan] else { return .unavailable }
 
+        ProductAnalytics.shared.event("purchase_start", ["plan": plan.rawValue])
         do {
             switch try await product.purchase() {
             case .success(let verification):
@@ -146,15 +147,19 @@ final class SubscriptionStore: ObservableObject {
                 }
                 await transaction.finish()
                 await refreshEntitlements()
+                if hasPlus { ProductAnalytics.shared.verifiedPurchase(transaction, plan: plan) }
                 return hasPlus ? .purchased : .failed
             case .pending:
+                ProductAnalytics.shared.event("purchase_pending", ["plan": plan.rawValue])
                 return .pending
             case .userCancelled:
+                ProductAnalytics.shared.event("purchase_cancel", ["plan": plan.rawValue])
                 return .cancelled
             @unknown default:
                 return .failed
             }
         } catch {
+            ProductAnalytics.shared.event("purchase_error", ["plan": plan.rawValue, "error_code": "storekit_failed"])
             return .failed
         }
     }

@@ -11,6 +11,7 @@ private enum MePage: Equatable {
 }
 
 struct MeView: View {
+    @AppStorage(ProductAnalytics.consentKey) private var shareUsage = false
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @EnvironmentObject private var dailyReminder: DailyReminderManager
@@ -600,6 +601,12 @@ struct MeView: View {
                 subtitle: language.text(zh: "离开画面，水声仍可继续", en: "Keep listening outside the app"),
                 isOn: $appState.backgroundPlayback
             )
+            Divider().overlay(YixiuTheme.hairline)
+            settingToggle(
+                title: language.text(zh: "帮助改进一休", en: "Help improve Yixiu"),
+                subtitle: language.text(zh: "自愿分享播放与功能使用统计，可随时关闭；不上传练习手记", en: "Optional listening and feature analytics; no journal upload. Turn off anytime."),
+                isOn: Binding(get: { shareUsage }, set: { shareUsage = $0; ProductAnalytics.shared.updateConsent() })
+            )
         }
         .font(YixiuTheme.sans(14))
         .padding(.horizontal, 17)
@@ -895,6 +902,10 @@ struct MeView: View {
                     language.text(
                         zh: "练习手记仅在此设备保存最近 200 次完成练习的时间、时长、类型与声音，不上传或跨设备同步。卸载 App 会同时移除本地偏好与手记。",
                         en: "The journal keeps the date, duration, type and sound of up to 200 completed practices on this device. It is not uploaded or synced. Removing the app also removes local preferences and entries."
+                    ),
+                    language.text(
+                        zh: "使用统计默认关闭。自愿开启后，我们使用 Google Analytics for Firebase 统计播放时长、声音选择与功能使用；它使用随机安装标识，不采集广告标识、姓名、录音或练习手记。可随时在“我的”关闭。详情见网站隐私说明。",
+                        en: "Usage analytics is off by default. If you opt in, Google Analytics for Firebase measures listening duration, sound choices and feature use with a random installation identifier. No advertising IDs, names, recordings or journal history are collected. Disable anytime in Me; see our website privacy notice for details."
                     )
                 ],
                 quote: language.text(zh: "少一些记录，多一些当下。", en: "Less tracking. More presence.")

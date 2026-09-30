@@ -40,6 +40,7 @@ struct YixiuMeditationApp: App {
                 .environmentObject(dailyReminder)
                 .preferredColorScheme(.dark)
                 .task {
+                    await ProductAnalytics.shared.configure()
                     consumeReminderRoute()
 #if DEBUG
                     if ProcessInfo.processInfo.arguments.contains("-yixiuStartQuietMinute") {

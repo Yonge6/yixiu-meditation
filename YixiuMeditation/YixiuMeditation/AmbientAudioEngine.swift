@@ -17,6 +17,7 @@ enum AmbientAudioError: LocalizedError {
 
 final class AmbientAudioEngine {
     private var player: AVAudioPlayer?
+    private var usageObserver: AudioUsageObserver?
     private var endBellPlayer: AVAudioPlayer?
     private var fadingPlayer: AVAudioPlayer?
     private var fadeGeneration = 0
@@ -72,6 +73,9 @@ final class AmbientAudioEngine {
     }
 
     func play(scene: MeditationScene, volume: Float) throws {
+        ProductAnalytics.shared.event("playback_request", ["scene_id": scene.rawValue])
+        var playbackSucceeded = false
+        defer { if !playbackSucceeded { ProductAnalytics.shared.event("playback_error", ["scene_id": scene.rawValue, "error_code": "native_audio_failed"]) } }
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
         try session.setActive(true)
@@ -96,6 +100,9 @@ final class AmbientAudioEngine {
         guard nextPlayer.play() else {
             throw AmbientAudioError.playbackFailed(scene.audioResource)
         }
+        playbackSucceeded = true
+        usageObserver?.stop(reason: "scene_change")
+        usageObserver = ProductAnalytics.shared.observe(nextPlayer, scene: scene)
         fadeGeneration += 1
         let generation = fadeGeneration
         fadingPlayer?.stop()
@@ -146,6 +153,8 @@ final class AmbientAudioEngine {
     }
 
     func stop() {
+        usageObserver?.stop(reason: "pause_or_end")
+        usageObserver = nil
         fadeGeneration += 1
         player?.stop()
         fadingPlayer?.stop()
