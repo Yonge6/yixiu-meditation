@@ -1092,6 +1092,8 @@ struct MeView: View {
             Spacer()
             Toggle("", isOn: isOn)
                 .labelsHidden()
+                .accessibilityLabel(title)
+                .accessibilityHint(subtitle)
                 .tint(YixiuTheme.aqua)
         }
         .frame(minHeight: 62)
