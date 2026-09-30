@@ -23,7 +23,7 @@ enum YixiuPlusPlan: String, CaseIterable, Identifiable {
 enum SubscriptionAccessPolicy {
     static let legacyCutoffVersion = "1.2"
     static let freeNatureScenes: Set<MeditationScene> = [.ocean, .rain, .spring, .birds, .stream, .lake, .valley, .bamboo, .window, .tide]
-    static let freeClassicalScenes: Set<MeditationScene> = [.clairDeLune, .gymnopedie, .canon, .moonlightSonata, .preludeC]
+    static let freeClassicalScenes: Set<MeditationScene> = [.clairDeLune, .gymnopedie, .canon, .moonlightSonata, .preludeC, .traumerei, .raindrop, .waltzAMinor, .gnossienne, .mozartAndante]
     static let freeMeditationScenes: Set<MeditationScene> = Set([.oasisRest, .firstBreath]).union(freeClassicalScenes)
     static let freeScenes = freeNatureScenes.union(freeMeditationScenes)
 

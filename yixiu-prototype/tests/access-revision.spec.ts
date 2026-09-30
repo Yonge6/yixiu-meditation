@@ -25,7 +25,7 @@ for (const width of [390, 572, 768, 1248]) test(`simplified header and library a
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: `/tmp/yixiu-access-header-${width}.png` });
   await page.getByRole('button', { name: '我的 ME', exact: true }).click();
-  await expect(page.getByText('10 种自然声 + 7 首音乐（含 5 首古典）', { exact: true })).toBeVisible();
+  await expect(page.getByText('10 种自然声 + 12 首音乐（含 10 首古典）', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: '浏览全部声音' }).click();
   const library = page.getByRole('dialog', { name: '声音库' });
   await library.getByRole('tab', { name: '自然声', exact: true }).click();
@@ -33,8 +33,8 @@ for (const width of [390, 572, 768, 1248]) test(`simplified header and library a
   await expect(library.locator('.scene-access-badge.is-free')).toHaveCount(10);
   await expect(library.locator('.scene-access-badge.is-plus')).toHaveCount(4);
   await library.getByRole('tab', { name: '古典静听', exact: true }).click();
-  await expect(library.locator('.scene-access-badge.is-free')).toHaveCount(5);
-  await expect(library.locator('.scene-access-badge.is-plus')).toHaveCount(5);
+  await expect(library.locator('.scene-access-badge.is-free')).toHaveCount(10);
+  await expect(library.locator('.scene-access-badge.is-plus')).toHaveCount(10);
   await expect(library.getByRole('link', { name: /免费完整试听/ })).toHaveCount(0);
   await page.screenshot({ path: `/tmp/yixiu-access-classical-${width}.png` });
 });

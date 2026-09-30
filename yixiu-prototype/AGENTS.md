@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- 2026-09-21 expansion supersedes earlier counts: 20 classical works, 10 Free / 10 Plus. New Free works: traumerei, raindrop, waltzAMinor, gnossienne, mozartAndante. Active total: 14 nature + 30 music = 44; Free total: 10 nature + 12 music = 22. Keep App/H5 catalogs, licenses and policy aligned. Home navigation is a stable Free-first partition, without changing deep-link targets or library order. Library filters remain outside the vertically scrolling cards. Preserve ungated attribution/downloads and all CC rights.
+
 - 2026-09-15 header refinement: remove only the player-header Quiet Journal icon, retaining the Me journal entry and all articles; move the header 16 px upward at each breakpoint while preserving the top safe area and touch target sizes.
 
 - 2026-09-15 user access revision supersedes earlier Free counts: 10/14 nature sounds are Free (ocean, rain, spring, birds, stream, lake, valley, bamboo, window, tide), the nearest whole-track ratio to 70%. Classical works split 5 Free (clairDeLune, gymnopedie, canon, moonlightSonata, preludeC) / 5 Plus. Oasis Rest and First Breath stay Free, so total Free music is 7. Keep native/H5 policies, badges and descriptions aligned; never change verified legacy ownership. Remove the Classical library's top full-listening note, while preserving independent credits, licenses and downloads. Native source changes are not a published App update.
