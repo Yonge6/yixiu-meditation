@@ -109,7 +109,9 @@ final class AudioUsageObserver {
     private func sample() {
         guard isEnabled(), let player else { clock.reset(); return }
         if player.isPlaying && !started { started = true; emit("playback_start") }
-        let delta = clock.sample(position: player.currentTime, at: ProcessInfo.processInfo.systemUptime,
+        // Wall time only bounds confirmed media progress. Do not derive uploaded
+        // analytics from Apple's restricted system-boot-time APIs.
+        let delta = clock.sample(position: player.currentTime, at: Date().timeIntervalSinceReferenceDate,
                                  duration: player.duration, rate: Double(player.rate))
         pending += delta; total += delta
         if total >= 60 && !qualified { qualified = true; emit("qualified_listen") }

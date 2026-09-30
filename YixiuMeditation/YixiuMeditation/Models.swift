@@ -54,15 +54,39 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case goldbergAria
     case berceuse
     case prelude17
+    case traumerei
+    case raindrop
+    case waltzAMinor
+    case gnossienne
+    case mozartAndante
+    case liebestraum
+    case schubertImpromptu
+    case nocturne27
+    case farewellWaltz
+    case preludeBMinor
 
     // Keep retired identifiers decodable for completed practice history only.
     var isAvailable: Bool { ![Self.sunlitShore, .oceanPassage, .cloudDrift, .quietOrbit].contains(self) }
     static var availableScenes: [Self] { allCases.filter(\.isAvailable) }
+    static var homeScenes: [Self] {
+        availableScenes.filter { SubscriptionAccessPolicy.freeScenes.contains($0) }
+        + availableScenes.filter { !SubscriptionAccessPolicy.freeScenes.contains($0) }
+    }
 
     var id: String { rawValue }
 
     var zhName: String {
         switch self {
+        case .traumerei: "梦幻曲"
+        case .raindrop: "雨滴前奏曲"
+        case .waltzAMinor: "A 小调圆舞曲"
+        case .gnossienne: "第一号玄秘曲"
+        case .mozartAndante: "如歌的行板 · K. 333"
+        case .liebestraum: "爱之梦 · 第三首"
+        case .schubertImpromptu: "降 A 大调即兴曲 · D. 935"
+        case .nocturne27: "降 D 大调夜曲 · Op. 27"
+        case .farewellWaltz: "告别圆舞曲"
+        case .preludeBMinor: "B 小调前奏曲"
         case .clairDeLune: "月光"
         case .nocturne: "降 E 大调夜曲"
         case .gymnopedie: "第一号吉姆诺佩蒂"
@@ -106,6 +130,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var enName: String {
         switch self {
+        case .traumerei: "Träumerei · Op. 15 No. 7"
+        case .raindrop: "Raindrop Prelude · Op. 28 No. 15"
+        case .waltzAMinor: "Waltz in A minor · B. 150"
+        case .gnossienne: "Gnossienne No. 1"
+        case .mozartAndante: "Andante cantabile · K. 333"
+        case .liebestraum: "Liebestraum No. 3"
+        case .schubertImpromptu: "Impromptu · D. 935 No. 2"
+        case .nocturne27: "Nocturne · Op. 27 No. 2"
+        case .farewellWaltz: "Farewell Waltz · Op. 69 No. 1"
+        case .preludeBMinor: "Prelude · Op. 28 No. 6"
         case .clairDeLune: "Clair de lune"
         case .nocturne: "Nocturne Op. 9 No. 2"
         case .gymnopedie: "Gymnopédie No. 1"
@@ -149,6 +183,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var useZh: String {
         switch self {
+        case .traumerei: "舒曼 · 3:22"
+        case .raindrop: "肖邦 · 4:55"
+        case .waltzAMinor: "肖邦 · 2:10"
+        case .gnossienne: "萨蒂 · 3:37"
+        case .mozartAndante: "莫扎特 · 6:15"
+        case .liebestraum: "李斯特 · 4:43"
+        case .schubertImpromptu: "舒伯特 · 7:55"
+        case .nocturne27: "肖邦 · 6:17"
+        case .farewellWaltz: "肖邦 · 4:08"
+        case .preludeBMinor: "肖邦 · 1:48"
         case .clairDeLune: "德彪西 · 5:04"
         case .nocturne: "肖邦 · 4:19"
         case .gymnopedie: "萨蒂 · 3:03"
@@ -188,6 +232,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var useEn: String {
         switch self {
+        case .traumerei: "Robert Schumann · 3:22"
+        case .raindrop: "Frédéric Chopin · 4:55"
+        case .waltzAMinor: "Frédéric Chopin · 2:10"
+        case .gnossienne: "Erik Satie · 3:37"
+        case .mozartAndante: "Wolfgang Amadeus Mozart · 6:15"
+        case .liebestraum: "Franz Liszt · 4:43"
+        case .schubertImpromptu: "Franz Schubert · 7:55"
+        case .nocturne27: "Frédéric Chopin · 6:17"
+        case .farewellWaltz: "Frédéric Chopin · 4:08"
+        case .preludeBMinor: "Frédéric Chopin · 1:48"
         case .clairDeLune: "Claude Debussy · 5:04"
         case .nocturne: "Frédéric Chopin · 4:19"
         case .gymnopedie: "Erik Satie · 3:03"
@@ -227,6 +281,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var assetName: String {
         switch self {
+        case .traumerei: "ClassicalGymnopedie"
+        case .raindrop: "ClassicalCanon"
+        case .waltzAMinor: "ClassicalPrelude17"
+        case .gnossienne: "ClassicalClairDeLune"
+        case .mozartAndante: "ClassicalPreludeC"
+        case .liebestraum: "ClassicalBerceuse"
+        case .schubertImpromptu: "ClassicalGoldbergAria"
+        case .nocturne27: "ClassicalNocturne"
+        case .farewellWaltz: "ClassicalPathetique"
+        case .preludeBMinor: "ClassicalMoonlightSonata"
         case .clairDeLune: "ClassicalClairDeLune"
         case .nocturne: "ClassicalNocturne"
         case .gymnopedie: "ClassicalGymnopedie"
@@ -270,6 +334,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var audioResource: String {
         switch self {
+        case .traumerei: "traumerei"
+        case .raindrop: "raindrop"
+        case .waltzAMinor: "waltz-a-minor"
+        case .gnossienne: "gnossienne"
+        case .mozartAndante: "mozart-andante"
+        case .liebestraum: "liebestraum"
+        case .schubertImpromptu: "schubert-impromptu"
+        case .nocturne27: "nocturne-27"
+        case .farewellWaltz: "farewell-waltz"
+        case .preludeBMinor: "prelude-b-minor"
         case .clairDeLune: "clair-de-lune"
         case .nocturne: "nocturne"
         case .gymnopedie: "gymnopedie"
@@ -309,6 +383,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isMeditationMusic: Bool {
         switch self {
+        case .traumerei, .raindrop, .waltzAMinor, .gnossienne, .mozartAndante, .liebestraum, .schubertImpromptu, .nocturne27, .farewellWaltz, .preludeBMinor: true
         case .clairDeLune, .nocturne, .gymnopedie, .canon, .moonlightSonata, .pathetique, .preludeC, .goldbergAria, .berceuse, .prelude17: true
         case .stillWater, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape,
              .firstBreath, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage,
@@ -358,7 +433,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .all:
             true
         case .classical:
-            ["clairDeLune","nocturne","gymnopedie","canon","moonlightSonata","pathetique","preludeC","goldbergAria","berceuse","prelude17"].contains(rawValue)
+            ["clairDeLune","nocturne","gymnopedie","canon","moonlightSonata","pathetique","preludeC","goldbergAria","berceuse","prelude17","traumerei","raindrop","waltzAMinor","gnossienne","mozartAndante","liebestraum","schubertImpromptu","nocturne27","farewellWaltz","preludeBMinor"].contains(rawValue)
         case .nature:
             !isMeditationMusic
         case .meditation:

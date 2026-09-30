@@ -140,6 +140,33 @@ final class HomeInteractionUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Play"].exists)
     }
 
+    func testUsageConsentDefaultsOffPersistsAndCanBeWithdrawn() {
+        // Run on a fresh, dedicated simulator. Simulator installs are excluded
+        // by ProductAnalytics, so this never sends test activity to production.
+        func consentSwitch() -> XCUIElement {
+            selectTab("Me")
+            let control = app.switches.matching(NSPredicate(format: "label CONTAINS %@", "Help improve Yixiu")).firstMatch
+            for _ in 0..<15 where !control.isHittable { app.swipeUp() }
+            XCTAssertTrue(control.isHittable)
+            return control
+        }
+        let consent = consentSwitch()
+        XCTAssertEqual(consent.value as? String, "0")
+        capture("analytics-default-off")
+        consent.tap()
+        XCTAssertEqual(consent.value as? String, "1")
+        app.terminate()
+        app.launch()
+        let restored = consentSwitch()
+        XCTAssertEqual(restored.value as? String, "1")
+        restored.tap()
+        XCTAssertEqual(restored.value as? String, "0")
+        capture("analytics-withdrawn")
+        app.terminate()
+        app.launch()
+        XCTAssertEqual(consentSwitch().value as? String, "0")
+    }
+
     func testExplicitReviewButtonOpensExternalStoreOrShowsFailure() {
         app.tabBars.buttons["Me"].tap()
         let rate = app.buttons["me.writeReview"]
