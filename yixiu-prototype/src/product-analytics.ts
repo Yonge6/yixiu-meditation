@@ -47,7 +47,7 @@ export function observeAudio(audio: HTMLAudioElement, sceneId: string, category:
   };
   const pause = () => { flush(); active = false; clock.reset(); };
   const waiting = () => { pause(); emit("playback_buffer"); };
-  const error = () => { pause(); if (!failed) emit("playback_error", { error_code: String(audio.error?.code ?? "play_rejected") }); failed = true; };
+  const error = () => { if (disposed) return; pause(); if (!failed) emit("playback_error", { error_code: String(audio.error?.code ?? "play_rejected") }); failed = true; };
   const consent = () => { pending = 0; total = 0; qualified = false; started = false; clock.reset(); if (analyticsConsent() && active) playing(); };
   const seek = () => { clock.reset(); flush(); clock.reset(); };
   const resume = () => { clock.reset(); sample(); };
