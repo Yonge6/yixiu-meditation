@@ -45,6 +45,7 @@ struct PlusPaywallView: View {
         }
         .preferredColorScheme(.dark)
         .task {
+            ProductAnalytics.shared.event("paywall_view")
             await subscriptionStore.loadProducts()
         }
         .onChange(of: subscriptionStore.hasPlus) { _, hasPlus in
@@ -133,6 +134,7 @@ struct PlusPaywallView: View {
     private func planCard(_ plan: YixiuPlusPlan) -> some View {
         Button {
             selectedPlan = plan
+            ProductAnalytics.shared.event("plan_select", ["plan": plan.rawValue])
         } label: {
             VStack(alignment: .leading, spacing: 9) {
                 HStack(alignment: .firstTextBaseline, spacing: 12) {

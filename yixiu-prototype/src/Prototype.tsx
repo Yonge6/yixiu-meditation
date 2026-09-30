@@ -27,6 +27,7 @@ import { useEndBell } from "./useEndBell";
 import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
 import { classicalMusic } from "./data/classical-music";
+import { analyticsConsent, setAnalyticsConsent, observeAudio, productEvent } from "./product-analytics";
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
@@ -520,10 +521,12 @@ function SceneAccessBadge({ free }: { free: boolean }) {
 
 type AudioGraph = {
   audio: HTMLAudioElement;
+  analytics?: ReturnType<typeof observeAudio>;
 };
 
 function stopAudioGraph(graph: AudioGraph | null) {
   if (!graph) return;
+  graph.analytics?.dispose();
   graph.audio.pause();
   graph.audio.removeAttribute("src");
   graph.audio.load();
@@ -563,8 +566,10 @@ function useAmbientSound(sceneId: SceneId, isPlaying: boolean, volume: number, f
     audio.volume = previousGraph ? 0 : targetVolume;
     fadeActiveRef.current = previousGraph !== null;
     fadingGraphRef.current = previousGraph;
-    graphRef.current = { audio };
+    const analytics = observeAudio(audio, sceneId, classicalSceneIds.includes(sceneId as typeof classicalSceneIds[number]) ? "classical" : (scene.kind ?? "nature"), freeSceneIds.has(sceneId));
+    graphRef.current = { audio, analytics };
     void audio.play().then(() => {
+      previousGraph?.analytics?.dispose("scene_change");
       if (!previousGraph || generation !== fadeGenerationRef.current) return;
       fadeActiveRef.current = true;
       const startedAt = performance.now();
@@ -585,6 +590,8 @@ function useAmbientSound(sceneId: SceneId, isPlaying: boolean, volume: number, f
       };
       fadeFrameRef.current = window.requestAnimationFrame(animate);
     }).catch(() => {
+      analytics.failed();
+      analytics.dispose("playback_error");
       if (graphRef.current?.audio === audio) graphRef.current = previousGraph;
       fadeActiveRef.current = false;
       stopAudioGraph({ audio });
@@ -795,6 +802,9 @@ function preferredLanguage(): Language {
 }
 
 export default function Prototype() {
+  const [usageAnalytics, setUsageAnalytics] = useState(analyticsConsent);
+  const [analyticsChoiceNeeded, setAnalyticsChoiceNeeded] = useState(() => { try { return localStorage.getItem("yixiu.analyticsConsent.v2") === null; } catch { return false; } });
+  const chooseAnalytics = (enabled: boolean) => { setUsageAnalytics(enabled); setAnalyticsConsent(enabled); setAnalyticsChoiceNeeded(false); };
   const [language, setLanguage] = useStoredState<Language>("yixiu.language", preferredLanguage(), linkedLanguage());
   const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene(), availableScene);
   const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30, null, value => typeof value === "number" && canUseWebTimer(value) ? value as DurationOption : 30);
@@ -809,6 +819,11 @@ export default function Prototype() {
   const [meView, setMeView] = useState<MeView>("home");
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [sceneCategory, setSceneCategory] = useState<SceneCategory>("all");
+  const analyticsMounted = useRef(false);
+  useEffect(() => {
+    if (analyticsMounted.current) productEvent("library_filter", { filter: sceneCategory });
+    analyticsMounted.current = true;
+  }, [sceneCategory]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(72);
   const [remainingSeconds, setRemainingSeconds] = useState(duration === 0 ? 0 : duration * 60);
@@ -916,6 +931,7 @@ export default function Prototype() {
       playEndBell();
       setWisdomOpen(true);
       recordGrowthEvent("yixiu_listening_complete", { completed_scene: active.id, timer_minutes: duration });
+      productEvent("timer_complete", { scene_id: active.id, timer_minutes: duration });
     };
     tick();
     const interval = window.setInterval(tick, 250);
@@ -940,6 +956,7 @@ export default function Prototype() {
       setIsPlaying(breathingOriginalPlaybackRef.current);
       playEndBell();
       recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
+      productEvent("focus_complete", { focus_minutes: focusDuration });
     };
     tick();
     const interval = window.setInterval(tick, 250);
@@ -949,6 +966,7 @@ export default function Prototype() {
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
+      productEvent("focus_pause", { focus_minutes: focusDuration, end_reason: "tab_change" });
       setIsPlaying(breathingOriginalPlaybackRef.current);
       setBreathingStatus("paused");
     }
@@ -1195,6 +1213,7 @@ export default function Prototype() {
   };
 
   const toggleFavorite = (sceneId: SceneId) => {
+    productEvent("favorite", { scene_id: sceneId, action: favorites.includes(sceneId) ? "remove" : "add" });
     setFavorites((current) => current.includes(sceneId)
       ? current.filter((item) => item !== sceneId)
       : [...current, sceneId]);
@@ -1202,6 +1221,7 @@ export default function Prototype() {
 
   const selectDuration = (minutes: DurationOption) => {
     if (!canUseWebTimer(minutes)) { setUpgradeOpen(true); return; }
+    productEvent("timer_select", { timer_minutes: minutes });
     listeningClockRef.current.reset(minutes * 60);
     listeningSessionRef.current = crypto.randomUUID();
     if (isPlaying && breathingStatus !== "running") listeningClockRef.current.start();
@@ -1334,9 +1354,11 @@ export default function Prototype() {
     setBreathingElapsed(0);
     setBreathingStatus("running");
     recordGrowthEvent("yixiu_focus_start", { focus_minutes: focusDuration, nature_sound: withSound });
+    productEvent("focus_start", { focus_minutes: focusDuration });
   };
 
   const resetBreathing = () => {
+    if (breathingStatus === "running" || breathingStatus === "paused") productEvent("focus_exit", { focus_minutes: focusDuration, listened_seconds: breathingElapsed });
     focusClockRef.current.reset(focusDuration * 60);
     if (breathingStatus === "running") setIsPlaying(breathingOriginalPlaybackRef.current);
     setBreathingElapsed(0);
@@ -1345,9 +1367,11 @@ export default function Prototype() {
 
   const toggleBreathing = () => {
     if (breathingStatus === "running") {
+      productEvent("focus_pause", { focus_minutes: focusDuration, end_reason: "user" });
       setIsPlaying(breathingOriginalPlaybackRef.current);
       setBreathingStatus("paused");
     } else {
+      productEvent("focus_resume", { focus_minutes: focusDuration });
       if (focusSoundEnabled && !freeSceneIds.has(active.id)) {
         setUpgradeOpen(true);
         return;
@@ -1442,6 +1466,11 @@ export default function Prototype() {
       data-scene={active.id}
       data-tab={activeTab}
     >
+      {analyticsChoiceNeeded && <aside className="analytics-choice" aria-label={language === "zh" ? "使用统计选择" : "Usage analytics choice"}>
+        <strong>{language === "zh" ? "一起让一休更好" : "Help shape a quieter Yixiu"}</strong>
+        <p>{language === "zh" ? "允许统计播放时长、声音选择与功能使用？不含姓名或练习手记，可在“我的”随时关闭。" : "Share listening time, sound choices and feature use? No names or journal history. Change this anytime in Me."} <a href="/privacy.html">{language === "zh" ? "隐私说明" : "Privacy"}</a></p>
+        <div><button type="button" onClick={() => chooseAnalytics(false)}>{language === "zh" ? "暂不分享" : "Not now"}</button><button type="button" onClick={() => chooseAnalytics(true)}>{language === "zh" ? "允许统计" : "Allow analytics"}</button></div>
+      </aside>}
       {activeTab === "sounds" && swipeOffset !== 0 && swipePreviewScene ? (
         <img
           className="ocean-backdrop scene-preview-backdrop"
@@ -2011,6 +2040,10 @@ export default function Prototype() {
                 </section>
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
+                <section className="me-card">
+                  <label className="setting-row"><span><strong>{language === "zh" ? "帮助改进一休" : "Help improve Yixiu"}</strong><small>{language === "zh" ? "自愿分享播放时长、声音选择与功能使用统计；不含姓名、录音或练习手记。可随时关闭。" : "Optionally share listening duration, sound choices and feature use. No names, recordings or journal history. Turn off anytime."}</small></span><input type="checkbox" aria-label={language === "zh" ? "分享使用统计" : "Share usage analytics"} checked={usageAnalytics} onChange={event => chooseAnalytics(event.target.checked)} /></label>
+                  <a href="/privacy.html">{language === "zh" ? "了解数据与隐私" : "Data and privacy"}</a>
+                </section>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
                   <button type="button" onClick={() => openMeDetail("about")}><span><strong>{language === "zh" ? "关于我们" : "About Us"}</strong><small>{language === "zh" ? "一休是谁，我们相信什么" : "Who we are and what we believe"}</small></span><ChevronRightIcon /></button>
                   <button type="button" onClick={() => openMeDetail("privacy")}><span><strong>{language === "zh" ? "隐私说明" : "Privacy"}</strong><small>{language === "zh" ? "偏好只保存在这台设备" : "Preferences stay on this device"}</small></span><ChevronRightIcon /></button>
@@ -2074,7 +2107,7 @@ export default function Prototype() {
                     </section>
                   </article>
                 ) : meView === "privacy" ? (
-                  <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
+                  <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取精确位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access precise location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><p>{language === "zh" ? "使用统计默认关闭。自愿开启后，Google Analytics 使用随机浏览器标识统计播放时长、声音选择和功能使用，不上传练习手记。可随时在“我的”关闭。" : "Usage analytics is off by default. If you opt in, Google Analytics uses a random browser identifier to measure listening duration, sound choices and feature use. Journal history is not uploaded. Disable anytime in Me."} <a href="/privacy.html">{language === "zh" ? "完整隐私说明" : "Full privacy notice"}</a></p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
                 ) : meView === "sources" ? (
                   <article className="me-article"><small>{language === "zh" ? "声音与音乐授权" : "AUDIO & MUSIC LICENSES"}</small><h2>{language === "zh" ? "每一次聆听，都尊重原创" : "Every listen respects its source"}</h2><p>{language === "zh" ? "自然环境录音按 Mixkit Sound Effects Free License 使用。" : "Nature field recordings are used under the Mixkit Sound Effects Free License."}</p><p>{language === "zh" ? "长篇冥想音乐由 HoliznaCC0 创作，按 CC0 1.0 使用；短篇音乐由 Yanni Ziangos（YannZ）创作，按 CC BY 4.0 使用。" : "Long meditation music is by HoliznaCC0 under CC0 1.0. Short music is by Yanni Ziangos (YannZ) under CC BY 4.0."}</p><a href="https://freemusicarchive.org/music/holiznacc0/space-sleep-meditation" target="_blank" rel="noreferrer">Free Music Archive</a><a href="https://opengameart.org/content/indie-meditations-free-music-pack" target="_blank" rel="noreferrer">OpenGameArt · YannZ</a><a href="https://mixkit.co/license/" target="_blank" rel="noreferrer">Mixkit License</a><AmbientMusicCredits language={language} /></article>
                 ) : (

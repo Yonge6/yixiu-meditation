@@ -290,11 +290,13 @@ struct FocusView: View {
             HStack(spacing: 12) {
                 Button {
                     if status == .running {
+                        ProductAnalytics.shared.event("focus_pause", ["scene_id": practiceSceneID])
                         clock.pause()
                         elapsed = totalSeconds - clock.secondsRemaining()
                         status = .paused
                         restoreOriginalPlayback()
                     } else {
+                        ProductAnalytics.shared.event("focus_resume", ["scene_id": practiceSceneID])
                         acquireFocusAudio()
                         clock.start()
                         status = .running
@@ -337,6 +339,7 @@ struct FocusView: View {
         }
         acquireFocusAudio()
         practiceSceneID = appState.scene.rawValue
+        ProductAnalytics.shared.event("focus_start", ["scene_id": practiceSceneID, "focus_minutes": appState.focusDuration])
         clock.reset(seconds: totalSeconds)
         clock.start()
         elapsed = 0
@@ -355,6 +358,7 @@ struct FocusView: View {
     }
 
     private func resetSession() {
+        if status == .running || status == .paused { ProductAnalytics.shared.event("focus_exit", ["scene_id": practiceSceneID]) }
         restoreOriginalPlayback()
         clock.reset(seconds: totalSeconds)
         elapsed = 0

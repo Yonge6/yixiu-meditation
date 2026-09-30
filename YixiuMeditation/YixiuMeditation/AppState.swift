@@ -46,7 +46,9 @@ final class AppState: ObservableObject {
     }
     @Published var isPlaying = false
     @Published var remainingSeconds = 30 * 60
-    @Published var activeTab: RootTab = .listen
+    @Published var activeTab: RootTab = .listen {
+        didSet { if activeTab != oldValue { ProductAnalytics.shared.event("tab_select", ["tab": activeTab.rawValue]) } }
+    }
     @Published var audioError: String?
     @Published var sessionCompleted = false
     @Published private(set) var reviewRequestToken = 0
@@ -255,6 +257,7 @@ final class AppState: ObservableObject {
 
     func toggleFavorite(_ target: MeditationScene? = nil) {
         let target = target ?? scene
+        ProductAnalytics.shared.event("favorite", ["scene_id": target.rawValue, "action": favorites.contains(target) ? "remove" : "add"])
         if let index = favorites.firstIndex(of: target) {
             favorites.remove(at: index)
         } else {
@@ -290,6 +293,7 @@ final class AppState: ObservableObject {
     }
 
     func recordCompletedSession(isFocus: Bool = false, seconds: Int? = nil, sceneID: String? = nil) {
+        ProductAnalytics.shared.event(isFocus ? "focus_complete" : "timer_complete", ["scene_id": sceneID ?? scene.rawValue])
         let entry = PracticeEntry(sceneID: sceneID ?? scene.rawValue,
                                   seconds: seconds ?? duration * 60,
                                   kind: isFocus ? .breathing : .listening)
