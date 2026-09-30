@@ -14,7 +14,7 @@ Scope: Yixiu only. The ops project reserves six project panels; no other product
 ## Verification
 
 - H5 build and 28-file runtime integrity check passed.
-- 54 Node tests passed, including default denial, opt-in once, withdrawal, preview exclusion, URL/parameter filtering, media progress, rate and loop boundaries.
+- 55 Node tests passed, including default denial, opt-in once, withdrawal, preview exclusion, URL/parameter filtering, media progress, rate, loop boundaries and cancellation without a false playback error.
 - Browser mobile 390×844: consent and Me withdrawal work; no horizontal overflow.
 - Local browser audio produced a confirmed start, 34.85 + 3.18 incremental seconds and a 38-second playback end. Test URL used `analytics=off`; these are test observations, not production users.
 - Native Release unsigned device build passed; Swift core: 15 tests passed.

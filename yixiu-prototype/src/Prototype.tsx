@@ -569,8 +569,9 @@ function useAmbientSound(sceneId: SceneId, isPlaying: boolean, volume: number, f
     const analytics = observeAudio(audio, sceneId, classicalSceneIds.includes(sceneId as typeof classicalSceneIds[number]) ? "classical" : (scene.kind ?? "nature"), freeSceneIds.has(sceneId));
     graphRef.current = { audio, analytics };
     void audio.play().then(() => {
+      if (generation !== fadeGenerationRef.current) return;
       previousGraph?.analytics?.dispose("scene_change");
-      if (!previousGraph || generation !== fadeGenerationRef.current) return;
+      if (!previousGraph) return;
       fadeActiveRef.current = true;
       const startedAt = performance.now();
       const previousStartVolume = previousGraph.audio.volume;
@@ -590,6 +591,7 @@ function useAmbientSound(sceneId: SceneId, isPlaying: boolean, volume: number, f
       };
       fadeFrameRef.current = window.requestAnimationFrame(animate);
     }).catch(() => {
+      if (generation !== fadeGenerationRef.current) { stopAudioGraph({ audio, analytics }); return; }
       analytics.failed();
       analytics.dispose("playback_error");
       if (graphRef.current?.audio === audio) graphRef.current = previousGraph;
