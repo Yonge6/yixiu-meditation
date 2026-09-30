@@ -37,6 +37,17 @@ struct FreeMusicPolicyHarness {
         precondition(Array(MeditationScene.homeScenes.prefix(22)).allSatisfy { SubscriptionAccessPolicy.freeScenes.contains($0) })
         precondition(MeditationScene.homeScenes.count == Set(MeditationScene.homeScenes).count)
         precondition(MeditationScene.homeScenes.first == .ocean)
+        if CommandLine.arguments.count == 2 {
+            let bundle = URL(fileURLWithPath: CommandLine.arguments[1], isDirectory: true)
+            for scene in MeditationScene.availableScenes {
+                let audio = bundle.appendingPathComponent(scene.audioSubdirectory)
+                    .appendingPathComponent(scene.audioResource + ".m4a")
+                let attributes = try! FileManager.default.attributesOfItem(atPath: audio.path)
+                precondition((attributes[.size] as? NSNumber)?.intValue ?? 0 > 0,
+                             "Missing archived audio for \(scene.rawValue)")
+            }
+            print("ARCHIVED_AUDIO_PASS: all 44 active scenes resolve to non-empty bundled audio")
+        }
         print("FREE_MUSIC_POLICY_PASS: 10 Free nature sounds, 12 Free music tracks (10 classical), 44 available scenes, twenty classical works, retired tracks denied, historical IDs preserved")
     }
 }
