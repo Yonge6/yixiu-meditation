@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E20000000000000000000004 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E10000000000000000000003; };
 		E20000000000000000000001 = {isa = PBXBuildFile; fileRef = E10000000000000000000001; };
 		E20000000000000000000002 = {isa = PBXBuildFile; fileRef = E10000000000000000000002; };
 		E20000000000000000000003 = {isa = PBXBuildFile; productRef = E80000000000000000000002; };
@@ -73,6 +74,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E10000000000000000000003 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E10000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAnalytics.swift; sourceTree = "<group>"; };
 		E10000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeningProgress.swift; sourceTree = "<group>"; };
 		D10000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/HomeInteractionUITests.swift; sourceTree = SOURCE_ROOT; };
@@ -149,6 +151,7 @@
 		A40000000000000000000002 /* YixiuMeditation */ = {
 			isa = PBXGroup;
 			children = (
+				E10000000000000000000003 /* GoogleService-Info.plist */,
 				E10000000000000000000001,
 				A10000000000000000000001 /* YixiuMeditationApp.swift */,
 				A10000000000000000000002 /* Models.swift */,
@@ -321,6 +324,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E20000000000000000000004 /* GoogleService-Info.plist in Resources */,
 				A2000000000000000000000A /* Assets.xcassets in Resources */,
 				A2000000000000000000000B /* Audio in Resources */,
 				A2000000000000000000000C /* Fonts in Resources */,

@@ -22,9 +22,9 @@ Scope: Yixiu only. The ops project reserves six project panels; no other product
 
 ## Required activation / remaining work
 
-1. The current Google login cannot link a Firebase project to the existing WonderElian GA4 property; the GA4 custom definitions page is also read-only (no create control). A GA4 administrator/editor must grant the required rights or complete linking and create event-scoped `scene_id`.
-2. Register bundle `com.health.yixiu` in the authorized Yixiu Firebase project, download the real `GoogleService-Info.plist`, include it in App resources, then verify the exact iOS stream. No placeholder configuration is bundled.
-3. Set the ops private `YIXIU_IOS_STREAM_ID` to that verified stream. The provider restricts App reports to that stream and iOS; H5 restricts exact hostname. Do not expose credentials or raw identifiers in public snapshots.
+1. Completed: switched to the already-signed-in GA4 account administrator after confirming the previous account had only lower-level access. No user roles were expanded. Event-scoped `scene_id` was created and read back.
+2. Completed after the user personally accepted Firebase terms: created `yixiu-meditation` on the free Spark plan, linked the existing WonderElian GA4 property, and registered `com.health.yixiu` / App Store ID `1461182261`. GA4 lists the dedicated Yixiu iOS stream separately from the existing web stream.
+3. The real `GoogleService-Info.plist` returned by Firebase's configuration-download request is included only in the main App resources, not the Widget. It is Firebase client configuration, not a service-account credential. Ops reads the verified iOS stream mapping from ignored machine-local configuration (or `YIXIU_IOS_STREAM_ID`); reports also restrict platform to iOS. No private mapping or credentials enter public snapshots. The first successful read returned no schema-2 events, as expected before native distribution.
 4. Before native distribution, update App Store privacy declarations to match the SDK and data use, validate opt-in/withdrawal on device, and run a separately authorized release.
 5. Cohort retention reporting and Apple renewal/refund/revenue reconciliation are not connected in this first phase; those cards remain null and explicitly pending, not zero. GA4 processing delay and opt-in coverage affect reports.
 
