@@ -1501,9 +1501,12 @@ export default function Prototype() {
       <div className="ocean-shade" aria-hidden="true" />
 
       {activeTab === "sounds" ? <header className="player-header">
-        <div className="brand-lockup" aria-label="Yixiu">
-          <span>{language === "zh" ? "一休" : "YIXIU"}</span>
-          <small>{language === "zh" ? "YIXIU" : "一休"}</small>
+        <div className="brand-lockup">
+          <img className="brand-app-icon" src="/assets/yixiu/app-icon.png" width="44" height="44" alt="" draggable={false} />
+          <div className="brand-copy">
+            <span className="brand-name">{language === "zh" ? "一休冥想" : "Yixiu"}</span>
+            <small>{language === "zh" ? "睡眠与静心" : "Sleep & Calm"}</small>
+          </div>
         </div>
         <div className="header-actions">
           <a
