@@ -408,6 +408,22 @@ img[data-image-scene="tide"] {
   .header-download-link { padding-right: 8px; padding-left: 8px; letter-spacing: 0.04em; }
 }
 
+/* The full English name needs compact type, not clipped words, on phones. */
+@media (max-width: 480px) {
+  [data-language="en"] .player-header { right: 16px; left: 16px; gap: 8px; }
+  [data-language="en"] .brand-lockup { gap: 7px; }
+  [data-language="en"] .brand-app-icon { width: 36px; height: 36px; border-radius: 9px; }
+  [data-language="en"] .brand-name { font-size: 15px; letter-spacing: 0; }
+  [data-language="en"] .brand-copy small { font-size: 10px; letter-spacing: 0.02em; }
+  [data-language="en"] .header-actions { gap: 4px; }
+  [data-language="en"] .header-download-link { padding-right: 8px; padding-left: 8px; letter-spacing: 0.04em; }
+}
+
+@media (max-width: 360px) {
+  [data-language="en"] .player-header { flex-wrap: wrap; }
+  [data-language="en"] .header-actions { margin-left: auto; }
+}
+
 .header-share-button,
 .header-language-button {
   display: grid;

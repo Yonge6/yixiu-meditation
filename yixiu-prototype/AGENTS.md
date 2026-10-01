@@ -2,7 +2,7 @@
 
 ## Yixiu Product Direction
 
-- 2026-10-01 H5 brand: use the actual App icon beside a two-line lockup, `一休冥想` above `睡眠与静心`; English mode uses `Yixiu` / `Sleep & Calm`. Preserve download/share/language actions and compact responsive spacing. Native App branding is unchanged.
+- 2026-10-01 H5 brand: use the actual App icon beside a two-line lockup, `一休冥想` above `休息、睡眠与静心`; English mode uses `Yixiu Meditation` / `Rest, Sleep & Calm`. Preserve download/share/language actions and compact responsive spacing. On English screens up to 360px, actions may wrap below the full brand rather than truncate it. Native App branding is unchanged.
 
 - 2026-09-21 expansion supersedes earlier counts: 20 classical works, 10 Free / 10 Plus. New Free works: traumerei, raindrop, waltzAMinor, gnossienne, mozartAndante. Active total: 14 nature + 30 music = 44; Free total: 10 nature + 12 music = 22. Keep App/H5 catalogs, licenses and policy aligned. Home navigation is a stable Free-first partition, without changing deep-link targets or library order. Library filters remain outside the vertically scrolling cards. Preserve ungated attribution/downloads and all CC rights.
 

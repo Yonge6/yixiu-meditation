@@ -2,7 +2,7 @@
 
 ## Implemented brand
 
-Use the unmodified native App icon with two lines: 一休冥想 / 睡眠与静心. English is Yixiu / Sleep & Calm. Keep the existing serif display and supporting type, current header position and all three actions. Narrow screens use a smaller icon/type without shrinking action touch targets. Native App code is unchanged.
+Use the unmodified native App icon with two lines: 一休冥想 / 休息、睡眠与静心. English is Yixiu Meditation / Rest, Sleep & Calm. Keep the existing serif display and supporting type, current header position and all three actions. English screens up to 480px use compact type, and up to 360px permit actions on a second row without truncating the name or reducing touch targets. Native App code is unchanged.
 
 Verified: production build, 28 protected-runtime checks and 45 Sites tests passed. Browser checks at 320, 390 and 1095 px confirmed a loaded icon, no horizontal overflow and no brand/action overlap; English 320 px also passed. Desktop and phone screenshots inspected. Local preview: http://127.0.0.1:4207/?scene=rain&lang=zh. Not deployed.
 

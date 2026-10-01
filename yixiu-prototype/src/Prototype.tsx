@@ -1504,8 +1504,8 @@ export default function Prototype() {
         <div className="brand-lockup">
           <img className="brand-app-icon" src="/assets/yixiu/app-icon.png" width="44" height="44" alt="" draggable={false} />
           <div className="brand-copy">
-            <span className="brand-name">{language === "zh" ? "一休冥想" : "Yixiu"}</span>
-            <small>{language === "zh" ? "睡眠与静心" : "Sleep & Calm"}</small>
+            <span className="brand-name">{language === "zh" ? "一休冥想" : "Yixiu Meditation"}</span>
+            <small>{language === "zh" ? "休息、睡眠与静心" : "Rest, Sleep & Calm"}</small>
           </div>
         </div>
         <div className="header-actions">
