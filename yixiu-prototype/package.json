@@ -9,9 +9,9 @@
     "test:runtime": "playwright test",
     "test:sites": "node --test tests/sites-worker.test.mjs",
     "test:practice": "node --experimental-strip-types --test tests/practice-core.test.ts",
-    "predev": "npm run check:runtime && npm run build:journal",
+    "predev": "npm run check:runtime && npm run build:journal && node scripts/prepare-app-banner.mjs",
     "dev": "vite",
-    "prebuild": "npm run check:runtime && npm run build:journal",
+    "prebuild": "npm run check:runtime && npm run build:journal && node scripts/prepare-app-banner.mjs",
     "build": "tsc && vite build && node scripts/prepare-sites-build.mjs",
     "build:journal": "node scripts/build-journal.mjs",
     "test:journal": "playwright test --config=playwright.journal.config.ts"
