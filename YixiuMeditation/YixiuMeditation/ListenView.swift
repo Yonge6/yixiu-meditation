@@ -382,21 +382,47 @@ struct ListenView: View {
     }
 
     private var header: some View {
-        HStack {
-            HStack(alignment: .firstTextBaseline, spacing: 11) {
-                Text(language == .zh ? "一休" : "YIXIU")
-                    .font(language == .zh ? YixiuTheme.chineseDisplay(25) : YixiuTheme.englishSerif(25))
-                    .tracking(2)
-                Text(language == .zh ? "YIXIU" : "一休")
-                    .font(YixiuTheme.sans(11, weight: .regular))
-                    .tracking(4)
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                brandLockup.fixedSize(horizontal: true, vertical: false)
+                Spacer(minLength: 12)
+                headerActions
             }
-            .foregroundStyle(YixiuTheme.moon)
-            .accessibilityElement(children: .combine)
+            VStack(alignment: .leading, spacing: 12) {
+                brandLockup
+                headerActions.frame(maxWidth: .infinity, alignment: .trailing)
+            }
+        }
+        // Keep adaptive header measurement out of the scene's gesture canvas.
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 24)
+        .frame(maxWidth: .infinity)
+    }
 
-            Spacer()
+    private var brandLockup: some View {
+        HStack(alignment: .center, spacing: 10) {
+            Image("BrandAppIcon")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 40, height: 40)
+                .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(language.text(zh: "一休冥想", en: "Yixiu Meditation"))
+                    .font(language == .zh ? YixiuTheme.chineseDisplay(22) : YixiuTheme.englishSerif(20))
+                    .foregroundStyle(YixiuTheme.moon)
+                Text(language.text(zh: "休息、睡眠与静心", en: "Rest, Sleep & Calm"))
+                    .font(YixiuTheme.sans(11))
+                    .foregroundStyle(YixiuTheme.moon.opacity(0.88))
+            }
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("listen.brandLockup")
+    }
 
-            HStack(spacing: 8) {
+    private var headerActions: some View {
+        HStack(spacing: 8) {
                 Button {
                     appState.language = language == .zh ? .en : .zh
                 } label: {
@@ -443,10 +469,8 @@ struct ListenView: View {
                     zh: "分享\(appState.scene.zhName)",
                     en: "Share \(appState.scene.enName)"
                 ))
-            }
         }
-        .padding(.horizontal, 24)
-        .frame(maxWidth: .infinity)
+        .fixedSize()
     }
 
     private var sceneIdentity: some View {

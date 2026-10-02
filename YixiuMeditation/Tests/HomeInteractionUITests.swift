@@ -42,6 +42,22 @@ final class HomeInteractionUITests: XCTestCase {
         tab.tap()
     }
 
+    func testBilingualBrandLockupAndHeaderActions() {
+        let brand = app.descendants(matching: .any).matching(identifier: "listen.brandLockup").firstMatch
+        XCTAssertTrue(brand.waitForExistence(timeout: 5))
+        XCTAssertTrue(brand.label.contains("Yixiu Meditation"))
+        XCTAssertTrue(brand.label.contains("Rest, Sleep & Calm"))
+        XCTAssertGreaterThanOrEqual(brand.frame.minX, 0)
+        XCTAssertLessThanOrEqual(brand.frame.maxX, app.frame.width)
+        XCTAssertTrue(app.buttons["Share Ocean Waves"].isHittable)
+        capture("brand-en")
+        app.buttons["Switch to Chinese"].tap()
+        XCTAssertTrue(brand.label.contains("一休冥想"))
+        XCTAssertTrue(brand.label.contains("休息、睡眠与静心"))
+        XCTAssertTrue(app.buttons["切换到英文"].isHittable)
+        capture("brand-zh")
+    }
+
     func testPortraitGesturesAndLowControls() {
         expectScene("Ocean Waves")
         let play = app.buttons["Play"]
