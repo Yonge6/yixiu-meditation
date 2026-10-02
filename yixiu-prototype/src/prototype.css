@@ -211,10 +211,12 @@ img[data-image-scene="tide"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .header-actions {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 8px;
 }
@@ -359,24 +361,67 @@ img[data-image-scene="tide"] {
 
 .brand-lockup {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding: 4px 0;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
   text-align: left;
   text-shadow: 0 1px 12px rgba(0, 20, 24, 0.72);
 }
 
-.brand-lockup span {
+.brand-app-icon {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  box-shadow: 0 2px 14px rgba(0, 20, 24, 0.22);
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.brand-lockup .brand-name {
   font-family: var(--serif);
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 400;
-  letter-spacing: 0.11em;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
 }
 
 .brand-lockup small {
   color: #d8e6e8;
   font-size: 12px;
-  letter-spacing: 0.34em;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+}
+
+@media (max-width: 390px) {
+  .player-header { right: 16px; left: 16px; gap: 8px; }
+  .brand-lockup { gap: 7px; }
+  .brand-app-icon { width: 36px; height: 36px; border-radius: 9px; }
+  .brand-lockup .brand-name { font-size: 17px; }
+  .brand-lockup small { font-size: 10px; letter-spacing: 0.08em; }
+  .header-actions { gap: 4px; }
+  .header-download-link { padding-right: 8px; padding-left: 8px; letter-spacing: 0.04em; }
+}
+
+/* The full English name needs compact type, not clipped words, on phones. */
+@media (max-width: 480px) {
+  [data-language="en"] .player-header { right: 16px; left: 16px; gap: 8px; }
+  [data-language="en"] .brand-lockup { gap: 7px; }
+  [data-language="en"] .brand-app-icon { width: 36px; height: 36px; border-radius: 9px; }
+  [data-language="en"] .brand-name { font-size: 15px; letter-spacing: 0; }
+  [data-language="en"] .brand-copy small { font-size: 10px; letter-spacing: 0.02em; }
+  [data-language="en"] .header-actions { gap: 4px; }
+  [data-language="en"] .header-download-link { padding-right: 8px; padding-left: 8px; letter-spacing: 0.04em; }
+}
+
+@media (max-width: 360px) {
+  [data-language="en"] .player-header { flex-wrap: wrap; }
+  [data-language="en"] .header-actions { margin-left: auto; }
 }
 
 .header-share-button,
@@ -3086,8 +3131,8 @@ img[data-image-scene="tide"] {
     left: clamp(30px, 4vw, 72px);
   }
 
-  .brand-lockup span {
-    font-size: 28px;
+  .brand-lockup .brand-name {
+    font-size: 25px;
   }
 
   .brand-lockup small {
