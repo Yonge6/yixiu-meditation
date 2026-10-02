@@ -792,10 +792,10 @@ struct MeView: View {
             Divider().overlay(YixiuTheme.hairline)
             workLink(
                 index: language.text(zh: "三", en: "03"),
-                title: language.text(zh: "不二 认识自己", en: "Not Two · Know Yourself"),
-                tagline: language.text(zh: "人生使用说明书", en: "A User Manual for Life"),
-                description: language.text(zh: "看见自己的能量结构，理解真实而独特的自己。", en: "See your energy design and understand your authentic, individual self."),
-                url: "https://human-design.wonderelian.com/"
+                title: language.text(zh: "不二见己", en: "Buer Within"),
+                tagline: language.text(zh: "与真实的自己 · 温柔相遇", en: "Meet your true self"),
+                description: language.text(zh: "和 AI 成长伙伴豆豆龙聊聊，在对话与成长档案中，更清楚地认识自己。", en: "Talk with Doudoulong, your AI growth companion, and get to know yourself through conversations and your growth profile."),
+                url: "https://buer.wonderelian.com/"
             )
             Divider().overlay(YixiuTheme.hairline)
             workLink(
