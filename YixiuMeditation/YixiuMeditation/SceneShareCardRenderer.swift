@@ -6,7 +6,6 @@ import UIKit
 struct SceneSharePayload: Identifiable {
     let id = UUID()
     let image: UIImage
-    let url: URL
 }
 
 enum SceneShareCardRenderer {
@@ -73,14 +72,23 @@ enum SceneShareCardRenderer {
         let moon = UIColor(red: 0.93, green: 0.97, blue: 0.95, alpha: 0.98)
         let mist = UIColor(red: 0.70, green: 0.86, blue: 0.85, alpha: 0.78)
 
-        let brand = language.text(zh: "一休", en: "YIXIU")
+        let iconRect = CGRect(x: 72, y: 58, width: 96, height: 96)
+        if let icon = UIImage(named: "BrandAppIcon") {
+            UIGraphicsGetCurrentContext()?.saveGState()
+            let iconPath = UIBezierPath(roundedRect: iconRect, cornerRadius: 22)
+            iconPath.addClip()
+            icon.draw(in: iconRect)
+            UIGraphicsGetCurrentContext()?.restoreGState()
+        }
+
+        let brand = language.text(zh: "一休冥想", en: "Yixiu Meditation")
         brand.draw(
-            at: CGPoint(x: 72, y: 58),
+            at: CGPoint(x: 194, y: 59),
             withAttributes: [.font: brandFont, .foregroundColor: moon]
         )
-        language.text(zh: "YIXIU", en: "一休").draw(
-            at: CGPoint(x: 74, y: 116),
-            withAttributes: [.font: UIFont.systemFont(ofSize: 21, weight: .medium), .foregroundColor: mist]
+        language.text(zh: "休息、睡眠与静心", en: "Rest, Sleep & Calm").draw(
+            at: CGPoint(x: 196, y: 119),
+            withAttributes: [.font: UIFont.systemFont(ofSize: 23, weight: .medium), .foregroundColor: mist]
         )
 
         let primary = language.text(zh: scene.zhName, en: scene.enName.uppercased())

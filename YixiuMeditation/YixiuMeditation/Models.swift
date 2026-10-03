@@ -453,7 +453,11 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         var components = URLComponents(string: "https://yixiu.wonderelian.com/")!
         components.queryItems = [
             URLQueryItem(name: isMeditationMusic ? "music" : "scene", value: rawValue),
-            URLQueryItem(name: "lang", value: language.rawValue)
+            URLQueryItem(name: "lang", value: language.rawValue),
+            URLQueryItem(name: "utm_source", value: "yixiu_app"),
+            URLQueryItem(name: "utm_medium", value: "share_poster"),
+            URLQueryItem(name: "utm_campaign", value: "scene_share"),
+            URLQueryItem(name: "utm_content", value: "\(rawValue)_\(language.rawValue)")
         ]
         return components.url!
     }

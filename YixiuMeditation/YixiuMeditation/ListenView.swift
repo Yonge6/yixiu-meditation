@@ -137,7 +137,10 @@ struct ListenView: View {
                 .presentationBackground(YixiuTheme.deepWater)
         }
         .sheet(item: $sharePayload) { payload in
-            ActivityShareSheet(items: [payload.image, payload.url])
+            // Share one image item so WeChat and other social extensions receive
+            // the poster as an image instead of falling back to a plain URL card.
+            // The poster QR code remains the attributed route back to this scene.
+            ActivityShareSheet(items: [payload.image])
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
@@ -452,10 +455,8 @@ struct ListenView: View {
                         shareRenderingFailed = true
                         return
                     }
-                    sharePayload = SceneSharePayload(
-                        image: image,
-                        url: appState.scene.shareURL(language: language)
-                    )
+                    ProductAnalytics.shared.event("share_poster_open", ["scene_id": appState.scene.rawValue])
+                    sharePayload = SceneSharePayload(image: image)
                 } label: {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 17, weight: .regular))
