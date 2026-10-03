@@ -34,6 +34,13 @@ struct FreeMusicPolicyHarness {
             precondition(scene.audioSubdirectory == "Audio/Meditation")
             precondition(scene.shareURL(language: .zh).query!.contains("music=\(scene.rawValue)"))
         }
+        let attributedShareURL = MeditationScene.rain.shareURL(language: .zh)
+        let shareQuery = attributedShareURL.query ?? ""
+        precondition(shareQuery.contains("scene=rain"))
+        precondition(shareQuery.contains("utm_source=yixiu_app"))
+        precondition(shareQuery.contains("utm_medium=share_poster"))
+        precondition(shareQuery.contains("utm_campaign=scene_share"))
+        precondition(shareQuery.contains("utm_content=rain_zh"))
         precondition(Array(MeditationScene.homeScenes.prefix(22)).allSatisfy { SubscriptionAccessPolicy.freeScenes.contains($0) })
         precondition(MeditationScene.homeScenes.count == Set(MeditationScene.homeScenes).count)
         precondition(MeditationScene.homeScenes.first == .ocean)
