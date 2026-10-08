@@ -1,5 +1,15 @@
 # 2026-10-08 adaptive layout and App Store creative work
 
+## Space recovery and Apple download continuation
+
+- User authorized a new browser space; created Ego space 1 `一休 Apple 下载与审核续接`.
+- Removed only ignored, untracked and unused `yixiu-prototype/node_modules` from four old Yixiu worktrees: brand-lockup-20261001, product-analytics-20260930, h5-full-width-tabs-20260922, classical-expansion-20260921 (about 1.1 GB logical size). Dependencies are recoverable from lockfiles; source, worktrees and release assets retained.
+- Official Xcode 27.1 RC download now succeeded to `/Volumes/LaCie/XcodePlatforms/Xcode_27.1_Release_Candidate.xip` (2,027,369,056 bytes). `pkgutil --check-signature` reports signed Apple Software. Expansion initiated in the external directory; xip still stages on the internal volume temporarily.
+- Live App Store readback: Focus/Reset CPP submission and the four-asset creative submission both remain Waiting for Review. No new binary submission.
+- Xip expansion completed successfully to `/Volumes/LaCie/XcodePlatforms/Xcode.app`. Internal available space returned to 12,885,284 KiB. Old `/Applications/Xcode.app` remains untouched; new executable first-run verification started with per-command DEVELOPER_DIR, not a global developer-directory switch.
+- New xcodebuild confirmed Xcode 27.1 (27A9275). GUI now displays Xcode and Apple SDKs Agreement; user must accept it personally. No agreement accepted by agent; first-launch components and Duo runtime remain pending.
+- Removed only this run's fallback iOS 26.5 runtime via official `simctl runtime delete` after confirming no booted devices and retaining its complete external installer. Runtime list now empty. Final Data-volume available space: 24,136,964 KiB (23.0 GiB). No personal/source files removed; four deleted dependency directories can be reinstalled from lockfiles.
+
 ## After user restart (16:18–16:26 CST)
 
 - Protected Inbox orphan cleared by the system; initial available space 26,609,908 KiB.
