@@ -1,5 +1,13 @@
 # 2026-10-08 adaptive layout and App Store creative work
 
+## After user restart (16:18–16:26 CST)
+
+- Protected Inbox orphan cleared by the system; initial available space 26,609,908 KiB.
+- Imported the retained external iOS 26.5 image successfully. Runtime `D39DEFC4-A889-4050-A5BA-2A9F16D32E94`, build 23F73, official state Ready.
+- Created dedicated `Yixiu Recovery QA` iPhone 17 Pro (`4553A3FD-7265-475F-9527-8D868CAAB209`). Device entered Booted, but initial LaunchServices migration did not finish before available disk fell below 9 GiB. Shut it down deliberately; do not treat bootstatus termination as successful full initialization or App QA.
+- Final disk readback 9,088,460 KiB available. Runtime retained; no personal files deleted. Selected Xcode remains 26.6 and has no Duo device type.
+- Previous Ego task spaces are gone after restart; requested authorization to create a replacement before resuming Apple downloads. No store changes in this continuation.
+
 ## Continuation: toolchain, disk and product page recovery
 
 - macOS now reports 27.0.1 (26A434); selected Xcode remains 26.6 (17F113). Official Xcode 27.1 RC download returned HTTP 403. No newer Xcode installation or Duo validation completed.
