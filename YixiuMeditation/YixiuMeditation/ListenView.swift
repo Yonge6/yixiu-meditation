@@ -52,6 +52,7 @@ struct ListenView: View {
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var timerOpen = false
     @State private var showPlusAfterTimer = false
     @State private var libraryOpen = false
@@ -218,7 +219,10 @@ struct ListenView: View {
     }
 
     private func isExpanded(_ size: CGSize) -> Bool {
-        size.width >= 680 && !dynamicTypeSize.isAccessibilitySize
+        YixiuAdaptiveLayout.usesColumns(
+            size: size, horizontalSizeClass: horizontalSizeClass,
+            dynamicTypeSize: dynamicTypeSize, minimumColumnWidth: 320
+        )
     }
 
     private func playerLayout(_ size: CGSize) -> AnyLayout {

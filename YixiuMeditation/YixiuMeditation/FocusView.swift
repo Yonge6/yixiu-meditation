@@ -5,6 +5,7 @@ struct FocusView: View {
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var status: BreathingStatus = .idle
     @State private var elapsed = 0
     @State private var originalAudioWasPlaying = false
@@ -191,7 +192,10 @@ struct FocusView: View {
     }
 
     private func focusLayout(_ size: CGSize) -> AnyLayout {
-        size.width >= 620 && !dynamicTypeSize.isAccessibilitySize
+        YixiuAdaptiveLayout.usesColumns(
+            size: size, horizontalSizeClass: horizontalSizeClass,
+            dynamicTypeSize: dynamicTypeSize, minimumColumnWidth: 286
+        )
             ? AnyLayout(HStackLayout(spacing: 32))
             : AnyLayout(VStackLayout(spacing: 12))
     }

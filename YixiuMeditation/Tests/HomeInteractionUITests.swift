@@ -101,6 +101,18 @@ final class HomeInteractionUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Sound Library"].waitForExistence(timeout: 3))
     }
 
+    func testPlaybackSurvivesWindowOrientationChanges() {
+        app.buttons["Play"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5))
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait, .landscapeRight, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            expectScene("Ocean Waves")
+            XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5),
+                          "Resizing must preserve active playback")
+        }
+        capture("playback-after-resizing")
+    }
+
     func testSwipeIntoPremiumSceneShowsPaywall() {
         for name in ["RAIN ON EAVES", "SPRING CREEK", "MORNING BIRDS", "MOUNTAIN STREAM"] {
             drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
