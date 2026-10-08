@@ -1,5 +1,15 @@
 # 2026-10-08 adaptive layout and App Store creative work
 
+## After license acceptance: native Duo smoke validation
+
+- User completed Xcode first launch. `-checkFirstLaunchStatus` succeeds; SDK 27.1 and iPhone-Duo device type are available.
+- iOS 27.1 (24A94232) downloaded/exported to external iOS27.1 directory. Download tool emitted a transient status lookup error (exit 70), but independent simctl runtime/list checks report Ready and the device boots successfully. Runtime ID: 03B411CD-F07B-4576-9B62-C70F23016174.
+- Dedicated device: Yixiu Duo QA, 3BB7CA6E-B597-493F-911F-E1BC0DBC626B. First migration completed in 51 seconds.
+- Test build succeeds with Xcode 27.1, using external DerivedData and the existing Yixiu-brand-review-20261002 SourcePackages cache. New-package fetch attempt was stopped before retry with the cache.
+- Selected three UI tests pass, 0 failures, 200.5 seconds: bilingual brand/header, landscape controls reachable, playback after orientation commands. Result bundle: `/Volumes/LaCie/XcodePlatforms/YixiuDuo-smoke-20261008.xcresult`; attachments in sibling `YixiuDuo-smoke-attachments`.
+- Visual limitation: exported landscape-control screenshot remains 1398x2034, matching portrait dimensions. Tests do not assert actual viewport change. Passing orientation commands must NOT be represented as completed folded/unfolded or true landscape certification. These are QA attachments, not approved App Store screenshots.
+- Shut down test device after results export. Internal available space 6,030,012 KiB; VM swap reached 7 GiB and dedicated device data about 2.6 GiB. Full suite, fold/unfold validation and store screenshot publication remain incomplete. No new App binary submitted.
+
 ## Space recovery and Apple download continuation
 
 - User authorized a new browser space; created Ego space 1 `一休 Apple 下载与审核续接`.
