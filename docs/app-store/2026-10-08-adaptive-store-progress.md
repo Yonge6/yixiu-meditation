@@ -1,5 +1,15 @@
 # 2026-10-08 adaptive layout and App Store creative work
 
+## Continuation: toolchain, disk and product page recovery
+
+- macOS now reports 27.0.1 (26A434); selected Xcode remains 26.6 (17F113). Official Xcode 27.1 RC download returned HTTP 403. No newer Xcode installation or Duo validation completed.
+- Removed a 7.9 GB temporary exported simulator bundle only after `diff -qr` proved it identical to the retained LaCie original. Data-volume available space rose from about 13.3 GiB to 21.1 GiB.
+- Direct `simctl runtime add` also failed with disk-full code 14, leaving `/Library/Developer/CoreSimulator/Cryptex/Images/Inbox/D3C21027-428F-4358-A759-D28C3B545BE2.dmg`. `cmp` proved it identical to the external original. Runtime list is empty; official delete dry-run cannot find the orphan. Requested macOS administrator authorization to remove this exact orphan only; completion is not yet confirmed. Available space after the failed import was about 13.1 GiB.
+- Replaced failed screenshot associations (not source library assets) in all three CPPs with approved Chinese/English iPhone artwork and localized 13-inch iPad screenshots. Sleep iPhone order: Sounds, Classical, Focus; Focus: Classical, Sounds, Focus; Reset: Focus, Sounds.
+- Focus and Reset submitted successfully together: Apple confirmation `已提交 2 个项目`, submission `ab9e23b2-4651-4ad3-a1a6-4e8b7876ca7f`. This is CPP review, not publication or a new binary submission.
+- Sleep screenshot repair is saved, but its header/search assets are still in the separate creative submission; Sleep publication remains pending.
+- No Duo screenshots fabricated, no system agreements accepted, no personal files or source trees deleted.
+
 ## Scope and baseline
 
 User authorized Duo adaptation, simulator validation, Chinese/English Duo screenshots, header/search assets, and existing custom product page updates. Work starts from `origin/main` `c1967ec1777686b293dd1d54eff9e600b734a0eb`, isolated on `codex/yixiu-adaptive-store-20261008`. No other product or original worktree changed.
