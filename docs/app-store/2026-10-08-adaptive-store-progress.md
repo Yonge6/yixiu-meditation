@@ -9,6 +9,7 @@
 - Focus and Reset submitted successfully together: Apple confirmation `已提交 2 个项目`, submission `ab9e23b2-4651-4ad3-a1a6-4e8b7876ca7f`. This is CPP review, not publication or a new binary submission.
 - Sleep screenshot repair is saved, but its header/search assets are still in the separate creative submission; Sleep publication remains pending.
 - No Duo screenshots fabricated, no system agreements accepted, no personal files or source trees deleted.
+- Administrator-authorized removal returned `Operation not permitted`; the protected orphan was NOT removed. Official `runtime scan-and-mount` still reports zero images. Final disk readback: 18,337,148 KiB available (about 17.5 GiB). No security protections were disabled.
 
 ## Scope and baseline
 
