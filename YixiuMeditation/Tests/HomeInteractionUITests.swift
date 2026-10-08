@@ -69,6 +69,14 @@ final class HomeInteractionUITests: XCTestCase {
         drag(CGVector(dx: 0.2, dy: 0.3), CGVector(dx: 0.8, dy: 0.3))
         expectScene("Ocean Waves")
         drag(CGVector(dx: 0.5, dy: 0.4), CGVector(dx: 0.5, dy: 0.2))
+        if app.scrollViews["listen.scrollFallback"].exists {
+            // Short windows reserve vertical swipes for scrolling; the library
+            // remains reachable through its explicit button.
+            let library = app.buttons["listen.library"]
+            for _ in 0..<6 where !library.isHittable { app.swipeUp() }
+            XCTAssertTrue(library.isHittable)
+            library.tap()
+        }
         XCTAssertTrue(app.staticTexts["Sound Library"].waitForExistence(timeout: 3))
         capture("swipe-up-library")
     }
@@ -114,10 +122,12 @@ final class HomeInteractionUITests: XCTestCase {
     }
 
     func testSwipeIntoPremiumSceneShowsPaywall() {
-        for name in ["RAIN ON EAVES", "SPRING CREEK", "MORNING BIRDS", "MOUNTAIN STREAM"] {
-            drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
-            expectScene(name)
-        }
+        // Mozart Andante is the last free scene in the free-first home order.
+        // The next scene (Forest Falls) must remain behind the entitlement gate.
+        app.terminate()
+        app.launchArguments = ["-language", "en", "-scene", "mozartAndante", "-volume", "0.72"]
+        app.launch()
+        XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
         drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
         XCTAssertTrue(app.staticTexts["YIXIU PLUS"].waitForExistence(timeout: 3))
         capture("premium-swipe-entitlement-preserved")
@@ -196,7 +206,7 @@ final class HomeInteractionUITests: XCTestCase {
     }
 
     func testExplicitReviewButtonOpensExternalStoreOrShowsFailure() {
-        app.tabBars.buttons["Me"].tap()
+        selectTab("Me")
         let rate = app.buttons["me.writeReview"]
         for _ in 0..<20 where !rate.isHittable { app.swipeUp() }
         XCTAssertTrue(rate.isHittable)
