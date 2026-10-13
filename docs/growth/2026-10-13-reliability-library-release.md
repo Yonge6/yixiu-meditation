@@ -1,5 +1,13 @@
 # Yixiu reliability and sound library optimization — 2026-10-13
 
+## Mobile library and native parity follow-up
+
+- H5 search input now uses a 16 px font so iOS Safari does not zoom the page on focus. The library sheet and scrolling card grid have no artificial bottom padding. A 390×844 browser check measured scale 1 before/after focus and a zero-pixel bottom gap.
+- The H5 fix was published from `0312944`. The first archive had an extra `client/` directory and did not switch production. The corrected archive passed the guarded deployment with marker `DEPLOY_OK_YIXIU_20261013-0312944-mobile-library-160916`. Public HTML references `assets/index-CluCwErs.css` and `assets/index-7_q1lzr3.js`; the CSS returned HTTP 200.
+- Native Sound Library now follows the H5 compact header: title, search toggle, All/Free/Favorites/Recent menu, and close icon on one row. Search expands on demand and clears its query when collapsed; categories and count stay above the scrolling cards. The card grid's extra bottom padding was removed. The existing Free/Plus gate and playback code were not changed.
+- The iOS 27.1 simulator build and a signed generic-iOS Debug build both succeeded. Strict deep signature verification passed; the main-app compiler invocation includes `-DDEBUG` and `-DYIXIU_INTERNAL_PLUS`.
+- The signed 1.19 (33) internal-Plus build was installed in place on the paired iPhone 14 Pro Max (`00008120-000A341C0E0BC01E`), and installed-app readback confirms 1.19 (33). Its launch confirmation is pending because the phone was locked when CoreDevice attempted to open it. iPhone Duo simulator screen capture returned black and is not treated as visual acceptance.
+
 ## Scope and source
 
 - Request: implement the accepted H5/App quality-audit improvements, preserving the visual direction, home gestures, licensed catalog and Free/Plus policy.

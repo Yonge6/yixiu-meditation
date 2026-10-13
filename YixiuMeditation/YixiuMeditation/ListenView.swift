@@ -748,6 +748,7 @@ struct SoundLibraryView: View {
     @State private var selectedCategory: SceneCategory = .all
     @State private var selectedScope: SoundLibraryScope = .all
     @State private var searchQuery = ""
+    @State private var searchOpen = false
     @State private var paywallOpen = false
     @FocusState private var searchFocused: Bool
 
@@ -763,40 +764,29 @@ struct SoundLibraryView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                libraryControls
-                ScrollView {
-                    Group {
-                        if filteredScenes.isEmpty {
-                            emptyResults
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
-                                ForEach(filteredScenes) { scene in
-                                    sceneCard(scene)
-                                }
+        VStack(spacing: 0) {
+            libraryControls
+            ScrollView {
+                Group {
+                    if filteredScenes.isEmpty {
+                        emptyResults
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
+                            ForEach(filteredScenes) { scene in
+                                sceneCard(scene)
                             }
                         }
                     }
-                    .padding(.horizontal, 18)
-                    .padding(.bottom, 18)
-                    .frame(maxWidth: 1040)
-                    .frame(maxWidth: .infinity)
                 }
-                .scrollDismissesKeyboard(.interactively)
-                .accessibilityIdentifier("library.results")
+                .padding(.horizontal, 18)
+                .frame(maxWidth: 1040)
+                .frame(maxWidth: .infinity)
             }
-            .background(YixiuTheme.deepWater)
-            .navigationTitle(language.text(zh: "声音库", en: "Sound Library"))
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbarBackground(YixiuTheme.deepWater, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(language.text(zh: "完成", en: "Done")) { dismiss() }
-                }
-            }
+            .scrollDismissesKeyboard(.interactively)
+            .accessibilityIdentifier("library.results")
         }
+        .background(YixiuTheme.deepWater.ignoresSafeArea())
         .sheet(isPresented: $paywallOpen) {
             PlusPaywallView()
                 .presentationDetents([.large])
@@ -808,50 +798,103 @@ struct SoundLibraryView: View {
     // Search, personal scopes and categories share a fixed header, so they remain
     // available while the card grid scrolls on both compact and expanded devices.
     private var libraryControls: some View {
-        VStack(spacing: 9) {
+        VStack(alignment: .leading, spacing: 9) {
             HStack(spacing: 9) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(YixiuTheme.mist)
-                TextField(language.text(zh: "搜索声音、曲名或作曲家", en: "Search sounds, titles or composers"), text: $searchQuery)
-                    .font(YixiuTheme.sans(13))
+                Text(language.text(zh: "声音库", en: "Sound Library"))
+                    .font(YixiuTheme.chineseDisplay(30))
                     .foregroundStyle(YixiuTheme.moon)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .submitLabel(.search)
-                    .focused($searchFocused)
-                    .onSubmit { searchFocused = false }
-                    .accessibilityIdentifier("library.search")
-                if !searchQuery.isEmpty {
-                    Button { searchQuery = "" } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(YixiuTheme.mist)
-                            .frame(width: 32, height: 44)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(language.text(zh: "清除搜索", en: "Clear search"))
-                }
-            }
-            .padding(.horizontal, 13)
-            .frame(minHeight: 44)
-            .background(RoundedRectangle(cornerRadius: 13).fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
-            .overlay(RoundedRectangle(cornerRadius: 13).stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
 
-            HStack(spacing: 5) {
-                ForEach(SoundLibraryScope.allCases) { scope in
-                    Button {
-                        selectedScope = scope
-                    } label: {
-                        Text(scope.title(language: language))
-                            .font(YixiuTheme.sans(12, weight: .medium))
-                            .foregroundStyle(selectedScope == scope ? YixiuTheme.aquaStrong : YixiuTheme.mist)
-                            .frame(maxWidth: .infinity, minHeight: 44)
-                            .background(RoundedRectangle(cornerRadius: 12).fill(selectedScope == scope ? YixiuTheme.aqua.opacity(0.12) : .clear))
-                            .contentShape(Rectangle())
+                Button {
+                    withAnimation(.easeInOut(duration: 0.18)) {
+                        if searchOpen { searchQuery = "" }
+                        searchOpen.toggle()
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(selectedScope == scope ? .isSelected : [])
-                    .accessibilityIdentifier("library.scope.\(scope.rawValue)")
+                    searchFocused = searchOpen
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 17, weight: .regular))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                        .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel(language.text(zh: "搜索声音", en: "Search sounds"))
+                .accessibilityIdentifier("library.search.toggle")
+
+                Menu {
+                    Picker(language.text(zh: "聆听筛选", en: "Listening filter"), selection: $selectedScope) {
+                        ForEach(SoundLibraryScope.allCases) { scope in
+                            Text(scope.title(language: language))
+                                .tag(scope)
+                                .accessibilityIdentifier("library.scope.\(scope.rawValue)")
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 8) {
+                        Text(selectedScope.title(language: language))
+                            .font(YixiuTheme.sans(13, weight: .medium))
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundStyle(YixiuTheme.mist)
+                    .padding(.horizontal, 15)
+                    .frame(height: 44)
+                    .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                    .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                }
+                .accessibilityIdentifier("library.scope.menu")
+
+                Spacer(minLength: 4)
+
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                        .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.7), lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(language.text(zh: "关闭声音库", en: "Close sound library"))
+                .accessibilityIdentifier("library.close")
+            }
+
+            Text(language.text(zh: "14 种自然声 · 30 首音乐（含 20 首古典）", en: "14 nature sounds · 30 music tracks (20 classical)"))
+                .font(YixiuTheme.sans(10, weight: .medium))
+                .tracking(1.5)
+                .foregroundStyle(YixiuTheme.aquaStrong)
+
+            if searchOpen {
+                HStack(spacing: 9) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(YixiuTheme.mist)
+                    TextField(language.text(zh: "搜索声音、曲名或作曲家", en: "Search sounds, titles or composers"), text: $searchQuery)
+                        .font(YixiuTheme.sans(16))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .submitLabel(.search)
+                        .focused($searchFocused)
+                        .onSubmit { searchFocused = false }
+                        .accessibilityIdentifier("library.search")
+                    if !searchQuery.isEmpty {
+                        Button { searchQuery = "" } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(YixiuTheme.mist)
+                                .frame(width: 32, height: 44)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(language.text(zh: "清除搜索", en: "Clear search"))
+                    }
+                }
+                .padding(.horizontal, 13)
+                .frame(minHeight: 44)
+                .background(RoundedRectangle(cornerRadius: 13).fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                .overlay(RoundedRectangle(cornerRadius: 13).stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -881,6 +924,10 @@ struct SoundLibraryView: View {
             }
             .frame(height: 44)
 
+            Text(language.text(zh: "\(filteredScenes.count) 个声音", en: "\(filteredScenes.count) sounds"))
+                .font(YixiuTheme.sans(12))
+                .foregroundStyle(YixiuTheme.mist)
+
             if !subscriptionStore.isReady {
                 HStack(spacing: 8) {
                     ProgressView().tint(YixiuTheme.aqua)
@@ -891,8 +938,8 @@ struct SoundLibraryView: View {
             }
         }
         .padding(.horizontal, 18)
-        .padding(.top, 10)
-        .padding(.bottom, 12)
+        .padding(.top, 8)
+        .padding(.bottom, 9)
         .frame(maxWidth: 1040)
         .frame(maxWidth: .infinity)
         .background(YixiuTheme.deepWater)

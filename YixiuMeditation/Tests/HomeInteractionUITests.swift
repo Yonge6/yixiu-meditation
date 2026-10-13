@@ -201,14 +201,18 @@ final class HomeInteractionUITests: XCTestCase {
 
     func testLibraryFreeSearchEmptyResetAndStickyControls() {
         app.buttons["listen.library"].tap()
-        let free = app.buttons["library.scope.free"]
-        XCTAssertTrue(free.waitForExistence(timeout: 4))
+        let scopeMenu = app.buttons["library.scope.menu"]
+        XCTAssertTrue(scopeMenu.waitForExistence(timeout: 4))
+        scopeMenu.tap()
+        let free = app.buttons["Free"]
+        XCTAssertTrue(free.waitForExistence(timeout: 2))
         free.tap()
-        let beforeScroll = free.frame.minY
+        let beforeScroll = scopeMenu.frame.minY
         app.scrollViews["library.results"].swipeUp()
-        XCTAssertTrue(free.isHittable)
-        XCTAssertEqual(free.frame.minY, beforeScroll, accuracy: 1, "Library scopes must remain above the scrolling cards")
+        XCTAssertTrue(scopeMenu.isHittable)
+        XCTAssertEqual(scopeMenu.frame.minY, beforeScroll, accuracy: 1, "Library scopes must remain above the scrolling cards")
         app.buttons["library.category.classical"].tap()
+        app.buttons["library.search.toggle"].tap()
         let search = app.textFields["library.search"]
         search.tap()
         search.typeText("debussy\n")
