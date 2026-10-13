@@ -40,6 +40,7 @@ jobs:
           import json
           import os
           import plistlib
+          import queue
           import re
           import shutil
           import signal
@@ -188,54 +189,411 @@ jobs:
               run(build_args(state) + ["build-for-testing"], timeout=1100)
           
           
-          def capture():
-              state = json.loads(STATE.read_text())
-              artifacts = ROOT / "artifacts"
-              artifacts.mkdir(exist_ok=True)
-              video = artifacts / "yixiu-native-capture.mp4"
+          MEDIA_INSPECTOR = r'''
+          import Foundation
+          import AppKit
+          import AVFoundation
+          import CoreGraphics
+          import CoreMedia
+          
+          @main struct NativeMediaInspector {
+              static func metrics(_ bitmap: NSBitmapImageRep) -> [String: Any] {
+                  var values = [Double]()
+                  for row in 0..<24 { for col in 0..<24 {
+                      let x = min(bitmap.pixelsWide - 1, (col * bitmap.pixelsWide + bitmap.pixelsWide / 2) / 24)
+                      let y = min(bitmap.pixelsHigh - 1, (row * bitmap.pixelsHigh + bitmap.pixelsHigh / 2) / 24)
+                      if let c = bitmap.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB) {
+                          values.append(255.0 * (0.2126 * Double(c.redComponent) + 0.7152 * Double(c.greenComponent) + 0.0722 * Double(c.blueComponent)))
+                      }
+                  }}
+                  let mean = values.reduce(0, +) / Double(max(1, values.count))
+                  let variance = values.map { ($0 - mean) * ($0 - mean) }.reduce(0, +) / Double(max(1, values.count))
+                  return ["width": bitmap.pixelsWide, "height": bitmap.pixelsHigh,
+                          "luminanceMean": mean, "luminanceStddev": sqrt(variance),
+                          "nonBlack": mean >= 2.0 || sqrt(variance) >= 1.0]
+              }
+              static func main() async {
+                  do {
+                      let mode = CommandLine.arguments[1]
+                      let url = URL(fileURLWithPath: CommandLine.arguments[2])
+                      var result: [String: Any]
+                      if mode == "image" {
+                          guard let bitmap = NSBitmapImageRep(data: try Data(contentsOf: url)) else {
+                              throw NSError(domain: "native-media", code: 1)
+                          }
+                          result = metrics(bitmap)
+                      } else {
+                          let asset = AVURLAsset(url: url)
+                          let duration = try await asset.load(.duration)
+                          let tracks = try await asset.loadTracks(withMediaType: .video)
+                          guard !tracks.isEmpty, duration.seconds.isFinite, duration.seconds > 0 else {
+                              throw NSError(domain: "native-media", code: 2)
+                          }
+                          let generator = AVAssetImageGenerator(asset: asset)
+                          generator.appliesPreferredTrackTransform = true
+                          let requested = CMTime(seconds: min(1.0, duration.seconds / 2.0), preferredTimescale: 600)
+                          let image = try await generator.image(at: requested)
+                          result = metrics(NSBitmapImageRep(cgImage: image.image))
+                          result["durationSeconds"] = duration.seconds
+                          result["sampleTimeSeconds"] = image.actualTime.seconds
+                          result["videoTrackCount"] = tracks.count
+                          let reader = try AVAssetReader(asset: asset)
+                          let output = AVAssetReaderTrackOutput(track: tracks[0], outputSettings: nil)
+                          reader.add(output)
+                          guard reader.startReading() else { throw reader.error ?? NSError(domain: "native-media", code: 3) }
+                          var samples = 0
+                          var lastPTS = 0.0
+                          while let buffer = output.copyNextSampleBuffer() {
+                              samples += CMSampleBufferGetNumSamples(buffer)
+                              lastPTS = max(lastPTS, CMSampleBufferGetPresentationTimeStamp(buffer).seconds)
+                          }
+                          if reader.status == .failed { throw reader.error ?? NSError(domain: "native-media", code: 4) }
+                          result["videoSampleCount"] = samples
+                          result["lastVideoSampleSeconds"] = lastPTS
+                      }
+                      let encoded = try JSONSerialization.data(withJSONObject: result, options: [.sortedKeys])
+                      print(String(data: encoded, encoding: .utf8)!)
+                  } catch {
+                      fputs("Native media could not be decoded: \(error)\n", stderr)
+                      exit(1)
+                  }
+              }
+          }
+          '''
+          
+          
+          def media_inspector():
+              source = TEMP / "NativeMediaInspector.swift"
+              binary = TEMP / "native-media-inspector"
+              source.write_text(MEDIA_INSPECTOR)
+              run(["xcrun", "swiftc", "-parse-as-library", "-O", str(source), "-o", str(binary)], timeout=120)
+              return binary
+          
+          
+          def inspect_media(binary, mode, path):
+              result = subprocess.run([str(binary), mode, str(path)], capture_output=True, text=True, timeout=45)
+              if result.returncode:
+                  raise RuntimeError(result.stderr.strip() or "Native media failed to decode")
+              return json.loads(result.stdout)
+          
+          
+          def stop_owned_process(process, first_signal=signal.SIGINT, grace=15):
+              """Signal only the process group created by this helper, never Simulator."""
+              if process is None or process.poll() is not None:
+                  return
+              for signum, timeout in ((first_signal, grace), (signal.SIGTERM, 5), (signal.SIGKILL, 3)):
+                  try:
+                      os.killpg(process.pid, signum)
+                  except ProcessLookupError:
+                      return
+                  try:
+                      process.wait(timeout=timeout)
+                      return
+                  except subprocess.TimeoutExpired:
+                      pass
+          
+          
+          def diagnostic_command(args, destination, timeout=30):
+              try:
+                  result = subprocess.run(args, capture_output=True, text=True, timeout=timeout)
+                  text = result.stdout + result.stderr
+                  destination.write_text(text)
+                  print("YIXIU_DIAGNOSTIC", " ".join(args), "EXIT", result.returncode, "\n" + text, flush=True)
+                  return text, result.returncode
+              except subprocess.TimeoutExpired:
+                  destination.write_text("Command timed out: " + " ".join(args))
+                  print("YIXIU_DIAGNOSTIC_TIMEOUT", " ".join(args), flush=True)
+                  return "", 124
+          
+          
+          def open_simulator(state, artifacts, tag):
+              app = Path(state["developerDir"]) / "Applications/Simulator.app"
+              if not app.is_dir():
+                  print("YIXIU_SIMULATOR_APP_NOT_PRESENT", str(app), flush=True)
+                  return
+              diagnostic_command(["open", "-a", str(app), "--args", "-CurrentDeviceUDID", state["udid"]],
+                                 artifacts / (tag + "-simulator-open.txt"))
+              time.sleep(3)
+          
+          
+          def display_candidates(enumeration, help_text):
+              """Take identifiers from actual IO output; never assume Duo LCD-1 is active."""
+              candidates = []
+              pattern = re.compile(r"(?:display\s*(?:id|uuid|identifier)|screen\s*id)\s*[:=]\s*[\"']?([A-Za-z0-9_.:-]+)", re.I)
+              for block in re.split(r"\n\s*\n|(?=\bPort\s*[:=])", enumeration):
+                  if not re.search(r"display|lcd|screen", block, re.I):
+                      continue
+                  # A powered-on inner framebuffer can still be black while Duo is
+                  # closed. Prefer an actual outer/primary name or the official outer
+                  # dimensions, then prove visibility by native screenshot pixels.
+                  outer = bool(re.search(r"\bprimary\b(?!-\d)|\bouter\b", block, re.I)) or bool(re.search(r"1398\D{1,20}2034", block))
+                  values = [match.group(1) for match in pattern.finditer(block)]
+                  # A UUID associated with a display block is also a real port identifier;
+                  # screenshot success + decoded non-black pixels is authoritative.
+                  values += re.findall(r"\b(?:port\s+)?uuid\s*[:=]\s*([A-Fa-f0-9-]{36})", block, re.I)
+                  values += re.findall(r"\b(?:device\s+name|display\s+name|name|identifier)\s*[:=]\s*[\"']?(primary(?:-\d+)?|main|internal|external)\b", block, re.I)
+                  for value in values:
+                      candidates.append((0 if outer else 1, value))
+              requested = os.environ.get("YIXIU_CAPTURE_DISPLAY")
+              if requested:
+                  candidates.insert(0, (-1, requested))
+              # These names are considered only when the installed Apple help advertises
+              # them; they are each validated by a screenshot and a 6-second recording.
+              for name in ("primary", "primary-1", "internal", "external", "main"):
+                  if re.search(r"(?<![\w-])" + re.escape(name) + r"(?![\w-])", help_text):
+                      candidates.append((2, name))
+              ordered = []
+              for _, value in sorted(candidates, key=lambda pair: pair[0]):
+                  if value not in ordered:
+                      ordered.append(value)
+              return ordered
+          
+          
+          def screenshot(state, display, destination):
+              args = ["xcrun", "simctl", "io", state["udid"], "screenshot", "--display=" + display, str(destination)]
+              result = subprocess.run(args, capture_output=True, text=True, timeout=25)
+              print("YIXIU_NATIVE_SCREENSHOT", destination.name, "DISPLAY", display, "EXIT", result.returncode,
+                    result.stdout.strip(), result.stderr.strip(), flush=True)
+              if result.returncode or not destination.is_file():
+                  raise RuntimeError("Screenshot failed for enumerated display " + display + ": " + result.stderr.strip())
+          
+          
+          def start_recorder(state, display, path, log_path, formal=False):
+              ready = threading.Event()
+              if formal:
+                  print("YIXIU_RECORD_PROCESS_START_EPOCH", time.time(), flush=True)
+              command = ["xcrun", "simctl", "io", state["udid"], "recordVideo", "--display=" + display,
+                         "--codec=h264", "--force", str(path)]
+              print("YIXIU_RECORD_COMMAND", " ".join(command), flush=True)
+              process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                         text=True, bufsize=1, start_new_session=True)
+          
+              def watch():
+                  with log_path.open("w") as handle:
+                      for line in process.stdout:
+                          handle.write(line)
+                          handle.flush()
+                          print("YIXIU_RECORDER", line.rstrip(), flush=True)
+                          if "Recording started" in line:
+                              process.recording_start_epoch = time.time()
+                              handle.write("YIXIU_RECORD_START_EPOCH " + str(process.recording_start_epoch) + "\n" if formal else "YIXIU_PREFLIGHT_READY_EPOCH " + str(process.recording_start_epoch) + "\n")
+                              handle.flush()
+                              if formal:
+                                  print("YIXIU_RECORD_START_EPOCH", process.recording_start_epoch, flush=True)
+                              ready.set()
+              watcher = threading.Thread(target=watch, daemon=True)
+              watcher.start()
+              if not ready.wait(timeout=45) or process.poll() is not None:
+                  stop_owned_process(process)
+                  raise RuntimeError("Recorder never became ready for actual display " + display)
+              return process, watcher
+          
+          
+          def preflight(state, artifacts, inspector, tag, metadata):
+              open_simulator(state, artifacts, tag)
               run(["xcrun", "simctl", "install", state["udid"], str(TEMP / "DerivedData/Build/Products/Debug-iphonesimulator/YixiuMeditation.app")])
               run(["xcrun", "simctl", "launch", state["udid"], "com.health.yixiu", "-language", "zh", "-scene", "rain", "-duration", "30", "-volume", "0.72", "-YixiuForceFreeAccess"])
               time.sleep(3)
-              ready = threading.Event()
-              print("YIXIU_RECORD_PROCESS_START_EPOCH", time.time(), flush=True)
-              recorder = subprocess.Popen(["xcrun", "simctl", "io", state["udid"], "recordVideo", "--codec=h264", "--force", str(video)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-          
-              def watch_recording():
-                  for line in recorder.stdout:
-                      print("YIXIU_RECORDER", line.rstrip(), flush=True)
-                      if "Recording started" in line:
-                          print("YIXIU_RECORD_START_EPOCH", time.time(), flush=True)
-                          ready.set()
-          
-              threading.Thread(target=watch_recording, daemon=True).start()
-              ready.wait(timeout=10)
-              if recorder.poll() is not None:
-                  raise RuntimeError("Native video recorder exited before UI capture")
-              result_bundle = TEMP / "Capture.xcresult"
-              code = 1
-              try:
-                  result = run(build_args(state) + ["-resultBundlePath", str(result_bundle), "-only-testing:HomeInteractionUITests/HomeInteractionUITests/testCaptureMarketingSequence", "test-without-building"], timeout=420, check=False)
-                  code = result.returncode
-              finally:
-                  print("YIXIU_RECORD_STOP_EPOCH", time.time(), flush=True)
-                  recorder.send_signal(signal.SIGINT)
+              enumeration, _ = diagnostic_command(["xcrun", "simctl", "io", state["udid"], "enumerate"], artifacts / (tag + "-io-enumerate.txt"))
+              help_text, _ = diagnostic_command(["xcrun", "simctl", "help", "io"], artifacts / (tag + "-io-help.txt"))
+              candidates = display_candidates(enumeration, help_text)
+              print("YIXIU_ACTUAL_DISPLAY_CANDIDATES", json.dumps(candidates), flush=True)
+              if "--display" not in help_text or not candidates:
+                  raise RuntimeError("Actual simctl IO did not expose usable display identifiers. Inspect retained io-help/enumerate logs.")
+              for index, display in enumerate(candidates[:10]):
+                  label = tag + "-display-" + str(index)
+                  item = {"device": state, "display": display, "label": label}
+                  metadata["preflights"].append(item)
+                  recorder = None
                   try:
-                      recorder.wait(timeout=30)
-                  except subprocess.TimeoutExpired:
-                      recorder.terminate()
-                      recorder.wait(timeout=10)
-              if result_bundle.exists():
-                  export_dir = TEMP / "screenshots"
-                  export_dir.mkdir(exist_ok=True)
-                  exported = run(["xcrun", "xcresulttool", "export", "attachments", "--path", str(result_bundle), "--output-path", str(export_dir)], check=False)
-                  if exported.returncode == 0:
-                      for index, file in enumerate(list(export_dir.rglob("*.png"))[:6]):
-                          shutil.copyfile(file, artifacts / ("native-shot-%02d.png" % index))
-              if not video.exists() or video.stat().st_size < 100000:
-                  raise RuntimeError("No usable native MP4 was produced")
-              print("YIXIU_NATIVE_VIDEO_BYTES", video.stat().st_size, flush=True)
-              if code:
-                  raise RuntimeError("Native capture test failed; MP4 remains available for diagnosis")
+                      png = artifacts / (label + ".png")
+                      screenshot(state, display, png)
+                      item["screenshot"] = inspect_media(inspector, "image", png)
+                      print("YIXIU_DISPLAY_SCREENSHOT_METRICS", json.dumps(item), flush=True)
+                      if not item["screenshot"]["nonBlack"]:
+                          raise RuntimeError("Actual display screenshot is black; try another actual port")
+                      movie = artifacts / (label + "-preflight.mp4")
+                      recorder, watcher = start_recorder(state, display, movie, artifacts / (label + "-recorder.txt"))
+                      # Idle simctl capture can emit only changed frames. A real native
+                      # terminate/relaunch after 4 seconds guarantees a late transition;
+                      # do not reject a visible screen merely because it was static.
+                      time.sleep(4)
+                      run(["xcrun", "simctl", "terminate", state["udid"], "com.health.yixiu"], check=False)
+                      run(["xcrun", "simctl", "launch", state["udid"], "com.health.yixiu", "-language", "zh", "-scene", "rain", "-duration", "30", "-volume", "0.72", "-YixiuForceFreeAccess"])
+                      time.sleep(3)
+                      screenshot(state, display, artifacts / (label + "-after-native-relaunch.png"))
+                      stop_owned_process(recorder)
+                      watcher.join(timeout=3)
+                      item["video"] = inspect_media(inspector, "video", movie)
+                      item["recordingStartEpoch"] = getattr(recorder, "recording_start_epoch", None)
+                      if item["video"]["durationSeconds"] < 4.0 or item["video"]["videoSampleCount"] <= 1 or item["video"]["lastVideoSampleSeconds"] < 3.9 or not item["video"]["nonBlack"]:
+                          raise RuntimeError("Native preflight with a real relaunch after 4 seconds has insufficient duration or black decoded pixels")
+                      item["selected"] = True
+                      print("YIXIU_SELECTED_ACTIVE_DISPLAY", json.dumps(item), flush=True)
+                      return display
+                  except (RuntimeError, OSError, ValueError, subprocess.TimeoutExpired) as error:
+                      item["error"] = str(error)
+                      print("YIXIU_DISPLAY_PREFLIGHT_REJECTED", json.dumps(item), flush=True)
+                  finally:
+                      stop_owned_process(recorder)
+              raise RuntimeError("No actual Duo/iPhone display passed native screenshot and 6-second video preflight")
+          
+          
+          def fresh_non_duo(state):
+              phones, runtimes = inventory()
+              for device in sorted([d for d in phones if "duo" not in d["name"].lower()], key=phone_rank, reverse=True):
+                  for runtime in runtimes:
+                      if version(runtime["version"]) < min_runtime(device):
+                          continue
+                      result = subprocess.run(["xcrun", "simctl", "create", "Yixiu Native Film Fallback", device["identifier"], runtime["identifier"]], capture_output=True, text=True)
+                      if result.returncode:
+                          continue
+                      fallback = {"udid": result.stdout.strip(), "device": device["name"], "runtime": runtime["name"], "developerDir": state["developerDir"], "fallbackFrom": state["udid"]}
+                      print("YIXIU_SELECTED_FALLBACK_SIMULATOR", json.dumps(fallback), flush=True)
+                      run(["xcrun", "simctl", "boot", fallback["udid"]])
+                      run(["xcrun", "simctl", "bootstatus", fallback["udid"], "-b"], timeout=180)
+                      run(["xcrun", "simctl", "status_bar", fallback["udid"], "override", "--time", "9:41", "--dataNetwork", "wifi", "--wifiMode", "active", "--wifiBars", "3", "--batteryState", "charged", "--batteryLevel", "100"], check=False)
+                      STATE.write_text(json.dumps(fallback))
+                      return fallback
+              raise RuntimeError("No compatible actual non-Duo iPhone is available for same-run fallback")
+          
+          
+          def capture():
+              state = json.loads(STATE.read_text())
+              os.environ["DEVELOPER_DIR"] = state["developerDir"]
+              artifacts = ROOT / "artifacts"
+              artifacts.mkdir(exist_ok=True)
+              metadata = {"originalSimulator": state, "preflights": [], "markers": [], "appImplementationChanged": False}
+              video = artifacts / "yixiu-native-capture.mp4"
+              result_bundle = TEMP / "Capture.xcresult"
+              recorder = test_process = None
+              screenshot_queue = queue.Queue()
+              screenshot_thread = None
+              inspector = None
+              display = None
+              passed = threading.Event()
+              capture_end = threading.Event()
+              test_failed = threading.Event()
+              marker_re = re.compile(r"YIXIU_FILM_MARK\s+(\d+(?:\.\d+)?)\s+([A-Z_]+)")
+              try:
+                  inspector = media_inspector()
+                  try:
+                      display = preflight(state, artifacts, inspector, "duo" if "duo" in state["device"].lower() else "iphone", metadata)
+                  except (RuntimeError, OSError, ValueError, subprocess.TimeoutExpired) as error:
+                      metadata["initialPreflightError"] = str(error)
+                      print("YIXIU_SAME_RUN_FALLBACK", str(error), flush=True)
+                      state = fresh_non_duo(state)
+                      display = preflight(state, artifacts, inspector, "fallback", metadata)
+                  metadata["selectedSimulator"] = state
+                  metadata["selectedDisplay"] = display
+          
+                  def screenshot_worker():
+                      while True:
+                          name = screenshot_queue.get()
+                          if name is None:
+                              return
+                          try:
+                              time.sleep(1.5)
+                              path = artifacts / ("native-stage-" + name.lower().replace("_", "-") + ".png")
+                              screenshot(state, display, path)
+                              metadata.setdefault("stageScreenshots", {})[name] = inspect_media(inspector, "image", path)
+                          except (RuntimeError, OSError, ValueError, subprocess.TimeoutExpired) as error:
+                              print("YIXIU_STAGE_SCREENSHOT_ERROR", name, str(error), flush=True)
+                          finally:
+                              screenshot_queue.task_done()
+                  screenshot_thread = threading.Thread(target=screenshot_worker, daemon=True)
+                  screenshot_thread.start()
+                  recorder, recorder_watcher = start_recorder(state, display, video, artifacts / "native-recorder.txt", formal=True)
+                  metadata["recordingStartEpoch"] = getattr(recorder, "recording_start_epoch", None)
+                  command = build_args(state) + ["-resultBundlePath", str(result_bundle), "-only-testing:HomeInteractionUITests/HomeInteractionUITests/testCaptureMarketingSequence", "test-without-building"]
+                  print("RUN", " ".join(command), flush=True)
+                  test_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                                  text=True, bufsize=1, start_new_session=True)
+          
+                  def watch_test():
+                      with (artifacts / "capture-test.txt").open("w") as handle:
+                          for line in test_process.stdout:
+                              handle.write(line)
+                              handle.flush()
+                              print(line.rstrip(), flush=True)
+                              match = marker_re.search(line)
+                              if match:
+                                  epoch, name = float(match.group(1)), match.group(2)
+                                  metadata["markers"].append({"epoch": epoch, "name": name})
+                                  screenshot_queue.put(name)
+                                  if name == "CAPTURE_END":
+                                      capture_end.set()
+                              if "testCaptureMarketingSequence" in line and "passed" in line:
+                                  passed.set()
+                              if "testCaptureMarketingSequence" in line and "failed" in line:
+                                  test_failed.set()
+                              if "** TEST SUCCEEDED **" in line:
+                                  passed.set()
+                  test_watcher = threading.Thread(target=watch_test, daemon=True)
+                  test_watcher.start()
+                  began = time.monotonic()
+                  completed_at = None
+                  while test_process.poll() is None:
+                      if capture_end.is_set() and recorder is not None:
+                          print("YIXIU_RECORD_STOP_EPOCH", time.time(), flush=True)
+                          stop_owned_process(recorder)
+                          recorder_watcher.join(timeout=3)
+                          recorder = None
+                      if passed.is_set() or test_failed.is_set() or capture_end.is_set():
+                          if completed_at is None:
+                              completed_at = time.monotonic()
+                          grace = 20 if passed.is_set() or test_failed.is_set() else 45
+                          if time.monotonic() - completed_at >= grace:
+                              metadata["xcodebuildPostTestHang"] = True
+                              print("YIXIU_XCODEBUILD_POST_TEST_HANG", "Graceful stop after observed film/test completion", flush=True)
+                              stop_owned_process(test_process, grace=10)
+                              break
+                      if time.monotonic() - began > 240:
+                          metadata["xcodebuildCaptureTimeout"] = True
+                          print("YIXIU_XCODEBUILD_CAPTURE_TIMEOUT", flush=True)
+                          stop_owned_process(test_process, grace=10)
+                          break
+                      time.sleep(.5)
+                  test_watcher.join(timeout=5)
+                  metadata["xcodebuildReturnCode"] = test_process.poll()
+                  metadata["testPassedInLog"] = passed.is_set()
+                  metadata["captureEndInLog"] = capture_end.is_set()
+                  if recorder is not None:
+                      print("YIXIU_RECORD_STOP_EPOCH", time.time(), flush=True)
+                      stop_owned_process(recorder)
+                      recorder_watcher.join(timeout=3)
+                      recorder = None
+                  metadata["nativeVideo"] = inspect_media(inspector, "video", video)
+                  if metadata["nativeVideo"]["durationSeconds"] < 25 or not metadata["nativeVideo"]["nonBlack"]:
+                      raise RuntimeError("Native film has insufficient duration or black decoded pixels; a single-frame/empty MP4 is not success")
+                  if not passed.is_set() or not capture_end.is_set() or test_failed.is_set():
+                      raise RuntimeError("Real native marketing UI test did not pass and reach CAPTURE_END; retained movie is diagnostic only")
+                  metadata["captureValidated"] = True
+                  print("YIXIU_NATIVE_VIDEO_BYTES", video.stat().st_size, flush=True)
+                  print("YIXIU_NATIVE_VIDEO_METRICS", json.dumps(metadata["nativeVideo"]), flush=True)
+              except BaseException as error:
+                  metadata["error"] = str(error)
+                  raise
+              finally:
+                  stop_owned_process(recorder)
+                  stop_owned_process(test_process, grace=10)
+                  if display:
+                      try:
+                          screenshot(state, display, artifacts / "native-final-diagnostic.png")
+                      except (RuntimeError, OSError, subprocess.TimeoutExpired) as error:
+                          print("YIXIU_FINAL_SCREENSHOT_ERROR", str(error), flush=True)
+                  if screenshot_thread:
+                      screenshot_queue.put(None)
+                      screenshot_thread.join(timeout=45)
+                  # An xcodebuild timeout never bypasses screenshot/attachment export.
+                  if result_bundle.exists():
+                      export_dir = TEMP / "screenshots"
+                      export_dir.mkdir(exist_ok=True)
+                      _, code = diagnostic_command(["xcrun", "xcresulttool", "export", "attachments", "--path", str(result_bundle), "--output-path", str(export_dir)], artifacts / "attachment-export.txt", timeout=45)
+                      if code == 0:
+                          for index, file in enumerate(sorted(export_dir.rglob("*.png"))[:8]):
+                              shutil.copyfile(file, artifacts / ("native-shot-%02d.png" % index))
+                  (artifacts / "native-capture-metadata.json").write_text(json.dumps(metadata, indent=2))
           
           
           if __name__ == "__main__":
@@ -311,6 +669,8 @@ jobs:
         run: python3 qa/native-video-capture/capture-native.py build
 
       - name: Record real native UI gestures, playback and breathing
+        env:
+          YIXIU_CAPTURE_DISPLAY: '1'
         run: python3 qa/native-video-capture/capture-native.py capture
 
       - name: Upload only native recording and native screenshots
@@ -321,5 +681,7 @@ jobs:
           path: |
             artifacts/*.mp4
             artifacts/*.png
+            artifacts/*.txt
+            artifacts/*.json
           retention-days: 1
           if-no-files-found: warn
