@@ -799,7 +799,7 @@ struct SoundLibraryView: View {
     // available while the card grid scrolls on both compact and expanded devices.
     private var libraryControls: some View {
         VStack(alignment: .leading, spacing: 9) {
-            HStack(spacing: 9) {
+            HStack(spacing: 6) {
                 Text(language.text(zh: "声音库", en: "Sound Library"))
                     .font(YixiuTheme.chineseDisplay(30))
                     .foregroundStyle(YixiuTheme.moon)
@@ -847,7 +847,7 @@ struct SoundLibraryView: View {
                 }
                 .accessibilityIdentifier("library.scope.menu")
 
-                Spacer(minLength: 4)
+                Spacer(minLength: 0)
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
@@ -861,11 +861,6 @@ struct SoundLibraryView: View {
                 .accessibilityLabel(language.text(zh: "关闭声音库", en: "Close sound library"))
                 .accessibilityIdentifier("library.close")
             }
-
-            Text(language.text(zh: "14 种自然声 · 30 首音乐（含 20 首古典）", en: "14 nature sounds · 30 music tracks (20 classical)"))
-                .font(YixiuTheme.sans(10, weight: .medium))
-                .tracking(1.5)
-                .foregroundStyle(YixiuTheme.aquaStrong)
 
             if searchOpen {
                 HStack(spacing: 9) {
@@ -924,10 +919,6 @@ struct SoundLibraryView: View {
             }
             .frame(height: 44)
 
-            Text(language.text(zh: "\(filteredScenes.count) 个声音", en: "\(filteredScenes.count) sounds"))
-                .font(YixiuTheme.sans(12))
-                .foregroundStyle(YixiuTheme.mist)
-
             if !subscriptionStore.isReady {
                 HStack(spacing: 8) {
                     ProgressView().tint(YixiuTheme.aqua)
@@ -938,7 +929,7 @@ struct SoundLibraryView: View {
             }
         }
         .padding(.horizontal, 18)
-        .padding(.top, 8)
+        .padding(.top, 18)
         .padding(.bottom, 9)
         .frame(maxWidth: 1040)
         .frame(maxWidth: .infinity)

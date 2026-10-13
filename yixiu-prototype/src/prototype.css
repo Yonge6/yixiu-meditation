@@ -2613,13 +2613,6 @@ img[data-image-scene="tide"] {
   align-items: stretch;
 }
 
-.sound-library header small {
-  margin-top: 3px;
-  color: var(--aqua);
-  font-size: 8px;
-  letter-spacing: 0.24em;
-}
-
 .sound-library h2 {
   margin: 0;
   font-family: var(--serif);
@@ -2685,9 +2678,13 @@ img[data-image-scene="tide"] {
 .library-scope-select svg { position: absolute; right: 10px; width: 14px; height: 14px; color: var(--mist); pointer-events: none; }
 
 @media (max-width: 360px) {
-  .sound-library h2 { font-size: 22px; letter-spacing: 0.04em; }
+  .sound-library h2 { font-size: 20px; letter-spacing: 0.04em; white-space: nowrap; }
+  [data-language="en"] .sound-library h2 { font-size: 17px; letter-spacing: 0; }
   .library-title-row { gap: 4px; }
-  .library-scope-select { min-width: 70px; }
+  .library-tool-button, .library-close-button { width: 36px; min-width: 36px; height: 36px; }
+  .library-scope-select { min-width: 66px; height: 36px; }
+  .library-scope-select select { padding: 0 25px 0 10px; font-size: 11px; }
+  .library-scope-select svg { right: 7px; width: 12px; height: 12px; }
 }
 
 .scene-category-tabs {
@@ -3641,7 +3638,6 @@ img[data-image-scene="tide"] {
 .library-search button { flex: 0 0 30px; width: 30px; min-height: 36px; }
 .sound-library > .scene-category-tabs { margin-top: 10px; }
 .scene-category-tabs button { min-height: 38px; font-size: 11px; }
-.library-results-count { flex: 0 0 auto; padding: 10px 1px 0; color: #a6c6cc; font-size: 11px; }
 .sound-library > .scene-grid { margin-top: 8px; }
 .library-empty { grid-column: 1 / -1; padding: 28px 16px; align-self: start; text-align: center; color: #dcebed; }
 .library-empty strong { font-family: var(--serif); font-size: 21px; font-weight: 400; }
@@ -3685,11 +3681,9 @@ img[data-image-scene="tide"] {
   .timer-panel { bottom: 78px; z-index: 60; }
   .sound-library { top: 8px; bottom: 8px; height: auto; padding-bottom: 0; }
   .sound-library .sheet-handle { display: none; }
-  .sound-library header small { display: none; }
   .sound-library h2 { font-size: 20px; }
   .library-search { margin-top: 6px; min-height: 36px; }
   .sound-library > .scene-category-tabs { margin-top: 6px; }
-  .library-results-count { padding-top: 4px; }
   .scene-grid { grid-auto-rows: 200px; }
 }
 

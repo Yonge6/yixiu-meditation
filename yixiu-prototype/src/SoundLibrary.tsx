@@ -42,7 +42,6 @@ export function SoundLibrary<T extends Item, C extends string>(props: Props<T, C
         <span className="library-header-spacer" />
         <button className="library-close-button" type="button" data-modal-initial aria-label={zh ? "关闭声音库" : "Close sound library"} onClick={props.onClose}><Cross2Icon /></button>
       </div>
-      <small>{zh ? "14 种自然声 · 30 首音乐（含 20 首古典）" : "14 NATURE SOUNDS · 30 MUSIC TRACKS"}</small>
     </header>
     {searchOpen ? <div className="library-search">
       <MagnifyingGlassIcon aria-hidden="true" />
@@ -59,7 +58,6 @@ export function SoundLibrary<T extends Item, C extends string>(props: Props<T, C
         target?.focus(); target?.scrollIntoView({ block: "nearest", inline: "nearest" });
       }}>{value.label}</button>)}
     </div>
-    <div className="library-results-count" role="status">{zh ? `${items.length} 个声音` : `${items.length} sounds`}</div>
     <div className="scene-grid" ref={grid}>
       {!items.length ? <div className="library-empty"><strong>{zh ? "这里还没有声音" : "No sounds here yet"}</strong><p>{scope === "favorites" && !props.favorites.length ? (zh ? "点声音卡片上的心形，就能把喜欢的声音留在这里。" : "Tap a card’s heart to keep a favorite here.") : scope === "recent" && !props.recent.length ? (zh ? "开始聆听后，你最近听过的声音会出现在这里。" : "Your recent sounds will appear after listening.") : (zh ? "换一个词，或清除筛选再看看。" : "Try another word, or clear your filters.")}</p><button type="button" onClick={reset}>{zh ? "查看全部声音" : "Browse all sounds"}</button></div> : null}
       {items.map(item => <article key={item.id} className={props.activeID === item.id ? "is-active" : ""}>
