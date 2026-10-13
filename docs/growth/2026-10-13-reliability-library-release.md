@@ -6,7 +6,7 @@
 - Implementation branch: `codex/yixiu-reliability-library-20261013`.
 - Baseline: `66a0613` on `origin/codex/yixiu-adaptive-store-20261008`, containing the existing 1.19 (33) App Store submission records. This is a source baseline, not a new verification of Apple review/release status.
 - Worktree: `/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想`. The original `f012` and Documents checkouts were not modified.
-- No App Store withdrawal, upload, submission, subscription-price change, version bump, or phone installation was performed for this request.
+- No App Store withdrawal, upload, submission, subscription-price change or version bump was performed. The annotated deployment follow-up installed the signed Debug 1.19 (33) internal-Plus build on the paired physical iPhone.
 
 ## Delivered changes
 
@@ -65,22 +65,24 @@
 - Generic iOS Release build passed with `CODE_SIGNING_ALLOWED=NO`. This is a compile verification, not an archive, signed distribution build, or Apple upload.
 - Simulator screenshot records the outer-display 1398×2034 layout. It is not proof of inner-display/unfolded or real-phone acceptance.
 - Compact logo follow-up compiled successfully in the iOS 27.1 simulator Debug build and was installed/launched on the outer-display simulator for a visual collision check.
+- Physical-device follow-up rebuilt Debug for generic iOS with inherited Swift package flags plus `DEBUG YIXIU_INTERNAL_PLUS`. The compiler invocation contained `-DYIXIU_INTERNAL_PLUS`; installation and launch succeeded on the paired iPhone 14 Pro Max (`00008120-000A341C0E0BC01E`). Installed-app readback reports Yixiu 1.19 (33). This internal QA entitlement does not change the App Store binary or subscription state.
 
 ## H5 production deployment
 
 - HTTPS site: https://yixiu.wonderelian.com/?scene=rain&lang=zh
 - Exact deployment root: `/srv/wonderelian/yixiu.wonderelian.com` on the existing production host.
-- Backup: `/srv/wonderelian/backups/yixiu-20261013-reliability-library` (overwritten files retained; no deletion of old asset hashes or changes to other products).
-- Checksum-based deployment uploaded non-HTML assets first, then HTML; post-deploy checksum dry-run had no differences. `nginx -t` passed; configuration was not changed.
+- Deployment marker: `DEPLOY_OK_YIXIU_20261013-cb256ed-compact-library-1552`.
+- Backup: `/srv/wonderelian/backups/yixiu-20261013-cb256ed-compact-library-1552` (complete previous production tree retained; no changes to other products).
+- Guarded deployment validated the SHA-256 archive, all required pages/assets and the live origin, then switched the complete site and passed `nginx -t`; configuration was not changed. The deploy guard's expected meditation-audio count was updated from the obsolete 24-track catalog to the current verified 34-file archive count.
 - Public readback hashes matched the local production files:
 
 | File | SHA-256 |
 | --- | --- |
-| `index.html` | `6b7fe02a905c03296cdcd5d000783478a5698abd1676fcc2dcda4dc412cc9adf` |
-| `assets/index-Dj1hHa0j.js` | `c3bb7c5b42b7c9cd7cc5f517ea7299b04d805034ea698abfcb64b1baa4fbb16e` |
-| `assets/index-D3HMdt_9.css` | `b52b2821f40195c723b99417e73a8ac7f8b0c4eb993e4ca6abe4963563705a9d` |
+| `index.html` | `df00c47801abdb065d1c14b662bce0a5b5b454081d7b170ca9c53b9ab7f13c21` |
+| `assets/index-BKwXxLvx.js` | `cca58b9205d5b1321ba036e61c096210252aa5c1dfd3c6efa25058e33a98ba19` |
+| `assets/index-L0Am_b_V.css` | `e85b43f448c6b3475eca4541112b9268c018a9f1da59810b8e314f8ee6c1371d` |
 
-- Public fresh-browser readback confirmed the new JavaScript bundle, compact banner, Free scope (22 sounds), complete card images, mobile layout and short landscape layout.
+- Public fresh-browser readback confirmed the new JavaScript bundle and the compact library header: title, search icon, All/Free/Favorites/Recent selector and close icon share the top row; the category tabs and all 44 cards remain available below it.
 
 ## Evidence and limits
 
