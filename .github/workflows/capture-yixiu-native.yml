@@ -1,0 +1,325 @@
+name: Capture Yixiu native iPhone marketing footage
+
+on:
+  push:
+    branches: ['codex/yixiu-native-video-*']
+    paths:
+      - '.github/workflows/capture-yixiu-native.yml'
+      - 'qa/native-video-capture/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: yixiu-native-video-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - name: Check out only native app and capture helpers
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            YixiuMeditation
+            qa/native-video-capture
+
+      - name: Write temporary native capture helpers
+        shell: bash
+        run: |
+          mkdir -p qa/native-video-capture
+          cat > qa/native-video-capture/capture-native.py <<'YIXIU_CAPTURE_PYTHON'
+          #!/usr/bin/env python3
+          """Drive only a fresh CI simulator; keep app implementation and entitlements intact."""
+          import glob
+          import json
+          import os
+          import plistlib
+          import re
+          import shutil
+          import signal
+          import subprocess
+          import sys
+          import threading
+          import time
+          from pathlib import Path
+          
+          ROOT = Path.cwd()
+          TEMP = Path(os.environ.get("RUNNER_TEMP", "/tmp")) / "yixiu-film"
+          STATE = TEMP / "state.json"
+          
+          
+          def run(args, timeout=300, check=True):
+              print("RUN", " ".join(map(str, args)), flush=True)
+              return subprocess.run(list(map(str, args)), text=True, check=check, timeout=timeout)
+          
+          
+          def output(args):
+              return subprocess.check_output(args, text=True)
+          
+          
+          def version(value):
+              if isinstance(value, int):
+                  return (value >> 16, (value >> 8) & 255, value & 255)
+              return tuple(int(n) for n in re.findall(r"\d+", str(value))[:3]) + (0,) * max(0, 3 - len(re.findall(r"\d+", str(value))[:3]))
+          
+          
+          def min_runtime(device):
+              for key in ("minRuntimeVersionString", "minRuntimeVersion"):
+                  if key in device:
+                      return version(device[key])
+              bundle = device.get("bundlePath")
+              if bundle:
+                  profile = Path(bundle) / "Contents/Resources/profile.plist"
+                  try:
+                      with profile.open("rb") as handle:
+                          data = plistlib.load(handle)
+                      for key in ("minRuntimeVersionString", "minRuntimeVersion", "minimumRuntimeVersion"):
+                          if key in data:
+                              return version(data[key])
+                  except (OSError, ValueError):
+                      pass
+              return (0, 0, 0)
+          
+          
+          def inventory():
+              types = json.loads(output(["xcrun", "simctl", "list", "devicetypes", "-j"]))["devicetypes"]
+              runtimes = json.loads(output(["xcrun", "simctl", "list", "runtimes", "-j"]))["runtimes"]
+              phones = [d for d in types if d.get("productFamily") == "iPhone" or d["name"].startswith("iPhone")]
+              ios = [r for r in runtimes if "iOS" in r["identifier"] and r.get("isAvailable", False)]
+              print("YIXIU_PHONE_INVENTORY", json.dumps([{**d, "requiredRuntime": min_runtime(d)} for d in phones]), flush=True)
+              print("YIXIU_RUNTIME_INVENTORY", json.dumps(ios), flush=True)
+              return phones, sorted(ios, key=lambda r: version(r.get("version", r["name"])), reverse=True)
+          
+          
+          def bounded_download():
+              free_gib = shutil.disk_usage(TEMP).free / 1024 ** 3
+              print("YIXIU_DOWNLOAD_FREE_GIB", round(free_gib, 2), flush=True)
+              if free_gib < 12:
+                  print("YIXIU_DUO_DOWNLOAD_SKIPPED insufficient free disk for a runtime", flush=True)
+                  return
+              args = ["xcodebuild", "-downloadPlatform", "iOS", "-buildVersion", "27.1", "-architectureVariant", "arm64"]
+              process = subprocess.Popen(args, start_new_session=True)
+              try:
+                  print("YIXIU_DUO_DOWNLOAD_BEGIN", time.time(), flush=True)
+                  process.wait(timeout=300)
+                  print("YIXIU_DUO_DOWNLOAD_RESULT", process.returncode, flush=True)
+              except subprocess.TimeoutExpired:
+                  os.killpg(process.pid, signal.SIGTERM)
+                  try:
+                      process.wait(timeout=5)
+                  except subprocess.TimeoutExpired:
+                      os.killpg(process.pid, signal.SIGKILL)
+                      process.wait()
+                  print("YIXIU_DUO_DOWNLOAD_TIMEOUT fallback to installed runtime", flush=True)
+          
+          
+          def phone_rank(device):
+              name = device["name"]
+              generation = re.search(r"iPhone\s+(\d+)", name)
+              return (int("duo" in name.lower()), int(generation.group(1)) if generation else 0,
+                      int("Pro Max" in name), int("Pro" in name), name)
+          
+          
+          def prepare():
+              TEMP.mkdir(parents=True, exist_ok=True)
+              choices = []
+              for app in glob.glob("/Applications/Xcode*.app"):
+                  match = re.search(r"Xcode[_ ](\d+(?:\.\d+){0,2})", Path(app).name)
+                  if match and version(match.group(1)) >= (27, 1, 0):
+                      choices.append((version(match.group(1)), app))
+              if choices:
+                  os.environ["DEVELOPER_DIR"] = max(choices)[1] + "/Contents/Developer"
+              else:
+                  os.environ["DEVELOPER_DIR"] = output(["xcode-select", "-p"]).strip()
+              print("YIXIU_DEVELOPER_DIR", os.environ["DEVELOPER_DIR"], flush=True)
+              run(["xcodebuild", "-version"])
+              with open(os.environ["GITHUB_ENV"], "a") as handle:
+                  handle.write("DEVELOPER_DIR=" + os.environ["DEVELOPER_DIR"] + "\n")
+              phones, runtimes = inventory()
+              duo = sorted([d for d in phones if "duo" in d["name"].lower()], key=phone_rank, reverse=True)
+          
+              def try_devices(candidates):
+                  for device in candidates:
+                      for runtime in runtimes:
+                          if version(runtime["version"]) < min_runtime(device):
+                              continue
+                          attempt = subprocess.run(["xcrun", "simctl", "create", "Yixiu Native Film", device["identifier"], runtime["identifier"]], capture_output=True, text=True)
+                          if attempt.returncode == 0:
+                              return (attempt.stdout.strip(), device, runtime)
+                          print("YIXIU_DEVICE_CREATE_SKIPPED", device["name"], runtime["name"], attempt.stderr.strip(), flush=True)
+                  return None
+          
+              # Metadata gate first; actual simctl creation is authoritative if the image
+              # omits a minRuntime field. Download only when a Duo type actually exists.
+              chosen = try_devices(duo)
+              if duo and chosen is None:
+                  bounded_download()
+                  phones, runtimes = inventory()
+                  duo = sorted([d for d in phones if "duo" in d["name"].lower()], key=phone_rank, reverse=True)
+                  chosen = try_devices(duo)
+              if chosen is None:
+                  chosen = try_devices(sorted([d for d in phones if "duo" not in d["name"].lower()], key=phone_rank, reverse=True))
+              if not chosen:
+                  raise RuntimeError("No compatible installed iPhone simulator is available")
+              udid, device, runtime = chosen
+              STATE.write_text(json.dumps({"udid": udid, "device": device["name"], "runtime": runtime["name"], "developerDir": os.environ["DEVELOPER_DIR"]}))
+              print("YIXIU_SELECTED_SIMULATOR", STATE.read_text(), flush=True)
+              run(["xcrun", "simctl", "boot", udid])
+              run(["xcrun", "simctl", "bootstatus", udid, "-b"], timeout=180)
+              run(["xcrun", "simctl", "status_bar", udid, "override", "--time", "9:41", "--dataNetwork", "wifi", "--wifiMode", "active", "--wifiBars", "3", "--batteryState", "charged", "--batteryLevel", "100"], check=False)
+              source = ROOT / "YixiuMeditation/Tests/HomeInteractionUITests.swift"
+              extension = ROOT / "qa/native-video-capture/CaptureMarketingUITest.swift"
+              with source.open("a") as handle:
+                  handle.write("\n" + extension.read_text(encoding="utf-8-sig") + "\n")
+          
+          
+          def build_args(state):
+              return ["xcodebuild", "-project", "YixiuMeditation/YixiuMeditation.xcodeproj", "-scheme", "YixiuHomeRegression", "-configuration", "Debug", "-sdk", "iphonesimulator", "-destination", "platform=iOS Simulator,id=" + state["udid"], "-derivedDataPath", str(TEMP / "DerivedData"), "-parallel-testing-enabled", "NO", "CODE_SIGNING_ALLOWED=NO", "CODE_SIGNING_REQUIRED=NO"]
+          
+          
+          def build():
+              state = json.loads(STATE.read_text())
+              run(build_args(state) + ["build-for-testing"], timeout=1100)
+          
+          
+          def capture():
+              state = json.loads(STATE.read_text())
+              artifacts = ROOT / "artifacts"
+              artifacts.mkdir(exist_ok=True)
+              video = artifacts / "yixiu-native-capture.mp4"
+              run(["xcrun", "simctl", "install", state["udid"], str(TEMP / "DerivedData/Build/Products/Debug-iphonesimulator/YixiuMeditation.app")])
+              run(["xcrun", "simctl", "launch", state["udid"], "com.health.yixiu", "-language", "zh", "-scene", "rain", "-duration", "30", "-volume", "0.72", "-YixiuForceFreeAccess"])
+              time.sleep(3)
+              ready = threading.Event()
+              print("YIXIU_RECORD_PROCESS_START_EPOCH", time.time(), flush=True)
+              recorder = subprocess.Popen(["xcrun", "simctl", "io", state["udid"], "recordVideo", "--codec=h264", "--force", str(video)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+          
+              def watch_recording():
+                  for line in recorder.stdout:
+                      print("YIXIU_RECORDER", line.rstrip(), flush=True)
+                      if "Recording started" in line:
+                          print("YIXIU_RECORD_START_EPOCH", time.time(), flush=True)
+                          ready.set()
+          
+              threading.Thread(target=watch_recording, daemon=True).start()
+              ready.wait(timeout=10)
+              if recorder.poll() is not None:
+                  raise RuntimeError("Native video recorder exited before UI capture")
+              result_bundle = TEMP / "Capture.xcresult"
+              code = 1
+              try:
+                  result = run(build_args(state) + ["-resultBundlePath", str(result_bundle), "-only-testing:HomeInteractionUITests/HomeInteractionUITests/testCaptureMarketingSequence", "test-without-building"], timeout=420, check=False)
+                  code = result.returncode
+              finally:
+                  print("YIXIU_RECORD_STOP_EPOCH", time.time(), flush=True)
+                  recorder.send_signal(signal.SIGINT)
+                  try:
+                      recorder.wait(timeout=30)
+                  except subprocess.TimeoutExpired:
+                      recorder.terminate()
+                      recorder.wait(timeout=10)
+              if result_bundle.exists():
+                  export_dir = TEMP / "screenshots"
+                  export_dir.mkdir(exist_ok=True)
+                  exported = run(["xcrun", "xcresulttool", "export", "attachments", "--path", str(result_bundle), "--output-path", str(export_dir)], check=False)
+                  if exported.returncode == 0:
+                      for index, file in enumerate(list(export_dir.rglob("*.png"))[:6]):
+                          shutil.copyfile(file, artifacts / ("native-shot-%02d.png" % index))
+              if not video.exists() or video.stat().st_size < 100000:
+                  raise RuntimeError("No usable native MP4 was produced")
+              print("YIXIU_NATIVE_VIDEO_BYTES", video.stat().st_size, flush=True)
+              if code:
+                  raise RuntimeError("Native capture test failed; MP4 remains available for diagnosis")
+          
+          
+          if __name__ == "__main__":
+              {"prepare": prepare, "build": build, "capture": capture}[sys.argv[1]]()
+          YIXIU_CAPTURE_PYTHON
+          cat > qa/native-video-capture/CaptureMarketingUITest.swift <<'YIXIU_CAPTURE_SWIFT'
+          // Append to the existing HomeInteractionUITests source only inside the CI workspace.
+          // This drives the production native views and never changes app implementation.
+          import XCTest
+          import Darwin
+          
+          extension HomeInteractionUITests {
+              private func filmMarker(_ name: String) {
+                  print("YIXIU_FILM_MARK \(Date().timeIntervalSince1970) \(name)")
+                  fflush(stdout)
+              }
+          
+              private func filmScreenshot(_ name: String, app: XCUIApplication) {
+                  let shot = XCTAttachment(screenshot: app.screenshot())
+                  shot.name = "marketing-\(name)"
+                  shot.lifetime = .keepAlways
+                  add(shot)
+              }
+          
+              @objc func testCaptureMarketingSequence() throws {
+                  let filmApp = XCUIApplication()
+                  filmApp.terminate()
+                  filmApp.launchArguments = ["-language", "zh", "-scene", "rain", "-duration", "30", "-volume", "0.72", "-focusDuration", "1", "-YixiuForceFreeAccess"]
+                  filmApp.launch()
+                  XCTAssertTrue(filmApp.buttons["listen.library"].waitForExistence(timeout: 20))
+                  XCTAssertEqual(filmApp.staticTexts["listen.sceneTitle"].label, "屋檐雨")
+                  Thread.sleep(forTimeInterval: 3)
+                  filmMarker("RAIN_BEGIN")
+                  filmApp.buttons["播放"].tap()
+                  XCTAssertTrue(filmApp.buttons["暂停"].waitForExistence(timeout: 5))
+                  filmScreenshot("rain", app: filmApp)
+                  Thread.sleep(forTimeInterval: 7)
+                  filmApp.buttons["暂停"].tap()
+                  Thread.sleep(forTimeInterval: 1)
+                  let focusTab = filmApp.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "静心")).firstMatch
+                  XCTAssertTrue(focusTab.waitForExistence(timeout: 5))
+                  focusTab.tap()
+                  XCTAssertTrue(filmApp.buttons["focus.start"].waitForExistence(timeout: 5))
+                  XCTAssertEqual(filmApp.staticTexts["focus.sceneTitle"].label, "屋檐雨")
+                  Thread.sleep(forTimeInterval: 2)
+                  filmMarker("FOCUS_BEGIN")
+                  filmApp.buttons["focus.start"].tap()
+                  XCTAssertTrue(filmApp.staticTexts["focus-countdown"].waitForExistence(timeout: 5))
+                  filmScreenshot("focus", app: filmApp)
+                  // One full 4s inhale + 2s hold + 6s exhale, plus another inhale.
+                  Thread.sleep(forTimeInterval: 17)
+                  filmMarker("FOCUS_END")
+                  filmApp.terminate()
+                  filmApp.launchArguments = ["-language", "zh", "-scene", "clairDeLune", "-duration", "30", "-volume", "0.72", "-YixiuForceFreeAccess"]
+                  filmApp.launch()
+                  XCTAssertTrue(filmApp.buttons["listen.library"].waitForExistence(timeout: 20))
+                  XCTAssertEqual(filmApp.staticTexts["listen.sceneTitle"].label, "月光")
+                  Thread.sleep(forTimeInterval: 2)
+                  filmMarker("CLASSICAL_BEGIN")
+                  filmApp.buttons["播放"].tap()
+                  XCTAssertTrue(filmApp.buttons["暂停"].waitForExistence(timeout: 5))
+                  filmScreenshot("classical", app: filmApp)
+                  Thread.sleep(forTimeInterval: 8)
+                  filmMarker("CAPTURE_END")
+              }
+          }
+          YIXIU_CAPTURE_SWIFT
+
+      - name: Inventory Xcode and boot a fresh compatible iPhone
+        run: python3 qa/native-video-capture/capture-native.py prepare
+
+      - name: Build native app and existing UI test target without signing
+        run: python3 qa/native-video-capture/capture-native.py build
+
+      - name: Record real native UI gestures, playback and breathing
+        run: python3 qa/native-video-capture/capture-native.py capture
+
+      - name: Upload only native recording and native screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yixiu-native-iphone-footage
+          path: |
+            artifacts/*.mp4
+            artifacts/*.png
+          retention-days: 1
+          if-no-files-found: warn
