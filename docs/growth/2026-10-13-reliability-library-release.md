@@ -29,6 +29,7 @@
 - Simplified Plus copy, retaining the complete listening/licensing link as a secondary action. H5 membership remains App Store-verified rather than being granted by browser state.
 - Download banner is more compact on mobile/short screens, retains session-only dismissal and the first-party WeChat browser-handoff route.
 - Generated 34 card thumbnails, with original full-size scene art untouched: 16,868,639 source bytes → 1,448,514 thumbnail bytes (91.4% smaller for these assets, not a whole-page transfer claim). Cards load lazily. Header/banner use 96/192 px WebP icons instead of the 1.27 MB original.
+- Follow-up compact-library pass replaces the permanently expanded search and four-way scope strip with a single header row: title, search toggle, native All/Free/Favorites/Recent selector and close icon. Search expands with focus only when requested and clears its hidden query when collapsed. Categories remain fixed above the scrolling results.
 
 ### Native App
 
@@ -37,6 +38,7 @@
 - Centralized Focus state/timing in AppState so app background transitions and audio interruptions apply consistently across tabs and Now Playing.
 - Downgrading from Plus resets a paused/running long Focus session even after leaving the Focus tab; it cannot resume a three-minute clock through the one-minute Free gate.
 - Plus prices show Apple loading/unavailable states and a retry, and purchase is enabled only with a real loaded StoreKit product.
+- The logo-lockup subtitle is shifted upward by 2 points without changing the icon, title sizing or adaptive header geometry.
 
 ## Verification
 
@@ -49,6 +51,7 @@
 - Blocked-audio check: error/retry shown, countdown stayed paused; after unblocking, Focus retry resumed the practice. This caught and fixed a retry button initially obscured by the fixed tabs.
 - Keyboard: repeated Tab traversal stayed in Plus; Escape returned focus to the home library trigger.
 - WeChat UA check preserved the first-party download handoff and attributed region-neutral App Store destination. This is browser emulation, not a real WeChat phone acceptance test.
+- Compact-library follow-up passed a fresh production build plus the 4 library filter tests. Browser checks at 390×844, 320×740 English, 844×390 and 1095×1173 confirmed no horizontal overflow; Free returned 22 items, Free + `德彪西` returned only `月光`, collapsing search cleared the query, and the icon close action dismissed the dialog.
 
 ### App
 
@@ -61,6 +64,7 @@
 - The library UI recheck passed (39.344 s): Free/search controls had independent identifiers; the Free scope remained fixed after card scrolling; Free + Classical + Debussy returned Clair de lune; unmatched search reset to Ocean. All four selected scenarios passed across the initial run and the corrected library-only recheck; the initial failed result was retained.
 - Generic iOS Release build passed with `CODE_SIGNING_ALLOWED=NO`. This is a compile verification, not an archive, signed distribution build, or Apple upload.
 - Simulator screenshot records the outer-display 1398×2034 layout. It is not proof of inner-display/unfolded or real-phone acceptance.
+- Compact logo follow-up compiled successfully in the iOS 27.1 simulator Debug build and was installed/launched on the outer-display simulator for a visual collision check.
 
 ## H5 production deployment
 

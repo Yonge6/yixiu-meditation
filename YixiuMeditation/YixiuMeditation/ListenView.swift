@@ -478,6 +478,7 @@ struct ListenView: View {
                 Text(language.text(zh: "休息、睡眠与静心", en: "Rest, Sleep & Calm"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.moon.opacity(0.88))
+                    .offset(y: -2)
             }
             .fixedSize(horizontal: false, vertical: true)
         }
