@@ -2625,10 +2625,24 @@ img[data-image-scene="tide"] {
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
 }
 
 .library-header-spacer { flex: 1 1 auto; }
+
+.library-filter-row {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.library-filter-label {
+  color: var(--mist);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
 
 .library-tool-button,
 .library-close-button {
@@ -2655,8 +2669,8 @@ img[data-image-scene="tide"] {
 .library-scope-select {
   position: relative;
   display: flex;
-  min-width: 76px;
-  height: 40px;
+  min-width: 92px;
+  height: 36px;
   align-items: center;
 }
 
@@ -2680,16 +2694,16 @@ img[data-image-scene="tide"] {
 @media (max-width: 360px) {
   .sound-library h2 { font-size: 20px; letter-spacing: 0.04em; white-space: nowrap; }
   [data-language="en"] .sound-library h2 { font-size: 17px; letter-spacing: 0; }
-  .library-title-row { gap: 4px; }
+  .library-title-row { gap: 8px; }
   .library-tool-button, .library-close-button { width: 36px; min-width: 36px; height: 36px; }
-  .library-scope-select { min-width: 66px; height: 36px; }
+  .library-scope-select { min-width: 88px; height: 36px; }
   .library-scope-select select { padding: 0 25px 0 10px; font-size: 11px; }
   .library-scope-select svg { right: 7px; width: 12px; height: 12px; }
 }
 
 .scene-category-tabs {
   display: flex;
-  margin: 13px -2px 0;
+  margin: 12px -2px 0;
   overflow-x: auto;
   gap: 7px;
   scrollbar-width: none;

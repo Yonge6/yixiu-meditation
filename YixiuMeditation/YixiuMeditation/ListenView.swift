@@ -798,8 +798,8 @@ struct SoundLibraryView: View {
     // Search, personal scopes and categories share a fixed header, so they remain
     // available while the card grid scrolls on both compact and expanded devices.
     private var libraryControls: some View {
-        VStack(alignment: .leading, spacing: 9) {
-            HStack(spacing: 6) {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
                 Text(language.text(zh: "声音库", en: "Sound Library"))
                     .font(YixiuTheme.chineseDisplay(30))
                     .foregroundStyle(YixiuTheme.moon)
@@ -824,6 +824,26 @@ struct SoundLibraryView: View {
                 .accessibilityLabel(language.text(zh: "搜索声音", en: "Search sounds"))
                 .accessibilityIdentifier("library.search.toggle")
 
+                Spacer(minLength: 0)
+
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                        .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.7), lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(language.text(zh: "关闭声音库", en: "Close sound library"))
+                .accessibilityIdentifier("library.close")
+            }
+
+            HStack(spacing: 10) {
+                Text(language.text(zh: "显示", en: "Show"))
+                    .font(YixiuTheme.sans(11))
+                    .foregroundStyle(YixiuTheme.mist)
+
                 Menu {
                     Picker(language.text(zh: "聆听筛选", en: "Listening filter"), selection: $selectedScope) {
                         ForEach(SoundLibraryScope.allCases) { scope in
@@ -841,25 +861,11 @@ struct SoundLibraryView: View {
                     }
                     .foregroundStyle(YixiuTheme.mist)
                     .padding(.horizontal, 15)
-                    .frame(height: 44)
+                    .frame(height: 36)
                     .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
                     .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
                 }
                 .accessibilityIdentifier("library.scope.menu")
-
-                Spacer(minLength: 0)
-
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 18, weight: .regular))
-                        .foregroundStyle(YixiuTheme.moon)
-                        .frame(width: 44, height: 44)
-                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
-                        .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.7), lineWidth: 1))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(language.text(zh: "关闭声音库", en: "Close sound library"))
-                .accessibilityIdentifier("library.close")
             }
 
             if searchOpen {
