@@ -22,6 +22,9 @@ const focus = source('FocusView');
 assert.match(focus, /Image\(appState\.scene\.assetName\)/);
 assert.match(focus, /zh: appState\.scene\.zhName, en: appState\.scene\.enName/);
 assert.doesNotMatch(focus, /Image\("MorningLake"\)|Water Breathing|selectScene\(\.stream/);
-assert.match(focus, /practiceSceneID = appState\.scene\.rawValue/);
-assert.match(focus, /if !appState\.isPlaying \{ appState\.play\(\) \}/);
+// Session ownership is shared with interruptions and lock-screen controls now.
+const appState = source('AppState');
+assert.match(focus, /appState\.beginFocusSession\(\)/);
+assert.match(appState, /practiceSceneID = scene\.rawValue/);
+assert.match(appState, /private func acquireFocusSound\(\) -> Bool \{\s+if focusSoundEnabled \{\s+if !isPlaying \{ play\(\) \}/);
 console.log('PASS: Focus shares scene artwork, title, audio and record identity');

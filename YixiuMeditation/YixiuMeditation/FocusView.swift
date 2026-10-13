@@ -6,12 +6,10 @@ struct FocusView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var status: BreathingStatus = .idle
-    @State private var elapsed = 0
-    @State private var originalAudioWasPlaying = false
     @State private var paywallOpen = false
-    @State private var clock = PracticeCountdown(seconds: 60)
-    @State private var practiceSceneID = ""
+
+    private var status: BreathingStatus { appState.focusStatus }
+    private var elapsed: Int { appState.focusElapsed }
 
     private var totalSeconds: Int { appState.focusDuration * 60 }
     private var sceneName: String {
@@ -149,39 +147,7 @@ struct FocusView: View {
             }
             .ignoresSafeArea()
         }
-        .task(id: status) {
-            guard status == .running else { return }
-
-            while status == .running, elapsed < totalSeconds, !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
-                guard status == .running, !Task.isCancelled else { return }
-
-                elapsed = totalSeconds - clock.secondsRemaining()
-                if elapsed >= totalSeconds {
-                    status = .complete
-                    clock.pause()
-                    appState.recordCompletedSession(isFocus: true, seconds: totalSeconds, sceneID: practiceSceneID)
-                    restoreOriginalPlayback()
-                    appState.playCompletionBell()
-                    return
-                }
-            }
-        }
-        .onDisappear {
-            if status == .running || status == .paused {
-                clock.pause()
-                elapsed = totalSeconds - clock.secondsRemaining()
-                restoreOriginalPlayback()
-                status = .paused
-            }
-        }
-        .onChange(of: appState.focusRequestToken) { _, _ in resetSession() }
-        .onChange(of: appState.scene) { _, newScene in
-            // A practice must not resume under a different scene than its record.
-            if (status == .running || status == .paused), practiceSceneID != newScene.rawValue {
-                resetSession()
-            }
-        }
+        .onDisappear { appState.leaveFocusSession() }
         .sensoryFeedback(.selection, trigger: phase)
         .sheet(isPresented: $paywallOpen) {
             PlusPaywallView()
@@ -211,7 +177,7 @@ struct FocusView: View {
                             return
                         }
                         appState.focusDuration = minutes
-                        elapsed = 0
+                        appState.resetFocusSession()
                     } label: {
                         Text("\(minutes) \(appState.language == .zh ? "分钟" : "MIN")")
                             .font(.system(size: 10, weight: .medium))
@@ -238,7 +204,6 @@ struct FocusView: View {
 
             Button {
                 appState.focusSoundEnabled.toggle()
-                syncFocusSound()
             } label: {
                 Label(
                     sceneName,
@@ -294,16 +259,9 @@ struct FocusView: View {
             HStack(spacing: 12) {
                 Button {
                     if status == .running {
-                        ProductAnalytics.shared.event("focus_pause", ["scene_id": practiceSceneID])
-                        clock.pause()
-                        elapsed = totalSeconds - clock.secondsRemaining()
-                        status = .paused
-                        restoreOriginalPlayback()
+                        appState.pauseFocusSession()
                     } else {
-                        ProductAnalytics.shared.event("focus_resume", ["scene_id": practiceSceneID])
-                        acquireFocusAudio()
-                        clock.start()
-                        status = .running
+                        appState.resumeFocusSession()
                     }
                 } label: {
                     Label(
@@ -341,52 +299,11 @@ struct FocusView: View {
             paywallOpen = true
             return
         }
-        acquireFocusAudio()
-        practiceSceneID = appState.scene.rawValue
-        ProductAnalytics.shared.event("focus_start", ["scene_id": practiceSceneID, "focus_minutes": appState.focusDuration])
-        clock.reset(seconds: totalSeconds)
-        clock.start()
-        elapsed = 0
-        status = .running
-    }
-
-    private func acquireFocusAudio() {
-        guard !appState.isFocusActive else { return }
-        originalAudioWasPlaying = appState.isPlaying
-        appState.isFocusActive = true
-        if appState.focusSoundEnabled {
-            if !appState.isPlaying { appState.play() }
-        } else if appState.isPlaying {
-            appState.pause()
-        }
+        appState.beginFocusSession()
     }
 
     private func resetSession() {
-        if status == .running || status == .paused { ProductAnalytics.shared.event("focus_exit", ["scene_id": practiceSceneID]) }
-        restoreOriginalPlayback()
-        clock.reset(seconds: totalSeconds)
-        elapsed = 0
-        status = .idle
-    }
-
-    private func syncFocusSound() {
-        guard status == .running else { return }
-
-        if appState.focusSoundEnabled, !appState.isPlaying {
-            appState.play()
-        } else if !appState.focusSoundEnabled, appState.isPlaying {
-            appState.pause()
-        }
-    }
-
-    private func restoreOriginalPlayback() {
-        guard appState.isFocusActive else { return }
-        if originalAudioWasPlaying, !appState.isPlaying {
-            appState.play()
-        } else if !originalAudioWasPlaying, appState.isPlaying {
-            appState.pause()
-        }
-        appState.isFocusActive = false
+        appState.resetFocusSession()
     }
 
     private var quickPractices: some View {

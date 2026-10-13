@@ -14,5 +14,6 @@ for (const mode of ['freeTrial', 'payAsYouGo', 'payUpFront']) {
 }
 assert.match(view, /offer\.periodCount/);
 assert.match(view, /Then .*per .*auto-renewing until canceled/);
-assert.match(view, /subscriptionStore\.isLoadingProducts \|\| subscriptionStore\.product/);
+assert.match(view, /\.disabled\(subscriptionStore\.isBusy \|\| priceState\(for: selectedPlan\) != \.available\)/);
+assert.doesNotMatch(view, /zh: "所示价格"|en: "the displayed price"/);
 console.log('INTRO_OFFER_SOURCE_REGRESSION_PASS');

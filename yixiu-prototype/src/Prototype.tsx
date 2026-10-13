@@ -12,6 +12,8 @@ import {
   HeartFilledIcon,
   HeartIcon,
   LockClosedIcon,
+  GridIcon,
+  ReloadIcon,
   PauseIcon,
   PersonIcon,
   PlayIcon,
@@ -24,10 +26,14 @@ import {
 import QRCode from "qrcode";
 import { QuietJournal, type QuietArticle } from "./QuietJournal";
 import { useEndBell } from "./useEndBell";
+import { filterLibrary, type LibraryScope } from "./library";
+import { useModalFocus } from "./useModalFocus";
+import { SoundLibrary } from "./SoundLibrary";
+import { useAmbientSound } from "./useAmbientSound";
 import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
 import { classicalMusic } from "./data/classical-music";
-import { analyticsConsent, setAnalyticsConsent, observeAudio, productEvent } from "./product-analytics";
+import { analyticsConsent, setAnalyticsConsent, productEvent } from "./product-analytics";
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
@@ -420,7 +426,7 @@ const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stre
 const homeSceneOrder = [...sceneOrder.filter(id => freeSceneIds.has(id)), ...sceneOrder.filter(id => !freeSceneIds.has(id))];
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
-  sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].kind === "meditation" ? scenes[sceneId].image : `/assets/yixiu/thumbs/${sceneId}.jpg`]),
+  sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].image.replace("/assets/yixiu/", "/assets/yixiu/card-thumbs/").replace(/\.(jpg|png|webp)$/i, ".webp")]),
 ) as Record<SceneId, string>;
 
 const scenesByCategory: Record<SceneCategory, SceneId[]> = {
@@ -518,104 +524,6 @@ function SceneAccessBadge({ free }: { free: boolean }) {
       <PremiumGemIcon />
     </span>
   );
-}
-
-type AudioGraph = {
-  audio: HTMLAudioElement;
-  analytics?: ReturnType<typeof observeAudio>;
-};
-
-function stopAudioGraph(graph: AudioGraph | null) {
-  if (!graph) return;
-  graph.analytics?.dispose();
-  graph.audio.pause();
-  graph.audio.removeAttribute("src");
-  graph.audio.load();
-}
-
-function useAmbientSound(sceneId: SceneId, isPlaying: boolean, volume: number, fadeFactor: number) {
-  const graphRef = useRef<AudioGraph | null>(null);
-  const fadingGraphRef = useRef<AudioGraph | null>(null);
-  const fadeFrameRef = useRef<number | null>(null);
-  const fadeGenerationRef = useRef(0);
-  const fadeActiveRef = useRef(false);
-
-  useEffect(() => {
-    fadeGenerationRef.current += 1;
-    const generation = fadeGenerationRef.current;
-    if (fadeFrameRef.current !== null) {
-      window.cancelAnimationFrame(fadeFrameRef.current);
-      fadeFrameRef.current = null;
-    }
-    fadeActiveRef.current = false;
-    stopAudioGraph(fadingGraphRef.current);
-    fadingGraphRef.current = null;
-
-    if (!isPlaying) {
-      stopAudioGraph(graphRef.current);
-      graphRef.current = null;
-      return;
-    }
-
-    const scene = scenes[sceneId];
-    const previousGraph = graphRef.current;
-    const audio = new Audio(scene.audio);
-    audio.loop = true;
-    audio.preload = "auto";
-    audio.playbackRate = scene.playbackRate ?? 1;
-    const targetVolume = Math.min(1, (volume / 100) * Math.min(scene.level * 11, 1) * fadeFactor);
-    audio.volume = previousGraph ? 0 : targetVolume;
-    fadeActiveRef.current = previousGraph !== null;
-    fadingGraphRef.current = previousGraph;
-    const analytics = observeAudio(audio, sceneId, classicalSceneIds.includes(sceneId as typeof classicalSceneIds[number]) ? "classical" : (scene.kind ?? "nature"), freeSceneIds.has(sceneId));
-    graphRef.current = { audio, analytics };
-    void audio.play().then(() => {
-      if (generation !== fadeGenerationRef.current) return;
-      previousGraph?.analytics?.dispose("scene_change");
-      if (!previousGraph) return;
-      fadeActiveRef.current = true;
-      const startedAt = performance.now();
-      const previousStartVolume = previousGraph.audio.volume;
-      const animate = (now: number) => {
-        if (generation !== fadeGenerationRef.current) return;
-        const progress = Math.max(0, Math.min((now - startedAt) / 600, 1));
-        audio.volume = targetVolume * progress;
-        previousGraph.audio.volume = previousStartVolume * (1 - progress);
-        if (progress < 1) {
-          fadeFrameRef.current = window.requestAnimationFrame(animate);
-        } else {
-          stopAudioGraph(previousGraph);
-          if (fadingGraphRef.current === previousGraph) fadingGraphRef.current = null;
-          fadeFrameRef.current = null;
-          fadeActiveRef.current = false;
-        }
-      };
-      fadeFrameRef.current = window.requestAnimationFrame(animate);
-    }).catch(() => {
-      if (generation !== fadeGenerationRef.current) { stopAudioGraph({ audio, analytics }); return; }
-      analytics.failed();
-      analytics.dispose("playback_error");
-      if (graphRef.current?.audio === audio) graphRef.current = previousGraph;
-      fadeActiveRef.current = false;
-      stopAudioGraph({ audio });
-    });
-  }, [isPlaying, sceneId]);
-
-  useEffect(() => () => {
-    fadeGenerationRef.current += 1;
-    if (fadeFrameRef.current !== null) window.cancelAnimationFrame(fadeFrameRef.current);
-    stopAudioGraph(graphRef.current);
-    stopAudioGraph(fadingGraphRef.current);
-    graphRef.current = null;
-    fadingGraphRef.current = null;
-  }, []);
-
-  useEffect(() => {
-    const graph = graphRef.current;
-    if (!graph || fadeActiveRef.current) return;
-    const scene = scenes[sceneId];
-    graph.audio.volume = Math.min(1, (volume / 100) * Math.min(scene.level * 11, 1) * fadeFactor);
-  }, [fadeFactor, sceneId, volume]);
 }
 
 function formatSeconds(value: number) {
@@ -822,6 +730,9 @@ export default function Prototype() {
   const [meView, setMeView] = useState<MeView>("home");
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [sceneCategory, setSceneCategory] = useState<SceneCategory>("all");
+  const [libraryScope, setLibraryScope] = useState<LibraryScope>("all");
+  const [libraryQuery, setLibraryQuery] = useState("");
+  const libraryTriggerRef = useRef<HTMLButtonElement>(null);
   const analyticsMounted = useRef(false);
   useEffect(() => {
     if (analyticsMounted.current) productEvent("library_filter", { filter: sceneCategory });
@@ -876,10 +787,46 @@ export default function Prototype() {
   const isFavorite = favorites.includes(active.id);
   const fadeFactor = duration === 0 || remainingSeconds > 20 ? 1 : Math.max(remainingSeconds / 20, 0);
   const breathingTotalSeconds = focusDuration * 60;
-  const filteredSceneOrder = scenesByCategory[sceneCategory];
+  const filteredSceneOrder = useMemo(() => filterLibrary(
+    scenesByCategory[sceneCategory].map(id => ({ id, searchText: `${scenes[id].zh} ${scenes[id].en} ${scenes[id].useZh} ${scenes[id].useEn}` })),
+    { scope: libraryScope, query: libraryQuery, free: freeSceneIds, favorites, recent: recentScenes },
+  ).map(item => item.id), [sceneCategory, libraryScope, libraryQuery, favorites, recentScenes]);
 
-  useAmbientSound(active.id, isPlaying, volume, fadeFactor);
+
+  const ambientPlayback = useAmbientSound({
+    scene: {
+      id: active.id, audio: active.audio, playbackRate: active.playbackRate, level: active.level,
+      category: classicalSceneIds.includes(active.id as typeof classicalSceneIds[number]) ? "classical" : (active.kind ?? "nature"),
+      free: freeSceneIds.has(active.id),
+    },
+    requested: isPlaying, volume, fadeFactor, onRequestChange: setIsPlaying,
+  });
   const playEndBell = useEndBell(endBell, volume);
+
+  useEffect(() => {
+    const pauseWhenHidden = () => {
+      if (backgroundPlayback || document.visibilityState !== "hidden") return;
+      // Pause Focus without restoring the ambience it captured before starting.
+      if (breathingStatus === "running") {
+        focusClockRef.current.pause();
+        setBreathingStatus("paused");
+        productEvent("focus_pause", { focus_minutes: focusDuration, end_reason: "background_disabled" });
+      }
+      listeningClockRef.current.pause();
+      ambientPlayback.pause();
+    };
+    pauseWhenHidden();
+    document.addEventListener("visibilitychange", pauseWhenHidden);
+    return () => document.removeEventListener("visibilitychange", pauseWhenHidden);
+  }, [backgroundPlayback, breathingStatus, focusDuration, ambientPlayback.pause]);
+
+  useEffect(() => {
+    if (breathingStatus !== "running" || !focusSoundEnabled) return;
+    if (isPlaying || (ambientPlayback.status !== "error" && ambientPlayback.status !== "paused")) return;
+    focusClockRef.current.pause();
+    setBreathingStatus("paused");
+    productEvent("focus_pause", { focus_minutes: focusDuration, end_reason: "audio_interrupted" });
+  }, [ambientPlayback.status, breathingStatus, focusSoundEnabled, focusDuration, isPlaying]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -913,7 +860,7 @@ export default function Prototype() {
   }, [downloadFeedback]);
 
   useEffect(() => {
-    if (!isPlaying || duration === 0 || breathingStatus === "running") return;
+    if (ambientPlayback.status !== "playing" || duration === 0 || breathingStatus === "running") return;
     const clock = listeningClockRef.current;
     if (clock.remaining() === 0) {
       clock.reset(duration * 60);
@@ -940,10 +887,11 @@ export default function Prototype() {
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [active.id, duration, isPlaying, breathingStatus, setJournal, playEndBell]);
+  }, [active.id, duration, ambientPlayback.status, breathingStatus, setJournal, playEndBell]);
 
   useEffect(() => {
     if (breathingStatus !== "running" || activeTab !== "focus") return;
+    if (focusSoundEnabled && ambientPlayback.status !== "playing") return;
     const clock = focusClockRef.current;
     clock.start();
     let completed = false;
@@ -965,7 +913,7 @@ export default function Prototype() {
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [activeTab, breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, setJournal, playEndBell]);
+  }, [activeTab, breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, ambientPlayback.status, setJournal, playEndBell]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
@@ -1055,7 +1003,6 @@ export default function Prototype() {
     if (nextIndex < 0 || nextIndex >= homeSceneOrder.length) return;
     const sceneId = homeSceneOrder[nextIndex];
     if (!freeSceneIds.has(sceneId)) {
-      setIsPlaying(false);
       setUpgradeOpen(true);
       recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: sceneId, placement: "scene_navigation" });
       return;
@@ -1101,6 +1048,12 @@ export default function Prototype() {
     setShareCardPreview(null);
     setShareCardCopyState("idle");
   };
+
+  useModalFocus(shareCardPreview ? "share" : upgradeOpen ? "plus" : libraryOpen ? "library" : null, () => {
+    if (shareCardPreview) closeShareCard();
+    else if (upgradeOpen) setUpgradeOpen(false);
+    else setLibraryOpen(false);
+  }, libraryTriggerRef);
 
   const copyShareCardLink = async () => {
     if (!shareCardPreview) return;
@@ -1227,7 +1180,7 @@ export default function Prototype() {
     productEvent("timer_select", { timer_minutes: minutes });
     listeningClockRef.current.reset(minutes * 60);
     listeningSessionRef.current = crypto.randomUUID();
-    if (isPlaying && breathingStatus !== "running") listeningClockRef.current.start();
+    if (ambientPlayback.status === "playing" && breathingStatus !== "running") listeningClockRef.current.start();
     setDuration(minutes);
     setRemainingSeconds(minutes === 0 ? 0 : minutes * 60);
     setTimerOpen(false);
@@ -1295,7 +1248,6 @@ export default function Prototype() {
   const selectScene = (sceneId: SceneId, play = true) => {
     if (!sceneOrder.includes(sceneId)) return;
     if (!freeSceneIds.has(sceneId)) {
-      setIsPlaying(false);
       setLibraryOpen(false);
       setUpgradeOpen(true);
       recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: sceneId, placement: "sound_library" });
@@ -1317,7 +1269,7 @@ export default function Prototype() {
       album: language === "zh" ? "如水而行" : "Be Water, My Friend.",
       artwork: [{ src: new URL(active.image, window.location.origin).toString(), sizes: "1200x1600", type: "image/jpeg" }],
     });
-    navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+    navigator.mediaSession.playbackState = ambientPlayback.status === "playing" ? "playing" : "paused";
 
     const actions: Array<[MediaSessionAction, MediaSessionActionHandler | null]> = [
       ["play", () => {
@@ -1341,7 +1293,7 @@ export default function Prototype() {
         try { navigator.mediaSession.setActionHandler(action, null); } catch { /* unsupported action */ }
       });
     };
-  }, [active, isPlaying, language, nextScene, previousScene]);
+  }, [active, ambientPlayback.status, language, nextScene, previousScene]);
 
   const beginBreathing = (withSound = focusSoundEnabled) => {
     if (!canUseWebFocus(focusDuration)) { setUpgradeOpen(true); return; }
@@ -1502,7 +1454,7 @@ export default function Prototype() {
 
       {activeTab === "sounds" ? <header className="player-header">
         <div className="brand-lockup">
-          <img className="brand-app-icon" src="/assets/yixiu/app-icon.png" width="44" height="44" alt="" draggable={false} />
+          <img className="brand-app-icon" src="/assets/yixiu/app-icon-96.webp" srcSet="/assets/yixiu/app-icon-192.webp 2x" width="44" height="44" alt="" draggable={false} />
           <div className="brand-copy">
             <span className="brand-name">{language === "zh" ? "一休冥想" : "Yixiu Meditation"}</span>
             <small>{language === "zh" ? "休息、睡眠与静心" : "Rest, Sleep & Calm"}</small>
@@ -1816,7 +1768,6 @@ export default function Prototype() {
             </button>
             <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} data-scene-id={active.id} onClick={() => {
               if (!freeSceneIds.has(active.id)) {
-                setIsPlaying(false);
                 setUpgradeOpen(true);
                 recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: active.id, placement: "player" });
                 return;
@@ -1824,7 +1775,7 @@ export default function Prototype() {
               if (!isPlaying) recordRecentScene(active.id);
               setIsPlaying((current) => !current);
             }}>
-              {isPlaying ? <PauseIcon /> : <PlayIcon />}
+              {ambientPlayback.status === "loading" ? <ReloadIcon className="audio-loading-icon" /> : isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
             <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "下一种声音" : "Next sound"} disabled={!nextScene} onClick={() => moveScene(1)}>
               <TrackNextIcon />
@@ -1843,7 +1794,13 @@ export default function Prototype() {
             <SpeakerLoudIcon />
           </section>
 
-          <p className="sound-swipe-hint">{language === "zh" ? "上滑浏览全部声音" : "SWIPE UP FOR ALL SOUNDS"}</p>
+          <div className="sound-library-entry">
+            <button ref={libraryTriggerRef} type="button" aria-haspopup="dialog" onClick={() => setLibraryOpen(true)}>
+              <GridIcon /><span>{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</span>
+            </button>
+          </div>
+          {ambientPlayback.status === "loading" ? <p className="audio-feedback" role="status">{language === "zh" ? "正在加载声音…" : "Loading sound…"}</p> : null}
+          {ambientPlayback.error ? <div className="audio-feedback audio-error" role="alert"><span>{language === "zh" ? "声音暂时无法播放" : "Unable to play this sound"}</span><button type="button" onClick={ambientPlayback.retry}>{language === "zh" ? "重试" : "Retry"}</button></div> : null}
 
         </section>
       ) : null}
@@ -1905,6 +1862,8 @@ export default function Prototype() {
             </div>
           )}
 
+          {focusSoundEnabled && ambientPlayback.status === "loading" && breathingStatus === "running" ? <p className="focus-audio-feedback" role="status">{language === "zh" ? "正在加载声音，练习计时暂缓…" : "Loading sound. The practice timer is waiting…"}</p> : null}
+          {focusSoundEnabled && ambientPlayback.error && breathingStatus === "paused" ? <div className="focus-audio-feedback" role="alert"><span>{language === "zh" ? "声音暂时无法播放，练习已暂停。" : "Sound could not play. Your practice is paused."}</span><button type="button" onClick={() => { ambientPlayback.retry(); setBreathingStatus("running"); }}>{language === "zh" ? "重试并继续" : "Retry & continue"}</button></div> : null}
           <p className="safety-note">{language === "zh" ? "顺其自然；如有不适，请暂停。" : "Let it be easy. Pause if you feel uncomfortable."}</p>
           </div></div>
           {(breathingStatus === "idle" || breathingStatus === "complete") && <section className="quick-practices" aria-label={language === "zh" ? "快捷练习" : "Quick practices"}>
@@ -2134,23 +2093,13 @@ export default function Prototype() {
       {libraryOpen ? (
         <>
           <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
-          <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
-            <div className="sheet-handle" />
-            <header><div><small>{language === "zh" ? "14 种自然声 · 30 首音乐（含 20 首古典）" : "14 NATURE SOUNDS · 30 MUSIC TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
-            <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
-              {sceneCategories.map((category) => (
-                <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
-                  {categoryLabel(category, language)}
-                </button>
-              ))}
-            </div>
-            <div className="scene-grid">
-              {filteredSceneOrder.map((sceneId) => {
-                const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" data-scene-id={scene.id} aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span><SceneAccessBadge free={freeSceneIds.has(scene.id)} /></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
-              })}
-            </div>
-          </section>
+          <SoundLibrary language={language} items={filteredSceneOrder.map(id => scenes[id])} activeID={activeScene}
+            scope={libraryScope} query={libraryQuery} category={sceneCategory}
+            categories={sceneCategories.map(id => ({ id, label: categoryLabel(id, language) }))}
+            favorites={favorites} recent={recentScenes} thumbnails={sceneThumbs}
+            badge={id => <SceneAccessBadge free={freeSceneIds.has(id)} />}
+            onScope={setLibraryScope} onQuery={setLibraryQuery} onCategory={setSceneCategory}
+            onSelect={selectScene} onFavorite={toggleFavorite} onClose={() => setLibraryOpen(false)} />
         </>
       ) : null}
 
@@ -2203,23 +2152,23 @@ export default function Prototype() {
       ) : null}
 
       {upgradeOpen ? (
-        <div className="plus-upgrade-modal" role="dialog" aria-modal="true" aria-label={language === "zh" ? "升级一休 Plus" : "Upgrade to Yixiu Plus"}>
-          <button className="plus-upgrade-backdrop" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)} />
+        <div className="plus-upgrade-modal" data-modal="plus" role="dialog" aria-modal="true" aria-label={language === "zh" ? "升级一休 Plus" : "Upgrade to Yixiu Plus"}>
+          <button className="plus-upgrade-backdrop" type="button" tabIndex={-1} aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)} />
           <section>
-            <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
+            <button className="plus-upgrade-close" type="button" data-modal-initial aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
             <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 10 种自然声、绿洲停歇与初息，以及 10 首古典名曲。其余 4 种自然声和 18 首音乐（含另外 10 首古典）属于 Plus。" : "Listen free to 10 nature sounds, Oasis Rest, First Breath and 10 classical works. The remaining 4 nature sounds and 18 music tracks (including 10 more classical works) are Plus."}</p>
-            <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
+            <p>{language === "zh" ? "免费聆听 10 种自然声与 12 首音乐，包含 10 首古典名曲。" : "Listen free to 10 nature sounds and 12 music tracks, including 10 classical works."}</p>
+            <ul className="plus-benefits"><li>{language === "zh" ? "解锁全部 44 个声音" : "Unlock all 44 sounds"}</li><li>{language === "zh" ? "静心 1 / 3 / 5 / 10 分钟" : "1 / 3 / 5 / 10-minute Focus"}</li><li>{language === "zh" ? "长时与不限时聆听" : "Extended and unlimited listening"}</li></ul>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);
               recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id });
             }}>
-              {language === "zh" ? "在 App Store 查看一休 Plus" : "View Yixiu Plus on the App Store"}
+              {language === "zh" ? "下载 App，了解 Plus" : "Get the app · Explore Plus"}
               <ExternalLinkIcon />
             </a>
-            <a href="/music-credits.html#classical">{language === "zh" ? "20 首古典名曲 · 免费完整试听" : "20 classical works · Free full listening"}</a>
-            <em>{language === "zh" ? "古典名曲已在网页来源页提供；App 内新曲随后续更新提供。会员权益由 App Store 管理。" : "Classical recordings are available on the web credits page; the in-app collection arrives with an upcoming update. Membership is managed by the App Store."}</em>
+            <a className="plus-source-link" href="/music-credits.html#classical">{language === "zh" ? "录音来源与完整试听" : "Recording sources & full listening"}<ExternalLinkIcon /></a>
+            <em>{language === "zh" ? "会员权益在 App 内由 App Store 验证；网页提供免费体验。老用户可在 App 内恢复购买，保留原有权益。" : "Membership is verified by the App Store in the app. The web offers free listening. Legacy users can restore purchases in the app to retain their original access."}</em>
           </section>
         </div>
       ) : null}
@@ -2227,11 +2176,12 @@ export default function Prototype() {
       {shareCardPreview ? (
         <div
           className="share-card-dialog"
+          data-modal="share"
           role="dialog"
           aria-modal="true"
           aria-label={language === "zh" ? `分享${active.zh}` : `Share ${active.en}`}
         >
-          <button className="share-card-backdrop" type="button" aria-label={language === "zh" ? "关闭分享图" : "Close share card"} onClick={closeShareCard} />
+          <button className="share-card-backdrop" type="button" tabIndex={-1} aria-label={language === "zh" ? "关闭分享图" : "Close share card"} onClick={closeShareCard} />
           <section>
             <button className="share-card-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={closeShareCard}><Cross2Icon /></button>
             <div className="share-card-copy">

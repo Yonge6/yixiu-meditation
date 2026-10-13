@@ -9,6 +9,7 @@
     "test:runtime": "playwright test",
     "test:sites": "node --test tests/sites-worker.test.mjs",
     "test:practice": "node --experimental-strip-types --test tests/practice-core.test.ts",
+    "test:audio": "node --experimental-strip-types --test tests/ambient-audio.test.ts",
     "predev": "npm run check:runtime && npm run build:journal && node scripts/prepare-app-banner.mjs",
     "dev": "vite",
     "prebuild": "npm run check:runtime && npm run build:journal && node scripts/prepare-app-banner.mjs",

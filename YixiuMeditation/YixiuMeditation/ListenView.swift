@@ -1,3 +1,60 @@
+import Foundation
+
+enum SoundLibraryScope: String, CaseIterable, Identifiable {
+    case all
+    case free
+    case favorites
+    case recent
+
+    var id: String { rawValue }
+
+    func title(language: AppLanguage) -> String {
+        switch self {
+        case .all: language.text(zh: "全部", en: "All")
+        case .free: language.text(zh: "免费", en: "Free")
+        case .favorites: language.text(zh: "收藏", en: "Favorites")
+        case .recent: language.text(zh: "最近听过", en: "Recent")
+        }
+    }
+}
+
+enum SoundLibraryFilter {
+    static func scenes(
+        in catalog: [MeditationScene] = MeditationScene.availableScenes,
+        scope: SoundLibraryScope,
+        category: SceneCategory,
+        query: String,
+        favorites: [MeditationScene],
+        recent: [MeditationScene]
+    ) -> [MeditationScene] {
+        let available = Set(catalog.filter(\.isAvailable))
+        let favoriteScenes = Set(favorites)
+        let words = normalized(query).split(whereSeparator: \.isWhitespace)
+        let source = scope == .recent ? recent : catalog
+        var seen = Set<MeditationScene>()
+
+        return source.filter { scene in
+            guard available.contains(scene), seen.insert(scene).inserted,
+                  scene.matches(category) else { return false }
+            switch scope {
+            case .free:
+                guard SubscriptionAccessPolicy.freeScenes.contains(scene) else { return false }
+            case .favorites:
+                guard favoriteScenes.contains(scene) else { return false }
+            case .all, .recent:
+                break
+            }
+            let searchable = normalized([scene.zhName, scene.enName, scene.useZh, scene.useEn].joined(separator: " "))
+            return words.allSatisfy { searchable.contains($0) }
+        }
+    }
+
+    private static func normalized(_ value: String) -> String {
+        value.folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: Locale(identifier: "en_US_POSIX"))
+    }
+}
+
+#if canImport(SwiftUI) && canImport(UIKit)
 import SwiftUI
 import UIKit
 
@@ -688,48 +745,37 @@ struct SoundLibraryView: View {
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.dismiss) private var dismiss
     @State private var selectedCategory: SceneCategory = .all
+    @State private var selectedScope: SoundLibraryScope = .all
+    @State private var searchQuery = ""
     @State private var paywallOpen = false
+    @FocusState private var searchFocused: Bool
 
     private var language: AppLanguage { appState.language }
     private var filteredScenes: [MeditationScene] {
-        MeditationScene.availableScenes.filter { $0.matches(selectedCategory) }
+        SoundLibraryFilter.scenes(
+            scope: selectedScope,
+            category: selectedCategory,
+            query: searchQuery,
+            favorites: appState.favorites,
+            recent: appState.recentScenes
+        )
     }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 7) {
-                        ForEach(SceneCategory.allCases) { category in
-                            Button {
-                                selectedCategory = category
-                            } label: {
-                                Text(category.title(language: language))
-                                    .font(.system(size: 11, weight: .medium))
-                                    .foregroundStyle(selectedCategory == category ? YixiuTheme.deepWater : YixiuTheme.mist)
-                                    .padding(.horizontal, 15)
-                                    .frame(height: 34)
-                                    .background(
-                                        Capsule().fill(selectedCategory == category ? YixiuTheme.aquaStrong : YixiuTheme.deepWaterSoft.opacity(0.56))
-                                    )
-                                    .overlay(
-                                        Capsule().stroke(selectedCategory == category ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
-                                    )
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
-                        }
-                    }
-                    .padding(.horizontal, 1)
-                }
-                .frame(height: 34)
-                .padding(.horizontal, 18)
-                .padding(.vertical, 14)
-                .background(YixiuTheme.deepWater)
+                libraryControls
                 ScrollView {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
-                        ForEach(filteredScenes) { scene in
-                            sceneCard(scene)
+                    Group {
+                        if filteredScenes.isEmpty {
+                            emptyResults
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
+                                ForEach(filteredScenes) { scene in
+                                    sceneCard(scene)
+                                }
+                            }
                         }
                     }
                     .padding(.horizontal, 18)
@@ -737,6 +783,8 @@ struct SoundLibraryView: View {
                     .frame(maxWidth: 1040)
                     .frame(maxWidth: .infinity)
                 }
+                .scrollDismissesKeyboard(.interactively)
+                .accessibilityIdentifier("library.results")
             }
             .background(YixiuTheme.deepWater)
             .navigationTitle(language.text(zh: "声音库", en: "Sound Library"))
@@ -756,9 +804,150 @@ struct SoundLibraryView: View {
         }
     }
 
+    // Search, personal scopes and categories share a fixed header, so they remain
+    // available while the card grid scrolls on both compact and expanded devices.
+    private var libraryControls: some View {
+        VStack(spacing: 9) {
+            HStack(spacing: 9) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(YixiuTheme.mist)
+                TextField(language.text(zh: "搜索声音、曲名或作曲家", en: "Search sounds, titles or composers"), text: $searchQuery)
+                    .font(YixiuTheme.sans(13))
+                    .foregroundStyle(YixiuTheme.moon)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .submitLabel(.search)
+                    .focused($searchFocused)
+                    .onSubmit { searchFocused = false }
+                    .accessibilityIdentifier("library.search")
+                if !searchQuery.isEmpty {
+                    Button { searchQuery = "" } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(YixiuTheme.mist)
+                            .frame(width: 32, height: 44)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(language.text(zh: "清除搜索", en: "Clear search"))
+                }
+            }
+            .padding(.horizontal, 13)
+            .frame(minHeight: 44)
+            .background(RoundedRectangle(cornerRadius: 13).fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+            .overlay(RoundedRectangle(cornerRadius: 13).stroke(YixiuTheme.hairline, lineWidth: 0.8))
+
+            HStack(spacing: 5) {
+                ForEach(SoundLibraryScope.allCases) { scope in
+                    Button {
+                        selectedScope = scope
+                    } label: {
+                        Text(scope.title(language: language))
+                            .font(YixiuTheme.sans(12, weight: .medium))
+                            .foregroundStyle(selectedScope == scope ? YixiuTheme.aquaStrong : YixiuTheme.mist)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .background(RoundedRectangle(cornerRadius: 12).fill(selectedScope == scope ? YixiuTheme.aqua.opacity(0.12) : .clear))
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(selectedScope == scope ? .isSelected : [])
+                    .accessibilityIdentifier("library.scope.\(scope.rawValue)")
+                }
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 7) {
+                    ForEach(SceneCategory.allCases) { category in
+                        Button {
+                            selectedCategory = category
+                        } label: {
+                            Text(category.title(language: language))
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(selectedCategory == category ? YixiuTheme.deepWater : YixiuTheme.mist)
+                                .padding(.horizontal, 15)
+                                .frame(minHeight: 44)
+                                .background(
+                                    Capsule().fill(selectedCategory == category ? YixiuTheme.aquaStrong : YixiuTheme.deepWaterSoft.opacity(0.56))
+                                )
+                                .overlay(
+                                    Capsule().stroke(selectedCategory == category ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
+                        .accessibilityIdentifier("library.category.\(category.rawValue)")
+                    }
+                }
+                .padding(.horizontal, 1)
+            }
+            .frame(height: 44)
+
+            if !subscriptionStore.isReady {
+                HStack(spacing: 8) {
+                    ProgressView().tint(YixiuTheme.aqua)
+                    Text(language.text(zh: "正在确认会员资格，免费声音可先听。", en: "Checking membership. Free sounds are ready to play."))
+                        .font(YixiuTheme.sans(11))
+                        .foregroundStyle(YixiuTheme.mist)
+                }
+            }
+        }
+        .padding(.horizontal, 18)
+        .padding(.top, 10)
+        .padding(.bottom, 12)
+        .frame(maxWidth: 1040)
+        .frame(maxWidth: .infinity)
+        .background(YixiuTheme.deepWater)
+    }
+
+    private var emptyResults: some View {
+        VStack(spacing: 12) {
+            Image(systemName: selectedScope == .favorites ? "heart" : selectedScope == .recent ? "clock" : "magnifyingglass")
+                .font(.system(size: 27, weight: .light))
+                .foregroundStyle(YixiuTheme.aqua)
+            Text(emptyResultsTitle)
+                .font(YixiuTheme.sans(16, weight: .medium))
+                .foregroundStyle(YixiuTheme.moon)
+            Text(emptyResultsMessage)
+                .font(YixiuTheme.sans(13))
+                .foregroundStyle(YixiuTheme.mist)
+                .multilineTextAlignment(.center)
+            Button {
+                searchQuery = ""
+                selectedScope = .all
+                selectedCategory = .all
+                searchFocused = false
+            } label: {
+                Text(language.text(zh: "浏览全部声音", en: "Explore all sounds"))
+                    .font(YixiuTheme.sans(13, weight: .medium))
+                    .foregroundStyle(YixiuTheme.deepWater)
+                    .padding(.horizontal, 22)
+                    .frame(minHeight: 44)
+                    .background(Capsule().fill(YixiuTheme.aquaStrong))
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("library.reset")
+        }
+        .padding(.vertical, 40)
+    }
+
+    private var emptyResultsTitle: String {
+        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all {
+            if selectedScope == .favorites { return language.text(zh: "还没有收藏的声音", en: "No favorites yet") }
+            if selectedScope == .recent { return language.text(zh: "还没有聆听记录", en: "No recent sounds yet") }
+        }
+        return language.text(zh: "没有找到匹配的声音", en: "No matching sounds")
+    }
+
+    private var emptyResultsMessage: String {
+        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all {
+            if selectedScope == .favorites { return language.text(zh: "点卡片上的爱心，把喜欢的声音留在这里。", en: "Tap a card’s heart to keep a favorite here.") }
+            if selectedScope == .recent { return language.text(zh: "开始聆听后，最近的声音会出现在这里。", en: "Start listening and your recent sounds will appear here.") }
+        }
+        return language.text(zh: "试试其他关键词，或重置筛选。", en: "Try another search, or reset your filters.")
+    }
+
     private func sceneCard(_ scene: MeditationScene) -> some View {
         ZStack(alignment: .topTrailing) {
             Button {
+                guard subscriptionStore.isReady || SubscriptionAccessPolicy.freeScenes.contains(scene) else { return }
                 guard subscriptionStore.canAccess(scene) else {
                     paywallOpen = true
                     return
@@ -799,8 +988,12 @@ struct SoundLibraryView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(language.text(
-                zh: subscriptionStore.canAccess(scene) ? "切换到\(scene.zhName)" : "\(scene.zhName)，一休 Plus",
-                en: subscriptionStore.canAccess(scene) ? "Switch to \(scene.enName)" : "\(scene.enName), Yixiu Plus"
+                zh: !subscriptionStore.isReady && !SubscriptionAccessPolicy.freeScenes.contains(scene)
+                    ? "\(scene.zhName)，正在确认会员资格"
+                    : subscriptionStore.canAccess(scene) ? "切换到\(scene.zhName)" : "\(scene.zhName)，一休 Plus",
+                en: !subscriptionStore.isReady && !SubscriptionAccessPolicy.freeScenes.contains(scene)
+                    ? "\(scene.enName), checking membership"
+                    : subscriptionStore.canAccess(scene) ? "Switch to \(scene.enName)" : "\(scene.enName), Yixiu Plus"
             ))
 
             Button {
@@ -935,3 +1128,4 @@ private struct FacetedGemShape: Shape {
         return path
     }
 }
+#endif

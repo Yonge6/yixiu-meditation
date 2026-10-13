@@ -178,6 +178,52 @@ final class HomeInteractionUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Play"].exists)
     }
 
+    func testFocusPauseFreezesCountdownAndResumes() {
+        selectTab("Focus")
+        let start = app.buttons["focus.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 15))
+        start.tap()
+        let countdown = app.staticTexts["focus-countdown"]
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 3))
+        sleep(3)
+        pause.tap()
+        let remainingWhilePaused = countdown.label
+        sleep(2)
+        XCTAssertEqual(countdown.label, remainingWhilePaused, "A paused practice must not keep counting")
+        let resume = app.buttons["Continue"]
+        XCTAssertTrue(resume.exists)
+        resume.tap()
+        sleep(2)
+        XCTAssertNotEqual(countdown.label, remainingWhilePaused, "An explicit resume must continue the practice")
+        capture("focus-pause-resume-countdown")
+    }
+
+    func testLibraryFreeSearchEmptyResetAndStickyControls() {
+        app.buttons["listen.library"].tap()
+        let free = app.buttons["library.scope.free"]
+        XCTAssertTrue(free.waitForExistence(timeout: 4))
+        free.tap()
+        let beforeScroll = free.frame.minY
+        app.scrollViews["library.results"].swipeUp()
+        XCTAssertTrue(free.isHittable)
+        XCTAssertEqual(free.frame.minY, beforeScroll, accuracy: 1, "Library scopes must remain above the scrolling cards")
+        app.buttons["library.category.classical"].tap()
+        let search = app.textFields["library.search"]
+        search.tap()
+        search.typeText("debussy\n")
+        XCTAssertTrue(app.buttons["Switch to Clair de lune"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["Nocturne Op. 9 No. 2, Yixiu Plus"].exists)
+        capture("library-free-composer-search")
+        app.buttons["Clear search"].tap()
+        search.tap()
+        search.typeText("zzzz-no-match\n")
+        XCTAssertTrue(app.staticTexts["No matching sounds"].waitForExistence(timeout: 3))
+        app.buttons["library.reset"].tap()
+        XCTAssertTrue(app.buttons["Switch to Ocean Waves"].waitForExistence(timeout: 3))
+        capture("library-reset-fixed-controls")
+    }
+
     func testUsageConsentDefaultsOffPersistsAndCanBeWithdrawn() {
         // Run on a fresh, dedicated simulator. Simulator installs are excluded
         // by ProductAnalytics, so this never sends test activity to production.
