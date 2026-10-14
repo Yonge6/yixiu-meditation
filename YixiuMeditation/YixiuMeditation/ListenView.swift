@@ -806,6 +806,22 @@ struct SoundLibraryView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.72)
 
+                Spacer(minLength: 0)
+
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                        .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.7), lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(language.text(zh: "关闭声音库", en: "Close sound library"))
+                .accessibilityIdentifier("library.close")
+            }
+
+            HStack(spacing: 10) {
                 Button {
                     withAnimation(.easeInOut(duration: 0.18)) {
                         if searchOpen { searchQuery = "" }
@@ -824,22 +840,6 @@ struct SoundLibraryView: View {
                 .accessibilityLabel(language.text(zh: "搜索声音", en: "Search sounds"))
                 .accessibilityIdentifier("library.search.toggle")
 
-                Spacer(minLength: 0)
-
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 18, weight: .regular))
-                        .foregroundStyle(YixiuTheme.moon)
-                        .frame(width: 44, height: 44)
-                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
-                        .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.7), lineWidth: 1))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(language.text(zh: "关闭声音库", en: "Close sound library"))
-                .accessibilityIdentifier("library.close")
-            }
-
-            HStack(spacing: 10) {
                 Text(language.text(zh: "显示", en: "Show"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
