@@ -835,6 +835,7 @@ struct MeView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(language.text(zh: "返回", en: "Back"))
+                .accessibilityIdentifier("me.detail.back")
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("一休 · YIXIU")
@@ -865,7 +866,6 @@ struct MeView: View {
         }
         .frame(width: geometry.size.width, height: geometry.size.height)
         .clipped()
-        .ignoresSafeArea(edges: .top)
     }
 
     private var detailBackGesture: some Gesture {

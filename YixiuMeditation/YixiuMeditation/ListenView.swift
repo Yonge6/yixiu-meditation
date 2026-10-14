@@ -471,14 +471,14 @@ struct ListenView: View {
                 .frame(width: 40, height: 40)
                 .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 1) {
                 Text(language.text(zh: "一休冥想", en: "Yixiu Meditation"))
                     .font(language == .zh ? YixiuTheme.chineseDisplay(22) : YixiuTheme.englishSerif(20))
                     .foregroundStyle(YixiuTheme.moon)
                 Text(language.text(zh: "休息、睡眠与静心", en: "Rest, Sleep & Calm"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.moon.opacity(0.88))
-                    .offset(y: -2)
+                    .offset(y: -3)
             }
             .fixedSize(horizontal: false, vertical: true)
         }
