@@ -100,7 +100,7 @@ final class AudioUsageObserver {
 
     private func emit(_ name: String, _ extra: [String: Any] = [:]) {
         var context: [String: Any] = ["scene_id": scene.rawValue,
-            "content_category": scene.matches(.classical) ? "classical" : (scene.isMeditationMusic ? "meditation" : "nature"),
+            "content_category": scene.isAIOriginal ? "original" : (scene.matches(.classical) ? "classical" : (scene.isMeditationMusic ? "meditation" : "nature")),
             "access_level": SubscriptionAccessPolicy.freeScenes.contains(scene) ? "free" : "plus"]
         context.merge(extra) { _, new in new }
         ProductAnalytics.shared.event(name, context)

@@ -1,5 +1,22 @@
 import SwiftUI
 
+/// Evaluate the live, safe-area-constrained container rather than a device model
+/// or physical screen. AnyLayout keeps view identity and practice state intact
+/// while the window changes size. Large accessibility text stays in one column.
+enum YixiuAdaptiveLayout {
+    static func usesColumns(
+        size: CGSize,
+        horizontalSizeClass: UserInterfaceSizeClass?,
+        dynamicTypeSize: DynamicTypeSize,
+        minimumColumnWidth: CGFloat
+    ) -> Bool {
+        guard !dynamicTypeSize.isAccessibilitySize,
+              size.width >= minimumColumnWidth * 2 + 48 else { return false }
+        // Compact landscape still benefits from columns in a short window.
+        return horizontalSizeClass == .regular || size.height < 500
+    }
+}
+
 enum YixiuTheme {
     static let deepWater = Color(red: 3 / 255, green: 23 / 255, blue: 33 / 255)
     static let deepWaterSoft = Color(red: 9 / 255, green: 44 / 255, blue: 56 / 255)

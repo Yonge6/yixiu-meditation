@@ -17,6 +17,7 @@ enum AmbientAudioError: LocalizedError {
 
 final class AmbientAudioEngine {
     private var player: AVAudioPlayer?
+    private var playerScene: MeditationScene?
     private var usageObserver: AudioUsageObserver?
     private var endBellPlayer: AVAudioPlayer?
     private var fadingPlayer: AVAudioPlayer?
@@ -24,6 +25,7 @@ final class AmbientAudioEngine {
     private var notificationTokens: [NSObjectProtocol] = []
     private var remoteCommandTokens: [(command: MPRemoteCommand, token: Any)] = []
     private var artworkCache: [String: MPMediaItemArtwork] = [:]
+    private let resourceBundle: Bundle
 
     var onShouldPause: (() -> Void)?
     var onPlay: (() -> Void)?
@@ -31,7 +33,8 @@ final class AmbientAudioEngine {
     var onNext: (() -> Void)?
     var onPrevious: (() -> Void)?
 
-    init() {
+    init(resourceBundle: Bundle = .main) {
+        self.resourceBundle = resourceBundle
         let center = NotificationCenter.default
 
         notificationTokens.append(
@@ -80,7 +83,19 @@ final class AmbientAudioEngine {
         try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
         try session.setActive(true)
 
-        guard let url = Bundle.main.url(
+        // A pause keeps the player and its media position. Only a different
+        // scene creates a new player; resuming music must not start it over.
+        if let player, playerScene == scene {
+            player.volume = max(0, min(volume, 1))
+            guard player.play() else { throw AmbientAudioError.playbackFailed(scene.audioResource) }
+            playbackSucceeded = true
+            if usageObserver == nil {
+                usageObserver = ProductAnalytics.shared.observe(player, scene: scene)
+            }
+            return
+        }
+
+        guard let url = resourceBundle.url(
             forResource: scene.audioResource,
             withExtension: "m4a",
             subdirectory: scene.audioSubdirectory
@@ -94,7 +109,7 @@ final class AmbientAudioEngine {
         nextPlayer.rate = scene.playbackRate
         let targetVolume = max(0, min(volume, 1))
         let previousPlayer = player
-        nextPlayer.volume = previousPlayer == nil ? targetVolume : 0
+        nextPlayer.volume = previousPlayer?.isPlaying == true ? 0 : targetVolume
         nextPlayer.prepareToPlay()
 
         guard nextPlayer.play() else {
@@ -108,8 +123,13 @@ final class AmbientAudioEngine {
         fadingPlayer?.stop()
         fadingPlayer = previousPlayer
         player = nextPlayer
+        playerScene = scene
 
-        guard let previousPlayer else { return }
+        guard let previousPlayer, previousPlayer.isPlaying else {
+            previousPlayer?.stop()
+            fadingPlayer = nil
+            return
+        }
 
         previousPlayer.setVolume(0, fadeDuration: 0.6)
         nextPlayer.setVolume(targetVolume, fadeDuration: 0.6)
@@ -132,7 +152,7 @@ final class AmbientAudioEngine {
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
         try session.setActive(true)
-        guard let url = Bundle.main.url(forResource: "end-bell", withExtension: "wav", subdirectory: "Audio") else {
+        guard let url = resourceBundle.url(forResource: "end-bell", withExtension: "wav", subdirectory: "Audio") else {
             throw AmbientAudioError.missingResource("end-bell")
         }
         let cue = try AVAudioPlayer(contentsOf: url)
@@ -152,14 +172,35 @@ final class AmbientAudioEngine {
         endBellPlayer = nil
     }
 
+    func pause() {
+        // Flush the observer while the player is still advancing so the final
+        // partial interval is measured. Resumption creates a fresh baseline.
+        usageObserver?.stop(reason: "pause")
+        usageObserver = nil
+        fadeGeneration += 1
+        player?.pause()
+        fadingPlayer?.stop()
+        fadingPlayer = nil
+    }
+
     func stop() {
-        usageObserver?.stop(reason: "pause_or_end")
+        usageObserver?.stop(reason: "stop")
         usageObserver = nil
         fadeGeneration += 1
         player?.stop()
         fadingPlayer?.stop()
         player = nil
+        playerScene = nil
         fadingPlayer = nil
+    }
+
+    func clearNowPlaying() {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        let center = MPRemoteCommandCenter.shared()
+        center.playCommand.isEnabled = false
+        center.pauseCommand.isEnabled = false
+        center.previousTrackCommand.isEnabled = false
+        center.nextTrackCommand.isEnabled = false
     }
 
     func updateNowPlaying(

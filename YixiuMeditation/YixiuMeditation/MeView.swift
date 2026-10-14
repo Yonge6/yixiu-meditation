@@ -142,7 +142,7 @@ struct MeView: View {
 
                 aboutCard
 
-                sectionLabel(language.text(zh: "沿途所作", en: "WORKS ALONG THE WAY"))
+                sectionLabel(language.text(zh: "生活方式", en: "LIFESTYLE"))
                     .padding(.top, 24)
 
                 worksCard
@@ -182,7 +182,7 @@ struct MeView: View {
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 14 种自然声 + 30 首音乐（含 20 首古典）", en: "Now listening · 14 nature sounds + 30 music tracks (including 20 classical works)"))
+                Text(language.text(zh: "正在聆听 · 14 种自然声 + 40 首音乐（20 首古典、10 首 AI 原创）", en: "Now listening · 14 nature sounds + 40 music tracks (20 classical and 10 AI originals)"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
@@ -372,17 +372,17 @@ struct MeView: View {
     private var membershipSubtitle: String {
         if subscriptionStore.isInternalPlusExperience {
             return language.text(
-                zh: "内部体验版 · 全部 44 种声音已解锁",
-                en: "Internal preview · All 44 sounds unlocked"
+                zh: "内部体验版 · 全部 54 种声音已解锁",
+                en: "Internal preview · All 54 sounds unlocked"
             )
         }
         switch subscriptionStore.accessLevel {
         case .plus:
             return language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
         case .legacy:
-            return language.text(zh: "原有 14 种自然声继续保留，12 首音乐免费（含 10 首古典）", en: "Your 14 nature sounds remain, plus 12 free music tracks (10 classical)")
+            return language.text(zh: "原有 14 种自然声继续保留，17 首音乐免费（10 首古典、5 首 AI 原创）", en: "Your 14 nature sounds remain, plus 17 free music tracks (10 classical, 5 AI originals)")
         case .free:
-            return language.text(zh: "10 种自然声 + 12 首音乐免费（含 10 首古典）", en: "10 nature sounds + 12 music tracks are free (10 classical)")
+            return language.text(zh: "10 种自然声 + 17 首音乐免费（10 首古典、5 首 AI 原创）", en: "10 nature sounds + 17 music tracks are free (10 classical, 5 AI originals)")
         }
     }
 
@@ -835,6 +835,7 @@ struct MeView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(language.text(zh: "返回", en: "Back"))
+                .accessibilityIdentifier("me.detail.back")
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("一休 · YIXIU")
@@ -865,7 +866,6 @@ struct MeView: View {
         }
         .frame(width: geometry.size.width, height: geometry.size.height)
         .clipped()
-        .ignoresSafeArea(edges: .top)
     }
 
     private var detailBackGesture: some Gesture {
@@ -978,6 +978,17 @@ struct MeView: View {
                 }
                 Link(destination: URL(string: "https://yixiu.wonderelian.com/music-credits.html")!) {
                     actionLinkLabel(language.text(zh: "原曲与可下载音频", en: "Original tracks & audio downloads"), icon: "arrow.down.circle")
+                }
+
+                Text(language.text(
+                    zh: "AI 原创 · 一休《十段安静》：10 首新作，由 Gemini / Lyria 辅助生成，并做音量调整与柔和淡入淡出。一休创作 · AI 辅助生成，5 首免费、5 首需要 Plus；每首配有独立 AI 风景图。",
+                    en: "AI Originals · Ten Quiet Moments: ten tracks created for Yixiu with Gemini / Lyria, with level adjustment and gentle fades. Created for Yixiu · AI-assisted music. Five are Free and five require Plus, each with its own AI-generated landscape."
+                ))
+                .font(YixiuTheme.sans(14))
+                .lineSpacing(7)
+                .foregroundStyle(YixiuTheme.mist)
+                Link(destination: URL(string: "https://yixiu.wonderelian.com/music-credits.html#ai-originals")!) {
+                    actionLinkLabel(language.text(zh: "AI 原创 · 曲目与创作来源", en: "AI Originals · Track list & creation sources"), icon: "music.note.list")
                 }
 
                 Link(destination: URL(string: "https://mixkit.co/license/")!) {

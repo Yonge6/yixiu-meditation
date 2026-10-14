@@ -47,9 +47,10 @@ struct YixiuMeditationApp: App {
                         try? await QuietMinuteActivityManager.start()
                     }
 #endif
-                    appState.enforceAccessLevel(subscriptionStore.accessLevel)
                     await subscriptionStore.start()
-                    appState.enforceAccessLevel(subscriptionStore.accessLevel)
+                    if subscriptionStore.isReady {
+                        appState.enforceAccessLevel(subscriptionStore.accessLevel)
+                    }
                     await dailyReminder.refresh(languageCode: appState.language.rawValue)
                 }
                 .onChange(of: subscriptionStore.accessLevel) { _, level in
@@ -63,6 +64,8 @@ struct YixiuMeditationApp: App {
                     if phase == .active {
                         appState.reconcilePlayback()
                         Task { await dailyReminder.refresh(languageCode: appState.language.rawValue) }
+                    } else if phase == .background {
+                        appState.enteredBackground()
                     }
                 }
                 .onChange(of: route.pendingFocus) { _, _ in consumeReminderRoute() }

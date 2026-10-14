@@ -69,6 +69,14 @@ final class HomeInteractionUITests: XCTestCase {
         drag(CGVector(dx: 0.2, dy: 0.3), CGVector(dx: 0.8, dy: 0.3))
         expectScene("Ocean Waves")
         drag(CGVector(dx: 0.5, dy: 0.4), CGVector(dx: 0.5, dy: 0.2))
+        if app.scrollViews["listen.scrollFallback"].exists {
+            // Short windows reserve vertical swipes for scrolling; the library
+            // remains reachable through its explicit button.
+            let library = app.buttons["listen.library"]
+            for _ in 0..<6 where !library.isHittable { app.swipeUp() }
+            XCTAssertTrue(library.isHittable)
+            library.tap()
+        }
         XCTAssertTrue(app.staticTexts["Sound Library"].waitForExistence(timeout: 3))
         capture("swipe-up-library")
     }
@@ -101,11 +109,25 @@ final class HomeInteractionUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Sound Library"].waitForExistence(timeout: 3))
     }
 
-    func testSwipeIntoPremiumSceneShowsPaywall() {
-        for name in ["RAIN ON EAVES", "SPRING CREEK", "MORNING BIRDS", "MOUNTAIN STREAM"] {
-            drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
-            expectScene(name)
+    func testPlaybackSurvivesWindowOrientationChanges() {
+        app.buttons["Play"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5))
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait, .landscapeRight, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            expectScene("Ocean Waves")
+            XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5),
+                          "Resizing must preserve active playback")
         }
+        capture("playback-after-resizing")
+    }
+
+    func testSwipeIntoPremiumSceneShowsPaywall() {
+        // Mozart Andante is the last free scene in the free-first home order.
+        // The next scene (Forest Falls) must remain behind the entitlement gate.
+        app.terminate()
+        app.launchArguments = ["-language", "en", "-scene", "mozartAndante", "-volume", "0.72"]
+        app.launch()
+        XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
         drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
         XCTAssertTrue(app.staticTexts["YIXIU PLUS"].waitForExistence(timeout: 3))
         capture("premium-swipe-entitlement-preserved")
@@ -156,6 +178,56 @@ final class HomeInteractionUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Play"].exists)
     }
 
+    func testFocusPauseFreezesCountdownAndResumes() {
+        selectTab("Focus")
+        let start = app.buttons["focus.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 15))
+        start.tap()
+        let countdown = app.staticTexts["focus-countdown"]
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 3))
+        sleep(3)
+        pause.tap()
+        let remainingWhilePaused = countdown.label
+        sleep(2)
+        XCTAssertEqual(countdown.label, remainingWhilePaused, "A paused practice must not keep counting")
+        let resume = app.buttons["Continue"]
+        XCTAssertTrue(resume.exists)
+        resume.tap()
+        sleep(2)
+        XCTAssertNotEqual(countdown.label, remainingWhilePaused, "An explicit resume must continue the practice")
+        capture("focus-pause-resume-countdown")
+    }
+
+    func testLibraryFreeSearchEmptyResetAndStickyControls() {
+        app.buttons["listen.library"].tap()
+        let scopeMenu = app.buttons["library.scope.menu"]
+        XCTAssertTrue(scopeMenu.waitForExistence(timeout: 4))
+        scopeMenu.tap()
+        let free = app.buttons["Free"]
+        XCTAssertTrue(free.waitForExistence(timeout: 2))
+        free.tap()
+        let beforeScroll = scopeMenu.frame.minY
+        app.scrollViews["library.results"].swipeUp()
+        XCTAssertTrue(scopeMenu.isHittable)
+        XCTAssertEqual(scopeMenu.frame.minY, beforeScroll, accuracy: 1, "Library scopes must remain above the scrolling cards")
+        app.buttons["library.category.classical"].tap()
+        app.buttons["library.search.toggle"].tap()
+        let search = app.textFields["library.search"]
+        search.tap()
+        search.typeText("debussy\n")
+        XCTAssertTrue(app.buttons["Switch to Clair de lune"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["Nocturne Op. 9 No. 2, Yixiu Plus"].exists)
+        capture("library-free-composer-search")
+        app.buttons["Clear search"].tap()
+        search.tap()
+        search.typeText("zzzz-no-match\n")
+        XCTAssertTrue(app.staticTexts["No matching sounds"].waitForExistence(timeout: 3))
+        app.buttons["library.reset"].tap()
+        XCTAssertTrue(app.buttons["Switch to Ocean Waves"].waitForExistence(timeout: 3))
+        capture("library-reset-fixed-controls")
+    }
+
     func testUsageConsentDefaultsOffPersistsAndCanBeWithdrawn() {
         // Run on a fresh, dedicated simulator. Simulator installs are excluded
         // by ProductAnalytics, so this never sends test activity to production.
@@ -184,7 +256,7 @@ final class HomeInteractionUITests: XCTestCase {
     }
 
     func testExplicitReviewButtonOpensExternalStoreOrShowsFailure() {
-        app.tabBars.buttons["Me"].tap()
+        selectTab("Me")
         let rate = app.buttons["me.writeReview"]
         for _ in 0..<20 where !rate.isHittable { app.swipeUp() }
         XCTAssertTrue(rate.isHittable)

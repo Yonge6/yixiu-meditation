@@ -24,7 +24,8 @@ enum SubscriptionAccessPolicy {
     static let legacyCutoffVersion = "1.2"
     static let freeNatureScenes: Set<MeditationScene> = [.ocean, .rain, .spring, .birds, .stream, .lake, .valley, .bamboo, .window, .tide]
     static let freeClassicalScenes: Set<MeditationScene> = [.clairDeLune, .gymnopedie, .canon, .moonlightSonata, .preludeC, .traumerei, .raindrop, .waltzAMinor, .gnossienne, .mozartAndante]
-    static let freeMeditationScenes: Set<MeditationScene> = Set([.oasisRest, .firstBreath]).union(freeClassicalScenes)
+    static let freeOriginalScenes: Set<MeditationScene> = [.moonAnchorage, .rainLantern, .blueQuiet, .snowfallSilence, .bedsideGlow]
+    static let freeMeditationScenes: Set<MeditationScene> = Set([.oasisRest, .firstBreath]).union(freeClassicalScenes).union(freeOriginalScenes)
     static let freeScenes = freeNatureScenes.union(freeMeditationScenes)
 
     static func isLegacyPurchase(originalAppVersion: String) -> Bool {
