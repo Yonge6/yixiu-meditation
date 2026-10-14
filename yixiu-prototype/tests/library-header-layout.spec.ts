@@ -10,16 +10,17 @@ for (const width of [320, 390]) {
 
       const library = page.getByRole("dialog", { name: language === "zh" ? "声音库" : "Sound library" });
       const title = await library.locator(".library-title-row").boundingBox();
-      const filter = await library.locator(".library-filter-row").boundingBox();
       const search = await library.getByRole("button", { name: language === "zh" ? "搜索声音" : "Search sounds" }).boundingBox();
+      const scope = await library.getByRole("combobox", { name: language === "zh" ? "聆听筛选" : "Listening filter" }).boundingBox();
       const categories = await library.locator(".scene-category-tabs").boundingBox();
       expect(title).not.toBeNull();
-      expect(filter).not.toBeNull();
       expect(search).not.toBeNull();
+      expect(scope).not.toBeNull();
       expect(categories).not.toBeNull();
-      expect(filter!.y).toBeGreaterThanOrEqual(title!.y + title!.height + 8);
-      expect(Math.abs(search!.y + search!.height / 2 - (filter!.y + filter!.height / 2))).toBeLessThan(1);
-      expect(categories!.y).toBeGreaterThanOrEqual(filter!.y + filter!.height + 8);
+      expect(Math.abs(search!.y + search!.height / 2 - (title!.y + title!.height / 2))).toBeLessThan(1);
+      expect(Math.abs(scope!.y + scope!.height / 2 - (title!.y + title!.height / 2))).toBeLessThan(1);
+      expect(categories!.y).toBeGreaterThanOrEqual(title!.y + title!.height + 8);
+      await expect(library.getByText(language === "zh" ? "显示" : "Show", { exact: true })).toHaveCount(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
       await expect(library.getByRole("button", { name: language === "zh" ? "关闭声音库" : "Close sound library" })).toBeInViewport();
       if ((width === 390 && language === "zh") || (width === 320 && language === "en")) {

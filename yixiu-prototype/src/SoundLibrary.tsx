@@ -32,18 +32,15 @@ export function SoundLibrary<T extends Item, C extends string>(props: Props<T, C
     <header className="library-header">
       <div className="library-title-row">
         <h2>{zh ? "声音库" : "Sound Library"}</h2>
-        <span className="library-header-spacer" />
-        <button className="library-close-button" type="button" data-modal-initial aria-label={zh ? "关闭声音库" : "Close sound library"} onClick={props.onClose}><Cross2Icon /></button>
-      </div>
-      <div className="library-filter-row">
         <button className="library-tool-button" type="button" aria-label={zh ? "搜索声音" : "Search sounds"} aria-expanded={searchOpen} onClick={toggleSearch}><MagnifyingGlassIcon /></button>
-        <span className="library-filter-label">{zh ? "显示" : "Show"}</span>
         <label className="library-scope-select">
           <select aria-label={zh ? "聆听筛选" : "Listening filter"} value={scope} onChange={event => props.onScope(event.currentTarget.value as LibraryScope)}>
             {scopeValues.map((value, index) => <option key={value} value={value}>{labels[index]}</option>)}
           </select>
           <ChevronDownIcon aria-hidden="true" />
         </label>
+        <span className="library-header-spacer" />
+        <button className="library-close-button" type="button" data-modal-initial aria-label={zh ? "关闭声音库" : "Close sound library"} onClick={props.onClose}><Cross2Icon /></button>
       </div>
     </header>
     {searchOpen ? <div className="library-search">
