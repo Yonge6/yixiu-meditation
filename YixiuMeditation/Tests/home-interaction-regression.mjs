@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 const source = name => readFileSync(new URL(`../YixiuMeditation/${name}.swift`, import.meta.url), 'utf8');
 const listen = source('ListenView');
 const me = source('MeView');
+const contentView = source('ContentView');
 assert.match(listen, /ViewThatFits\(in: \.vertical\)/);
 assert.match(listen, /sceneCanvas\(width: size\.width, opensLibrary: !scrolls\)/);
 assert.match(listen, /playerPage\(geometry\.size, scrolls: true\)/);
@@ -15,14 +16,15 @@ assert.match(listen, /subscriptionStore\.canAccess\(target\)/);
 assert.doesNotMatch(me, /requestReview\(\)/);
 assert.match(me, /https:\/\/apps\.apple\.com\/app\/id1461182261\?action=write-review/);
 assert.match(me, /if !accepted \{ reviewOpenFailed = true \}/);
-assert.match(source('ContentView'), /requestReview\(\)/);
+assert.match(contentView, /requestReview\(\)/);
 console.log('PASS: home layout/gesture and explicit review-link guardrails');
 
 const focus = source('FocusView');
 assert.match(focus, /Image\(appState\.scene\.assetName\)/);
 assert.match(focus, /zh: appState\.scene\.zhName, en: appState\.scene\.enName/);
-assert.match(focus, /geometry\.size\.height - bottomTabBarClearance\(in: geometry\)/);
-assert.match(me, /private func bottomTabBarClearance\(in geometry: GeometryProxy\)/);
+assert.match(contentView, /UITabBarController/);
+assert.match(contentView, /controller\.setViewControllers\(tabs\.map\(hostingController\(for:\)\), animated: false\)/);
+assert.doesNotMatch(contentView, /tabBarMinimizeBehavior/);
 assert.doesNotMatch(focus, /Image\("MorningLake"\)|Water Breathing|selectScene\(\.stream/);
 // Session ownership is shared with interruptions and lock-screen controls now.
 const appState = source('AppState');

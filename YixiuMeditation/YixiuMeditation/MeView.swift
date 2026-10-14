@@ -158,11 +158,7 @@ struct MeView: View {
             .frame(width: max(min(geometry.size.width - 36, 680), 0))
             .padding(.horizontal, 18)
         }
-        .frame(
-            width: geometry.size.width,
-            height: max(0, geometry.size.height - bottomTabBarClearance(in: geometry)),
-            alignment: .top
-        )
+        .frame(width: geometry.size.width)
         .clipped()
     }
 
@@ -868,16 +864,8 @@ struct MeView: View {
             .frame(width: geometry.size.width)
             .clipped()
         }
-        .frame(
-            width: geometry.size.width,
-            height: max(0, geometry.size.height - bottomTabBarClearance(in: geometry)),
-            alignment: .top
-        )
+        .frame(width: geometry.size.width, height: geometry.size.height)
         .clipped()
-    }
-
-    private func bottomTabBarClearance(in geometry: GeometryProxy) -> CGFloat {
-        max(96, 112 - geometry.safeAreaInsets.bottom)
     }
 
     private var detailBackGesture: some Gesture {

@@ -129,11 +129,7 @@ struct FocusView: View {
                 .frame(maxWidth: .infinity)
                 }
             }
-            .frame(
-                width: geometry.size.width,
-                height: max(0, geometry.size.height - bottomTabBarClearance(in: geometry)),
-                alignment: .top
-            )
+            .frame(width: geometry.size.width, height: geometry.size.height)
             .clipped()
         }
         .background {
@@ -159,10 +155,6 @@ struct FocusView: View {
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
         }
-    }
-
-    private func bottomTabBarClearance(in geometry: GeometryProxy) -> CGFloat {
-        max(96, 112 - geometry.safeAreaInsets.bottom)
     }
 
     private func focusLayout(_ size: CGSize) -> AnyLayout {
