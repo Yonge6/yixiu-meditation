@@ -3,11 +3,12 @@ import Foundation
 @main
 enum SubscriptionAccessPolicySmoke {
     static func main() {
-        precondition(MeditationScene.availableScenes.count == 44)
-        precondition(MeditationScene.availableScenes.filter(\.isMeditationMusic).count == 30)
+        precondition(MeditationScene.availableScenes.count == 54)
+        precondition(MeditationScene.availableScenes.filter(\.isMeditationMusic).count == 40)
         precondition(SubscriptionAccessPolicy.freeNatureScenes.count == 10)
-        precondition(SubscriptionAccessPolicy.freeMeditationScenes.count == 12)
-        precondition(SubscriptionAccessPolicy.freeScenes.count == 22)
+        precondition(SubscriptionAccessPolicy.freeMeditationScenes.count == 17)
+        precondition(SubscriptionAccessPolicy.freeScenes.count == 27)
+        precondition(SubscriptionAccessPolicy.freeOriginalScenes.count == 5)
 
         for scene in MeditationScene.availableScenes {
             let freeExpected = SubscriptionAccessPolicy.freeScenes.contains(scene)
@@ -28,6 +29,6 @@ enum SubscriptionAccessPolicySmoke {
             precondition(SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: .legacy))
             precondition(SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: .plus))
         }
-        print("Subscription access policy smoke passed: 44 sounds and free/legacy/Plus focus and timer matrix.")
+        print("Subscription access policy smoke passed: 54 sounds and free/legacy/Plus focus and timer matrix.")
     }
 }

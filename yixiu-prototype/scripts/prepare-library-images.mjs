@@ -10,6 +10,9 @@ const paths = new Set([...source.matchAll(/image:\s*"\/assets\/yixiu\/([^"\n]+\.
 const classicalSource = await readFile(path.join(root, "src/data/classical-music.ts"), "utf8");
 const classical = JSON.parse(classicalSource.match(/export const classicalMusic = (\[[\s\S]*\]) as const;/)[1]);
 for (const track of classical) paths.add(`classical/${track.art ?? track.slug}.jpg`);
+const originalSource = await readFile(path.join(root, "src/data/original-music.ts"), "utf8");
+const originals = JSON.parse(originalSource.match(/export const originalMusic = (\[[\s\S]*\]) as const;/)[1]);
+for (const track of originals) paths.add(`original/${track.slug}.jpg`);
 let before = 0;
 let after = 0;
 for (const relative of paths) {

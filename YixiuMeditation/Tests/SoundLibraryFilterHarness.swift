@@ -17,6 +17,10 @@ struct SoundLibraryFilterHarness {
         precondition(Set(scenes(scope: .free)) == SubscriptionAccessPolicy.freeScenes, "Free scope must reflect catalog policy, not member entitlement")
         precondition(Set(scenes(scope: .free, category: .classical)) == SubscriptionAccessPolicy.freeClassicalScenes,
                      "Free and category must intersect")
+        precondition(scenes(category: .original).count == 10)
+        precondition(Set(scenes(scope: .free, category: .original)) == SubscriptionAccessPolicy.freeOriginalScenes)
+        precondition(scenes(category: .original, query: "月泊") == [.moonAnchorage])
+        precondition(scenes(category: .original, query: "Bamboo") == [.bambooStillness])
         precondition(scenes(scope: .free, category: .classical, query: "Chopin") == [.raindrop, .waltzAMinor],
                      "Search, free scope and classical category must compose")
         precondition(scenes(scope: .favorites, favorites: [.rain, .clairDeLune, .rain, .quietOrbit]) == [.rain, .clairDeLune],

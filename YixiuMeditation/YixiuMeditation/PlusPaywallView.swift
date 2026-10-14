@@ -111,7 +111,7 @@ struct PlusPaywallView: View {
 
     private var benefits: some View {
         VStack(spacing: 0) {
-            benefit("waveform", zh: "全部 14 种自然声与 30 首音乐（含 20 首古典）", en: "All 14 nature sounds and 30 music tracks (including 20 classical works)")
+            benefit("waveform", zh: "全部 14 种自然声与 40 首音乐（20 首古典、10 首 AI 原创）", en: "All 14 nature sounds and 40 music tracks (20 classical and 10 AI originals)")
             Divider().overlay(YixiuTheme.hairline)
             benefit("timer", zh: "60 分钟与不限时聆听", en: "60-minute and unlimited listening")
             Divider().overlay(YixiuTheme.hairline)
@@ -339,8 +339,8 @@ struct PlusPaywallView: View {
 
     private var legacyNote: some View {
         Text(language.text(
-            zh: "已拥有一休 1.2 或更早版本的用户，原有 14 种自然声与功能继续保留；绿洲停歇、初息及 10 首古典名曲免费，其余音乐属于 Plus。",
-            en: "If you owned Yixiu 1.2 or earlier, all 14 original nature sounds remain yours. Oasis Rest, First Breath and 10 classical works are free; the other music tracks require Plus."
+            zh: "已拥有一休 1.2 或更早版本的用户，原有 14 种自然声与功能继续保留；绿洲停歇、初息、10 首古典名曲及 5 首 AI 原创免费，其余音乐属于 Plus。",
+            en: "If you owned Yixiu 1.2 or earlier, all 14 original nature sounds remain yours. Oasis Rest, First Breath, 10 classical works and 5 AI originals are free; the other music tracks require Plus."
         ))
         .font(YixiuTheme.sans(11))
         .foregroundStyle(YixiuTheme.mist.opacity(0.78))
