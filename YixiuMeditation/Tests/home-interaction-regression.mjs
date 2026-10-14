@@ -21,6 +21,8 @@ console.log('PASS: home layout/gesture and explicit review-link guardrails');
 const focus = source('FocusView');
 assert.match(focus, /Image\(appState\.scene\.assetName\)/);
 assert.match(focus, /zh: appState\.scene\.zhName, en: appState\.scene\.enName/);
+assert.match(focus, /geometry\.size\.height - bottomTabBarClearance\(in: geometry\)/);
+assert.match(me, /private func bottomTabBarClearance\(in geometry: GeometryProxy\)/);
 assert.doesNotMatch(focus, /Image\("MorningLake"\)|Water Breathing|selectScene\(\.stream/);
 // Session ownership is shared with interruptions and lock-screen controls now.
 const appState = source('AppState');

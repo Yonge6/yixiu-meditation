@@ -1360,19 +1360,10 @@ img[data-image-scene="tide"] {
 }
 
 .bottom-nav .nav-label {
-  margin-top: 3px;
+  margin-top: 5px;
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
-}
-
-.bottom-nav small {
-  margin-top: 3px;
-  color: inherit;
-  font-family: var(--serif);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
 .section-kicker {

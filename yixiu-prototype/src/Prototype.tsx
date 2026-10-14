@@ -2016,7 +2016,7 @@ export default function Prototype() {
                   <button type="button" onClick={() => openMeDetail("support")}><span><strong>{language === "zh" ? "联系与反馈" : "Contact and feedback"}</strong><small>{language === "zh" ? "邮箱与社交媒体" : "Email and social channels"}</small></span><ChevronRightIcon /></button>
                 </section>
 
-                <p className="me-group-label">{language === "zh" ? "沿途所作" : "WORKS ALONG THE WAY"}</p>
+                <p className="me-group-label">{language === "zh" ? "生活方式" : "LIFESTYLE"}</p>
                 <section className="me-works">
                   <a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "一" : "01"}</b><span><strong>WonderElian</strong><em>{language === "zh" ? "让复杂的想法变得清晰、好看而有人情味" : "Make complex ideas clear, beautiful, and human"}</em><small>{language === "zh" ? "WonderElian 是永歌 Elian 的个人创作空间。这里记录作品，也记录关于设计、AI、产品，以及如何慢慢成为自己的思考与探索。" : "An independent creative world from Wuhan, connecting visual culture, wellbeing, and real life through design, AI, and digital products."}</small></span><ExternalLinkIcon /></a>
                   <a href="https://xiazishuo.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "二" : "02"}</b><span><strong>{language === "zh" ? "虾子曰" : "Xiazi Says"}</strong><em>{language === "zh" ? "昨日世界" : "Yesterday's World"}</em><small>{language === "zh" ? "每天用全球热点与双语海报，看清复杂世界。" : "Global stories and bilingual posters make the world easier to see."}</small></span><ExternalLinkIcon /></a>
@@ -2085,9 +2085,9 @@ export default function Prototype() {
       ) : null}
 
       <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
-        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="sounds" onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><span className="nav-icon"><WaterWavesIcon /></span><span className="nav-label">{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
-        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="focus" onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-icon"><span className="nav-focus-orbit" /></span><span className="nav-label">{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
-        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="me" onClick={() => { setActiveTab("me"); setMeView("home"); }}><span className="nav-icon"><PersonIcon /></span><span className="nav-label">{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
+        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="sounds" onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><span className="nav-icon"><WaterWavesIcon /></span><span className="nav-label">{language === "zh" ? "声音" : "Sounds"}</span></button>
+        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="focus" onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-icon"><span className="nav-focus-orbit" /></span><span className="nav-label">{language === "zh" ? "静心" : "Focus"}</span></button>
+        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="me" onClick={() => { setActiveTab("me"); setMeView("home"); }}><span className="nav-icon"><PersonIcon /></span><span className="nav-label">{language === "zh" ? "我的" : "Me"}</span></button>
       </nav>
 
       {libraryOpen ? (
