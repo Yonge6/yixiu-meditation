@@ -1913,7 +1913,7 @@ export default function Prototype() {
                   <div className="me-sound-space-copy">
                     <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
                     <strong>{language === "zh" ? active.zh : active.en}</strong>
-                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 40 首音乐（20 首古典、10 首 AI 原创）" : "Now listening · 14 nature sounds + 40 music tracks (20 classical and 10 AI originals)"}</span>
+                    <span>{language === "zh" ? "留一点时间，听见自己的节奏。" : "A little space to listen, and return to yourself."}</span>
                     <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
                   </div>
                 </section>
