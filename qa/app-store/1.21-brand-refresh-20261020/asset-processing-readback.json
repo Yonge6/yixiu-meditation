@@ -1,0 +1,194 @@
+[
+  {
+    "id": "c3800005-717d-8f35-801d-aa4291db376c",
+    "name": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "a3000005-717d-8f35-8021-fab732a4ba7f",
+    "name": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "49800005-717d-8f35-8034-5863f743d2c5",
+    "name": "yixiu-121-brand-20261020-duo-zh-03-original.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "ca000005-717d-8f35-8026-e3a64cac1cc8",
+    "name": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "cdc00005-717d-8f35-800d-718d8d9199a6",
+    "name": "yixiu-121-brand-20261020-duo-zh-05-original-library.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "b2400005-717d-8f35-800b-d4f8ef1188d1",
+    "name": "yixiu-121-brand-20261020-duo-zh-06-library.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "0b400005-717d-8f35-802b-f2eb54b1d52b",
+    "name": "yixiu-121-brand-20261020-duo-en-01-nature.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "61000005-717d-8f35-8035-574e1d9d87f4",
+    "name": "yixiu-121-brand-20261020-duo-en-02-focus.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "f2c00005-717d-8f35-8029-1de8ac0c6aff",
+    "name": "yixiu-121-brand-20261020-duo-en-03-original.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "e0c00005-717d-8f35-800a-ceff2723b2a8",
+    "name": "yixiu-121-brand-20261020-duo-en-04-classical.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "90400005-717d-8f35-801b-15284f1d8851",
+    "name": "yixiu-121-brand-20261020-duo-en-05-original-library.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "87800005-717d-8f35-802c-dd1b2731f559",
+    "name": "yixiu-121-brand-20261020-duo-en-06-library.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 1398,
+    "height": 2034
+  },
+  {
+    "id": "e2800005-717d-8f35-8034-3f3ab9595720",
+    "name": "yixiu-121-brand-20261020-ipad-zh-01-nature.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 2064,
+    "height": 2752
+  },
+  {
+    "id": "4e800005-717d-8f35-803b-38b498af25a6",
+    "name": "yixiu-121-brand-20261020-ipad-zh-02-focus.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 2064,
+    "height": 2752
+  },
+  {
+    "id": "00400005-717d-8f35-8000-b1996ccaee04",
+    "name": "yixiu-121-brand-20261020-ipad-zh-04-classical.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 2064,
+    "height": 2752
+  },
+  {
+    "id": "42800005-717d-8f35-8000-9bf890353609",
+    "name": "yixiu-121-brand-20261020-ipad-en-01-nature.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 2064,
+    "height": 2752
+  },
+  {
+    "id": "96c00005-717d-8f35-8023-fa98b3cfc63a",
+    "name": "yixiu-121-brand-20261020-ipad-en-02-focus.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 2064,
+    "height": 2752
+  },
+  {
+    "id": "13000005-717d-8f35-8004-7a7da171a753",
+    "name": "yixiu-121-brand-20261020-ipad-en-04-classical.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 2064,
+    "height": 2752
+  },
+  {
+    "id": "73000005-717d-8f35-801c-8943fd000511",
+    "name": "yixiu-121-brand-20261020-watch-zh-01-smart-stack.png",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 416,
+    "height": 496
+  },
+  {
+    "id": "53000005-717d-8f35-803e-287ef7e20e27",
+    "name": "yixiu-121-brand-20261020-watch-en-01-smart-stack.png",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 416,
+    "height": 496
+  },
+  {
+    "id": "84400005-717d-8f35-801e-dd7c7e4d5001",
+    "name": "yixiu-121-brand-20261020-header-zh.png",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 3840,
+    "height": 1646
+  },
+  {
+    "id": "ac800005-717d-8f35-802a-f0a3427d1986",
+    "name": "yixiu-121-brand-20261020-search-zh.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 3840,
+    "height": 2560
+  },
+  {
+    "id": "a9000005-717d-8f35-8027-ad8ccdf3f318",
+    "name": "yixiu-121-brand-20261020-header-en.png",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 3840,
+    "height": 1646
+  },
+  {
+    "id": "85400005-717d-8f35-8033-472c13764d12",
+    "name": "yixiu-121-brand-20261020-search-en.jpg",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "stateDetails": null,
+    "width": 3840,
+    "height": 2560
+  }
+]

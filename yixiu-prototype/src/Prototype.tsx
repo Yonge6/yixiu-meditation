@@ -2110,9 +2110,13 @@ export default function Prototype() {
                 </section>
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
-                <section className="me-card">
-                  <label className="setting-row"><span><strong>{language === "zh" ? "帮助改进一休" : "Help improve Yixiu"}</strong><small>{language === "zh" ? "自愿分享播放时长、声音选择与功能使用统计；不含姓名、录音或练习手记。可随时关闭。" : "Optionally share listening duration, sound choices and feature use. No names, recordings or journal history. Turn off anytime."}</small></span><input type="checkbox" aria-label={language === "zh" ? "分享使用统计" : "Share usage analytics"} checked={usageAnalytics} onChange={event => chooseAnalytics(event.target.checked)} /></label>
-                  <a href="/privacy.html">{language === "zh" ? "了解数据与隐私" : "Data and privacy"}</a>
+                <section className="me-card analytics-preference">
+                  <div className="analytics-preference-heading">
+                    <strong id="analytics-preference-title">{language === "zh" ? "帮助改进一休" : "Help improve Yixiu"}</strong>
+                    <button className={`analytics-switch ${usageAnalytics ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "分享使用统计" : "Share usage analytics"} aria-describedby="analytics-preference-description" aria-checked={usageAnalytics} onClick={() => chooseAnalytics(!usageAnalytics)}><span aria-hidden="true" /></button>
+                  </div>
+                  <p id="analytics-preference-description">{language === "zh" ? "自愿分享播放时长、声音选择与功能使用统计；不含姓名、录音或练习手记。可随时关闭。" : "Optionally share listening duration, sound choices and feature use. No names, recordings or journal history. Turn off anytime."}</p>
+                  <a className="analytics-privacy-link" href="/privacy.html"><span>{language === "zh" ? "了解数据与隐私" : "Data and privacy"}</span><ChevronRightIcon /></a>
                 </section>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
                   <button type="button" onClick={() => openMeDetail("about")}><span><strong>{language === "zh" ? "关于我们" : "About Us"}</strong><small>{language === "zh" ? "一休是谁，我们相信什么" : "Who we are and what we believe"}</small></span><ChevronRightIcon /></button>

@@ -362,4 +362,21 @@ final class HomeInteractionUITests: XCTestCase {
                       || store.state == .runningForeground
                       || app.alerts["Could not open the App Store"].exists)
     }
+
+    func testBrandBreathingStoreCapture() {
+        for language in ["zh", "en"] {
+            app.terminate()
+            app.launchArguments = ["-language", language, "-scene", "rain", "-volume", "0.72", "-YixiuForceFreeAccess"]
+            app.launch()
+            XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+            selectTab(language == "zh" ? "静心" : "Focus")
+            let start = app.buttons["focus.start"]
+            XCTAssertTrue(start.waitForExistence(timeout: 5))
+            // A mid-scroll capture keeps the real primary action fully visible,
+            // rather than presenting a partially clipped button in store art.
+            drag(CGVector(dx: 0.65, dy: 0.72), CGVector(dx: 0.65, dy: 0.53))
+            XCTAssertTrue(start.isHittable)
+            capture("storebrand-\(language)-focus")
+        }
+    }
 }

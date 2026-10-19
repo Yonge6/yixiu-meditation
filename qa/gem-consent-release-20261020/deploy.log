@@ -1,0 +1,69 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  1  395M    1 6752k    0     0  9001k      0  0:00:45 --:--:--  0:00:45 8990k  2  395M    2 10.3M    0     0  6600k      0  0:01:01  0:00:01  0:01:00 6598k  4  395M    4 16.5M    0     0  6637k      0  0:01:01  0:00:02  0:00:59 6635k  5  395M    5 21.4M    0     0  6393k      0  0:01:03  0:00:03  0:01:00 6392k  6  395M    6 26.0M    0     0  6012k      0  0:01:07  0:00:04  0:01:03 6011k  7  395M    7 30.7M    0     0  5804k      0  0:01:09  0:00:05  0:01:04 5292k  9  395M    9 36.4M    0     0  5809k      0  0:01:09  0:00:06  0:01:03 5545k 10  395M   10 41.7M    0     0  5753k      0  0:01:10  0:00:07  0:01:03 5289k 11  395M   11 46.5M    0     0  5643k      0  0:01:11  0:00:08  0:01:03 5129k 12  395M   12 50.1M    0     0  5442k      0  0:01:14  0:00:09  0:01:05 4934k 13  395M   13 53.5M    0     0  5252k      0  0:01:17  0:00:10  0:01:07 4653k 14  395M   14 56.7M    0     0  5087k      0  0:01:19  0:00:11  0:01:08 4159k 15  395M   15 60.6M    0     0  4998k      0  0:01:21  0:00:12  0:01:09 3878k 16  395M   16 65.5M    0     0  4994k      0  0:01:21  0:00:13  0:01:08 3898k 17  395M   17 70.2M    0     0  4986k      0  0:01:21  0:00:14  0:01:07 4124k 18  395M   18 74.4M    0     0  4938k      0  0:01:22  0:00:15  0:01:07 4281k 19  395M   19 77.6M    0     0  4840k      0  0:01:23  0:00:16  0:01:07 4275k 20  395M   20 82.5M    0     0  4828k      0  0:01:23  0:00:17  0:01:06 4412k 21  395M   21 86.6M    0     0  4816k      0  0:01:24  0:00:18  0:01:06 4339k 22  395M   22 90.6M    0     0  4775k      0  0:01:24  0:00:19  0:01:05 4169k 23  395M   23 94.4M    0     0  4733k      0  0:01:25  0:00:20  0:01:05 4103k 24  395M   24 98.5M    0     0  4710k      0  0:01:26  0:00:21  0:01:05 4285k 26  395M   26  103M    0     0  4698k      0  0:01:26  0:00:22  0:01:04 4241k 26  395M   26  106M    0     0  4664k      0  0:01:26  0:00:23  0:01:03 4106k 27  395M   27  110M    0     0  4630k      0  0:01:27  0:00:24  0:01:03 4064k 28  395M   28  114M    0     0  4602k      0  0:01:28  0:00:25  0:01:03 4064k 29  395M   29  117M    0     0  4564k      0  0:01:28  0:00:26  0:01:02 3940k 30  395M   30  121M    0     0  4539k      0  0:01:29  0:00:27  0:01:02 3817k 31  395M   31  124M    0     0  4493k      0  0:01:30  0:00:28  0:01:02 3688k 32  395M   32  128M    0     0  4478k      0  0:01:30  0:00:29  0:01:01 3734k 33  395M   33  132M    0     0  4463k      0  0:01:30  0:00:30  0:01:00 3760k 34  395M   34  136M    0     0  4434k      0  0:01:31  0:00:31  0:01:00 3747k 35  395M   35  139M    0     0  4404k      0  0:01:32  0:00:32  0:01:00 3660k 36  395M   36  143M    0     0  4405k      0  0:01:31  0:00:33  0:00:58 3908k 37  395M   37  148M    0     0  4403k      0  0:01:32  0:00:34  0:00:58 3968k 38  395M   38  152M    0     0  4414k      0  0:01:31  0:00:35  0:00:56 4117k 39  395M   39  157M    0     0  4418k      0  0:01:31  0:00:36  0:00:55 4316k 40  395M   40  161M    0     0  4413k      0  0:01:31  0:00:37  0:00:54 4477k 41  395M   41  166M    0     0  4422k      0  0:01:31  0:00:38  0:00:53 4535k 43  395M   43  170M    0     0  4425k      0  0:01:31  0:00:39  0:00:52 4576k 44  395M   44  174M    0     0  4429k      0  0:01:31  0:00:40  0:00:51 4529k 45  395M   45  179M    0     0  4423k      0  0:01:31  0:00:41  0:00:50 4462k 46  395M   46  183M    0     0  4439k      0  0:01:31  0:00:42  0:00:49 4630k 47  395M   47  188M    0     0  4452k      0  0:01:31  0:00:43  0:00:48 4685k 48  395M   48  193M    0     0  4468k      0  0:01:30  0:00:44  0:00:46 4801k 49  395M   49  197M    0     0  4460k      0  0:01:30  0:00:45  0:00:45 4714k 51  395M   51  202M    0     0  4461k      0  0:01:30  0:00:46  0:00:44 4770k 52  395M   52  206M    0     0  4465k      0  0:01:30  0:00:47  0:00:43 4685k 53  395M   53  211M    0     0  4469k      0  0:01:30  0:00:48  0:00:42 4615k 54  395M   54  215M    0     0  4461k      0  0:01:30  0:00:49  0:00:41 4408k 55  395M   55  220M    0     0  4475k      0  0:01:30  0:00:50  0:00:40 4608k 56  395M   56  224M    0     0  4468k      0  0:01:30  0:00:51  0:00:39 4531k 57  395M   57  228M    0     0  4464k      0  0:01:30  0:00:52  0:00:38 4460k 58  395M   58  232M    0     0  4455k      0  0:01:30  0:00:53  0:00:37 4318k 59  395M   59  236M    0     0  4449k      0  0:01:31  0:00:54  0:00:37 4327k 60  395M   60  241M    0     0  4457k      0  0:01:30  0:00:55  0:00:35 4276k 61  395M   61  245M    0     0  4449k      0  0:01:31  0:00:56  0:00:35 4250k 63  395M   63  249M    0     0  4456k      0  0:01:30  0:00:57  0:00:33 4364k 64  395M   64  253M    0     0  4446k      0  0:01:31  0:00:58  0:00:33 4351k 65  395M   65  258M    0     0  4447k      0  0:01:31  0:00:59  0:00:32 4421k 66  395M   66  263M    0     0  4468k      0  0:01:30  0:01:00  0:00:30 4588k 68  395M   68  269M    0     0  4493k      0  0:01:30  0:01:01  0:00:29 4998k 68  395M   68  271M    0     0  4459k      0  0:01:30  0:01:02  0:00:28 4496k 69  395M   69  274M    0     0  4423k      0  0:01:31  0:01:03  0:00:28 4160k 69  395M   69  276M    0     0  4395k      0  0:01:32  0:01:04  0:00:28 3780k 70  395M   70  280M    0     0  4388k      0  0:01:32  0:01:05  0:00:27 3421k 71  395M   71  284M    0     0  4389k      0  0:01:32  0:01:06  0:00:26 3105k 73  395M   73  289M    0     0  4389k      0  0:01:32  0:01:07  0:00:25 3519k 73  395M   73  292M    0     0  4377k      0  0:01:32  0:01:08  0:00:24 3785k 74  395M   74  295M    0     0  4361k      0  0:01:32  0:01:09  0:00:23 3918k 75  395M   75  299M    0     0  4349k      0  0:01:33  0:01:10  0:00:23 3848k 76  395M   76  301M    0     0  4327k      0  0:01:33  0:01:11  0:00:22 3499k 77  395M   77  305M    0     0  4323k      0  0:01:33  0:01:12  0:00:21 3429k 78  395M   78  309M    0     0  4318k      0  0:01:33  0:01:13  0:00:20 3515k 78  395M   78  312M    0     0  4297k      0  0:01:34  0:01:14  0:00:20 3413k 79  395M   79  315M    0     0  4282k      0  0:01:34  0:01:15  0:00:19 3333k 80  395M   80  319M    0     0  4283k      0  0:01:34  0:01:16  0:00:18 3655k 82  395M   82  325M    0     0  4299k      0  0:01:34  0:01:17  0:00:17 3948k 83  395M   83  330M    0     0  4319k      0  0:01:33  0:01:18  0:00:15 4324k 84  395M   84  334M    0     0  4314k      0  0:01:33  0:01:19  0:00:14 4571k 85  395M   85  339M    0     0  4322k      0  0:01:33  0:01:20  0:00:13 4921k 86  395M   86  343M    0     0  4323k      0  0:01:33  0:01:21  0:00:12 4935k 88  395M   88  348M    0     0  4327k      0  0:01:33  0:01:22  0:00:11 4768k 89  395M   89  352M    0     0  4325k      0  0:01:33  0:01:23  0:00:10 4426k 90  395M   90  357M    0     0  4334k      0  0:01:33  0:01:24  0:00:09 4650k 91  395M   91  361M    0     0  4338k      0  0:01:33  0:01:25  0:00:08 4607k 92  395M   92  365M    0     0  4333k      0  0:01:33  0:01:26  0:00:07 4492k 93  395M   93  370M    0     0  4334k      0  0:01:33  0:01:27  0:00:06 4447k 94  395M   94  375M    0     0  4350k      0  0:01:33  0:01:28  0:00:05 4763k 95  395M   95  379M    0     0  4347k      0  0:01:33  0:01:29  0:00:04 4572k 96  395M   96  383M    0     0  4345k      0  0:01:33  0:01:30  0:00:03 4463k 98  395M   98  388M    0     0  4355k      0  0:01:33  0:01:31  0:00:02 4736k 99  395M   99  394M    0     0  4368k      0  0:01:32  0:01:32 --:--:-- 4963k100  395M  100  395M    0     0  4366k      0  0:01:32  0:01:32 --:--:-- 4700k
+/srv/wonderelian/.yixiu-yixiu-gem-consent-20261020-r1/site.tar.gz: OK
+assets/yixiu/audio/meditation/moon-anchorage.m4a: OK
+assets/yixiu/audio/meditation/rain-lantern.m4a: OK
+assets/yixiu/audio/meditation/blue-quiet.m4a: OK
+assets/yixiu/audio/meditation/snowfall-in-silence.m4a: OK
+assets/yixiu/audio/meditation/bedside-glow.m4a: OK
+assets/yixiu/audio/meditation/cloud-blanket.m4a: OK
+assets/yixiu/audio/meditation/bamboo-stillness.m4a: OK
+assets/yixiu/audio/meditation/one-quiet-leaf.m4a: OK
+assets/yixiu/audio/meditation/pine-shadows.m4a: OK
+assets/yixiu/audio/meditation/returning-to-stillness.m4a: OK
+assets/yixiu/audio/meditation/clair-de-lune.m4a: OK
+assets/yixiu/classical/clair-de-lune.jpg: OK
+assets/yixiu/audio/meditation/nocturne.m4a: OK
+assets/yixiu/classical/nocturne.jpg: OK
+assets/yixiu/audio/meditation/gymnopedie.m4a: OK
+assets/yixiu/classical/gymnopedie.jpg: OK
+assets/yixiu/audio/meditation/canon.m4a: OK
+assets/yixiu/classical/canon.jpg: OK
+assets/yixiu/audio/meditation/moonlight-sonata.m4a: OK
+assets/yixiu/classical/moonlight-sonata.jpg: OK
+assets/yixiu/audio/meditation/pathetique.m4a: OK
+assets/yixiu/classical/pathetique.jpg: OK
+assets/yixiu/audio/meditation/prelude-c.m4a: OK
+assets/yixiu/classical/prelude-c.jpg: OK
+assets/yixiu/audio/meditation/goldberg-aria.m4a: OK
+assets/yixiu/classical/goldberg-aria.jpg: OK
+assets/yixiu/audio/meditation/berceuse.m4a: OK
+assets/yixiu/classical/berceuse.jpg: OK
+assets/yixiu/audio/meditation/prelude-17.m4a: OK
+assets/yixiu/classical/prelude-17.jpg: OK
+/srv/wonderelian/.yixiu-yixiu-gem-consent-20261020-r1/site/assets/yixiu/audio/meditation/quiet-hour.m4a: OK
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+assets/yixiu/audio/meditation/moon-anchorage.m4a: OK
+assets/yixiu/audio/meditation/rain-lantern.m4a: OK
+assets/yixiu/audio/meditation/blue-quiet.m4a: OK
+assets/yixiu/audio/meditation/snowfall-in-silence.m4a: OK
+assets/yixiu/audio/meditation/bedside-glow.m4a: OK
+assets/yixiu/audio/meditation/cloud-blanket.m4a: OK
+assets/yixiu/audio/meditation/bamboo-stillness.m4a: OK
+assets/yixiu/audio/meditation/one-quiet-leaf.m4a: OK
+assets/yixiu/audio/meditation/pine-shadows.m4a: OK
+assets/yixiu/audio/meditation/returning-to-stillness.m4a: OK
+assets/yixiu/audio/meditation/clair-de-lune.m4a: OK
+assets/yixiu/classical/clair-de-lune.jpg: OK
+assets/yixiu/audio/meditation/nocturne.m4a: OK
+assets/yixiu/classical/nocturne.jpg: OK
+assets/yixiu/audio/meditation/gymnopedie.m4a: OK
+assets/yixiu/classical/gymnopedie.jpg: OK
+assets/yixiu/audio/meditation/canon.m4a: OK
+assets/yixiu/classical/canon.jpg: OK
+assets/yixiu/audio/meditation/moonlight-sonata.m4a: OK
+assets/yixiu/classical/moonlight-sonata.jpg: OK
+assets/yixiu/audio/meditation/pathetique.m4a: OK
+assets/yixiu/classical/pathetique.jpg: OK
+assets/yixiu/audio/meditation/prelude-c.m4a: OK
+assets/yixiu/classical/prelude-c.jpg: OK
+assets/yixiu/audio/meditation/goldberg-aria.m4a: OK
+assets/yixiu/classical/goldberg-aria.jpg: OK
+assets/yixiu/audio/meditation/berceuse.m4a: OK
+assets/yixiu/classical/berceuse.jpg: OK
+assets/yixiu/audio/meditation/prelude-17.m4a: OK
+assets/yixiu/classical/prelude-17.jpg: OK
+/srv/wonderelian/yixiu.wonderelian.com/assets/yixiu/audio/meditation/quiet-hour.m4a: OK
+DEPLOY_OK_YIXIU_yixiu-gem-consent-20261020-r1

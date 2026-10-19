@@ -1,0 +1,47 @@
+{
+  "data" : {
+    "type" : "appStoreVersionLocalizations",
+    "id" : "0cde2c69-91c5-46ac-a579-a08c4c51e36d",
+    "attributes" : {
+      "description" : "随时，给自己一休。\n不必等到有空，才可以休息。\n\n一休冥想，是日常的休息与声音陪伴。午休、夜里醒来、工作间隙，用自然声音、古典音乐与轻柔原创，给自己一小段安静。无需注册，没有广告，也没有连续打卡的压力。\n\n【这一刻，你想怎样休息？】\n在“静心”中选择 15 分钟午休、夜里醒来时的 15 分钟轻声陪伴，或工作间隙的 1 分钟呼吸。这三个入口都可免费使用。可以跟着呼吸，也可以只听声音，随时停下。首页继续保留简洁的沉浸播放器。\n\n【54 个声音，27 个免费】\n14 种自然声：海浪、屋檐雨、溪流、鸟鸣、湖岸、微风、竹林细雨与更多自然环境音。其中 10 种免费聆听。\n20 首古典名曲：德彪西《月光》、萨蒂《第一号吉姆诺佩蒂》、帕赫贝尔《D 大调卡农》、贝多芬《月光奏鸣曲》第一乐章，以及肖邦、巴赫、舒曼、莫扎特等作品。其中 10 首免费。\n10 首 AI 原创音乐：「十段安静」系列，月泊、雨灯、蓝眠、雪絮、暖枕等轻柔曲目，搭配明亮自然画面。由一休创作、AI 辅助生成，5 首免费、5 首 Plus。\n另有 10 首冥想与氛围音乐，绿洲停歇与初息免费。60 分钟「午后留白」延长版基于 HoliznaCC0 原曲制作。声音来源与授权可在 App 中查看。\n\n【找到当下想听的声音】\n声音库把休息用途与声音类型分开筛选，可配合搜索、免费、收藏与最近听过，一起找到合适的声音。首页左右滑动优先浏览免费场景。“我的”优先展示继续聆听、最近听过与收藏；休息记录放在设置之后，没有需要完成的目标。\n\n【保留自己的节奏】\n免费使用 5、15、30 分钟定时和一分钟呼吸静心。背景、声音与当前场景保持一致。开启后台播放后，离开 App 或锁屏也能继续聆听。\nPlus 解锁完整声音库、60 分钟与不限时聆听，以及 3、5、10 分钟静心。支持恢复购买。已在 1.2 或更早版本拥有一休的用户，经验证后保留原有 14 种自然声权限。\n\n【把安静分享出去】\n将当前场景生成带二维码的图片海报，通过系统分享发送给朋友；中英文可切换。支持 iPhone 与 iPad。\n\n【尊重你的隐私】\n偏好与练习记录保存在本机。使用统计默认关闭，你可在“我的”自愿开启或随时关闭；练习手记不上传，不用于广告追踪。\n\n订阅通过 Apple 自动续期，价格与适用优惠以购买界面为准。可在系统设置中管理或取消订阅。\n隐私政策：https://yixiu.wonderelian.com/privacy.html\n使用条款（Apple 标准 EULA）：https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+      "locale" : "zh-Hans",
+      "keywords" : "雨声,海浪,溪流,鸟鸣,环境音,睡前,入睡,午休,正念,呼吸,计时器,背景播放,学习,工作,减压,钢琴,月光,收藏",
+      "marketingUrl" : "https://yixiu.wonderelian.com/",
+      "promotionalText" : "随时，给自己一休。在“静心”里选择 15 分钟午休、夜醒聆听或 1 分钟呼吸。27 个声音免费，支持定时、后台播放与场景海报分享。无需账号，没有广告。",
+      "supportUrl" : "https://yixiu.wonderelian.com/",
+      "whatsNew" : "随时，给自己一休。\n“静心”新增三个免费休息入口：15 分钟午休、夜醒时的 15 分钟聆听，以及工作间隙的 1 分钟呼吸；首页仍是简洁的沉浸播放器。\n可以跟着呼吸，也可以只听声音，保留你的声音偏好。\n声音库新增独立的休息用途与声音类型筛选，可与搜索、免费、收藏和最近听过配合使用。\n“我的”优先展示继续聆听与收藏，休息记录移至设置之后；生活方式作品移至独立页面，支持返回。\n更新品牌表达、会员权益说明与中英文导航，保留现有免费内容、订阅和隐私选择。"
+    },
+    "relationships" : {
+      "appScreenshotSets" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/relationships/appScreenshotSets",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/appScreenshotSets"
+        }
+      },
+      "appPreviewSets" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/relationships/appPreviewSets",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/appPreviewSets"
+        }
+      },
+      "searchKeywords" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/relationships/searchKeywords",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/searchKeywords"
+        }
+      },
+      "placements" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/relationships/placements",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d/placements"
+        }
+      }
+    },
+    "links" : {
+      "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d"
+    }
+  },
+  "links" : {
+    "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/0cde2c69-91c5-46ac-a579-a08c4c51e36d"
+  }
+}

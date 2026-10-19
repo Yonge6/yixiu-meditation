@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "EB856BE5-EA95-48AC-B9B0-2DDFABA14265.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "storebrand-en-focus_0_552D4A37-EC5E-455C-A5E0-46E16DA322BA.png",
+        "timestamp" : 1792427773.088
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "5E4F71A1-7986-4E3E-9071-96C3F174FBC6.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "storebrand-zh-focus_0_F8C98348-BC74-416C-83FF-B39D1C4BEC18.png",
+        "timestamp" : 1792427752.49
+      }
+    ],
+    "testIdentifier" : "HomeInteractionUITests/testBrandBreathingStoreCapture()",
+    "testIdentifierURL" : "test://com.apple.xcode/YixiuMeditation/HomeInteractionUITests/HomeInteractionUITests/testBrandBreathingStoreCapture"
+  }
+]

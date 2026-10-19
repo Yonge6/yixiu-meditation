@@ -1,0 +1,74 @@
+[
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "80000005-717d-8f35-8f19-c8e331127289",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPAD_13_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "3e400005-717d-8f35-8019-e609452f079b"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/80000005-717d-8f35-8f19-c8e331127289"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "db000005-717d-8f35-8f35-c209c3e05976",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPAD_13_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "c8c00005-717d-8f35-8002-40c75fb9d8fa"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/db000005-717d-8f35-8f35-c209c3e05976"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "f6000005-717d-8f35-8f1c-f36f5ccfec9c",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPAD_13_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "d9c00005-717d-8f35-801c-43589d0fd846"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/f6000005-717d-8f35-8f1c-f36f5ccfec9c"
+    }
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "data" : {
+    "type" : "appStoreVersionLocalizations",
+    "id" : "952a079e-1db9-4ecd-bf5d-d1a554d305f4",
+    "attributes" : {
+      "description" : "Make room for quiet.\nYou do not have to wait for free time to rest.\n\nYixiu is your everyday rest and sound companion. Take a lunch break, rest when you wake at night, or pause between tasks with nature sounds, classical music and gentle originals. No account, no ads and no streaks to maintain.\n\nA LITTLE TIME FOR YOU\nIn Focus, choose a 15-minute lunch break, 15 minutes of quiet listening when awake at night, or one minute of breathing between tasks. All three are free. Follow your breath or just listen, and stop whenever you like. The home screen stays a simple, immersive player.\n\n54 SOUNDS. 27 FREE TO ENJOY.\n• 14 nature sounds: waves, rain on eaves, flowing streams, birds, a misty lake, wind and more. Ten are free.\n• 20 classical works: Debussy's Clair de lune, Satie's Gymnopedie No. 1, Pachelbel's Canon in D, Beethoven's Moonlight Sonata first movement, and selections by Chopin, Bach, Schumann and Mozart. Ten are free.\n• 10 AI-assisted originals: the Ten Quiet Moments collection pairs Moon Anchorage, Rain at the Window, Blue Quiet and more with bright nature artwork. Created for Yixiu with AI assistance; five free and five for Plus.\n• 10 other meditation and ambient tracks, including free Oasis Rest and First Breath. The 60-minute Quiet Hour is an extended arrangement of a HoliznaCC0 recording. Recording credits are available in the app.\n\nFIND YOUR SOUND\nFilter by rest purpose and sound type separately, together with search, Free, Favorites and Recent. Swipe through free-first scenes on the home screen. Me puts continued listening, recent sounds and favorites first. Rest history sits below settings, with no goals to meet.\n\nKEEP YOUR OWN RHYTHM\nFree 5, 15 and 30-minute listening timers, plus a one-minute breathing practice. Your sound and background follow the selected scene. Enable background playback to keep listening while using another app or with your screen locked.\nPlus unlocks the complete sound library, 60-minute and unlimited listening, and 3, 5 and 10-minute breathing sessions. Restore Purchases is supported. Verified owners of version 1.2 or earlier retain access to the original 14 nature sounds.\n\nSHARE A QUIET MOMENT\nCreate a scene poster with a QR code and send it through the system share sheet. Switch between Chinese and English. Made for iPhone and iPad.\n\nYOUR PRIVACY, YOUR CHOICE\nPreferences and practice history stay on this device. Optional usage analytics is off by default and can be enabled or withdrawn under Me. Journal notes are not uploaded, and data is not used for advertising tracking.\n\nSubscriptions renew automatically through Apple. Prices and eligible offers are shown before purchase. Manage or cancel your subscription in system Settings.\nPrivacy: https://yixiu.wonderelian.com/privacy.html\nTerms (Apple Standard EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+      "locale" : "en-US",
+      "keywords" : "rain,ocean,white noise,bedtime,relax,focus,meditation,piano,classical,breathe,timer,birds,ambient",
+      "marketingUrl" : "https://yixiu.wonderelian.com/",
+      "promotionalText" : "Make room for quiet. Take a 15-minute lunch break, listen when awake at night, or breathe for one minute. 27 sounds free. No account. No ads.",
+      "supportUrl" : "https://yixiu.wonderelian.com/",
+      "whatsNew" : "Make room for quiet.\nFocus adds three free ways to pause: a 15-minute lunch break, 15 minutes of listening when awake at night, and one minute of breathing between tasks. The home screen stays uncluttered.\nFollow your breath or just listen, with your sound preference preserved.\nFilter the Sound Library by rest purpose and sound type, alongside search, Free, Favorites and Recent.\nMe puts continued listening and favorites first. Rest history sits below settings, and other projects have their own page with Back.\nRefined brand copy, current Plus benefits and bilingual navigation. Existing free content, subscriptions and privacy choices remain."
+    },
+    "relationships" : {
+      "appScreenshotSets" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/relationships/appScreenshotSets",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/appScreenshotSets"
+        }
+      },
+      "appPreviewSets" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/relationships/appPreviewSets",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/appPreviewSets"
+        }
+      },
+      "searchKeywords" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/relationships/searchKeywords",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/searchKeywords"
+        }
+      },
+      "placements" : {
+        "links" : {
+          "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/relationships/placements",
+          "related" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4/placements"
+        }
+      }
+    },
+    "links" : {
+      "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4"
+    }
+  },
+  "links" : {
+    "self" : "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/952a079e-1db9-4ecd-bf5d-d1a554d305f4"
+  }
+}

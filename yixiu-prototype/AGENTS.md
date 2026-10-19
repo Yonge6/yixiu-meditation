@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- 2026-10-20 analytics preference styling: use a 44px accessible switch target and a soft aqua privacy link with chevron instead of the browser-default checkbox/blue underline. Keep opt-in default off, persisted consent, revocation and privacy copy unchanged. The entire explanatory paragraph must remain readable at narrow widths.
+
 - 2026-10-19 membership mark: use the same warm yellow-orange faceted gemstone geometry in H5 and native library badges, Me membership entry and Plus hero. Keep light-gold highlights, amber/orange lower facets and a clear small-size outline; no flashing animation. FREE pills, access policy, prices and all non-membership aqua controls stay unchanged.
 
 - 2026-10-19 user corrections supersede the folded/secondary presentation below: show the complete philosophy directly in About, without details/DisclosureGroup, and list Lifestyle works directly on Me home. Favorites always has an explicit header action opening the Favorites scope; its empty state offers browse-all. Keep ordinary secondary-page Back and optional rest-history behavior. Native startup playback is non-blocking while StoreKit verifies, bounded by a 30-second readiness watchdog with verified/Free fallback; never grant a permanent subscription from pending state. AI-original loudness adjustments require full-track LUFS/true-peak measurement, matching H5/native audio, preserved original-source identity, and cache-versioned public URLs.

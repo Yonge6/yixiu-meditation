@@ -1,0 +1,148 @@
+{
+  "data": [
+    {
+      "type": "builds",
+      "id": "9d037f9a-e9d0-40bc-a626-f8c283c28b89",
+      "attributes": {
+        "version": "38",
+        "uploadedDate": "2026-10-19T09:30:22-07:00",
+        "expirationDate": "2027-01-17T08:30:22-08:00",
+        "expired": false,
+        "minOsVersion": "17.0",
+        "lsMinimumSystemVersion": null,
+        "computedMinMacOsVersion": "14.0",
+        "computedMinVisionOsVersion": "1.0",
+        "iconAssetToken": {
+          "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/39/db/ce/39dbce1a-7c4d-1dd1-14f1-d292d868cf30/AppIcon76x76@2x_U007eipad.png/{w}x{h}bb.{f}",
+          "width": 152,
+          "height": 152
+        },
+        "processingState": "VALID",
+        "buildAudienceType": "APP_STORE_ELIGIBLE",
+        "usesNonExemptEncryption": false,
+        "isWatchOnly": false,
+        "hasMessagesExtension": false,
+        "hasStickers": false,
+        "isLaunchProhibited": false,
+        "qcState": "BETA_INTERNAL_TESTING",
+        "deviceFamilies": [
+          "IPHONE",
+          "IPAD"
+        ],
+        "controllerRequiredPlatforms": [],
+        "hasGameCenterEntitlement": false,
+        "isSpatialControllerRequired": false
+      },
+      "relationships": {
+        "ciBuildGroup": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/ciBuildGroup",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/ciBuildGroup"
+          }
+        },
+        "preReleaseVersion": {
+          "data": {
+            "type": "preReleaseVersions",
+            "id": "0b2e05be-42b4-45a4-a8ee-f4ef1028b8f8"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/preReleaseVersion",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/preReleaseVersion"
+          }
+        },
+        "individualTesters": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/individualTesters",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/individualTesters"
+          }
+        },
+        "betaGroups": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/betaGroups"
+          }
+        },
+        "betaBuildLocalizations": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/betaBuildLocalizations",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/betaBuildLocalizations"
+          }
+        },
+        "appEncryptionDeclaration": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/appEncryptionDeclaration",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/appEncryptionDeclaration"
+          }
+        },
+        "betaAppReviewSubmission": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/betaAppReviewSubmission",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/betaAppReviewSubmission"
+          }
+        },
+        "app": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/app",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/app"
+          }
+        },
+        "buildBetaDetail": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/buildBetaDetail",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/buildBetaDetail"
+          }
+        },
+        "appStoreVersion": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/appStoreVersion",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/appStoreVersion"
+          }
+        },
+        "icons": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/relationships/icons",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89/icons"
+          }
+        }
+      },
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/builds/9d037f9a-e9d0-40bc-a626-f8c283c28b89"
+      }
+    }
+  ],
+  "included": [
+    {
+      "type": "preReleaseVersions",
+      "id": "0b2e05be-42b4-45a4-a8ee-f4ef1028b8f8",
+      "attributes": {
+        "version": "1.21",
+        "platform": "IOS"
+      },
+      "relationships": {
+        "builds": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/preReleaseVersions/0b2e05be-42b4-45a4-a8ee-f4ef1028b8f8/relationships/builds",
+            "related": "https://appstoreconnect.apple.com/iris/v1/preReleaseVersions/0b2e05be-42b4-45a4-a8ee-f4ef1028b8f8/builds"
+          }
+        },
+        "app": {
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/preReleaseVersions/0b2e05be-42b4-45a4-a8ee-f4ef1028b8f8/relationships/app",
+            "related": "https://appstoreconnect.apple.com/iris/v1/preReleaseVersions/0b2e05be-42b4-45a4-a8ee-f4ef1028b8f8/app"
+          }
+        }
+      },
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/preReleaseVersions/0b2e05be-42b4-45a4-a8ee-f4ef1028b8f8"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://appstoreconnect.apple.com/iris/v1/builds?filter%5Bversion%5D=38&filter%5Bapp%5D=1461182261&include=preReleaseVersion"
+  },
+  "meta": {
+    "paging": {
+      "total": 1,
+      "limit": 50
+    }
+  }
+}

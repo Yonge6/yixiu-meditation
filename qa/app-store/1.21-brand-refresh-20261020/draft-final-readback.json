@@ -1,0 +1,24 @@
+{
+  "version": "1.21",
+  "state": "PREPARE_FOR_SUBMISSION",
+  "releaseType": "AFTER_APPROVAL",
+  "build": "38",
+  "locales": [
+    {
+      "locale": "zh-Hans",
+      "keywords": "雨声,海浪,自然声,古典音乐,呼吸,专注,正念,午睡,放松音乐,夜醒,背景音,定时,环境音",
+      "promotionalText": "不必等到有空，才可以休息。午休 15 分钟，夜里醒来听一会儿，或在工作间隙呼吸一分钟。27 个声音免费，无需注册，没有广告，也没有连续打卡的压力。",
+      "whatsNew": "随时，给自己一休。\n\n• “静心”提供三个免费休息入口：15 分钟午休、夜醒聆听与 1 分钟呼吸。首页保持简洁的沉浸播放器。\n• 声音库按用途和类型筛选，可搭配搜索、免费、收藏与最近听过。\n• 先开始播放，购买权益在后台确认，再按实际资格生效。\n• 调整 10 首 AI 原创的聆听音量，保留原有轻柔动态。\n• 优化会员钻石与中英文界面；收藏入口更清晰，生命观和生活方式直接展示。\n\n现有免费内容、订阅价格与隐私选择保持不变。"
+    },
+    {
+      "locale": "en-US",
+      "keywords": "white,noise,meditation,rain,ocean,nap,break,relax,focus,classical,music,timer,nature,breathing",
+      "promotionalText": "You do not have to wait for free time to rest. Take a lunch break, listen when awake at night, or breathe for one minute. 27 sounds free. No account, ads or streaks.",
+      "whatsNew": "Make room for quiet.\n\n• Three free Focus shortcuts: a 15-minute lunch break, nighttime listening and one minute of breathing. The Sounds home stays uncluttered.\n• Filter by purpose and sound type alongside search, Free, Favorites and Recent.\n• Start listening while purchase access is checked in the background, then apply verified access.\n• More balanced levels across the ten AI-assisted originals, preserving their gentle dynamics.\n• Refined amber membership gems, bilingual navigation and clearer Favorites. Philosophy and Lifestyle are directly visible.\n\nExisting free content, subscription prices and privacy choices remain unchanged."
+    }
+  ],
+  "newAssetsAssociated": 24,
+  "ordinaryIPhoneAssetsRefreshed": false,
+  "submitted": false,
+  "pending": "Fresh ordinary-iPhone capture or explicit instruction to retain existing iPhone assets; final rights declaration check"
+}
