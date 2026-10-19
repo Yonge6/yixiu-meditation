@@ -222,11 +222,20 @@ final class HomeInteractionUITests: XCTestCase {
         capture("everyday-rest-en-work-break")
     }
 
-    func testEverydayRestChineseScreensAndLifestyleBack() {
+    func testEverydayRestChineseScreensAndVisibleLifestyle() {
         app.terminate()
         app.launchArguments = ["-language", "zh", "-scene", "rain", "-volume", "0.72", "-focusSoundEnabled", "NO", "-YixiuForceFreeAccess"]
         app.launch()
         XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+        selectTab("我的")
+        let favorites = app.buttons["me.favorites.open"]
+        for _ in 0..<8 where !favorites.isHittable { app.swipeUp() }
+        XCTAssertTrue(favorites.isHittable)
+        favorites.tap()
+        XCTAssertTrue(app.buttons["library.scope.menu"].waitForExistence(timeout: 4))
+        capture("corrections-zh-favorites-library")
+        XCTAssertTrue(app.buttons["library.scope.menu"].label.contains("收藏"), app.buttons["library.scope.menu"].label)
+        app.buttons["library.close"].tap()
         selectTab("静心")
         let lunch = app.buttons["focus.preset.lunch"]
         for _ in 0..<7 where !lunch.isHittable { app.swipeUp() }
@@ -243,12 +252,20 @@ final class HomeInteractionUITests: XCTestCase {
         capture("everyday-rest-zh-night-focus")
         selectTab("我的")
         capture("everyday-rest-zh-me-continue-first")
-        let lifestyle = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "慢慢探索，其他用心的作品")).firstMatch
+        let lifestyle = app.descendants(matching: .any)["me.lifestyle.WonderElian"].firstMatch
         for _ in 0..<15 where !lifestyle.isHittable { app.swipeUp() }
         XCTAssertTrue(lifestyle.isHittable)
-        lifestyle.tap()
+        capture("everyday-rest-zh-lifestyle-inline")
+        XCTAssertFalse(app.buttons["me.detail.back"].exists)
+        let about = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "一休是谁，我们相信什么")).firstMatch
+        for _ in 0..<8 where !about.isHittable { app.swipeDown() }
+        XCTAssertTrue(about.isHittable)
+        about.tap()
         XCTAssertTrue(app.buttons["me.detail.back"].waitForExistence(timeout: 4))
-        capture("everyday-rest-zh-lifestyle-detail")
+        let philosophy = app.staticTexts["我们的生命观"]
+        for _ in 0..<5 where !philosophy.isHittable { app.swipeUp() }
+        XCTAssertTrue(philosophy.isHittable)
+        capture("everyday-rest-zh-about-expanded")
         app.buttons["me.detail.back"].tap()
         XCTAssertFalse(app.buttons["me.detail.back"].exists)
     }

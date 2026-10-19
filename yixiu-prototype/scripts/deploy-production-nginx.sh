@@ -297,7 +297,9 @@ grep -F 'https://yixiu.wonderelian.com/20-minute-meditation-music/' "$site_path/
 grep -F 'https://yixiu.wonderelian.com/free-online-sound-machine/' "$site_path/sitemap.xml" >/dev/null
 
 # Do not publish an older bundle that silently drops native-parity features.
-grep -FR '20261019-everyday-rest' "$site_path/assets" >/dev/null
+grep -FR '20261019-me-playback-corrections' "$site_path/assets" >/dev/null
+grep -FR 'ai-level-20261019' "$site_path/assets" >/dev/null
+grep -FR 'favorites-heading' "$site_path/assets" >/dev/null
 grep -FR 'library-discovery-filters' "$site_path/assets" >/dev/null
 grep -FR 'meaningful_rest' "$site_path/assets" >/dev/null
 grep -FR 'yixiu.practiceJournal.v1' "$site_path/assets" >/dev/null
@@ -613,7 +615,9 @@ curl --compressed -fsS \
   https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/ \
   | grep -F 'data-preview-timer' >/dev/null
 
-grep -FR '20261019-everyday-rest' "$deploy_target/assets" >/dev/null
+grep -FR '20261019-me-playback-corrections' "$deploy_target/assets" >/dev/null
+grep -FR 'ai-level-20261019' "$deploy_target/assets" >/dev/null
+grep -FR 'favorites-heading' "$deploy_target/assets" >/dev/null
 curl --compressed -fsS --resolve 'yixiu.wonderelian.com:443:127.0.0.1' https://yixiu.wonderelian.com/journal/zh/ | grep -F '一休日常' >/dev/null
 test "$(find "$deploy_target/journal" -type f -name index.html | wc -l)" -eq "$journal_page_count"
 echo "DEPLOY_OK_YIXIU_${release_id}"

@@ -40,7 +40,9 @@ struct YixiuMeditationApp: App {
                 .environmentObject(dailyReminder)
                 .preferredColorScheme(.dark)
                 .task {
-                    await ProductAnalytics.shared.configure()
+                    // Analytics verification must not delay playback access
+                    // verification or its bounded startup watchdog.
+                    async let analyticsConfiguration: Void = ProductAnalytics.shared.configure()
                     consumeReminderRoute()
 #if DEBUG
                     if ProcessInfo.processInfo.arguments.contains("-yixiuStartQuietMinute") {
@@ -52,6 +54,10 @@ struct YixiuMeditationApp: App {
                         appState.enforceAccessLevel(subscriptionStore.accessLevel)
                     }
                     await dailyReminder.refresh(languageCode: appState.language.rawValue)
+                    await analyticsConfiguration
+                }
+                .onChange(of: subscriptionStore.isReady) { _, ready in
+                    if ready { appState.enforceAccessLevel(subscriptionStore.accessLevel) }
                 }
                 .onChange(of: subscriptionStore.accessLevel) { _, level in
                     guard subscriptionStore.isReady else { return }

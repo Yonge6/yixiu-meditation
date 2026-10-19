@@ -783,6 +783,10 @@ struct SoundLibraryView: View {
     @State private var paywallOpen = false
     @FocusState private var searchFocused: Bool
 
+    init(initialScope: SoundLibraryScope = .all) {
+        _selectedScope = State(initialValue: initialScope)
+    }
+
     private var language: AppLanguage { appState.language }
     private var filteredScenes: [MeditationScene] {
         SoundLibraryFilter.scenes(
@@ -951,14 +955,6 @@ struct SoundLibraryView: View {
                 .accessibilityIdentifier("library.type.menu")
             }
 
-            if !subscriptionStore.isReady {
-                HStack(spacing: 8) {
-                    ProgressView().tint(YixiuTheme.aqua)
-                    Text(language.text(zh: "正在确认会员资格，免费声音可先听。", en: "Checking membership. Free sounds are ready to play."))
-                        .font(YixiuTheme.sans(11))
-                        .foregroundStyle(YixiuTheme.mist)
-                }
-            }
         }
         .padding(.horizontal, 18)
         .padding(.top, 18)
@@ -1035,7 +1031,6 @@ struct SoundLibraryView: View {
     private func sceneCard(_ scene: MeditationScene) -> some View {
         ZStack(alignment: .topTrailing) {
             Button {
-                guard subscriptionStore.isReady || SubscriptionAccessPolicy.freeScenes.contains(scene) else { return }
                 guard subscriptionStore.canAccess(scene) else {
                     paywallOpen = true
                     return
@@ -1076,12 +1071,8 @@ struct SoundLibraryView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(language.text(
-                zh: !subscriptionStore.isReady && !SubscriptionAccessPolicy.freeScenes.contains(scene)
-                    ? "\(scene.zhName)，正在确认会员资格"
-                    : subscriptionStore.canAccess(scene) ? "切换到\(scene.zhName)" : "\(scene.zhName)，一休 Plus",
-                en: !subscriptionStore.isReady && !SubscriptionAccessPolicy.freeScenes.contains(scene)
-                    ? "\(scene.enName), checking membership"
-                    : subscriptionStore.canAccess(scene) ? "Switch to \(scene.enName)" : "\(scene.enName), Yixiu Plus"
+                zh: subscriptionStore.canAccess(scene) ? "切换到\(scene.zhName)" : "\(scene.zhName)，一休 Plus",
+                en: subscriptionStore.canAccess(scene) ? "Switch to \(scene.enName)" : "\(scene.enName), Yixiu Plus"
             ))
 
             Button {

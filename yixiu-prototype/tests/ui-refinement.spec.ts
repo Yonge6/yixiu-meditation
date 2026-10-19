@@ -87,7 +87,7 @@ for (const [width, height, lang] of [[390, 844, "zh"], [320, 740, "en"], [1280, 
     await expect(page.locator(".me-screen")).toBeVisible();
     await page.screenshot({ path: `${output}/${phase}-${width}-${lang}-me.png`, animations: "disabled" });
     await page.locator(".me-screen").evaluate(el => { el.scrollTop = el.scrollHeight; });
-    const last = page.locator(".trust-links").getByRole("button", { name: lang === "zh" ? /^生活方式/ : /^Lifestyle/ });
+    const last = page.locator(".me-works > a").last();
     await expect(last).toBeInViewport();
     expect((await last.boundingBox())!.y + (await last.boundingBox())!.height).toBeLessThanOrEqual((await nav.boundingBox())!.y);
   });

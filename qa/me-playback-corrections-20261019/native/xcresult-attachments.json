@@ -1,0 +1,62 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "9FC2A4C5-21C9-4983-9FD0-756B70F59146.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-about-expanded_0_F5726E72-CBEB-409B-BD21-DEA02B8CDFDF.png",
+        "timestamp" : 1792403536.28
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "8D970562-C1DC-4F00-AF9F-1873A5A77BF7.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-lifestyle-inline_0_473C3360-BD1D-4165-AFF5-E4791ABED302.png",
+        "timestamp" : 1792403525.818
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "9CE09673-46E9-4661-8FB7-89CAF67DD754.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-me-continue-first_0_3874F874-1F58-48AF-BA5F-2BB7A64D3FA4.png",
+        "timestamp" : 1792403508.131
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "F5AAACCF-9A81-4B64-BE79-98CFC9773D99.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-night-focus_0_A97DCCDC-9742-421C-955C-E681010CC819.png",
+        "timestamp" : 1792403505.134
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "D84F9079-9B1C-4161-B53C-751D2AE26AE7.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-lunch-focus_0_628D617E-5F5D-4586-9BEB-110355C77B69.png",
+        "timestamp" : 1792403501.367
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "1EF69952-B80F-4BD8-A94B-CB4A2E9B3C39.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "corrections-zh-favorites-library_0_A6A9EBD4-9D12-41BC-B797-1F4D8976CC2A.png",
+        "timestamp" : 1792403489.22
+      }
+    ],
+    "testIdentifier" : "HomeInteractionUITests/testEverydayRestChineseScreensAndVisibleLifestyle()",
+    "testIdentifierURL" : "test://com.apple.xcode/YixiuMeditation/HomeInteractionUITests/HomeInteractionUITests/testEverydayRestChineseScreensAndVisibleLifestyle"
+  }
+]

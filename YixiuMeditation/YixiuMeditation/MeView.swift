@@ -18,7 +18,7 @@ struct MeView: View {
     @EnvironmentObject private var dailyReminder: DailyReminderManager
     @Environment(\.openURL) private var openURL
     @State private var page: MePage = .home
-    @State private var libraryOpen = false
+    @State private var libraryScope: SoundLibraryScope?
     @State private var videoChannelOpen = false
     @State private var paywallOpen = false
     @State private var reviewOpenFailed = false
@@ -52,8 +52,8 @@ struct MeView: View {
             }
             .ignoresSafeArea()
         }
-        .sheet(isPresented: $libraryOpen) {
-            SoundLibraryView()
+        .sheet(item: $libraryScope) { scope in
+            SoundLibraryView(initialScope: scope)
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
@@ -146,15 +146,7 @@ struct MeView: View {
                 sectionLabel(language.text(zh: "生活方式", en: "LIFESTYLE"))
                     .padding(.top, 24)
 
-                VStack {
-                    infoRow(
-                        title: language.text(zh: "生活方式", en: "Lifestyle"),
-                        subtitle: language.text(zh: "慢慢探索，其他用心的作品", en: "Other thoughtful things to explore"),
-                        icon: "leaf", target: .lifestyle
-                    )
-                }
-                .padding(.horizontal, 16)
-                .yixiuPanel()
+                worksCard
 
                 Text(language.text(zh: "不必等到有空，才可以休息。", en: "You don't have to wait for a free day to pause."))
                     .font(YixiuTheme.chineseDisplay(13))
@@ -388,6 +380,9 @@ struct MeView: View {
 
     private var favoritesCard: some View {
         VStack(alignment: .leading, spacing: 14) {
+            Button {
+                libraryScope = .favorites
+            } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(language.text(zh: "我的收藏", en: "Favorites"))
@@ -399,7 +394,16 @@ struct MeView: View {
                 Spacer()
                 Image(systemName: "heart")
                     .foregroundStyle(YixiuTheme.mist)
+                Image(systemName: "chevron.right")
+                    .font(YixiuTheme.sans(12))
+                    .foregroundStyle(YixiuTheme.mist)
             }
+            .frame(minHeight: 50)
+            .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(language.text(zh: "查看我的收藏", en: "View favorites"))
+            .accessibilityIdentifier("me.favorites.open")
 
             if appState.favorites.isEmpty {
                 Text(language.text(
@@ -409,6 +413,16 @@ struct MeView: View {
                 .font(YixiuTheme.sans(13))
                 .foregroundStyle(YixiuTheme.mist.opacity(0.66))
                 .lineSpacing(5)
+                Button {
+                    libraryScope = .all
+                } label: {
+                    Label(language.text(zh: "浏览声音，添加收藏", en: "Browse sounds to add favorites"), systemImage: "chevron.right")
+                        .font(YixiuTheme.sans(13))
+                        .foregroundStyle(YixiuTheme.aquaStrong)
+                        .frame(minHeight: 44)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("me.favorites.browse")
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 9) {
@@ -1167,6 +1181,7 @@ struct MeView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("me.lifestyle.\(title)")
     }
 
     private func contactLink(title: String, value: String, icon: String, url: String) -> some View {
@@ -1293,7 +1308,6 @@ private struct AboutYixiuView: View {
             .foregroundStyle(YixiuTheme.mist)
             .padding(.top, 16)
 
-            DisclosureGroup(language.text(zh: "我们相信的生活方式", en: "The way of life we believe in")) {
             VStack(alignment: .leading, spacing: 0) {
                 Text(language.text(zh: "我们的生命观", en: "OUR PHILOSOPHY OF LIFE"))
                     .yixiuSecondary(9)
@@ -1392,11 +1406,6 @@ private struct AboutYixiuView: View {
             .overlay(alignment: .top) { Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7) }
             .overlay(alignment: .bottom) { Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7) }
             .padding(.top, 30)
-            }
-            .font(YixiuTheme.sans(14, weight: .medium))
-            .tint(YixiuTheme.aquaStrong)
-            .foregroundStyle(YixiuTheme.moon)
-            .padding(.top, 26)
         }
     }
 }

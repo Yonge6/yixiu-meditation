@@ -207,11 +207,9 @@ final class AppState: ObservableObject {
 
     func play() {
         guard canAccessScene(scene),
-              isFocusActive || SubscriptionAccessPolicy.canUseTimer(minutes: duration, level: enforcedAccessLevel ?? .free) else {
+              isFocusActive || SubscriptionAccessPolicy.canUseTimer(minutes: duration, level: enforcedAccessLevel ?? .plus) else {
             pauseAudio()
-            audioError = enforcedAccessLevel == nil
-                ? language.text(zh: "正在确认购买权益，请稍后再试。", en: "Checking your access. Please try again shortly.")
-                : language.text(zh: "升级一休 Plus 即可聆听这首音乐。", en: "Upgrade to Yixiu Plus to play this track.")
+            audioError = language.text(zh: "升级一休 Plus 即可聆听这首音乐。", en: "Upgrade to Yixiu Plus to play this track.")
             isPlaying = false
             return
         }
@@ -299,7 +297,7 @@ final class AppState: ObservableObject {
 
     func selectDuration(_ minutes: Int) {
         guard [0, 5, 15, 30, 60].contains(minutes) else { return }
-        guard SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: enforcedAccessLevel ?? .free) else { return }
+        guard SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: enforcedAccessLevel ?? .plus) else { return }
         duration = minutes
         if isPlaying {
             startTimer()
@@ -384,9 +382,10 @@ final class AppState: ObservableObject {
 
     private func canAccessScene(_ target: MeditationScene) -> Bool {
         guard target.isAvailable else { return false }
-        // Free content remains usable while StoreKit checks the account. A saved
-        // Plus scene stays selected, but cannot play until access is verified.
-        return SubscriptionAccessPolicy.canAccess(scene: target, level: enforcedAccessLevel ?? .free)
+        // Start the selected sound while StoreKit verifies in the background.
+        // SubscriptionStore's 30-second watchdog applies the last verified / Free
+        // policy through enforceAccessLevel even when StoreKit does not return.
+        return SubscriptionAccessPolicy.canAccess(scene: target, level: enforcedAccessLevel ?? .plus)
     }
 
     private func startTimer() {
@@ -503,7 +502,7 @@ final class AppState: ObservableObject {
     @discardableResult
     func beginFocusSession() -> Bool {
         guard canAccessScene(scene),
-              SubscriptionAccessPolicy.canUseFocus(minutes: focusDuration, level: enforcedAccessLevel ?? .free) else { return false }
+              SubscriptionAccessPolicy.canUseFocus(minutes: focusDuration, level: enforcedAccessLevel ?? .plus) else { return false }
         resetFocusSession()
         ProductAnalytics.shared.beginRestSession(restIntent: preparedFocusRestIntent, entryPoint: preparedFocusEntryPoint)
         practiceSceneID = scene.rawValue
@@ -540,7 +539,7 @@ final class AppState: ObservableObject {
     func resumeFocusSession() -> Bool {
         guard focusStatus == .paused, practiceSceneID == scene.rawValue,
               canAccessScene(scene),
-              SubscriptionAccessPolicy.canUseFocus(minutes: focusDuration, level: enforcedAccessLevel ?? .free) else { return false }
+              SubscriptionAccessPolicy.canUseFocus(minutes: focusDuration, level: enforcedAccessLevel ?? .plus) else { return false }
         if !isFocusActive { originalAudioWasPlaying = isPlaying }
         isFocusActive = true
         mayRestoreOriginalPlayback = true

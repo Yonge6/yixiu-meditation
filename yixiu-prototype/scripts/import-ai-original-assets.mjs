@@ -7,6 +7,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const delivery = process.argv[2];
 if (!delivery) throw new Error("Provide the verified album delivery folder");
 const ledger = JSON.parse(await readFile(path.join(root, "docs/audio/ai-originals-20261014.json"), "utf8"));
+let playbackLevels;
+try { playbackLevels = JSON.parse(await readFile(path.join(root, "docs/audio/ai-original-playback-levels-20261019.json"), "utf8")); }
+catch (error) { if (error.code !== "ENOENT") throw error; }
 const art = JSON.parse(await readFile(path.join(root, "docs/audio/ai-original-artwork-20261014.json"), "utf8"));
 const { default: sharp } = await import(process.env.YIXIU_SHARP_MODULE || "sharp");
 const web = path.join(root, "yixiu-prototype/public/assets/yixiu");
@@ -18,8 +21,20 @@ for (const [index, track] of ledger.tracks.entries()) {
   const sourceAudio = path.join(delivery, track.sourceFile);
   const audio = await readFile(sourceAudio);
   if (createHash("sha256").update(audio).digest("hex") !== track.audioSha256) throw new Error("Audio hash mismatch: " + track.id);
-  await copyFile(sourceAudio, path.join(web, "audio/meditation", track.slug + ".m4a"));
-  await copyFile(sourceAudio, path.join(native, "Audio/Meditation", track.slug + ".m4a"));
+  const webAudio = path.join(web, "audio/meditation", track.slug + ".m4a");
+  const nativeAudio = path.join(native, "Audio/Meditation", track.slug + ".m4a");
+  if (playbackLevels) {
+    const corrected = playbackLevels.tracks.find(item => item.id === track.id);
+    if (!corrected || corrected.originalSha256 !== track.audioSha256) throw new Error("Missing playback calibration: " + track.id);
+    for (const file of [webAudio, nativeAudio]) {
+      if (createHash("sha256").update(await readFile(file)).digest("hex") !== corrected.playbackSha256) {
+        throw new Error("Preserve the calibrated playback copies; restore them before importing artwork: " + track.id);
+      }
+    }
+  } else {
+    await copyFile(sourceAudio, webAudio);
+    await copyFile(sourceAudio, nativeAudio);
+  }
   audioBytes += audio.length;
   const sourceImage = art.find(item => item.slug === track.slug)?.sourceImage;
   if (!sourceImage) throw new Error("Missing original artwork: " + track.id);

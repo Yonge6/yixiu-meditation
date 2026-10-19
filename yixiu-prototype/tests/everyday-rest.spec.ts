@@ -1,6 +1,13 @@
 import { expect, test, type Page } from "@playwright/test";
+import path from "node:path";
+import { mkdir } from "node:fs/promises";
 
 const root = process.env.YIXIU_UI_URL || "";
+async function capture(page: Page, name: string) {
+  if (!process.env.YIXIU_UI_EVIDENCE) return;
+  await mkdir(process.env.YIXIU_UI_EVIDENCE, { recursive: true });
+  await page.screenshot({ path: path.join(process.env.YIXIU_UI_EVIDENCE, `${process.env.YIXIU_UI_PHASE || "local"}-${name}.png`), animations: "disabled" });
+}
 type Language = "zh" | "en";
 
 declare global { interface Window { everydayRestAudio: HTMLMediaElement[] } }
@@ -143,7 +150,7 @@ for (const language of ["zh", "en"] as const) {
     expect((await library.locator(".library-discovery-filters").boundingBox())!.y).toBe(discovery!.y);
   });
 
-  test(`Me keeps rest records optional and Lifestyle has Back (${language})`, async ({ page }) => {
+  test(`Me keeps rest records optional and Lifestyle directly visible (${language})`, async ({ page }) => {
     await open(page, language, "", true);
     await nav(page, language).getByRole("button", { name: zh ? "我的" : "Me", exact: true }).click();
     await expect(page.locator(".me-sound-space button")).toHaveText(zh ? "继续聆听" : "Continue listening");
@@ -156,15 +163,39 @@ for (const language of ["zh", "en"] as const) {
       const records = el.querySelector(".practice-journal");
       return settings !== null && records !== null && children.indexOf(settings) < children.indexOf(records);
     })).toBe(true);
-    await expect(page.locator(".me-works")).toHaveCount(0);
-    await page.locator(".trust-links").getByRole("button", { name: zh ? /^生活方式/ : /^Lifestyle/ }).click();
-    await expect(page.locator(".me-screen")).toHaveAttribute("data-me-view", "works");
     await expect(page.locator(".me-works a")).toHaveCount(5);
+    await expect(page.locator(".me-works")).toBeVisible();
+    await page.locator(".me-works > a").last().scrollIntoViewIfNeeded();
+    await capture(page, `${language}-lifestyle-inline`);
+    await page.locator(".trust-links").getByRole("button", { name: zh ? /^关于我们/ : /^About Us/ }).click();
+    await expect(page.locator(".life-philosophy")).toBeVisible();
+    await expect(page.locator("details.life-philosophy, .life-philosophy summary")).toHaveCount(0);
+    await expect(page.locator(".life-philosophy h3")).toBeVisible();
+    await capture(page, `${language}-about-visible`);
     await page.getByRole("button", { name: zh ? "返回" : "Back", exact: true }).click();
     await expect(page.locator(".me-screen")).toHaveAttribute("data-me-view", "home");
     await history.locator("summary").click();
     await expect(history).toHaveAttribute("open", "");
     await expect(history.locator(".journal-entries button")).toHaveCount(1);
     await expect(history.locator(".journal-entries button")).toBeVisible();
+  });
+
+  test(`Favorites always opens a usable library, including the empty state (${language})`, async ({ page }) => {
+    await open(page, language);
+    await nav(page, language).getByRole("button", { name: zh ? "我的" : "Me", exact: true }).click();
+    await page.getByRole("button", { name: zh ? "查看我的收藏" : "View favorites", exact: true }).click();
+    const library = page.getByRole("dialog", { name: zh ? "声音库" : "Sound library", exact: true });
+    await expect(library.getByRole("combobox", { name: zh ? "聆听筛选" : "Listening filter" })).toHaveValue("favorites");
+    await expect(library.locator(".library-empty")).toBeVisible();
+    await capture(page, `${language}-favorites-empty-library`);
+    await library.getByRole("button", { name: zh ? "关闭声音库" : "Close sound library", exact: true }).click();
+    await page.getByRole("button", { name: zh ? "浏览声音，添加收藏" : "Browse sounds to add favorites", exact: true }).click();
+    await expect(library.getByRole("combobox", { name: zh ? "聆听筛选" : "Listening filter" })).toHaveValue("all");
+    await expect(library.locator(".scene-select")).toHaveCount(54);
+    await library.getByRole("button", { name: zh ? "收藏屋檐雨" : "Favorite Rain on Eaves", exact: true }).click();
+    await library.getByRole("button", { name: zh ? "关闭声音库" : "Close sound library", exact: true }).click();
+    await page.getByRole("button", { name: zh ? "查看我的收藏" : "View favorites", exact: true }).click();
+    await expect(library.getByRole("combobox", { name: zh ? "聆听筛选" : "Listening filter" })).toHaveValue("favorites");
+    await expect(library.locator(".scene-select")).toHaveCount(1);
   });
 }

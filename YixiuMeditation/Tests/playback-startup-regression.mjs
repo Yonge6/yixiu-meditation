@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+const read = file => readFileSync(new URL(`../YixiuMeditation/${file}.swift`, import.meta.url), 'utf8');
+const store = read('SubscriptionStore');
+const app = read('YixiuMeditationApp');
+const state = read('AppState');
+const library = read('ListenView');
+assert.doesNotMatch(state, /正在确认购买权益|Checking your access/);
+assert.match(state, /enforcedAccessLevel \?\? \.plus/);
+assert.match(store, /initialVerificationTimeoutSeconds[^\n]*30/);
+assert.match(store, /verificationTimeoutTask/);
+assert.match(app, /onChange\(of: subscriptionStore\.isReady\)/);
+assert.doesNotMatch(library, /正在确认会员资格|checking membership|guard subscriptionStore\.isReady \|\|/);
+assert.ok(store.indexOf('finishInitialVerification()\n        await loadProducts()') >= 0, 'Store product loading must not delay entitlement readiness');
+console.log('PLAYBACK_STARTUP_PASS: immediate pending playback, bounded verification, product-loading independence, no checking blockers');

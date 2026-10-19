@@ -121,20 +121,20 @@ enum AppStatePracticeSmoke {
         state.enteredBackground()
         precondition(!state.isPlaying)
 
-        // Saved member content is preserved, but cannot play before StoreKit
-        // finishes verifying access. Verified Plus restores that exact scene.
+        // Saved member content starts while StoreKit checks in the background.
+        // A confirmed Plus result must not restart the phrase; a Free result
+        // still revokes restricted playback and extended timers.
         defaults.set(MeditationScene.nocturne.rawValue, forKey: "scene")
         defaults.set(60, forKey: "duration")
         let gatedAudio = AmbientAudioEngine()
         let gated = AppState(defaults: defaults, now: { now }, audio: gatedAudio)
         precondition(gated.scene == .nocturne && gated.duration == 60)
         gated.play()
-        precondition(!gated.isPlaying && gatedAudio.playCount == 0)
+        precondition(gated.isPlaying && gatedAudio.playCount == 1 && gated.audioError == nil)
         precondition(defaults.string(forKey: "scene") == MeditationScene.nocturne.rawValue)
         gated.enforceAccessLevel(.plus)
         precondition(gated.scene == .nocturne && gated.duration == 60)
-        gated.play()
-        precondition(gated.isPlaying)
+        precondition(gated.isPlaying && gatedAudio.playCount == 1)
         gated.enforceAccessLevel(.free)
         precondition(gated.scene == .ocean && gated.duration == 30 && !gated.isPlaying)
 
@@ -227,6 +227,6 @@ enum AppStatePracticeSmoke {
         now += 58
         downgrade.reconcilePlayback()
         precondition(downgrade.focusStatus == .complete && downgrade.practiceJournal.last?.seconds == 60)
-        print("APP_STATE_RELIABILITY_PASS: retained-player pause/resume, background preference, saved Plus scene gated until verified, Focus interruption/explicit silence, shared lock-screen clocks, audio failure and no duplicate records.")
+        print("APP_STATE_RELIABILITY_PASS: retained-player pause/resume, background preference, immediate pending playback with verified downgrade, Focus interruption/explicit silence, shared lock-screen clocks, audio failure and no duplicate records.")
     }
 }

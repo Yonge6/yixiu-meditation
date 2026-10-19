@@ -114,7 +114,7 @@ const originalScenes = Object.fromEntries(originalMusic.map(track => [track.id, 
   id: track.id, zh: track.zh, en: track.en,
   useZh: "AI 原创 · " + track.duration, useEn: "AI Original · " + track.duration,
   image: "/assets/yixiu/original/" + track.slug + ".jpg",
-  audio: "/assets/yixiu/audio/meditation/" + track.slug + ".m4a",
+  audio: "/assets/yixiu/audio/meditation/" + track.slug + ".m4a?v=ai-level-20261019",
   kind: "meditation", free: track.free, filter: "lowpass", frequency: 20000, level: 0.08,
 }])) as Record<(typeof originalMusic)[number]["id"], Scene>;
 const freeClassicalSceneIds = new Set<SceneId>(["clairDeLune", "gymnopedie", "canon", "moonlightSonata", "preludeC", "traumerei", "raindrop", "waltzAMinor", "gnossienne", "mozartAndante"]);
@@ -734,6 +734,16 @@ function preferredLanguage(): Language {
   return "en";
 }
 
+function LifestyleWorks({ language }: { language: Language }) {
+  return <section className="me-works" aria-label={language === "zh" ? "生活方式作品" : "Lifestyle projects"}>
+                  <a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "一" : "01"}</b><span><strong>WonderElian</strong><em>{language === "zh" ? "让复杂的想法变得清晰、好看而有人情味" : "Make complex ideas clear, beautiful, and human"}</em><small>{language === "zh" ? "WonderElian 是永歌 Elian 的个人创作空间。这里记录作品，也记录关于设计、AI、产品，以及如何慢慢成为自己的思考与探索。" : "An independent creative world from Wuhan, connecting visual culture, wellbeing, and real life through design, AI, and digital products."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://xiazishuo.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "二" : "02"}</b><span><strong>{language === "zh" ? "虾子曰" : "Xiazi Says"}</strong><em>{language === "zh" ? "昨日世界" : "Yesterday's World"}</em><small>{language === "zh" ? "每天用全球热点与双语海报，看清复杂世界。" : "Global stories and bilingual posters make the world easier to see."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://buer.wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "三" : "03"}</b><span><strong>{language === "zh" ? "不二见己" : "Buer Within"}</strong><em>{language === "zh" ? "与真实的自己 · 温柔相遇" : "Meet your true self"}</em><small>{language === "zh" ? "和 AI 成长伙伴豆豆龙聊聊，在对话与成长档案中，更清楚地认识自己。" : "Talk with Doudoulong, your AI growth companion, and get to know yourself through conversations and your growth profile."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://wendao.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "四" : "04"}</b><span><strong>{language === "zh" ? "三慢问道" : "Wendao"}</strong><em>{language === "zh" ? "道德经" : "Tao Te Ching"}</em><small>{language === "zh" ? "读懂经典，也在慢下来时读懂自己。" : "Read the classic slowly—and yourself with it."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://style-atlas.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "五" : "05"}</b><span><strong>{language === "zh" ? "艺术风格图鉴" : "Style Atlas"}</strong><em>{language === "zh" ? "学习看懂一种美" : "Learn to see a style"}</em><small>{language === "zh" ? "沿着艺术与设计风格的脉络，找到自己的观看方式。" : "Follow art and design lineages to find your own way of looking."}</small></span><ExternalLinkIcon /></a>
+  </section>;
+}
+
 export default function Prototype() {
   const [restLink] = useState(() => readRestLink(window.location.search));
   const [restIntent, setRestIntent] = useState<RestIntent>(restLink?.intent ?? "none");
@@ -757,6 +767,13 @@ export default function Prototype() {
   const [sceneCategory, setSceneCategory] = useState<SceneCategory>("all");
   const [restPurpose, setRestPurpose] = useState<RestPurpose>("all");
   const [libraryScope, setLibraryScope] = useState<LibraryScope>("all");
+  const openPersonalLibrary = (scope: LibraryScope) => {
+    setLibraryScope(scope);
+    setLibraryQuery("");
+    setSceneCategory("all");
+    setRestPurpose("all");
+    setLibraryOpen(true);
+  };
   const [libraryQuery, setLibraryQuery] = useState("");
   const libraryTriggerRef = useRef<HTMLButtonElement>(null);
   const analyticsMounted = useRef(false);
@@ -1476,7 +1493,7 @@ export default function Prototype() {
   return (
     <main
       className={`yixiu-app ${isPlaying ? "is-audio-playing" : ""} ${swipeOffset !== 0 ? "is-scene-dragging" : ""} ${swipeSettling ? "is-swipe-settling" : ""}`}
-      data-ui-version="20261019-everyday-rest"
+      data-ui-version="20261019-me-playback-corrections"
       data-language={language}
       data-scene={active.id}
       data-tab={activeTab}
@@ -2000,13 +2017,13 @@ export default function Prototype() {
                 ) : null}
 
                 <section className="me-card favorites-card">
-                  <div className="card-heading">
+                  <button className="card-heading favorites-heading" type="button" aria-label={language === "zh" ? "查看我的收藏" : "View favorites"} onClick={() => openPersonalLibrary("favorites")}>
                     <div>
                       <strong>{language === "zh" ? "我的收藏" : "Favorites"}</strong>
                       <small>{language === "zh" ? "喜欢的声音，随时回来听" : "Your returning sounds"}</small>
                     </div>
-                    <HeartIcon />
-                  </div>
+                    <span className="favorites-heading-icons"><HeartIcon /><ChevronRightIcon /></span>
+                  </button>
                   {favorites.length ? (
                     <div className="favorite-scenes">
                       {favorites.map((sceneId) => (
@@ -2017,7 +2034,7 @@ export default function Prototype() {
                       ))}
                     </div>
                   ) : (
-                    <p className="empty-copy">{language === "zh" ? "点亮心形，把喜欢的声音留在这里。" : "Tap the heart while listening and your favorite sounds will stay here."}</p>
+                    <div className="favorites-empty"><p className="empty-copy">{language === "zh" ? "点亮心形，把喜欢的声音留在这里。" : "Tap the heart while listening and your favorite sounds will stay here."}</p><button type="button" className="favorites-empty-action" onClick={() => openPersonalLibrary("all")}>{language === "zh" ? "浏览声音，添加收藏" : "Browse sounds to add favorites"}<ChevronRightIcon /></button></div>
                   )}
                 </section>
 
@@ -2100,7 +2117,8 @@ export default function Prototype() {
 
 
 
-                <section className="trust-links"><button type="button" onClick={() => openMeDetail("works")}><span><strong>{language === "zh" ? "生活方式" : "Lifestyle"}</strong><small>{language === "zh" ? "其他作品，留待有空时看看" : "Other projects, whenever you have time"}</small></span><ChevronRightIcon /></button></section>
+                <p className="me-group-label">{language === "zh" ? "生活方式" : "LIFESTYLE"}</p>
+                <LifestyleWorks language={language} />
                 <p className="me-philosophy-footnote">{language === "zh" ? "不必等到有空，才可以休息。" : "You do not have to wait for free time to rest."}</p>
               </div>
             </>
@@ -2124,8 +2142,8 @@ export default function Prototype() {
                     <h2>{language === "zh" ? "不必等到有空，才可以休息。" : "You do not have to wait for free time to rest."}</h2>
                     <p>{language === "zh" ? "一休是日常的休息与声音陪伴。在午休、夜里醒来或工作间隙，听一会儿自然声与轻音乐，或者跟着呼吸一分钟。" : "Yixiu is an everyday rest and sound companion. Take a lunch break, rest when you wake at night, or pause between tasks—with nature sounds, gentle music or a minute of breathing."}</p>
                     <p>{language === "zh" ? "无需账号，没有广告。不必完成课程，也没有连续打卡。免费声音、1 分钟呼吸和短时定时，就可以好好用。" : "No account, no ads, no courses to finish and no streaks to maintain. Free sounds, one-minute breathing and short timers are ready whenever you need them."}</p>
-                    <details className="life-philosophy">
-                      <summary>{language === "zh" ? "我们的生命观" : "Our philosophy of life"}</summary>
+                    <section className="life-philosophy" aria-label={language === "zh" ? "我们的生命观" : "Our philosophy of life"}>
+                      <h2 className="life-philosophy-heading">{language === "zh" ? "我们的生命观" : "Our philosophy of life"}</h2>
                       <h3>{language === "zh" ? "生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。" : "Life is not for proving yourself. It is for knowing, accepting, becoming, and living as yourself."}</h3>
                       <p>{language === "zh" ? "真正的成长，不是把自己改造成某个标准答案，而是在变化中越来越诚实地看见自己，越来越从容地选择自己的活法。" : "Growth is not the work of turning yourself into a standard answer. It is learning to see yourself more honestly through change, and to choose your way of living with greater ease."}</p>
                       <div className="life-path" aria-label={language === "zh" ? "核心路径" : "Core path"}>
@@ -2146,16 +2164,10 @@ export default function Prototype() {
                       </div>
                       <blockquote>{language === "zh" ? "向内认识自己，向外如水而行。" : "Know yourself within; move through the world like water."}</blockquote>
                       <p className="life-vision">{language === "zh" ? "我们愿陪伴彼此走过低谷与高峰，探索身心健康的工作与生活方式；真实面对自己与世界，善待自己、他人与生命，并在创造和欣赏中活出生命之美。" : "We hope to accompany one another through valleys and peaks, exploring healthier ways to work and live: facing self and world truthfully, treating life with kindness, and creating and appreciating beauty."}</p>
-                    </details>
+                    </section>
                   </article>
                 ) : meView === "works" ? (
-                  <section className="me-works">
-                  <a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "一" : "01"}</b><span><strong>WonderElian</strong><em>{language === "zh" ? "让复杂的想法变得清晰、好看而有人情味" : "Make complex ideas clear, beautiful, and human"}</em><small>{language === "zh" ? "WonderElian 是永歌 Elian 的个人创作空间。这里记录作品，也记录关于设计、AI、产品，以及如何慢慢成为自己的思考与探索。" : "An independent creative world from Wuhan, connecting visual culture, wellbeing, and real life through design, AI, and digital products."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://xiazishuo.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "二" : "02"}</b><span><strong>{language === "zh" ? "虾子曰" : "Xiazi Says"}</strong><em>{language === "zh" ? "昨日世界" : "Yesterday's World"}</em><small>{language === "zh" ? "每天用全球热点与双语海报，看清复杂世界。" : "Global stories and bilingual posters make the world easier to see."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://buer.wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "三" : "03"}</b><span><strong>{language === "zh" ? "不二见己" : "Buer Within"}</strong><em>{language === "zh" ? "与真实的自己 · 温柔相遇" : "Meet your true self"}</em><small>{language === "zh" ? "和 AI 成长伙伴豆豆龙聊聊，在对话与成长档案中，更清楚地认识自己。" : "Talk with Doudoulong, your AI growth companion, and get to know yourself through conversations and your growth profile."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://wendao.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "四" : "04"}</b><span><strong>{language === "zh" ? "三慢问道" : "Wendao"}</strong><em>{language === "zh" ? "道德经" : "Tao Te Ching"}</em><small>{language === "zh" ? "读懂经典，也在慢下来时读懂自己。" : "Read the classic slowly—and yourself with it."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://style-atlas.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "五" : "05"}</b><span><strong>{language === "zh" ? "艺术风格图鉴" : "Style Atlas"}</strong><em>{language === "zh" ? "学习看懂一种美" : "Learn to see a style"}</em><small>{language === "zh" ? "沿着艺术与设计风格的脉络，找到自己的观看方式。" : "Follow art and design lineages to find your own way of looking."}</small></span><ExternalLinkIcon /></a>
-                </section>
+                  <LifestyleWorks language={language} />
                 ) : meView === "privacy" ? (
                   <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取精确位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access precise location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><p>{language === "zh" ? "使用统计默认关闭。自愿开启后，Google Analytics 使用随机浏览器标识统计播放时长、声音选择和功能使用，不上传练习手记。可随时在“我的”关闭。" : "Usage analytics is off by default. If you opt in, Google Analytics uses a random browser identifier to measure listening duration, sound choices and feature use. Journal history is not uploaded. Disable anytime in Me."} <a href="/privacy.html">{language === "zh" ? "完整隐私说明" : "Full privacy notice"}</a></p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
                 ) : meView === "sources" ? (

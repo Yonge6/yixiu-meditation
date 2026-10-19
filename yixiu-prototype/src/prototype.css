@@ -3906,9 +3906,13 @@ img[data-image-scene="tide"] {
 .practice-journal summary > span { display: block; margin-top: 8px; color: #b4cdd0; font: 12px var(--sans); }
 .practice-journal summary b { font-weight: 400; }
 .practice-journal .journal-privacy { font-size: 11px; opacity: 1; color: #b5cbce; }
-.life-philosophy summary { min-height: 44px; cursor: pointer; color: #bce8e4; font: 18px var(--serif); }
-.life-philosophy[open] summary { margin-bottom: 22px; }
+.life-philosophy .life-philosophy-heading { margin: 0 0 22px; color: #bce8e4; font: 18px var(--serif); }
 .me-works { overflow: hidden; text-align: left; }
+.favorites-heading { width: 100%; min-height: 54px; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
+.favorites-heading-icons { display: flex; align-items: center; gap: 12px; color: var(--mist); }
+.favorites-heading-icons svg { width: 18px; height: 18px; }
+.favorites-empty-action { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 8px; padding: 0; border: 0; background: none; color: var(--aqua); font-size: 13px; cursor: pointer; }
+.favorites-heading:focus-visible, .favorites-empty-action:focus-visible { outline: 2px solid var(--aqua); outline-offset: 5px; border-radius: 6px; }
 .scene-card-copy em { color: #c4dddd; font-size: 11px; }
 .me-screen .section-kicker { font-size: 11px; }
 @media (max-width: 360px) {
