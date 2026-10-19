@@ -1,0 +1,35 @@
+
+> yixiu-prototype@0.1.0 test:runtime
+> playwright test tests/everyday-rest.spec.ts tests/ui-refinement.spec.ts --workers=1 --reporter=line
+
+
+[WebServer] (node:33253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+
+(node:33259) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/20] tests/everyday-rest.spec.ts:39:3 › rest entries stay in Focus, not the immersive home (zh)
+[2/20] tests/everyday-rest.spec.ts:57:5 › lunch is a free 15-minute listen in Focus (zh)
+[3/20] tests/everyday-rest.spec.ts:57:5 › night_waking is a free 15-minute listen in Focus (zh)
+[4/20] tests/everyday-rest.spec.ts:71:3 › work break is free one-minute breathing, with no forced sound (zh)
+[5/20] tests/everyday-rest.spec.ts:83:3 › work break preserves saved sound-on choice and advances breathing (zh)
+[6/20] tests/everyday-rest.spec.ts:99:3 › campaign links prepare the matching free rest without autoplay (zh)
+[7/20] tests/everyday-rest.spec.ts:110:3 › library purpose and sound type intersect with Free and search (zh)
+[8/20] tests/everyday-rest.spec.ts:146:3 › Me keeps rest records optional and Lifestyle has Back (zh)
+[9/20] tests/everyday-rest.spec.ts:39:3 › rest entries stay in Focus, not the immersive home (en)
+[10/20] tests/everyday-rest.spec.ts:57:5 › lunch is a free 15-minute listen in Focus (en)
+[11/20] tests/everyday-rest.spec.ts:57:5 › night_waking is a free 15-minute listen in Focus (en)
+[12/20] tests/everyday-rest.spec.ts:71:3 › work break is free one-minute breathing, with no forced sound (en)
+[13/20] tests/everyday-rest.spec.ts:83:3 › work break preserves saved sound-on choice and advances breathing (en)
+[14/20] tests/everyday-rest.spec.ts:99:3 › campaign links prepare the matching free rest without autoplay (en)
+[15/20] tests/everyday-rest.spec.ts:110:3 › library purpose and sound type intersect with Free and search (en)
+[16/20] tests/everyday-rest.spec.ts:146:3 › Me keeps rest records optional and Lifestyle has Back (en)
+[17/20] tests/ui-refinement.spec.ts:10:3 › refined H5 390x844 zh
+[18/20] tests/ui-refinement.spec.ts:10:3 › refined H5 320x740 en
+[19/20] tests/ui-refinement.spec.ts:10:3 › refined H5 1280x900 zh
+[20/20] tests/ui-refinement.spec.ts:10:3 › refined H5 844x390 en
+  20 passed (33.1s)

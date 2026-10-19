@@ -1,0 +1,57 @@
+
+> yixiu-prototype@0.1.0 test:sites
+> node --test tests/sites-worker.test.mjs
+
+✔ serves existing static assets without a fallback (10.426709ms)
+✔ falls back to index.html for an unknown app route (0.693666ms)
+✔ does not turn missing API or write requests into the app shell (0.276708ms)
+✔ emits the files required by Sites packaging (2.437666ms)
+✔ root page exposes truthful software application structured data (0.609667ms)
+✔ root page declares the complete region-neutral Apple Smart App Banner (0.262ms)
+✔ root page exposes a useful no-JavaScript Yixiu entry point (0.32175ms)
+✔ every sitemap HTML page points agents to the covering llms.txt (5.568334ms)
+✔ every public Yixiu application schema matches the official App Store version (2.80725ms)
+✔ every shareable sitemap page exposes a complete large-image social card (6.127708ms)
+✔ sitemap marks the completed social-card pages as updated (0.246125ms)
+✔ all H5 App Store actions use the shared Apple campaign attribution (2.356375ms)
+✔ every after-preview page loads the global share-prompt script version (2.337583ms)
+✔ sleep intent page keeps its search promise, visible FAQ, and conversion path aligned (0.650959ms)
+✔ iPhone lock-screen rain guide answers the setting intent and keeps source, schema and conversion aligned (0.325708ms)
+✔ focus intent page answers the query and keeps its App Store path aligned (0.336042ms)
+✔ reset intent page offers a real one-tap preview before its matched App Store path (0.181292ms)
+✔ ocean focus page aligns visible video, structured data, and attributed download CTA (0.260583ms)
+✔ ocean sleep page serves real waves and the matched Sleep download path (0.404ms)
+✔ mountain stream focus page keeps its search promise, real preview, and schema aligned (0.317291ms)
+✔ robots and sitemap expose the crawlable focus routes (0.249625ms)
+✔ river study page keeps its student intent, real preview, and Focus download path aligned (0.304291ms)
+✔ study-sound comparison page exposes three real previews and a truthful comparison schema (0.432458ms)
+✔ sleep-sound comparison page exposes seven real previews and an honest choice path (0.345917ms)
+✔ rain reading page answers a distinct reading intent with a real preview and compressed hero (0.381416ms)
+✔ rain study page keeps its study intent, real preview, and Focus download path aligned (0.288542ms)
+✔ white noise study page serves the real focus recording and an honest conversion path (0.518ms)
+✔ nature sounds meditation page serves four real recordings, a timer, and a truthful conversion path (0.494209ms)
+✔ 20-minute meditation music page serves the complete Still Water track with source and attribution (0.533834ms)
+✔ 1-minute meditation music page serves the complete First Breath track with source and attribution (0.738584ms)
+✔ quiet pass exposes three anonymous scene-specific gift pages without changing membership (1.434208ms)
+✔ free online sound machine serves 10 real recordings with a truthful timer and conversion path (0.667541ms)
+✔ guides hub organizes every English intent page and exposes a real preview and truthful collection schema (0.429041ms)
+✔ every English intent page links back to the guides hub (1.575625ms)
+✔ waterfall masking page serves a real recording and keeps every claim, schema and download path aligned (0.425875ms)
+✔ thunderstorm sleep page serves distant thunder and keeps every claim, schema and download path aligned (0.254959ms)
+✔ underwater white noise black screen page keeps its search promise, real recording and Sleep download path aligned (0.635917ms)
+✔ morning birds focus page serves real birdsong and keeps its bright focus promise aligned (0.298375ms)
+✔ forest focus page serves its real forest-breeze recording and aligned search promise (0.284625ms)
+✔ forest sleep page serves real forest ambience, timer, and an aligned Sleep App Store path (0.493083ms)
+✔ wind sleep page serves real mountain wind and keeps its no-music bedtime promise aligned (0.427875ms)
+✔ keeps the Google Search Console verification file exact (0.125667ms)
+✔ keeps the public IndexNow key file exact (0.147875ms)
+✔ llms.txt exposes the existing Yixiu collection without unrelated products or outcome claims (0.408ms)
+✔ production deploy acceptance checks the HTTPS origin instead of its redirect (1.157958ms)
+ℹ tests 45
+ℹ suites 0
+ℹ pass 45
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 87.296583

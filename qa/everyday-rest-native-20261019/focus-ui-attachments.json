@@ -1,0 +1,77 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "01601AAF-3F1B-46AF-8E7D-620FC8A2FBBD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-lifestyle-detail_0_1D4F980F-80C8-47AF-8E9F-390E6B290ED2.png",
+        "timestamp" : 1792396420.516
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "2342E7FC-DF4C-4F72-A863-ABB71F28FBB1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-me-continue-first_0_2B3226B5-9E02-49F2-9068-2C9CFD743D34.png",
+        "timestamp" : 1792396412.963
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "C98F1820-E3DE-4751-8F10-0D793453124D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-night-focus_0_B8B13C45-64A7-47AC-8540-B57C971D6890.png",
+        "timestamp" : 1792396409.789
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "251A52F3-25C8-49B0-8662-B492AA4E4108.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-zh-lunch-focus_0_726CFC1A-828A-4AED-A7D3-65551E2F8985.png",
+        "timestamp" : 1792396408.091
+      }
+    ],
+    "testIdentifier" : "HomeInteractionUITests/testEverydayRestChineseScreensAndLifestyleBack()",
+    "testIdentifierURL" : "test://com.apple.xcode/YixiuMeditation/HomeInteractionUITests/HomeInteractionUITests/testEverydayRestChineseScreensAndLifestyleBack"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "D6207CC7-906E-43C2-BBCE-ED9132C3405E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-en-work-break_0_AC067C1D-B284-41A9-97FF-341576141BB1.png",
+        "timestamp" : 1792396455.561
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "6C34D7FA-FDB1-4C37-BD82-2881695BC887.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-en-night-focus_0_DA4853FA-0183-4E66-B6DF-85F8C44FC2A0.png",
+        "timestamp" : 1792396451.908
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "EA581C81-CDD5-4D75-97AF-3A6EF9486030.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "everyday-rest-en-lunch-focus_0_FD10697E-B56A-4E3C-ABE7-26CE95C60994.png",
+        "timestamp" : 1792396444.04
+      }
+    ],
+    "testIdentifier" : "HomeInteractionUITests/testFocusFreePresetsStayInFocusAndPauseListening()",
+    "testIdentifierURL" : "test://com.apple.xcode/YixiuMeditation/HomeInteractionUITests/HomeInteractionUITests/testFocusFreePresetsStayInFocusAndPauseListening"
+  }
+]

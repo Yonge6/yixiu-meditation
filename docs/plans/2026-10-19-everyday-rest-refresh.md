@@ -6,7 +6,7 @@
 
 **Architecture:** Reuse existing sound selection, timer, breathing, local journal and consent-gated analytics. Keep stable scene IDs, 27 Free / 54 total catalog, native system tabs, web full-width tabs, opt-in privacy and existing download handoff. H5 gets intent-aware deep links with explicit user-gesture playback, not autoplay. Native source/build delivery is separate from an approved App Store release.
 
-**Tech Stack:** React/TypeScript, app-owned CSS, SwiftUI/StoreKit, Firebase/GA4 consent gates, existing Node/Swift regression harnesses, production Nginx atomic publisher.
+**Tech Stack:** React/TypeScript, app-owned CSS, SwiftUI/StoreKit, Firebase/GA4 consent gates, existing Node/Swift regression harnesses, production Nginx publisher with a recoverable backup and rsync.
 
 ---
 

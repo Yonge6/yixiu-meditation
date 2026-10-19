@@ -38,4 +38,6 @@ Pre-existing uncommitted `ContentView.swift`, project settings and unrelated UI-
 
 ## Limits
 
-No physical-phone install was requested or performed in this change. WeChat handoff and privacy exclusions have regression coverage; this is not a fresh WeChat-on-phone or VoiceOver compliance certification. Store privacy labels are independently checked during submission, not inferred from screenshots.
+No physical-phone install was requested or performed in this change. The installed iOS27.1 runtime only supports iPhone Duo; attempts to create ordinary iPhone14 Pro Max and17 Pro Max simulators returned CoreSimulator403 (incompatible device). The simulator evidence therefore proves Duo flows, not ordinary-phone layout or absence of overlap. No runtime or system device profile was altered.
+
+WeChat handoff and privacy exclusions have regression coverage; this is not a fresh WeChat-on-phone or VoiceOver compliance certification. Store privacy labels are independently checked during submission, not inferred from screenshots.
