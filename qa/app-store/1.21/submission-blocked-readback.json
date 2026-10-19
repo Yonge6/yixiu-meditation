@@ -1,0 +1,70 @@
+{
+  "checkedAt": "2026-10-19T08:23:51.973Z",
+  "appId": "1461182261",
+  "version": {
+    "id": "f0556f3f-178a-43a6-8a6e-d0033b4d5af8",
+    "versionString": "1.21",
+    "appStoreState": "PREPARE_FOR_SUBMISSION",
+    "releaseType": "AFTER_APPROVAL"
+  },
+  "selectedBuild": {
+    "id": "a085b1ae-f1c4-4b04-a68c-704725642fe3",
+    "version": "36",
+    "preReleaseVersion": "1.21",
+    "processingState": "VALID",
+    "usesNonExemptEncryption": false
+  },
+  "metadataReadback": {
+    "canonical": "aso-metadata.json",
+    "zh-Hans": {
+      "id": "0cde2c69-91c5-46ac-a579-a08c4c51e36d",
+      "status": 200,
+      "matches": { "description": true, "promotionalText": true, "whatsNew": true },
+      "lengths": { "description": 1121, "promotionalText": 75, "whatsNew": 224 }
+    },
+    "en-US": {
+      "id": "952a079e-1db9-4ecd-bf5d-d1a554d305f4",
+      "status": 200,
+      "matches": { "description": true, "promotionalText": true, "whatsNew": true },
+      "lengths": { "description": 2860, "promotionalText": 141, "whatsNew": 647 }
+    },
+    "reviewNotes": {
+      "id": "2ac0cc1d-8489-48aa-ad8e-f0440af52cdb",
+      "version": "1.21 (36)",
+      "matchesCanonical": true,
+      "contactsOmittedFromEvidence": true,
+      "noCollapsedHistoryClaim": true
+    }
+  },
+  "submissionAttempt": {
+    "action": "Add for Review",
+    "result": "Blocked before submission",
+    "modalVisibleText": "协议更新 / 好",
+    "modalBody": "",
+    "noticeAcknowledgedOnly": true,
+    "submitted": false,
+    "submissionId": null
+  },
+  "confirmedAgreementBlocker": {
+    "source": "https://appstoreconnect.apple.com/business",
+    "visibleNotice": "《Apple Developer Program 许可协议》已更新并需要查阅。若要更新现有 App 和提交新 App，账户持有人必须登录账户，查看并接受更新后的协议。",
+    "accountUrl": "https://developer.apple.com/account",
+    "freeAppAgreementStatus": "有效（新协议可用）",
+    "paidAppAgreementStatus": "有效",
+    "legalAgreementAccepted": false
+  },
+  "unchanged": ["names", "subtitles", "keywords", "pricing", "existing approved media", "privacy declarations"],
+  "sanitizedScreenshots": ["required-agreement-banner-only.png", "prepared-version-status-only.png"],
+  "localOnlyDoNotCommit": [
+    "submission-blocked-agreement-update.png: contains review contact fields behind the dialog",
+    "submission-agreement-notice-only.png: clipped capture is blank and is not accepted visual evidence"
+  ],
+  "handoff": {
+    "taskSpace": 11,
+    "preparedPage": "p1",
+    "agreementPage": "p2",
+    "handedToUser": true,
+    "finished": false,
+    "nextAction": "Account holder must review the updated agreement. Resume only after user confirmation, then retry Add for Review and final submission of the existing verified build."
+  }
+}

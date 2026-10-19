@@ -1,0 +1,74 @@
+{
+  "verifiedOn": "2026-10-19",
+  "appId": "1461182261",
+  "taskSpace": 11,
+  "page": "p1",
+  "url": "https://appstoreconnect.apple.com/apps/1461182261/distribution/ios/version/inflight",
+  "version": {
+    "id": "f0556f3f-178a-43a6-8a6e-d0033b4d5af8",
+    "versionString": "1.21",
+    "appStoreState": "PREPARE_FOR_SUBMISSION",
+    "releaseType": "AFTER_APPROVAL",
+    "build": null
+  },
+  "publishedVersionPreserved": {
+    "versionString": "1.20",
+    "appStoreState": "READY_FOR_SALE",
+    "withdrawn": false
+  },
+  "localizations": [
+    {
+      "locale": "zh-Hans",
+      "id": "0cde2c69-91c5-46ac-a579-a08c4c51e36d",
+      "saveStatus": 200,
+      "readbackMatchesCanonical": { "promotionalText": true, "description": true, "whatsNew": true },
+      "lengths": { "promotionalText": 75, "description": 1120, "whatsNew": 222 },
+      "keywordsPreserved": true,
+      "inheritedPlacementCount": 18,
+      "sameImageIdsAsPublishedVersion": true,
+      "sortedImageIdsSha256": "8f56635b7b325feb6141062b78d99302cba74e14de603d2645540557d76693cf"
+    },
+    {
+      "locale": "en-US",
+      "id": "952a079e-1db9-4ecd-bf5d-d1a554d305f4",
+      "saveStatus": 200,
+      "readbackMatchesCanonical": { "promotionalText": true, "description": true, "whatsNew": true },
+      "lengths": { "promotionalText": 141, "description": 2860, "whatsNew": 644 },
+      "keywordsPreserved": true,
+      "inheritedPlacementCount": 18,
+      "sameImageIdsAsPublishedVersion": true,
+      "sortedImageIdsSha256": "c91df7941bbc908ab07b2f538ca1a81601e5fe297a17d04dd79a1fd579542ef7"
+    }
+  ],
+  "placementsPerLocale": {
+    "IPHONE_DUO_PROFILE:APP_SCREENSHOT": 6,
+    "IPAD_13_PROFILE:APP_SCREENSHOT": 3,
+    "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE:APP_SCREENSHOT": 6,
+    "WATCH_SERIES_10_PROFILE:APP_SCREENSHOT": 1,
+    "DEFAULT_PROFILE:APP_STORE_SEARCH_RESULTS_ASSET": 1,
+    "DEFAULT_PROFILE:PRODUCT_PAGE_HEADER_ASSET": 1
+  },
+  "privacyReadback": {
+    "changed": false,
+    "policyUrl": "https://yixiu.wonderelian.com/privacy.html",
+    "linkedToUser": true,
+    "types": ["Product Interaction", "Other Diagnostic Data", "Device ID", "Coarse Location", "Purchase History"],
+    "purpose": "Analytics",
+    "sourceComparison": "Optional analytics remains off until consent and verified production installation. No new data category was introduced by rest_intent, entry_point or meaningful_rest; published declarations retained without weakening. No full SDK or legal compliance certification claimed."
+  },
+  "reviewDetails": {
+    "id": "2ac0cc1d-8489-48aa-ad8e-f0440af52cdb",
+    "demoAccountRequired": false,
+    "contactFieldsPresent": true,
+    "inheritedNotesVersion": "1.20 (34)",
+    "notesNotUpdatedYet": true
+  },
+  "remainingBeforeSubmission": [
+    "Wait for exact 1.21 (36) upload and processing receipt, then attach the verified build.",
+    "Update inherited 1.20 review notes to verified 1.21 build notes while preserving contact details.",
+    "Check encryption/export compliance and Apple's final validation; do not accept new legal agreements automatically.",
+    "Submit only after root finalizes verification. This receipt is draft preparation, not submission or approval."
+  ],
+  "unchanged": ["names", "subtitles", "keywords", "subscription prices", "existing approved media", "recording licenses", "privacy declarations"],
+  "screenshots": ["draft-metadata-saved.png", "privacy-labels-unchanged.png"]
+}

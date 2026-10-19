@@ -1,0 +1,27 @@
+Sanitized Yixiu App Store binary release receipt
+Date: 2026-10-19
+Feature commit: 1d809d4 (frozen worktree with preserved pre-existing changes)
+App: com.health.yixiu
+Version: 1.21
+Build: 36
+Xcode: 27.1 (27A9275)
+Configuration: Release; normal project compilation conditions.
+
+** ARCHIVE SUCCEEDED **
+Host and widget Info.plist both verified as 1.21 (36).
+Host deep-strict and widget strict code-signature verification passed.
+All 55 bundled audio resources match source SHA-256.
+All 10 AI originals match the approved delivery manifest SHA-256.
+Debug/internal access compilation flags and executable markers absent.
+Analytics/privacy defaults verified off; non-exempt encryption false.
+
+2026-10-19 16:11:27.399 Asia/Shanghai: Uploading YixiuMeditation.ipa is complete.
+2026-10-19 16:11:28.048 Asia/Shanghai: Uploaded package is processing.
+2026-10-19 16:11:28.065 Asia/Shanghai: Upload succeeded.
+Uploaded YixiuMeditation
+** EXPORT SUCCEEDED **
+Export process exit code: 0
+
+Non-blocking warnings: FirebaseAnalytics.framework and GoogleAppMeasurement.framework vendor dSYMs were not available for symbol upload. The binary upload succeeded.
+
+This receipt does not confirm review submission, approval, public release, or a phone installation. App Store Connect processing and build selection require independent readback.
