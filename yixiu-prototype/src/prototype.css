@@ -2830,8 +2830,8 @@ img[data-image-scene="tide"] {
   place-items: center;
   border: 0;
   border-radius: 0;
-  color: #f5fdff;
-  background: linear-gradient(145deg, #75d8de 0%, #277587 48%, #092f43 100%);
+  color: #fff0c8;
+  background: linear-gradient(145deg, #604928 0%, #312b21 48%, #17282d 100%);
   box-shadow: 0 7px 18px rgba(0, 12, 23, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.42);
   clip-path: polygon(20% 0, 80% 0, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0 80%, 0 20%);
 }
@@ -2839,23 +2839,15 @@ img[data-image-scene="tide"] {
 .scene-access-badge.is-plus svg {
   position: relative;
   z-index: 1;
-  width: 17px;
-  height: 15px;
+  width: 21px;
+  height: 19px;
   overflow: visible;
-  fill: none;
-  stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.scene-access-badge.is-plus .premium-gem-outline {
-  stroke-width: 1.35;
-}
-
-.scene-access-badge.is-plus .premium-gem-facets {
-  opacity: 0.72;
-  stroke-width: 0.9;
-}
+[data-premium-gem] .premium-gem-outline { fill: none; stroke: #fff0c8; stroke-width: .85; stroke-linejoin: round; }
+[data-premium-gem] .premium-gem-facets { fill: none; stroke: #fff0c8; stroke-opacity: .65; stroke-width: .65; stroke-linejoin: round; }
 
 .scene-card-play {
   position: absolute;
@@ -3530,8 +3522,6 @@ img[data-image-scene="tide"] {
 .me-scroll > .download-feedback:not(.is-visible) { display: none; }
 .focus-sound-toggle .water-waves-icon { fill: none; stroke: currentColor; stroke-width: 1.4; }
 .web-membership .card-heading > svg { width: 26px; height: 26px; flex-shrink: 0; }
-.web-membership .premium-gem-outline { fill: rgba(163,225,230,.15); stroke: var(--aqua-strong); }
-.web-membership .premium-gem-facets { fill: none; stroke: var(--aqua-strong); stroke-width: .7; }
 .practice-journal { padding: 22px; }
 .journal-heading { display: flex; align-items: center; justify-content: space-between; }
 .journal-heading > svg { width: 30px; height: 27px; color: var(--aqua-strong); fill: none; stroke: currentColor; }

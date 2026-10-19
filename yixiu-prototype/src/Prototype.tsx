@@ -531,9 +531,15 @@ function WaterWavesIcon() {
 
 function PremiumGemIcon() {
   return (
-    <svg data-premium-gem viewBox="0 0 18 16" aria-hidden="true">
-      <path className="premium-gem-outline" d="M1 5.2 4.7 1h8.6L17 5.2 9 15 1 5.2Z" />
-      <path className="premium-gem-facets" d="M1 5.2h16M4.7 1 9 5.2 13.3 1M9 5.2V15" />
+    <svg data-premium-gem viewBox="0 0 24 22" aria-hidden="true">
+      <path fill="#ffe9b3" d="M1 7 6 1 12 7Z" />
+      <path fill="#ffde91" d="M6 1h12l-6 6Z" />
+      <path fill="#f5b34e" d="m18 1 5 6H12Z" />
+      <path fill="#f5ac3d" d="M1 7h7l4 14Z" />
+      <path fill="#ffd375" d="M8 7h8l-4 14Z" />
+      <path fill="#df8129" d="M16 7h7L12 21Z" />
+      <path className="premium-gem-outline" d="M1 7 6 1h12l5 6-11 14Z" />
+      <path className="premium-gem-facets" d="M1 7h22M6 1l6 6 6-6M8 7l4 14 4-14" />
     </svg>
   );
 }

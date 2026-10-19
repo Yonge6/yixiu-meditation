@@ -1122,8 +1122,8 @@ private struct PremiumGemBadge: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            YixiuTheme.moon.opacity(0.16),
-                            YixiuTheme.deepWaterSoft.opacity(0.94),
+                            YixiuTheme.plusGold.opacity(0.24),
+                            YixiuTheme.deepWaterSoft.opacity(0.96),
                             YixiuTheme.deepWater.opacity(0.98)
                         ],
                         startPoint: .topLeading,
@@ -1135,9 +1135,9 @@ private struct PremiumGemBadge: View {
                 .stroke(
                     LinearGradient(
                         colors: [
-                            YixiuTheme.moon.opacity(0.78),
-                            YixiuTheme.aquaStrong.opacity(0.46),
-                            YixiuTheme.mist.opacity(0.18)
+                            YixiuTheme.plusGold.opacity(0.64),
+                            YixiuTheme.plusGold.opacity(0.32),
+                            YixiuTheme.plusGold.opacity(0.12)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -1145,20 +1145,12 @@ private struct PremiumGemBadge: View {
                     lineWidth: 0.8
                 )
 
-            FacetedGemShape()
-                .stroke(
-                    LinearGradient(
-                        colors: [YixiuTheme.moon, YixiuTheme.aquaStrong, YixiuTheme.mist],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    style: StrokeStyle(lineWidth: 1.05, lineCap: .round, lineJoin: .round)
-                )
-                .frame(width: 16, height: 14)
+            PremiumGemIcon()
+                .frame(width: 21, height: 19)
         }
         .frame(width: 30, height: 30)
         .shadow(color: .black.opacity(0.34), radius: 5, y: 2)
-        .shadow(color: YixiuTheme.aqua.opacity(0.16), radius: 7)
+        .shadow(color: YixiuTheme.plusGold.opacity(0.08), radius: 5)
         .drawingGroup()
     }
 }
@@ -1180,31 +1172,4 @@ private struct CutCornerMedallion: Shape {
     }
 }
 
-private struct FacetedGemShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        let left = CGPoint(x: rect.minX + 0.8, y: rect.minY + rect.height * 0.34)
-        let topLeft = CGPoint(x: rect.minX + rect.width * 0.26, y: rect.minY + 0.8)
-        let topRight = CGPoint(x: rect.maxX - rect.width * 0.26, y: rect.minY + 0.8)
-        let right = CGPoint(x: rect.maxX - 0.8, y: rect.minY + rect.height * 0.34)
-        let crown = CGPoint(x: rect.midX, y: rect.minY + rect.height * 0.34)
-        let tip = CGPoint(x: rect.midX, y: rect.maxY - 0.8)
-
-        var path = Path()
-        path.move(to: left)
-        path.addLine(to: topLeft)
-        path.addLine(to: topRight)
-        path.addLine(to: right)
-        path.addLine(to: tip)
-        path.closeSubpath()
-
-        path.move(to: left)
-        path.addLine(to: right)
-        path.move(to: topLeft)
-        path.addLine(to: crown)
-        path.addLine(to: topRight)
-        path.move(to: crown)
-        path.addLine(to: tip)
-        return path
-    }
-}
 #endif

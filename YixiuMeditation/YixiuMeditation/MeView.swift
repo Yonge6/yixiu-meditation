@@ -286,12 +286,11 @@ struct MeView: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(YixiuTheme.aqua.opacity(0.10))
+                        .fill(YixiuTheme.plusGold.opacity(0.08))
                     Circle()
-                        .stroke(YixiuTheme.aqua.opacity(0.42), lineWidth: 0.8)
-                    Image(systemName: subscriptionStore.hasPlus ? "drop.fill" : "drop")
-                        .font(.system(size: 18, weight: .light))
-                        .foregroundStyle(YixiuTheme.aquaStrong)
+                        .stroke(YixiuTheme.plusGold.opacity(0.35), lineWidth: 0.8)
+                    PremiumGemIcon()
+                        .frame(width: 27, height: 25)
                 }
                 .frame(width: 46, height: 46)
 

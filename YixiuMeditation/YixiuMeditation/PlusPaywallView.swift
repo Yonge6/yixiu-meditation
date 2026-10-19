@@ -86,12 +86,11 @@ struct PlusPaywallView: View {
 
     private var hero: some View {
         VStack(spacing: 10) {
-            Image(systemName: "drop.fill")
-                .font(.system(size: 31, weight: .light))
-                .foregroundStyle(YixiuTheme.aquaStrong)
+            PremiumGemIcon()
+                .frame(width: 39, height: 36)
                 .frame(width: 70, height: 70)
-                .background(Circle().fill(YixiuTheme.aqua.opacity(0.10)))
-                .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.38), lineWidth: 0.8))
+                .background(Circle().fill(YixiuTheme.plusGold.opacity(0.08)))
+                .overlay(Circle().stroke(YixiuTheme.plusGold.opacity(0.35), lineWidth: 0.8))
 
             Text("YIXIU PLUS")
                 .yixiuSecondary(10)
