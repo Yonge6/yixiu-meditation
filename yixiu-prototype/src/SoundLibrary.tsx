@@ -1,11 +1,13 @@
 import { ChevronDownIcon, Cross2Icon, HeartFilledIcon, HeartIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { LibraryScope } from "./library";
+import type { RestPurpose } from "./rest-presets";
 
 type Item = { id: string; zh: string; en: string; useZh: string; useEn: string };
 type Props<T extends Item, C extends string> = {
   language: "zh" | "en"; items: readonly T[]; activeID: string;
   scope: LibraryScope; query: string; category: C; categories: readonly { id: C; label: string }[];
+  purpose: RestPurpose; purposes: readonly { id: RestPurpose; label: string }[]; onPurpose: (purpose: RestPurpose) => void;
   favorites: readonly string[]; recent: readonly string[];
   thumbnails: Record<string, string>; badge: (id: T["id"]) => ReactNode;
   onScope: (scope: LibraryScope) => void; onQuery: (query: string) => void; onCategory: (category: C) => void;
@@ -18,11 +20,11 @@ export function SoundLibrary<T extends Item, C extends string>(props: Props<T, C
   const grid = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchOpen, setSearchOpen] = useState(Boolean(query));
-  useEffect(() => { grid.current?.scrollTo({ top: 0 }); }, [scope, query, category]);
+  useEffect(() => { grid.current?.scrollTo({ top: 0 }); }, [scope, query, category, props.purpose]);
   useEffect(() => { if (searchOpen) searchInput.current?.focus(); }, [searchOpen]);
   const labels = zh ? ["全部", "免费", "收藏", "最近听过"] : ["All", "Free", "Favorites", "Recent"];
   const scopeValues = ["all", "free", "favorites", "recent"] as const;
-  const reset = () => { props.onQuery(""); props.onScope("all"); props.onCategory(props.categories[0].id); };
+  const reset = () => { props.onQuery(""); props.onScope("all"); props.onCategory(props.categories[0].id); props.onPurpose("all"); };
   const toggleSearch = () => {
     if (searchOpen && query) props.onQuery("");
     setSearchOpen(!searchOpen);
@@ -48,15 +50,9 @@ export function SoundLibrary<T extends Item, C extends string>(props: Props<T, C
       <input ref={searchInput} type="search" aria-label={zh ? "搜索声音、曲名或作曲家" : "Search sounds, titles or composers"} placeholder={zh ? "搜索声音、曲名或作曲家" : "Sound, title or composer"} value={query} onChange={event => props.onQuery(event.currentTarget.value)} />
       {query ? <button type="button" aria-label={zh ? "清除搜索" : "Clear search"} onClick={() => props.onQuery("")}><Cross2Icon /></button> : null}
     </div> : null}
-    <div className="scene-category-tabs" role="tablist" aria-label={zh ? "声音分类" : "Sound categories"}>
-      {props.categories.map((value, index) => <button key={value.id} type="button" role="tab" tabIndex={category === value.id ? 0 : -1} aria-selected={category === value.id} className={category === value.id ? "is-active" : ""} onClick={() => props.onCategory(value.id)} onKeyDown={event => {
-        const n = props.categories.length;
-        const next = event.key === "ArrowRight" ? (index + 1) % n : event.key === "ArrowLeft" ? (index + n - 1) % n : event.key === "Home" ? 0 : event.key === "End" ? n - 1 : -1;
-        if (next < 0) return;
-        event.preventDefault(); props.onCategory(props.categories[next].id);
-        const target = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role=tab]")[next];
-        target?.focus(); target?.scrollIntoView({ block: "nearest", inline: "nearest" });
-      }}>{value.label}</button>)}
+    <div className="library-discovery-filters" role="group" aria-label={zh ? "用途与声音类型" : "Purpose and sound type"}>
+      <label><span>{zh ? "用途" : "For"}</span><select aria-label={zh ? "休息场景" : "Rest purpose"} value={props.purpose} onChange={event => props.onPurpose(event.currentTarget.value as RestPurpose)}>{props.purposes.map(value => <option key={value.id} value={value.id}>{value.label}</option>)}</select><ChevronDownIcon aria-hidden="true" /></label>
+      <label><span>{zh ? "类型" : "Type"}</span><select aria-label={zh ? "声音类型" : "Sound type"} value={category} onChange={event => props.onCategory(event.currentTarget.value as C)}>{props.categories.map(value => <option key={value.id} value={value.id}>{value.label}</option>)}</select><ChevronDownIcon aria-hidden="true" /></label>
     </div>
     <div className="scene-grid" ref={grid}>
       {!items.length ? <div className="library-empty"><strong>{zh ? "这里还没有声音" : "No sounds here yet"}</strong><p>{scope === "favorites" && !props.favorites.length ? (zh ? "点声音卡片上的心形，就能把喜欢的声音留在这里。" : "Tap a card’s heart to keep a favorite here.") : scope === "recent" && !props.recent.length ? (zh ? "开始聆听后，你最近听过的声音会出现在这里。" : "Your recent sounds will appear after listening.") : (zh ? "换一个词，或清除筛选再看看。" : "Try another word, or clear your filters.")}</p><button type="button" onClick={reset}>{zh ? "查看全部声音" : "Browse all sounds"}</button></div> : null}

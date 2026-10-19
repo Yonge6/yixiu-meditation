@@ -167,15 +167,90 @@ final class HomeInteractionUITests: XCTestCase {
 
     func testQuickBreathingKeepsHomeScene() {
         selectTab("Focus")
-        let breathe = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Breathe")).firstMatch
+        let soundBeforePractice = app.buttons["focus.sceneSound"].value as? String
+        let breathe = app.buttons["focus.preset.work_break"]
         for _ in 0..<5 where !breathe.isHittable { app.swipeUp() }
         XCTAssertTrue(breathe.isHittable)
         breathe.tap()
         XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Ocean Waves")
-        XCTAssertEqual(app.buttons["focus.sceneSound"].value as? String, "On")
+        XCTAssertEqual(app.buttons["focus.sceneSound"].value as? String, soundBeforePractice, "A quick breathing practice must preserve the scene-sound preference")
         selectTab("Sounds")
         expectScene("Ocean Waves")
         XCTAssertTrue(app.buttons["Play"].exists)
+    }
+
+    func testFocusFreePresetsStayInFocusAndPauseListening() {
+        app.terminate()
+        app.launchArguments = ["-language", "en", "-scene", "ocean", "-volume", "0.72", "-focusSoundEnabled", "NO", "-YixiuForceFreeAccess"]
+        app.launch()
+        XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+        selectTab("Focus")
+        func tapPreset(_ id: String) {
+            let preset = app.buttons[id]
+            for _ in 0..<7 where !preset.isHittable { app.swipeUp() }
+            XCTAssertTrue(preset.isHittable)
+            preset.tap()
+        }
+        tapPreset("focus.preset.lunch")
+        let countdown = app.staticTexts["focus.listeningCountdown"]
+        XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Morning Lake")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable, "A newly chosen rest must open from the top, not retain the preset-list scroll offset")
+        XCTAssertTrue(app.buttons["focus.listeningPlayback"].exists)
+        XCTAssertFalse(app.staticTexts["YIXIU PLUS"].exists)
+        for _ in 0..<6 where !app.buttons["focus.listeningPlayback"].isHittable { app.swipeDown() }
+        capture("everyday-rest-en-lunch-focus")
+        app.buttons["focus.listeningPlayback"].tap()
+        let paused = countdown.label
+        sleep(2)
+        XCTAssertEqual(countdown.label, paused)
+        app.buttons["focus.listeningPlayback"].tap()
+        sleep(2)
+        XCTAssertNotEqual(countdown.label, paused)
+
+        tapPreset("focus.preset.night_waking")
+        XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Window Rain")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable)
+        XCTAssertFalse(app.staticTexts["YIXIU PLUS"].exists)
+        for _ in 0..<6 where !app.buttons["focus.listeningPlayback"].isHittable { app.swipeDown() }
+        capture("everyday-rest-en-night-focus")
+        tapPreset("focus.preset.work_break")
+        XCTAssertTrue(app.staticTexts["focus-countdown"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.buttons["focus.sceneSound"].value as? String, "Off")
+        XCTAssertFalse(app.staticTexts["YIXIU PLUS"].exists)
+        capture("everyday-rest-en-work-break")
+    }
+
+    func testEverydayRestChineseScreensAndLifestyleBack() {
+        app.terminate()
+        app.launchArguments = ["-language", "zh", "-scene", "rain", "-volume", "0.72", "-focusSoundEnabled", "NO", "-YixiuForceFreeAccess"]
+        app.launch()
+        XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+        selectTab("静心")
+        let lunch = app.buttons["focus.preset.lunch"]
+        for _ in 0..<7 where !lunch.isHittable { app.swipeUp() }
+        lunch.tap()
+        XCTAssertTrue(app.staticTexts["focus.listeningCountdown"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "晨雾湖岸")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable)
+        capture("everyday-rest-zh-lunch-focus")
+        let night = app.buttons["focus.preset.night_waking"]
+        for _ in 0..<7 where !night.isHittable { app.swipeUp() }
+        night.tap()
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "窗边夜雨")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable)
+        capture("everyday-rest-zh-night-focus")
+        selectTab("我的")
+        capture("everyday-rest-zh-me-continue-first")
+        let lifestyle = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "慢慢探索，其他用心的作品")).firstMatch
+        for _ in 0..<15 where !lifestyle.isHittable { app.swipeUp() }
+        XCTAssertTrue(lifestyle.isHittable)
+        lifestyle.tap()
+        XCTAssertTrue(app.buttons["me.detail.back"].waitForExistence(timeout: 4))
+        capture("everyday-rest-zh-lifestyle-detail")
+        app.buttons["me.detail.back"].tap()
+        XCTAssertFalse(app.buttons["me.detail.back"].exists)
     }
 
     func testFocusPauseFreezesCountdownAndResumes() {
@@ -211,7 +286,8 @@ final class HomeInteractionUITests: XCTestCase {
         app.scrollViews["library.results"].swipeUp()
         XCTAssertTrue(scopeMenu.isHittable)
         XCTAssertEqual(scopeMenu.frame.minY, beforeScroll, accuracy: 1, "Library scopes must remain above the scrolling cards")
-        app.buttons["library.category.classical"].tap()
+        app.buttons["library.type.menu"].tap()
+        app.buttons["Classical"].tap()
         app.buttons["library.search.toggle"].tap()
         let search = app.textFields["library.search"]
         search.tap()

@@ -76,8 +76,13 @@
 
   function send(eventName, parameters) {
     if (!enabled || !/^yixiu_[a-z0-9_]+$/.test(eventName)) return;
-    const safeKeys = new Set(["value", "placement", "schema_version", "scene_id", "content_category", "access_level", "listened_seconds", "end_reason", "error_code", "action", "filter", "timer_minutes", "focus_minutes", "selected_scene", "completed_scene", "gated_scene", "shared_scene", "share_method", "nature_sound", "landing_scene", "landing_language", "referrer_host"]);
-    const safe = Object.fromEntries(Object.entries(parameters || {}).filter(([key, value]) => safeKeys.has(key) && ["string", "number", "boolean"].includes(typeof value)).map(([key, value]) => [key, typeof value === "string" ? value.slice(0, 100) : value]));
+    const safeKeys = new Set(["value", "placement", "schema_version", "scene_id", "content_category", "access_level", "listened_seconds", "end_reason", "error_code", "action", "filter", "timer_minutes", "focus_minutes", "selected_scene", "completed_scene", "gated_scene", "shared_scene", "share_method", "nature_sound", "landing_scene", "landing_language", "referrer_host", "rest_intent", "entry_point", "qualification_method"]);
+    const choices = {
+      rest_intent: ["none", "lunch", "night_waking", "work_break"],
+      entry_point: ["direct", "focus_quick", "focus_breathing", "library", "continue", "scene_link", "campaign", "sounds"],
+      qualification_method: ["audio_60s", "breathing_complete"],
+    };
+    const safe = Object.fromEntries(Object.entries(parameters || {}).filter(([key, value]) => safeKeys.has(key) && ["string", "number", "boolean"].includes(typeof value) && (!choices[key] || choices[key].includes(value))).map(([key, value]) => [key, typeof value === "string" ? value.slice(0, 100) : value]));
     window.gtag("event", eventName, {
       ...context(),
       ...safe,

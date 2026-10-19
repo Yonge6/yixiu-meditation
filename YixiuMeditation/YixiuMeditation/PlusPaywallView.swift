@@ -32,9 +32,9 @@ struct PlusPaywallView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 22) {
                     hero
+                    benefits
                     planPicker
                     purchaseButton
-                    benefits
                     legacyNote
                     footer
                 }
@@ -95,12 +95,12 @@ struct PlusPaywallView: View {
 
             Text("YIXIU PLUS")
                 .yixiuSecondary(10)
-            Text(language.text(zh: "让安静持续生长", en: "Let quiet keep growing"))
+            Text(language.text(zh: "让安静，陪伴久一点", en: "More room for quiet"))
                 .font(language == .zh ? YixiuTheme.chineseDisplay(30) : YixiuTheme.englishSerif(29))
                 .foregroundStyle(YixiuTheme.moon)
             Text(language.text(
-                zh: "订阅支持我们持续采集自然声、创作流动画面与新的静心练习。",
-                en: "Your subscription funds new field recordings, flowing scenes, and quiet practices."
+                zh: "更丰富的声音，更从容的聆听。无需账号；免费声音与一分钟呼吸始终可用。",
+                en: "More sounds and longer listening. No account needed; free sounds and one-minute breathing stay available."
             ))
             .font(YixiuTheme.sans(13))
             .foregroundStyle(YixiuTheme.mist)
@@ -116,8 +116,6 @@ struct PlusPaywallView: View {
             benefit("timer", zh: "60 分钟与不限时聆听", en: "60-minute and unlimited listening")
             Divider().overlay(YixiuTheme.hairline)
             benefit("circle.circle", zh: "3 / 5 / 10 分钟水之呼吸", en: "3 / 5 / 10-minute water breathing")
-            Divider().overlay(YixiuTheme.hairline)
-            benefit("sparkles", zh: "未来混音与日常静心练习", en: "Future mixes and daily practices")
         }
         .padding(.horizontal, 16)
         .yixiuPanel()

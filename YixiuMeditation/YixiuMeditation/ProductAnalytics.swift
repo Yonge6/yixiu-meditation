@@ -10,6 +10,11 @@ final class ProductAnalytics {
     static let shared = ProductAnalytics()
     static let consentKey = "yixiu.analyticsConsent.v2"
     static let consentChanged = Notification.Name("yixiu.analyticsConsentChanged")
+    static let restContextChanged = Notification.Name("yixiu.restContextChanged")
+    private(set) var restContext: [String: Any] = ["rest_intent": "none", "entry_point": "direct"]
+    private(set) var restRevision = 0
+    private var restListeningSeconds = 0.0
+    private var meaningfulRestRecorded = false
     private var configured = false
     private var configuring = false
     private var productionInstall = false
@@ -36,6 +41,8 @@ final class ProductAnalytics {
     }
 
     func updateConsent() {
+        restListeningSeconds = 0
+        meaningfulRestRecorded = false
         if !configured && UserDefaults.standard.bool(forKey: Self.consentKey) {
             Task { @MainActor in await self.configure() }
         }
@@ -50,11 +57,37 @@ final class ProductAnalytics {
 
     func event(_ name: String, _ parameters: [String: Any] = [:]) {
         guard enabled else { return }
-        let allowed: Set<String> = ["scene_id", "content_category", "access_level", "value", "listened_seconds", "end_reason", "error_code", "action", "filter", "timer_minutes", "focus_minutes", "plan", "tab"]
-        var safe = parameters.filter { allowed.contains($0.key) }
+        let allowed: Set<String> = ["scene_id", "content_category", "access_level", "value", "listened_seconds", "end_reason", "error_code", "action", "filter", "timer_minutes", "focus_minutes", "plan", "tab", "rest_intent", "entry_point", "rest_kind"]
+        var safe = restContext.merging(parameters) { _, new in new }.filter { allowed.contains($0.key) }
         safe["schema_version"] = 2
         safe["surface"] = "ios"
         Analytics.logEvent("yixiu_v2_" + name, parameters: safe)
+    }
+
+    /// A local-only boundary, never an uploaded session identifier. Pause/resume
+    /// stays in the same rest; deliberately selecting a new intent starts another.
+    func beginRestSession(restIntent: String, entryPoint: String) {
+        let intents: Set<String> = ["none", "lunch", "night_waking", "work_break"]
+        let entries: Set<String> = ["direct", "focus_quick", "focus_breathing", "library", "continue", "scene_link", "campaign", "sounds"]
+        restContext = ["rest_intent": intents.contains(restIntent) ? restIntent : "none",
+                       "entry_point": entries.contains(entryPoint) ? entryPoint : "direct"]
+        restRevision += 1
+        restListeningSeconds = 0
+        meaningfulRestRecorded = false
+        NotificationCenter.default.post(name: Self.restContextChanged, object: nil)
+        event("rest_prepare")
+    }
+
+    func recordActualListening(_ seconds: Double, revision: Int) {
+        guard enabled, revision == restRevision, seconds.isFinite, seconds > 0 else { return }
+        restListeningSeconds += seconds
+        if restListeningSeconds >= 60 { recordMeaningfulRest(kind: "listening") }
+    }
+
+    func recordMeaningfulRest(kind: String) {
+        guard enabled, !meaningfulRestRecorded, ["listening", "breathing"].contains(kind) else { return }
+        meaningfulRestRecorded = true
+        event("meaningful_rest", ["rest_kind": kind])
     }
 
     func verifiedPurchase(_ transaction: StoreKit.Transaction, plan: YixiuPlusPlan) {
@@ -81,6 +114,9 @@ final class AudioUsageObserver {
     private var clock = ListeningProgress()
     private var timer: Timer?
     private var consentToken: NSObjectProtocol?
+    private var restToken: NSObjectProtocol?
+    private var restContext: [String: Any]
+    private var restRevision: Int
     private var pending = 0.0
     private var total = 0.0
     private var qualified = false
@@ -89,12 +125,21 @@ final class AudioUsageObserver {
 
     init(player: AVAudioPlayer, scene: MeditationScene, isEnabled: @escaping () -> Bool) {
         self.player = player; self.scene = scene; self.isEnabled = isEnabled
+        self.restContext = ProductAnalytics.shared.restContext
+        self.restRevision = ProductAnalytics.shared.restRevision
         sample()
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in self?.sample() }
         consentToken = NotificationCenter.default.addObserver(forName: ProductAnalytics.consentChanged, object: nil, queue: .main) { [weak self] _ in
             guard let self else { return }
             self.clock.reset(); self.pending = 0; self.total = 0; self.qualified = false; self.started = false
             self.sample()
+        }
+        restToken = NotificationCenter.default.addObserver(forName: ProductAnalytics.restContextChanged, object: nil, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            self.flush()
+            self.restContext = ProductAnalytics.shared.restContext
+            self.restRevision = ProductAnalytics.shared.restRevision
+            self.clock.reset(); self.pending = 0; self.total = 0; self.qualified = false; self.started = false
         }
     }
 
@@ -103,6 +148,7 @@ final class AudioUsageObserver {
             "content_category": scene.isAIOriginal ? "original" : (scene.matches(.classical) ? "classical" : (scene.isMeditationMusic ? "meditation" : "nature")),
             "access_level": SubscriptionAccessPolicy.freeScenes.contains(scene) ? "free" : "plus"]
         context.merge(extra) { _, new in new }
+        context.merge(restContext) { _, new in new }
         ProductAnalytics.shared.event(name, context)
     }
 
@@ -114,6 +160,7 @@ final class AudioUsageObserver {
         let delta = clock.sample(position: player.currentTime, at: Date().timeIntervalSinceReferenceDate,
                                  duration: player.duration, rate: Double(player.rate))
         pending += delta; total += delta
+        ProductAnalytics.shared.recordActualListening(delta, revision: restRevision)
         if total >= 60 && !qualified { qualified = true; emit("qualified_listen") }
         if pending >= 30 { flush() }
         if !player.isPlaying { clock.reset() }
@@ -130,6 +177,12 @@ final class AudioUsageObserver {
         timer?.invalidate(); timer = nil
         if let consentToken { NotificationCenter.default.removeObserver(consentToken) }
         consentToken = nil
+        if let restToken { NotificationCenter.default.removeObserver(restToken) }
+        restToken = nil
     }
-    deinit { timer?.invalidate(); if let consentToken { NotificationCenter.default.removeObserver(consentToken) } }
+    deinit {
+        timer?.invalidate()
+        if let consentToken { NotificationCenter.default.removeObserver(consentToken) }
+        if let restToken { NotificationCenter.default.removeObserver(restToken) }
+    }
 }

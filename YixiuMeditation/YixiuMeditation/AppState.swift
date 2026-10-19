@@ -57,6 +57,7 @@ final class AppState: ObservableObject {
     @Published private(set) var reviewRequestToken = 0
     @Published private(set) var practiceJournal: [PracticeEntry] = []
     @Published var focusRequestToken = 0
+    @Published var focusRestMode: FocusRestMode = .breathing
     @Published private(set) var focusStatus: BreathingStatus = .idle
     @Published private(set) var focusElapsed = 0
     var isFocusActive = false {
@@ -78,6 +79,12 @@ final class AppState: ObservableObject {
     private var practiceSceneID = ""
     private var originalAudioWasPlaying = false
     private var mayRestoreOriginalPlayback = true
+    private var restIntent = "none"
+    private var restEntryPoint = "sounds"
+    private var preparedFocusRestIntent = "none"
+    private var preparedFocusEntryPoint = "focus_breathing"
+    private var lastAudioPauseTime: TimeInterval?
+    private var startsNewRestOnPlay = true
 
     private enum EngagementKey {
         static let firstLaunchDate = "yixiu.engagement.firstLaunchDate"
@@ -214,10 +221,15 @@ final class AppState: ObservableObject {
         }
 
         do {
+            if !isFocusActive, startsNewRestOnPlay || lastAudioPauseTime.map({ now() - $0 >= 30 * 60 }) == true {
+                ProductAnalytics.shared.beginRestSession(restIntent: restIntent, entryPoint: restEntryPoint)
+            }
             try audio.play(scene: scene, volume: Float(volume) * fadeFactor)
             audioError = nil
             sessionCompleted = false
             hasStartedPlayback = true
+            startsNewRestOnPlay = false
+            lastAudioPauseTime = nil
             increment(EngagementKey.playbackStarts)
             recordRecentScene(scene)
             isPlaying = true
@@ -248,13 +260,23 @@ final class AppState: ObservableObject {
         timer?.invalidate()
         timer = nil
         isPlaying = false
+        lastAudioPauseTime = now()
         syncNowPlaying()
     }
 
-    func selectScene(_ newScene: MeditationScene, autoplay: Bool = true) {
+    func selectScene(_ newScene: MeditationScene, autoplay: Bool = true,
+                     restIntent: String = "none", entryPoint: String = "sounds", startsRest: Bool = true) {
         guard canAccessScene(newScene) else { return }
         if isFocusActive || ((focusStatus == .running || focusStatus == .paused) && scene != newScene) {
             resetFocusSession()
+        }
+        if startsRest {
+            self.restIntent = restIntent
+            self.restEntryPoint = entryPoint
+            ProductAnalytics.shared.beginRestSession(restIntent: restIntent, entryPoint: entryPoint)
+            startsNewRestOnPlay = false
+            preparedFocusRestIntent = "none"
+            preparedFocusEntryPoint = "focus_breathing"
         }
         scene = newScene
         recordRecentScene(newScene)
@@ -391,6 +413,7 @@ final class AppState: ObservableObject {
             audio.stop()
             recordCompletedSession()
             sessionCompleted = true
+            startsNewRestOnPlay = true
             playCompletionBell()
         } else {
             audio.setVolume(Float(volume) * fadeFactor)
@@ -398,20 +421,33 @@ final class AppState: ObservableObject {
         }
     }
 
-    func startQuickListening(scene: MeditationScene, minutes: Int) {
+    func startQuickListening(scene: MeditationScene, minutes: Int, restIntent: String = "none", entryPoint: String = "focus_quick", stayInFocus: Bool = false) {
         guard canAccessScene(scene) else { return }
         if let enforcedAccessLevel,
            !SubscriptionAccessPolicy.canUseTimer(minutes: minutes, level: enforcedAccessLevel) { return }
         pause()
         audio.stop()
+        self.restIntent = restIntent
+        self.restEntryPoint = entryPoint
+        preparedFocusRestIntent = "none"
+        preparedFocusEntryPoint = "focus_breathing"
+        ProductAnalytics.shared.beginRestSession(restIntent: restIntent, entryPoint: entryPoint)
+        startsNewRestOnPlay = false
         selectDuration(minutes)
-        selectScene(scene, autoplay: false)
-        activeTab = .listen
+        selectScene(scene, autoplay: false, startsRest: false)
+        focusRestMode = stayInFocus ? .listening : .breathing
+        activeTab = stayInFocus ? .focus : .listen
         play()
     }
 
-    func prepareFocus(minutes: Int = 1) {
+    func prepareFocus(minutes: Int = 1, restIntent: String = "none", entryPoint: String = "focus_breathing") {
         resetFocusSession()
+        if !canAccessScene(scene) { selectScene(.rain, autoplay: false, startsRest: false) }
+        self.restIntent = restIntent
+        self.restEntryPoint = entryPoint
+        preparedFocusRestIntent = restIntent
+        preparedFocusEntryPoint = entryPoint
+        focusRestMode = .breathing
         focusDuration = minutes
         activeTab = .focus
         focusRequestToken += 1
@@ -421,9 +457,9 @@ final class AppState: ObservableObject {
         guard let target = MeditationScene(rawValue: entry.sceneID), canAccessScene(target) else { return }
         if entry.kind == .breathing {
             selectScene(target, autoplay: false)
-            prepareFocus(minutes: entry.seconds / 60)
+            prepareFocus(minutes: entry.seconds / 60, restIntent: "none", entryPoint: "continue")
         } else {
-            startQuickListening(scene: target, minutes: entry.seconds / 60)
+            startQuickListening(scene: target, minutes: entry.seconds / 60, restIntent: "none", entryPoint: "continue")
         }
     }
 
@@ -469,6 +505,7 @@ final class AppState: ObservableObject {
         guard canAccessScene(scene),
               SubscriptionAccessPolicy.canUseFocus(minutes: focusDuration, level: enforcedAccessLevel ?? .free) else { return false }
         resetFocusSession()
+        ProductAnalytics.shared.beginRestSession(restIntent: preparedFocusRestIntent, entryPoint: preparedFocusEntryPoint)
         practiceSceneID = scene.rawValue
         originalAudioWasPlaying = isPlaying
         mayRestoreOriginalPlayback = true
@@ -566,6 +603,7 @@ final class AppState: ObservableObject {
         focusTimer?.invalidate()
         focusTimer = nil
         focusStatus = .complete
+        ProductAnalytics.shared.recordMeaningfulRest(kind: "breathing")
         recordCompletedSession(isFocus: true, seconds: focusDuration * 60, sceneID: practiceSceneID)
         restoreListeningAfterFocus()
         playCompletionBell()

@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+// Source guardrails complement the deterministic state/filter harnesses and UI QA.
+const source = name => readFileSync(new URL(`../YixiuMeditation/${name}.swift`, import.meta.url), 'utf8');
+const focus = source('FocusView');
+const me = source('MeView');
+const listen = source('ListenView');
+const paywall = source('PlusPaywallView');
+const analytics = source('ProductAnalytics');
+assert.match(focus, /给自己一分钟/);
+assert.match(focus, /不跟呼吸，只听一会儿/);
+assert.match(focus, /scene: \.lake, minutes: 15, restIntent: "lunch"/);
+assert.match(focus, /scene: \.window, minutes: 15, restIntent: "night_waking"/);
+assert.match(focus, /prepareFocus\(minutes: 1, restIntent: "work_break"/);
+assert.doesNotMatch(focus, /focusSoundEnabled = true/);
+assert.doesNotMatch(listen.slice(listen.indexOf('struct ListenView'), listen.indexOf('struct SoundLibraryView')), /午休一下|夜里醒了|工作间隙/);
+assert.match(listen, /purpose\.matches\(scene\)/);
+assert.match(listen, /library\.purpose\.menu/);
+assert.match(listen, /library\.type\.menu/);
+const meHome = me.slice(me.indexOf('private func home'), me.indexOf('private var soundSpaceCard'));
+assert.ok(meHome.indexOf('soundSpaceCard') < meHome.indexOf('favoritesCard'));
+assert.ok(meHome.indexOf('favoritesCard') < meHome.indexOf('membershipCard'));
+assert.ok(meHome.indexOf('settingsCard') < meHome.indexOf('journalCard'));
+assert.doesNotMatch(me, /PracticeEntry\.weekDays\(\)/);
+assert.match(me, /case \.lifestyle:\s+worksCard/);
+assert.match(me, /DisclosureGroup\(language\.text\(zh: "我们相信的生活方式"/);
+assert.ok(paywall.indexOf('benefits\n') < paywall.indexOf('planPicker\n'));
+assert.doesNotMatch(paywall, /未来混音|Future mixes/);
+assert.match(analytics, /if restListeningSeconds >= 60 \{ recordMeaningfulRest\(kind: "listening"\) \}/);
+assert.match(analytics, /guard enabled, !meaningfulRestRecorded/);
+assert.match(analytics, /recordActualListening\(delta, revision: restRevision\)/);
+assert.match(source('AppState'), /recordMeaningfulRest\(kind: "breathing"\)/);
+assert.match(analytics, /\["none", "lunch", "night_waking", "work_break"\]/);
+assert.doesNotMatch(analytics, /"rest_session_id"|"user_id"|setUserID\(/);
+console.log('EVERYDAY_REST_SOURCE_PASS: Focus-only presets, quiet preference, two-level library, no-pressure Me, accurate Plus benefits and consent-gated meaningful rest');

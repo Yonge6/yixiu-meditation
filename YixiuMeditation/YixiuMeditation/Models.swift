@@ -15,6 +15,11 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 }
 
+enum FocusRestMode {
+    case breathing
+    case listening
+}
+
 enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case ocean
     case rain
@@ -542,15 +547,15 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     func shareTitle(language: AppLanguage) -> String {
         language.text(
-            zh: "一休 · \(zhName)｜如水而行",
-            en: "Yixiu · \(enName) | Be water, my friend."
+            zh: "一休 · \(zhName)｜随时，给自己一休",
+            en: "Yixiu · \(enName) | Make room for quiet."
         )
     }
 
     func shareMessage(language: AppLanguage) -> String {
         language.text(
-            zh: "此刻，我在一休聆听「\(zhName)」。真实自己，流动人生。",
-            en: "I am listening to \(enName) in Yixiu. True to yourself, flow with life."
+            zh: "给自己留一小会儿，听听「\(zhName)」。不必等到有空，才可以休息。",
+            en: "Make a little room for yourself with \(enName). You don't have to wait for a free day to pause."
         )
     }
 }

@@ -3874,3 +3874,73 @@ img[data-image-scene="tide"] {
 @media (prefers-reduced-motion: reduce) {
   .scene-select img { transition: none; }
 }
+
+/* Everyday rest: light decisions, one compact filter row, no new home chrome. */
+.focus-mode-switch { display: flex; width: min(100%, 320px); margin: 24px auto 0; padding: 4px; gap: 4px; border: 1px solid var(--glass-line); border-radius: 999px; background: #041b2675; }
+.focus-mode-switch button { flex: 1; min-width: 0; min-height: 42px; border-radius: 999px; font: 13px var(--sans); color: #c5d9da; }
+.focus-mode-switch button[aria-pressed="true"] { color: #13313a; background: #c5efeb; }
+.focus-screen .focus-heading h1 { font-size: clamp(26px, 5.3vw, 34px); letter-spacing: .015em; }
+.focus-screen .focus-heading .section-intro { font-size: 14px; letter-spacing: .025em; }
+.quick-practices { width: min(100%, 520px); }
+.quick-practices > p { color: #c5d9da; font-size: 13px; }
+.quick-practice-grid button { min-height: 100px; padding: 14px 6px; }
+.quick-practice-grid strong { font-size: 13px; line-height: 1.5; }
+.quick-practice-grid small { color: #bcd3d5; font-size: 11px; line-height: 1.5; }
+.safety-note { color: #c2d5d7; font-size: 12px; }
+.focus-listen-card { width: min(100%, 360px); margin: 28px auto 0; overflow: hidden; border: 1px solid var(--glass-line); border-radius: 24px; background: #08232ddd; }
+.focus-listen-card > img { width: 100%; height: 170px; object-fit: cover; display: block; }
+.focus-listen-card > div { padding: 22px 24px 0; }
+.focus-listen-card small { display: block; color: #b4d8da; font-size: 11px; letter-spacing: .12em; }
+.focus-listen-card strong { display: block; margin-top: 8px; font: 25px var(--serif); }
+.focus-listen-card p { font-size: 14px; line-height: 1.9; color: #c5d9da; }
+.focus-listen-countdown { display: block; margin: 8px auto 18px; font: 22px var(--serif); color: #d8e9e7; font-variant-numeric: tabular-nums; }
+.focus-listen-card .focus-primary { margin: 10px auto 0; width: calc(100% - 48px); }
+.focus-browse-sounds { display: flex; align-items: center; justify-content: center; gap: 5px; min-height: 52px; width: 100%; font-size: 13px; color: #bce8e4; }
+.library-discovery-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-shrink: 0; margin: 16px 0 10px; }
+.library-discovery-filters label { position: relative; display: flex; min-width: 0; align-items: center; border: 1px solid var(--glass-line); border-radius: 12px; background: #d2edf008; }
+.library-discovery-filters label > span { flex-shrink: 0; padding-left: 12px; color: #abc6c9; font-size: 11px; }
+.library-discovery-filters select { appearance: none; min-width: 0; width: 100%; height: 44px; padding: 0 27px 0 8px; color: #e1f0ed; font: 16px var(--sans); border: 0; background: transparent; border-radius: 12px; }
+.library-discovery-filters option { color: #e1f0ed; background: #08232d; }
+.library-discovery-filters svg { position: absolute; right: 10px; width: 14px; height: 14px; pointer-events: none; color: #bcd3d5; }
+.practice-journal summary { min-height: 44px; cursor: pointer; text-align: left; color: #d8e9e7; font: 18px var(--serif); }
+.practice-journal summary > span { display: block; margin-top: 8px; color: #b4cdd0; font: 12px var(--sans); }
+.practice-journal summary b { font-weight: 400; }
+.practice-journal .journal-privacy { font-size: 11px; opacity: 1; color: #b5cbce; }
+.life-philosophy summary { min-height: 44px; cursor: pointer; color: #bce8e4; font: 18px var(--serif); }
+.life-philosophy[open] summary { margin-bottom: 22px; }
+.me-works { overflow: hidden; text-align: left; }
+.scene-card-copy em { color: #c4dddd; font-size: 11px; }
+.me-screen .section-kicker { font-size: 11px; }
+@media (max-width: 360px) {
+  .library-discovery-filters { gap: 7px; }
+  .library-discovery-filters label > span { padding-left: 9px; font-size: 10px; }
+  .library-discovery-filters select { padding-left: 6px; font-size: 16px; }
+  .quick-practice-grid { gap: 7px; }
+  .quick-practice-grid strong { font-size: 12px; }
+  .quick-practice-grid small { font-size: 10px; }
+}
+@media (max-width: 759px) and (min-height: 561px) {
+  .focus-screen { padding-top: max(20px, calc(env(safe-area-inset-top, 0px) + 16px)); }
+  .focus-mode-switch { margin-top: 16px; }
+  .focus-preferences { margin-top: 14px; }
+  .breathing-orbit { width: 146px; height: 146px; margin-top: 14px; }
+  .breathing-orbit .ripple-one { width: 140px; height: 140px; }
+  .breathing-orbit .ripple-two { width: 108px; height: 108px; }
+  .breathing-orbit .breathing-core { width: 78px; height: 78px; }
+  .breathing-orbit.status-idle, .breathing-orbit.status-complete { width: 80px; height: 80px; }
+  .breathing-orbit.status-idle .ripple-one, .breathing-orbit.status-complete .ripple-one { width: 78px; height: 78px; }
+  .breathing-orbit.status-idle .ripple-two, .breathing-orbit.status-complete .ripple-two { width: 60px; height: 60px; }
+  .breathing-orbit.status-idle .breathing-core, .breathing-orbit.status-complete .breathing-core { width: 44px; height: 44px; }
+  .breathing-readout strong { font-size: 22px; }
+  .focus-exercise .focus-primary { margin-top: 18px; }
+  .safety-note { margin-top: 14px; }
+  .quick-practices { margin-top: 16px; padding-top: 14px; }
+  .quick-practice-grid button { min-height: 86px; }
+}
+@media (min-width: 760px) {
+  .focus-screen[data-focus-mode="listen"] .focus-main { align-items: center; }
+  .focus-listen-card { margin-top: 0; }
+}
+@media (max-height: 560px) {
+  .library-discovery-filters { margin-top: 8px; margin-bottom: 6px; }
+}

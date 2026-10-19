@@ -18,11 +18,41 @@ enum SoundLibraryScope: String, CaseIterable, Identifiable {
     }
 }
 
+enum SoundLibraryPurpose: String, CaseIterable, Identifiable {
+    case all, lunch, bedtime, nightWaking, workBreak, focus, morning, relax
+    var id: String { rawValue }
+    func title(language: AppLanguage) -> String {
+        switch self {
+        case .all: language.text(zh: "全部", en: "All")
+        case .lunch: language.text(zh: "午休", en: "Lunch break")
+        case .bedtime: language.text(zh: "睡前", en: "Bedtime")
+        case .nightWaking: language.text(zh: "夜醒", en: "Night waking")
+        case .workBreak: language.text(zh: "工作间隙", en: "Work break")
+        case .focus: language.text(zh: "专注", en: "Focus")
+        case .morning: language.text(zh: "清晨", en: "Morning")
+        case .relax: language.text(zh: "放松", en: "Relax")
+        }
+    }
+    func matches(_ scene: MeditationScene) -> Bool {
+        switch self {
+        case .all: return true
+        case .lunch: return [.lake, .spring, .stream, .softLightRest, .quietHour, .gymnopedie, .mozartAndante, .bedsideGlow].contains(scene)
+        case .bedtime: return scene.matches(.sleep)
+        case .nightWaking: return [.window, .rain, .ocean, .tide, .moonAnchorage, .blueQuiet, .nocturne, .moonlightSonata].contains(scene)
+        case .workBreak: return scene.matches(.focus) || [.lake, .spring, .birds, .bamboo].contains(scene)
+        case .focus: return scene.matches(.focus)
+        case .morning: return scene.matches(.morning)
+        case .relax: return scene.matches(.relax)
+        }
+    }
+}
+
 enum SoundLibraryFilter {
     static func scenes(
         in catalog: [MeditationScene] = MeditationScene.availableScenes,
         scope: SoundLibraryScope,
         category: SceneCategory,
+        purpose: SoundLibraryPurpose = .all,
         query: String,
         favorites: [MeditationScene],
         recent: [MeditationScene]
@@ -35,7 +65,7 @@ enum SoundLibraryFilter {
 
         return source.filter { scene in
             guard available.contains(scene), seen.insert(scene).inserted,
-                  scene.matches(category) else { return false }
+                  scene.matches(category), purpose.matches(scene) else { return false }
             switch scope {
             case .free:
                 guard SubscriptionAccessPolicy.freeScenes.contains(scene) else { return false }
@@ -555,9 +585,9 @@ struct ListenView: View {
                 .padding(.top, 10)
 
             HStack(spacing: 11) {
-                Text(language.text(zh: "如水而行", en: "Be water, my friend."))
+                Text(language.text(zh: "随时，给自己一休。", en: "Make room for quiet."))
                 Text("·")
-                Text(language.secondary(zh: "如水而行", en: "BE WATER, MY FRIEND."))
+                Text(language.secondary(zh: "随时，给自己一休。", en: "MAKE ROOM FOR QUIET."))
                     .italic()
             }
             .font(YixiuTheme.englishSerif(11))
@@ -746,6 +776,7 @@ struct SoundLibraryView: View {
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.dismiss) private var dismiss
     @State private var selectedCategory: SceneCategory = .all
+    @State private var selectedPurpose: SoundLibraryPurpose = .all
     @State private var selectedScope: SoundLibraryScope = .all
     @State private var searchQuery = ""
     @State private var searchOpen = false
@@ -757,6 +788,7 @@ struct SoundLibraryView: View {
         SoundLibraryFilter.scenes(
             scope: selectedScope,
             category: selectedCategory,
+            purpose: selectedPurpose,
             query: searchQuery,
             favorites: appState.favorites,
             recent: appState.recentScenes
@@ -894,32 +926,30 @@ struct SoundLibraryView: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 7) {
-                    ForEach(SceneCategory.allCases) { category in
-                        Button {
-                            selectedCategory = category
-                        } label: {
-                            Text(category.title(language: language))
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundStyle(selectedCategory == category ? YixiuTheme.deepWater : YixiuTheme.mist)
-                                .padding(.horizontal, 15)
-                                .frame(minHeight: 44)
-                                .background(
-                                    Capsule().fill(selectedCategory == category ? YixiuTheme.aquaStrong : YixiuTheme.deepWaterSoft.opacity(0.56))
-                                )
-                                .overlay(
-                                    Capsule().stroke(selectedCategory == category ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
-                                )
+            HStack(spacing: 9) {
+                Menu {
+                    Picker(language.text(zh: "休息用途", en: "Rest purpose"), selection: $selectedPurpose) {
+                        ForEach(SoundLibraryPurpose.allCases) { purpose in
+                            Text(purpose.title(language: language)).tag(purpose)
+                                .accessibilityIdentifier("library.purpose.\(purpose.rawValue)")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
-                        .accessibilityIdentifier("library.category.\(category.rawValue)")
                     }
+                } label: {
+                    filterLabel(kind: language.text(zh: "用途", en: "Purpose"), value: selectedPurpose.title(language: language))
                 }
-                .padding(.horizontal, 1)
+                .accessibilityIdentifier("library.purpose.menu")
+                Menu {
+                    Picker(language.text(zh: "声音类型", en: "Sound type"), selection: $selectedCategory) {
+                        ForEach([SceneCategory.all, .nature, .classical, .original, .meditation]) { category in
+                            Text(category.title(language: language)).tag(category)
+                                .accessibilityIdentifier("library.category.\(category.rawValue)")
+                        }
+                    }
+                } label: {
+                    filterLabel(kind: language.text(zh: "声音", en: "Sound"), value: selectedCategory.title(language: language))
+                }
+                .accessibilityIdentifier("library.type.menu")
             }
-            .frame(height: 44)
 
             if !subscriptionStore.isReady {
                 HStack(spacing: 8) {
@@ -938,6 +968,22 @@ struct SoundLibraryView: View {
         .background(YixiuTheme.deepWater)
     }
 
+    private func filterLabel(kind: String, value: String) -> some View {
+        HStack(spacing: 7) {
+            Text("\(kind) · \(value)")
+                .font(YixiuTheme.sans(12, weight: .medium))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.down").font(.system(size: 10, weight: .medium))
+        }
+        .foregroundStyle(YixiuTheme.moon)
+        .padding(.horizontal, 13)
+        .frame(maxWidth: .infinity, minHeight: 44)
+        .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+        .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+    }
+
     private var emptyResults: some View {
         VStack(spacing: 12) {
             Image(systemName: selectedScope == .favorites ? "heart" : selectedScope == .recent ? "clock" : "magnifyingglass")
@@ -954,6 +1000,7 @@ struct SoundLibraryView: View {
                 searchQuery = ""
                 selectedScope = .all
                 selectedCategory = .all
+                selectedPurpose = .all
                 searchFocused = false
             } label: {
                 Text(language.text(zh: "浏览全部声音", en: "Explore all sounds"))
@@ -970,7 +1017,7 @@ struct SoundLibraryView: View {
     }
 
     private var emptyResultsTitle: String {
-        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all {
+        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all, selectedPurpose == .all {
             if selectedScope == .favorites { return language.text(zh: "还没有收藏的声音", en: "No favorites yet") }
             if selectedScope == .recent { return language.text(zh: "还没有聆听记录", en: "No recent sounds yet") }
         }
@@ -978,7 +1025,7 @@ struct SoundLibraryView: View {
     }
 
     private var emptyResultsMessage: String {
-        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all {
+        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all, selectedPurpose == .all {
             if selectedScope == .favorites { return language.text(zh: "点卡片上的爱心，把喜欢的声音留在这里。", en: "Tap a card’s heart to keep a favorite here.") }
             if selectedScope == .recent { return language.text(zh: "开始聆听后，最近的声音会出现在这里。", en: "Start listening and your recent sounds will appear here.") }
         }
@@ -993,7 +1040,7 @@ struct SoundLibraryView: View {
                     paywallOpen = true
                     return
                 }
-                appState.selectScene(scene)
+                appState.selectScene(scene, entryPoint: "library")
                 dismiss()
             } label: {
                 GeometryReader { geometry in

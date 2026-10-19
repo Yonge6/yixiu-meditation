@@ -6,11 +6,12 @@ struct SoundLibraryFilterHarness {
         func scenes(
             scope: SoundLibraryScope = .all,
             category: SceneCategory = .all,
+            purpose: SoundLibraryPurpose = .all,
             query: String = "",
             favorites: [MeditationScene] = [],
             recent: [MeditationScene] = []
         ) -> [MeditationScene] {
-            SoundLibraryFilter.scenes(scope: scope, category: category, query: query, favorites: favorites, recent: recent)
+            SoundLibraryFilter.scenes(scope: scope, category: category, purpose: purpose, query: query, favorites: favorites, recent: recent)
         }
 
         precondition(scenes() == MeditationScene.availableScenes, "Default library must retain catalog order")
@@ -18,6 +19,12 @@ struct SoundLibraryFilterHarness {
         precondition(Set(scenes(scope: .free, category: .classical)) == SubscriptionAccessPolicy.freeClassicalScenes,
                      "Free and category must intersect")
         precondition(scenes(category: .original).count == 10)
+        precondition(scenes(scope: .free, category: .nature, purpose: .lunch).contains(.lake))
+        precondition(scenes(scope: .free, category: .nature, purpose: .nightWaking).contains(.window))
+        precondition(scenes(category: .original, purpose: .nightWaking) == [.moonAnchorage, .blueQuiet],
+                     "Purpose and sound type must intersect without renaming catalog IDs")
+        precondition(scenes(scope: .recent, category: .nature, purpose: .lunch, recent: [.window, .lake, .rain, .spring]) == [.lake, .spring],
+                     "Purpose filtering must preserve recent order")
         precondition(Set(scenes(scope: .free, category: .original)) == SubscriptionAccessPolicy.freeOriginalScenes)
         precondition(scenes(category: .original, query: "月泊") == [.moonAnchorage])
         precondition(scenes(category: .original, query: "Bamboo") == [.bambooStillness])

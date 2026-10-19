@@ -33,6 +33,13 @@ final class AmbientAudioEngine {
 final class ProductAnalytics {
     static let shared = ProductAnalytics()
     func event(_ name: String, _ parameters: [String: Any] = [:]) {}
+    private(set) var restIntent = "none"
+    private(set) var entryPoint = "sounds"
+    private(set) var meaningfulKinds: [String] = []
+    func beginRestSession(restIntent: String, entryPoint: String) {
+        self.restIntent = restIntent; self.entryPoint = entryPoint
+    }
+    func recordMeaningfulRest(kind: String) { meaningfulKinds.append(kind) }
 }
 
 @main
@@ -45,6 +52,23 @@ enum AppStatePracticeSmoke {
         let audio = AmbientAudioEngine()
         let state = AppState(defaults: defaults, now: { now }, audio: audio)
         state.enforceAccessLevel(.free)
+        state.focusSoundEnabled = false
+        state.startQuickListening(scene: .lake, minutes: 15, restIntent: "lunch", entryPoint: "focus_quick", stayInFocus: true)
+        precondition(state.scene == .lake && state.duration == 15 && state.isPlaying)
+        precondition(state.activeTab == .focus && state.focusRestMode == .listening)
+        precondition(ProductAnalytics.shared.restIntent == "lunch" && ProductAnalytics.shared.entryPoint == "focus_quick")
+        precondition(!state.focusSoundEnabled, "Listening presets must not change the explicit silent breathing preference")
+        state.startQuickListening(scene: .window, minutes: 15, restIntent: "night_waking", entryPoint: "focus_quick", stayInFocus: true)
+        precondition(state.scene == .window && state.isPlaying && !state.endBell)
+        precondition(state.activeTab == .focus && state.focusRestMode == .listening)
+        state.prepareFocus(minutes: 1, restIntent: "work_break", entryPoint: "focus_quick")
+        precondition(state.focusDuration == 1 && !state.focusSoundEnabled)
+        precondition(state.activeTab == .focus && state.focusRestMode == .breathing)
+        precondition(state.beginFocusSession())
+        precondition(ProductAnalytics.shared.restIntent == "work_break")
+        state.resetFocusSession()
+        state.pause()
+        let pauseCountBeforeMainTest = audio.pauseCount
         state.startQuickListening(scene: .birds, minutes: 5)
         precondition(state.scene == .birds && state.duration == 5 && state.isPlaying)
         now += 90.25
@@ -52,7 +76,7 @@ enum AppStatePracticeSmoke {
         precondition(state.remainingSeconds == 210)
         state.pause()
         let stopCountBeforeResume = audio.stopCount
-        precondition(audio.pauseCount == 2) // quick-session setup, then the explicit pause
+        precondition(audio.pauseCount == pauseCountBeforeMainTest + 2) // quick-session setup, then explicit pause
         now += 600
         state.play()
         precondition(audio.stopCount == stopCountBeforeResume, "Pause/resume must not stop or release the media player")

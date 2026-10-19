@@ -3,7 +3,7 @@ import path from "node:path";
 
 const root = process.env.YIXIU_UI_URL || "";
 const phase = process.env.YIXIU_UI_PHASE || "local";
-const output = path.resolve("../qa/h5-refinement-20261018");
+const output = path.resolve(process.env.YIXIU_UI_EVIDENCE || "../qa/everyday-rest-20261019");
 declare global { interface Window { refinementAudio: HTMLMediaElement[] } }
 
 for (const [width, height, lang] of [[390, 844, "zh"], [320, 740, "en"], [1280, 900, "zh"], [844, 390, "en"]] as const) {
@@ -37,7 +37,8 @@ for (const [width, height, lang] of [[390, 844, "zh"], [320, 740, "en"], [1280, 
       await page.getByRole("button", { name: "播放", exact: true }).click();
       await expect.poll(() => page.evaluate(() => window.refinementAudio.some(audio => !audio.paused && audio.currentTime > 0.2))).toBe(true);
       await nav.getByRole("button", { name: "静心", exact: true }).click();
-      await expect(page.locator(".focus-screen h1")).toHaveText("屋檐雨");
+      await expect(page.locator(".focus-screen h1")).toHaveText("给自己一分钟");
+      await expect(page.getByRole("switch", { name: "场景声音：屋檐雨", exact: true })).toBeVisible();
       expect(await page.evaluate(() => window.refinementAudio.length)).toBe(1);
       expect(await page.evaluate(() => !window.refinementAudio[0].paused)).toBe(true);
       await nav.getByRole("button", { name: "声音", exact: true }).click();
@@ -64,7 +65,7 @@ for (const [width, height, lang] of [[390, 844, "zh"], [320, 740, "en"], [1280, 
     await search.fill("Moon Anchorage");
     await expect(library.locator(".scene-grid article")).toHaveCount(1);
     await search.fill("");
-    await library.getByRole("combobox").selectOption("free");
+    await library.getByRole("combobox", { name: lang === "zh" ? "聆听筛选" : "Listening filter" }).selectOption("free");
     await expect(library.locator(".scene-grid article")).toHaveCount(27);
     const headerBefore = await library.locator(".library-title-row").boundingBox();
     await library.locator(".scene-grid").evaluate(el => { el.scrollTop = 400; });
@@ -86,7 +87,7 @@ for (const [width, height, lang] of [[390, 844, "zh"], [320, 740, "en"], [1280, 
     await expect(page.locator(".me-screen")).toBeVisible();
     await page.screenshot({ path: `${output}/${phase}-${width}-${lang}-me.png`, animations: "disabled" });
     await page.locator(".me-screen").evaluate(el => { el.scrollTop = el.scrollHeight; });
-    const last = page.locator(".me-works a").last();
+    const last = page.locator(".trust-links").getByRole("button", { name: lang === "zh" ? /^生活方式/ : /^Lifestyle/ });
     await expect(last).toBeInViewport();
     expect((await last.boundingBox())!.y + (await last.boundingBox())!.height).toBeLessThanOrEqual((await nav.boundingBox())!.y);
   });
