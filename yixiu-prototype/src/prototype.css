@@ -3556,7 +3556,11 @@ img[data-image-scene="tide"] {
 .journal-entries svg { flex-shrink: 0; color: var(--aqua-strong); }
 .journal-privacy { display: block; margin-top: 20px; opacity: .8; }
 .web-membership > p { font-size: 12px; line-height: 1.8; color: var(--mist); }
-.web-membership > button { display: flex; align-items: center; gap: 8px; min-height: 44px; color: var(--aqua-strong) !important; font-size: 13px; }
+.web-membership { position: relative; cursor: pointer; }
+.web-membership > button { position: static; display: flex; align-items: center; gap: 8px; min-height: 44px; color: var(--aqua-strong) !important; font-size: 13px; }
+/* Stretch the existing semantic button, retaining one keyboard/focus target. */
+.web-membership > button::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.web-membership:has(> button:focus-visible) { outline: 2px solid var(--aqua-strong); outline-offset: 4px; }
 .web-membership > small { display: block; margin-top: 8px; font-size: 10px; line-height: 1.7; color: var(--mist); }
 .settings-duration { flex-wrap: wrap; }
 .timer-panel { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
@@ -3823,7 +3827,7 @@ img[data-image-scene="tide"] {
 .card-heading strong, .setting-title strong { font-size: 20px; letter-spacing: 0.035em; }
 .card-heading small { margin-top: 6px; font-size: 12px; line-height: 1.7; }
 .empty-copy { color: #b4c9cd; line-height: 1.9; }
-.me-group-label { padding-left: 4px; color: #a5cccf; font-size: 11px; letter-spacing: 0.12em; }
+.me-group-label { padding-left: 4px; color: #a5cccf; font-size: 11px; line-height: 1.8; letter-spacing: 0.12em; overflow-wrap: anywhere; }
 .me-links > button, .me-works > a { transition: background-color 160ms ease; }
 .journal-heading strong { font-size: 46px; font-variant-numeric: tabular-nums; }
 .journal-heading span { font-size: 13px; }

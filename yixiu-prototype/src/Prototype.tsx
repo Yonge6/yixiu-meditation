@@ -2047,7 +2047,7 @@ export default function Prototype() {
                 <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
                   <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "10 种自然声 + 17 首音乐（10 首古典、5 首 AI 原创）" : "10 nature sounds + 17 music tracks (10 classical, 5 AI originals)"}</small></div><PremiumGemIcon /></div>
                   <p>{language === "zh" ? "无需账号，没有广告。免费使用 1 分钟呼吸、27 个声音和 5 / 15 / 30 分钟定时。Plus 在 App 中提供更长、更丰富的声音陪伴。" : "No account. No ads. Enjoy 1-minute breathing, 27 free sounds and 5 / 15 / 30-minute timers. Plus adds longer listening and the full collection in the app."}</p>
-                  <button type="button" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
+                  <button type="button" aria-haspopup="dialog" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
                   <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
                 </section>
 
@@ -2127,7 +2127,7 @@ export default function Prototype() {
 
 
 
-                <p className="me-group-label">{language === "zh" ? "生活方式" : "LIFESTYLE"}</p>
+                <p className="me-group-label">{language === "zh" ? "探索健康的工作和生活方式" : "EXPLORE HEALTHIER WAYS TO WORK AND LIVE"}</p>
                 <LifestyleWorks language={language} />
                 <p className="me-philosophy-footnote">{language === "zh" ? "不必等到有空，才可以休息。" : "You do not have to wait for free time to rest."}</p>
               </div>
@@ -2143,7 +2143,7 @@ export default function Prototype() {
             >
               <header className="me-detail-header">
                 <button type="button" aria-label={language === "zh" ? "返回" : "Back"} onClick={returnToMeHome}><ArrowLeftIcon /></button>
-                <div><small>一休 · YIXIU</small><strong>{meView === "about" ? (language === "zh" ? "关于我们" : "About Us") : meView === "works" ? (language === "zh" ? "生活方式" : "Lifestyle") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
+                <div><small>一休 · YIXIU</small><strong>{meView === "about" ? (language === "zh" ? "关于我们" : "About Us") : meView === "works" ? (language === "zh" ? "探索健康的工作和生活方式" : "Healthier ways to work and live") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
               </header>
               <div className="me-detail-scroll">
                 {meView === "about" ? (

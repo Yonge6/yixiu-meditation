@@ -2,6 +2,8 @@
 
 ## Yixiu Product Direction
 
+- 2026-10-20 Me interaction/copy: the full H5 membership card opens the existing Plus dialog through one semantic, keyboard-accessible button (no nested controls); retain drag-scroll suppression and existing access rules. Rename the related-works group to `探索健康的工作和生活方式` with equivalent English copy; long headings wrap naturally without breakpoint-specific truncation.
+
 - 2026-10-20 analytics preference styling: use a 44px accessible switch target and a soft aqua privacy link with chevron instead of the browser-default checkbox/blue underline. Keep opt-in default off, persisted consent, revocation and privacy copy unchanged. The entire explanatory paragraph must remain readable at narrow widths.
 
 - 2026-10-19 membership mark: use the same warm yellow-orange faceted gemstone geometry in H5 and native library badges, Me membership entry and Plus hero. Keep light-gold highlights, amber/orange lower facets and a clear small-size outline; no flashing animation. FREE pills, access policy, prices and all non-membership aqua controls stay unchanged.
