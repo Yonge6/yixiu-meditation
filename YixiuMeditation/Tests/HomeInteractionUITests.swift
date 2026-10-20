@@ -363,12 +363,26 @@ final class HomeInteractionUITests: XCTestCase {
                       || app.alerts["Could not open the App Store"].exists)
     }
 
+    func testBrandBrightHomeCapture() {
+        for language in ["zh", "en"] {
+            app.terminate()
+            app.launchArguments = ["-language", language, "-scene", "oasisRest", "-volume", "0.72", "-YixiuForceFreeAccess"]
+            app.launch()
+            let library = app.buttons["listen.library"]
+            XCTAssertTrue(library.waitForExistence(timeout: 15))
+            XCTAssertTrue(library.isHittable)
+            expectScene(language == "zh" ? "绿洲停歇" : "Oasis Rest")
+            capture("bright-home-\(language)")
+        }
+    }
+
     func testBrandBreathingStoreCapture() {
         for language in ["zh", "en"] {
             app.terminate()
-            app.launchArguments = ["-language", language, "-scene", "rain", "-volume", "0.72", "-YixiuForceFreeAccess"]
+            app.launchArguments = ["-language", language, "-scene", "oasisRest", "-volume", "0.72", "-YixiuForceFreeAccess"]
             app.launch()
             XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+            capture("storebrand-\(language)-nature")
             selectTab(language == "zh" ? "静心" : "Focus")
             let start = app.buttons["focus.start"]
             XCTAssertTrue(start.waitForExistence(timeout: 5))

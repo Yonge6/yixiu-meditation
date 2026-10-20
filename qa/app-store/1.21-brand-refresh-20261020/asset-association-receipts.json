@@ -1,54 +1,6 @@
 [
   {
     "locale": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
-    "imageId": "c3800005-717d-8f35-801d-aa4291db376c",
-    "placementId": "72c00005-717d-8f35-8f35-f76dbdb7b3b2"
-  },
-  {
-    "locale": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
-    "imageId": "a3000005-717d-8f35-8021-fab732a4ba7f",
-    "placementId": "4d800005-717d-8f35-8f0c-5043885fe505"
-  },
-  {
-    "locale": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-zh-03-original.jpg",
-    "imageId": "49800005-717d-8f35-8034-5863f743d2c5",
-    "placementId": "5fc00005-717d-8f35-8f2d-bce6999bdc99"
-  },
-  {
-    "locale": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
-    "imageId": "ca000005-717d-8f35-8026-e3a64cac1cc8",
-    "placementId": "81400005-717d-8f35-8f3f-481354410ca9"
-  },
-  {
-    "locale": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-zh-05-original-library.jpg",
-    "imageId": "cdc00005-717d-8f35-800d-718d8d9199a6",
-    "placementId": "1ec00005-717d-8f35-8f1a-8fcf9e84a493"
-  },
-  {
-    "locale": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-zh-06-library.jpg",
-    "imageId": "b2400005-717d-8f35-800b-d4f8ef1188d1",
-    "placementId": "7cc00005-717d-8f35-8f08-bac2bca9ed93"
-  },
-  {
-    "locale": "zh",
     "group": "IPAD_13_PROFILE",
     "type": "APP_SCREENSHOT",
     "name": "yixiu-121-brand-20261020-ipad-zh-01-nature.jpg",
@@ -97,54 +49,6 @@
   },
   {
     "locale": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-en-01-nature.jpg",
-    "imageId": "0b400005-717d-8f35-802b-f2eb54b1d52b",
-    "placementId": "1c000005-717d-8f35-8f1c-5e1fd0d63826"
-  },
-  {
-    "locale": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-en-02-focus.jpg",
-    "imageId": "61000005-717d-8f35-8035-574e1d9d87f4",
-    "placementId": "10800005-717d-8f35-8f0f-899697fa308c"
-  },
-  {
-    "locale": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-en-03-original.jpg",
-    "imageId": "f2c00005-717d-8f35-8029-1de8ac0c6aff",
-    "placementId": "ec400005-717d-8f35-8f32-2d74d0f1ef72"
-  },
-  {
-    "locale": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-en-04-classical.jpg",
-    "imageId": "e0c00005-717d-8f35-800a-ceff2723b2a8",
-    "placementId": "02400005-717d-8f35-8f30-b3fe0be8d212"
-  },
-  {
-    "locale": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-en-05-original-library.jpg",
-    "imageId": "90400005-717d-8f35-801b-15284f1d8851",
-    "placementId": "b5400005-717d-8f35-8f15-72ea3180b6a0"
-  },
-  {
-    "locale": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "name": "yixiu-121-brand-20261020-duo-en-06-library.jpg",
-    "imageId": "87800005-717d-8f35-802c-dd1b2731f559",
-    "placementId": "c5400005-717d-8f35-8f2d-cb97d0a68c70"
-  },
-  {
-    "locale": "en",
     "group": "IPAD_13_PROFILE",
     "type": "APP_SCREENSHOT",
     "name": "yixiu-121-brand-20261020-ipad-en-01-nature.jpg",
@@ -190,5 +94,165 @@
     "name": "yixiu-121-brand-20261020-search-en.jpg",
     "imageId": "85400005-717d-8f35-8033-472c13764d12",
     "placementId": "10400005-717d-8f35-8f00-5efcf79ac3df"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-zh-01-nature.jpg",
+    "imageId": "7d800005-717d-8f35-800c-a41cc6f99105",
+    "placementId": "cc000005-717d-8f35-8f12-ba4404fa2914"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-zh-02-focus.jpg",
+    "imageId": "bac00005-717d-8f35-8033-06f6ad465729",
+    "placementId": "b1000005-717d-8f35-8f01-a037efa5ef03"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-zh-03-original.jpg",
+    "imageId": "f8c00005-717d-8f35-801b-d1d7a7b01911",
+    "placementId": "3a000005-717d-8f35-8f35-dfcec0b0d4b3"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-zh-04-classical.jpg",
+    "imageId": "7a400005-717d-8f35-8026-745a9a76fb46",
+    "placementId": "72400005-717d-8f35-8f2f-614a980b4cb9"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-en-01-nature.jpg",
+    "imageId": "9b400005-717d-8f35-802a-138cdcccc1df",
+    "placementId": "0b800005-717d-8f35-8f35-8fea44277e78"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-en-02-focus.jpg",
+    "imageId": "52000005-717d-8f35-800c-e5e31bf5be87",
+    "placementId": "1b800005-717d-8f35-8f30-c6dba02888be"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-en-03-original.jpg",
+    "imageId": "f8000005-717d-8f35-800d-5803686a278b",
+    "placementId": "6b000005-717d-8f35-8f08-843730912bcc"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-iphone-en-04-classical.jpg",
+    "imageId": "69800005-717d-8f35-8030-8db5ff535258",
+    "placementId": "6e000005-717d-8f35-8f06-fed830f62ff0"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
+    "imageId": "4b400005-717d-8f35-8017-cf8fc439b246",
+    "placementId": "49000005-717d-8f35-8f1a-2075b9fa1540"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
+    "imageId": "12c00005-717d-8f35-801d-5bfa232f4690",
+    "placementId": "98400005-717d-8f35-8f24-6dfbf75e0ea1"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-zh-03-original.jpg",
+    "imageId": "49800005-717d-8f35-8034-5863f743d2c5",
+    "placementId": "b3800005-717d-8f35-8f39-4e5bd68d3c75"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
+    "imageId": "17000005-717d-8f35-800b-040d4a5b0161",
+    "placementId": "ac800005-717d-8f35-8f0c-39bb291db29d"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-zh-05-original-library.jpg",
+    "imageId": "cdc00005-717d-8f35-800d-718d8d9199a6",
+    "placementId": "be800005-717d-8f35-8f02-102809aded77"
+  },
+  {
+    "locale": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-zh-06-library.jpg",
+    "imageId": "b2400005-717d-8f35-800b-d4f8ef1188d1",
+    "placementId": "aac00005-717d-8f35-8f10-b644fb764b2e"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-en-01-nature.jpg",
+    "imageId": "43400005-717d-8f35-803e-4946e66bbe3f",
+    "placementId": "a2c00005-717d-8f35-8f16-6a4e1ad7749c"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-en-02-focus.jpg",
+    "imageId": "35400005-717d-8f35-802e-70a28ead6b0c",
+    "placementId": "f4c00005-717d-8f35-8f17-ef38fcf0acc5"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-en-03-original.jpg",
+    "imageId": "f2c00005-717d-8f35-8029-1de8ac0c6aff",
+    "placementId": "3a400005-717d-8f35-8f05-8648ac85615a"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-en-04-classical.jpg",
+    "imageId": "73000005-717d-8f35-8034-a5f9f722f96a",
+    "placementId": "43c00005-717d-8f35-8f0c-ae9784e31596"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-en-05-original-library.jpg",
+    "imageId": "90400005-717d-8f35-801b-15284f1d8851",
+    "placementId": "4e400005-717d-8f35-8f0f-713f87cc0b5f"
+  },
+  {
+    "locale": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "name": "yixiu-121-brand-20261020-duo-en-06-library.jpg",
+    "imageId": "87800005-717d-8f35-802c-dd1b2731f559",
+    "placementId": "26800005-717d-8f35-8f16-c3ebd65fbe1f"
   }
 ]

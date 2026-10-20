@@ -1,0 +1,178 @@
+[
+  {
+    "file": "iphone-zh-nature.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "nature",
+    "scene": "oasisRest",
+    "lang": "zh",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:46:45.812Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "zh",
+      "-scene",
+      "oasisRest",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": null,
+    "sha256": "9be1e672ca4a88f59badcc74a6092fcacdd8a9f62d85556e588a5c332f53a163"
+  },
+  {
+    "file": "iphone-zh-focus.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "focus",
+    "scene": "oasisRest",
+    "lang": "zh",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:46:50.675Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "zh",
+      "-scene",
+      "oasisRest",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": "yixiu://focus",
+    "sha256": "4fe502835f77112aef30d388ba7a93450e953cf06c9f952e0e18150c6f29b947"
+  },
+  {
+    "file": "iphone-zh-original.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "original",
+    "scene": "moonAnchorage",
+    "lang": "zh",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:46:55.272Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "zh",
+      "-scene",
+      "moonAnchorage",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": null,
+    "sha256": "31c2052c5922543e77f582eeea50ed963719459161e24b3923007f5c8f0073c8"
+  },
+  {
+    "file": "iphone-zh-classical.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "classical",
+    "scene": "canon",
+    "lang": "zh",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:47:00.283Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "zh",
+      "-scene",
+      "canon",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": null,
+    "sha256": "403c810897d06a50cebb84df5ed029274605e986ff1da789388d7de7f3d706f4"
+  },
+  {
+    "file": "iphone-en-nature.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "nature",
+    "scene": "oasisRest",
+    "lang": "en",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:47:05.292Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "en",
+      "-scene",
+      "oasisRest",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": null,
+    "sha256": "54c18a4d5601c24faf4f1ccbb29dfbbcbc59c71310c1f21a0550411b86fd177d"
+  },
+  {
+    "file": "iphone-en-focus.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "focus",
+    "scene": "oasisRest",
+    "lang": "en",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:47:09.944Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "en",
+      "-scene",
+      "oasisRest",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": "yixiu://focus",
+    "sha256": "a5788e27006cd08d01ae34017436895f85d71cb53d051650fce2b77e9fc39a3f"
+  },
+  {
+    "file": "iphone-en-original.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "original",
+    "scene": "moonAnchorage",
+    "lang": "en",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:47:14.549Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "en",
+      "-scene",
+      "moonAnchorage",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": null,
+    "sha256": "1c926c4faba6b93de86215d6e893572a4d471de4d94eea64358a75d285904cd6"
+  },
+  {
+    "file": "iphone-en-classical.png",
+    "device": "00008120-000A341C0E0BC01E",
+    "topic": "classical",
+    "scene": "canon",
+    "lang": "en",
+    "width": 1290,
+    "height": 2796,
+    "capturedAt": "2026-10-20T01:47:19.329Z",
+    "method": "devicectl device capture screenshot",
+    "launchArguments": [
+      "-language",
+      "en",
+      "-scene",
+      "canon",
+      "-volume",
+      "0.72",
+      "-YixiuForceFreeAccess"
+    ],
+    "payloadURL": null,
+    "sha256": "68fbdb371631539fdbd7d2aede1bc0de93e202c84cec41ce7b1ee9c9804af872"
+  }
+]

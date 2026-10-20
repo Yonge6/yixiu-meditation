@@ -1,25 +1,5 @@
 [
   {
-    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/01-nature.jpg",
-    "lang": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
-    "name": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
-    "id": "c3800005-717d-8f35-801d-aa4291db376c",
-    "uploaded": true
-  },
-  {
-    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/02-focus.jpg",
-    "lang": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
-    "name": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
-    "id": "a3000005-717d-8f35-8021-fab732a4ba7f",
-    "uploaded": true
-  },
-  {
     "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/03-original.jpg",
     "lang": "zh",
     "group": "IPHONE_DUO_PROFILE",
@@ -27,16 +7,6 @@
     "category": "APP_SCREENSHOTS_AND_PREVIEWS",
     "name": "yixiu-121-brand-20261020-duo-zh-03-original.jpg",
     "id": "49800005-717d-8f35-8034-5863f743d2c5",
-    "uploaded": true
-  },
-  {
-    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/04-classical.jpg",
-    "lang": "zh",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
-    "name": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
-    "id": "ca000005-717d-8f35-8026-e3a64cac1cc8",
     "uploaded": true
   },
   {
@@ -60,26 +30,6 @@
     "uploaded": true
   },
   {
-    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/01-nature.jpg",
-    "lang": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
-    "name": "yixiu-121-brand-20261020-duo-en-01-nature.jpg",
-    "id": "0b400005-717d-8f35-802b-f2eb54b1d52b",
-    "uploaded": true
-  },
-  {
-    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/02-focus.jpg",
-    "lang": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
-    "name": "yixiu-121-brand-20261020-duo-en-02-focus.jpg",
-    "id": "61000005-717d-8f35-8035-574e1d9d87f4",
-    "uploaded": true
-  },
-  {
     "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/03-original.jpg",
     "lang": "en",
     "group": "IPHONE_DUO_PROFILE",
@@ -87,16 +37,6 @@
     "category": "APP_SCREENSHOTS_AND_PREVIEWS",
     "name": "yixiu-121-brand-20261020-duo-en-03-original.jpg",
     "id": "f2c00005-717d-8f35-8029-1de8ac0c6aff",
-    "uploaded": true
-  },
-  {
-    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/04-classical.jpg",
-    "lang": "en",
-    "group": "IPHONE_DUO_PROFILE",
-    "type": "APP_SCREENSHOT",
-    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
-    "name": "yixiu-121-brand-20261020-duo-en-04-classical.jpg",
-    "id": "e0c00005-717d-8f35-800a-ceff2723b2a8",
     "uploaded": true
   },
   {
@@ -237,6 +177,146 @@
     "category": "CREATIVE_ASSETS",
     "name": "yixiu-121-brand-20261020-search-en.jpg",
     "id": "85400005-717d-8f35-8033-472c13764d12",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-zh/01-nature.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-zh-01-nature.jpg",
+    "id": "7d800005-717d-8f35-800c-a41cc6f99105",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-zh/02-focus.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-zh-02-focus.jpg",
+    "id": "bac00005-717d-8f35-8033-06f6ad465729",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-zh/03-original.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-zh-03-original.jpg",
+    "id": "f8c00005-717d-8f35-801b-d1d7a7b01911",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-zh/04-classical.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-zh-04-classical.jpg",
+    "id": "7a400005-717d-8f35-8026-745a9a76fb46",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-en/01-nature.jpg",
+    "lang": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-en-01-nature.jpg",
+    "id": "9b400005-717d-8f35-802a-138cdcccc1df",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-en/02-focus.jpg",
+    "lang": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-en-02-focus.jpg",
+    "id": "52000005-717d-8f35-800c-e5e31bf5be87",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-en/03-original.jpg",
+    "lang": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-en-03-original.jpg",
+    "id": "f8000005-717d-8f35-800d-5803686a278b",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/iphone-en/04-classical.jpg",
+    "lang": "en",
+    "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-iphone-en-04-classical.jpg",
+    "id": "69800005-717d-8f35-8030-8db5ff535258",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/01-nature.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
+    "id": "4b400005-717d-8f35-8017-cf8fc439b246",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/02-focus.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
+    "id": "12c00005-717d-8f35-801d-5bfa232f4690",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/04-classical.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
+    "id": "17000005-717d-8f35-800b-040d4a5b0161",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/01-nature.jpg",
+    "lang": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-en-01-nature.jpg",
+    "id": "43400005-717d-8f35-803e-4946e66bbe3f",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/02-focus.jpg",
+    "lang": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-en-02-focus.jpg",
+    "id": "35400005-717d-8f35-802e-70a28ead6b0c",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/04-classical.jpg",
+    "lang": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-en-04-classical.jpg",
+    "id": "73000005-717d-8f35-8034-a5f9f722f96a",
     "uploaded": true
   }
 ]

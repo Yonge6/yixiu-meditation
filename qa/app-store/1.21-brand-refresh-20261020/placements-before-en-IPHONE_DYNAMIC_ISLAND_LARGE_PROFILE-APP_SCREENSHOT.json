@@ -1,0 +1,146 @@
+[
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "12c00005-717d-8f35-8f39-6d78f6725620",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "1d800005-717d-8f35-803e-53d347dc0516"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/12c00005-717d-8f35-8f39-6d78f6725620"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "06800005-717d-8f35-8f13-a10f8d09d623",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "d5c00005-717d-8f35-8016-597162c276e6"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/06800005-717d-8f35-8f13-a10f8d09d623"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "56400005-717d-8f35-8f00-94ecced3559d",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "41400005-717d-8f35-802f-7077e621a292"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/56400005-717d-8f35-8f00-94ecced3559d"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "7cc00005-717d-8f35-8f2b-12bbbcccf882",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "44400005-717d-8f35-800f-333f5e55b30f"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/7cc00005-717d-8f35-8f2b-12bbbcccf882"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "ca800005-717d-8f35-8f37-6f8367fdc750",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "57400005-717d-8f35-8033-8e242a93d4c5"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/ca800005-717d-8f35-8f37-6f8367fdc750"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "a3800005-717d-8f35-8f28-d59363641ebf",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "35000005-717d-8f35-8018-2c9b5395dbc8"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/a3800005-717d-8f35-8f28-d59363641ebf"
+    }
+  }
+]

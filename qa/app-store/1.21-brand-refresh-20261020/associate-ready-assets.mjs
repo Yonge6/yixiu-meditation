@@ -27,18 +27,22 @@ export async function associateReadyAssets(page) {
     const loc=locales[lang],selected=assets.filter(a=>a.lang===lang);
     const keys=[...new Set(selected.map(a=>`${a.group}|${a.type}`))];
     for(const key of keys) {
-      const [group,type]=key.split('|'),items=selected.filter(a=>a.group===group&&a.type===type),ids=new Set(items.map(a=>a.id));
+      const [group,type]=key.split('|'),items=selected.filter(a=>a.group===group&&a.type===type).sort((a,b)=>a.name.localeCompare(b.name));
       const current=await page.fetch(endpoint(loc));if(!current.ok)throw Error('Read placements failed');
       const old=JSON.parse(current.body).data.filter(x=>x.attributes.placementGroup===group&&x.attributes.placementType===type);
       const filename=path.join(base,`placements-before-${lang}-${group}-${type}.json`);
       try{await fs.writeFile(filename,JSON.stringify(old,null,2),{flag:'wx'});}catch(e){if(e.code!=='EEXIST')throw e;}
-      const remove=old.filter(x=>!ids.has(x.relationships.image.data.id));
+      // Associations append in creation order. Rebuild only a draft group
+      // whose visible order differs, retaining every source library image.
+      const reorder=old.length!==items.length||old.some((x,i)=>x.relationships.image.data.id!==items[i]?.id);
+      const remove=reorder?old:[];
       if(remove.length) {
         const r=await page.fetch('/iris/v1/appAssetLibraryPlacementsDeletionRequests',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({data:{type:'appAssetLibraryPlacementsDeletionRequests',relationships:{placements:{data:remove.map(x=>({type:x.type,id:x.id}))}}}})});
         if(!r.ok)throw Error(`Remove draft associations: ${r.status} ${r.body}`);
       }
+      if(reorder){receipts=receipts.filter(x=>!(x.locale===lang&&x.group===group&&x.type===type));await save();}
       for(const a of items) {
-        const existing=old.find(x=>x.relationships.image.data.id===a.id);
+        const existing=reorder?undefined:old.find(x=>x.relationships.image.data.id===a.id);
         let id=existing?.id;
         if(!id) {
           const r=await page.fetch('/iris/v1/appAssetLibraryPlacements',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({data:{type:'appAssetLibraryPlacements',attributes:{placementType:a.type,placementGroup:a.group},relationships:{image:{data:{type:'appAssetLibraryImages',id:a.id}},appStoreVersionLocalization:{data:{type:'appStoreVersionLocalizations',id:loc}}}}})});
@@ -54,6 +58,11 @@ export async function associateReadyAssets(page) {
     const r=await page.fetch(endpoint(loc));if(!r.ok)throw Error('Final placement readback failed');
     const j=JSON.parse(r.body),expected=assets.filter(a=>a.lang===lang);
     for(const a of expected)if(!j.data.some(x=>x.relationships.image.data.id===a.id))throw Error(`Missing final association ${a.name}`);
+    for(const key of [...new Set(expected.map(a=>`${a.group}|${a.type}`))]) {
+      const [group,type]=key.split('|'),ordered=expected.filter(a=>a.group===group&&a.type===type).sort((a,b)=>a.name.localeCompare(b.name));
+      const actual=j.data.filter(x=>x.attributes.placementGroup===group&&x.attributes.placementType===type);
+      if(actual.length!==ordered.length||actual.some((x,i)=>x.relationships.image.data.id!==ordered[i]?.id))throw Error(`Order mismatch ${lang} ${group}`);
+    }
     readbacks.push({locale:lang,associatedNew:expected.length,placements:j.data,images:j.included});
   }
   await fs.writeFile(path.join(base,'main-page-assets-readback.json'),JSON.stringify(readbacks,null,2));

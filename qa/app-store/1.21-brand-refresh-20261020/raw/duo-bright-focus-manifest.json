@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "451A8AA4-C864-4692-BB24-85C8ECEFAC33.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "storebrand-en-focus_0_226D2249-E36E-49E9-B4A4-C5BA6C70F05A.png",
+        "timestamp" : 1792460836.067
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "E6344CBA-E43F-4A84-B292-4C5FC840DC98.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "storebrand-en-nature_0_2713E83E-1D75-446F-90CC-FFAEF9CBBBF4.png",
+        "timestamp" : 1792460830.416
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "AA50F2A6-51DB-41F1-BFD0-DEBFE18EFB2D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "storebrand-zh-focus_0_CFA9CE54-98F6-4075-8499-C227395485BD.png",
+        "timestamp" : 1792460822.629
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "A8FF3323-732D-4949-A3A2-F621DE75E207.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "storebrand-zh-nature_0_C599883D-9002-4A58-9809-0C36590A91E0.png",
+        "timestamp" : 1792460811.386
+      }
+    ],
+    "testIdentifier" : "HomeInteractionUITests/testBrandBreathingStoreCapture()",
+    "testIdentifierURL" : "test://com.apple.xcode/YixiuMeditation/HomeInteractionUITests/HomeInteractionUITests/testBrandBreathingStoreCapture"
+  }
+]

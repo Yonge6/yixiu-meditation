@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "44460FAD-EDDB-4296-86B6-60AB55852F4C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "bright-home-en_0_90F3B7EA-0A10-4E60-ADAF-1B643ADD1357.png",
+        "timestamp" : 1792461257.441
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "F988A108-E590-4EDE-B643-18FD3ECB999C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "bright-home-zh_0_A3CD831E-F667-4B96-86FB-540A1EDF210E.png",
+        "timestamp" : 1792461249.194
+      }
+    ],
+    "testIdentifier" : "HomeInteractionUITests/testBrandBrightHomeCapture()",
+    "testIdentifierURL" : "test://com.apple.xcode/YixiuMeditation/HomeInteractionUITests/HomeInteractionUITests/testBrandBrightHomeCapture"
+  }
+]

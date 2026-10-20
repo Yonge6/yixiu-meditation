@@ -48,3 +48,7 @@ Files: new store refresh asset directory and receipt scripts; do not overwrite o
 ## Completion states
 
 H5 deployed, binary uploaded, media processed, draft saved, submitted for review and publicly released are separate states. Final report must identify achieved state and any user-only blocker without implying approval.
+
+## Verified completion, October 20
+
+H5 release is publicly verified. App 1.21 (38) and 32 bilingual assets were submitted successfully at 10:08 Asia/Shanghai; submission 913a0424-9671-4a14-97f8-ab12388ced21 and version both read WAITING_FOR_REVIEW. The user requested brighter screens, so Oasis Rest leads iPhone/Duo and Canon in D supplies a sunlit classical panel. Eight phone captures succeeded directly after XCTest connection failures; two Duo screenshot tests passed. Existing iPad/Watch UI was retained and recomposed, not newly device-tested. Content-rights metadata was corrected against the license ledger. No new price change, agreement acceptance, CPP release, approval or public App release is claimed.
