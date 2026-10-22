@@ -5,12 +5,12 @@ struct FocusView: View {
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @State private var status: BreathingStatus = .idle
-    @State private var elapsed = 0
-    @State private var originalAudioWasPlaying = false
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var paywallOpen = false
-    @State private var clock = PracticeCountdown(seconds: 60)
-    @State private var practiceSceneID = ""
+    @State private var restViewportID = 0
+
+    private var status: BreathingStatus { appState.focusStatus }
+    private var elapsed: Int { appState.focusElapsed }
 
     private var totalSeconds: Int { appState.focusDuration * 60 }
     private var sceneName: String {
@@ -47,13 +47,19 @@ struct FocusView: View {
         GeometryReader { geometry in
             ZStack {
                 ScrollView(showsIndicators: false) {
+                if appState.focusRestMode == .listening {
+                    listeningRestPanel(size: geometry.size)
+                } else {
                 VStack(spacing: 28) {
                 focusLayout(geometry.size).callAsFunction {
                 VStack(spacing: 0) {
                 Text(appState.language.text(zh: "静心 · FOCUS", en: "FOCUS · 静心"))
                     .yixiuSecondary(11)
 
-                Text(sceneName)
+                Text(appState.language.text(
+                    zh: appState.focusDuration == 1 ? "给自己一分钟" : "给自己 \(appState.focusDuration) 分钟",
+                    en: appState.focusDuration == 1 ? "A minute to yourself" : "\(appState.focusDuration) minutes to yourself"
+                ))
                     .font(
                         appState.language == .zh
                             ? YixiuTheme.chineseDisplay(32)
@@ -61,16 +67,29 @@ struct FocusView: View {
                     )
                     .foregroundStyle(YixiuTheme.moon)
                     .padding(.top, 12)
-                    .accessibilityIdentifier("focus.sceneTitle")
+                    .accessibilityIdentifier("focus.restTitle")
 
-                Text(appState.language.text(zh: "吸气，停驻，流动", en: "Breathe in, pause, flow"))
+                Text(sceneName)
                     .font(YixiuTheme.chineseDisplay(14))
                     .tracking(2)
                     .foregroundStyle(YixiuTheme.mist)
                     .padding(.top, 8)
+                    .accessibilityIdentifier("focus.sceneTitle")
 
                 focusPreferences
                     .padding(.top, 18)
+                Button {
+                    let target = subscriptionStore.canAccess(appState.scene) ? appState.scene : .rain
+                    appState.startQuickListening(scene: target, minutes: 15, restIntent: "none", entryPoint: "focus_quick", stayInFocus: true)
+                } label: {
+                    Text(appState.language.text(zh: "不跟呼吸，只听一会儿", en: "Just listen, without a breathing guide"))
+                        .font(YixiuTheme.sans(12))
+                        .foregroundStyle(YixiuTheme.aquaStrong)
+                        .frame(minHeight: 44)
+                }
+                .buttonStyle(.plain)
+                .disabled(status == .running || status == .paused)
+                .accessibilityIdentifier("focus.listenOnly")
                 }
                 .frame(maxWidth: .infinity)
 
@@ -129,6 +148,8 @@ struct FocusView: View {
                 .frame(minHeight: geometry.size.height)
                 .frame(maxWidth: .infinity)
                 }
+                }
+                .id(restViewportID)
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .clipped()
@@ -148,38 +169,10 @@ struct FocusView: View {
             }
             .ignoresSafeArea()
         }
-        .task(id: status) {
-            guard status == .running else { return }
-
-            while status == .running, elapsed < totalSeconds, !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
-                guard status == .running, !Task.isCancelled else { return }
-
-                elapsed = totalSeconds - clock.secondsRemaining()
-                if elapsed >= totalSeconds {
-                    status = .complete
-                    clock.pause()
-                    appState.recordCompletedSession(isFocus: true, seconds: totalSeconds, sceneID: practiceSceneID)
-                    restoreOriginalPlayback()
-                    appState.playCompletionBell()
-                    return
-                }
-            }
-        }
-        .onDisappear {
-            if status == .running || status == .paused {
-                clock.pause()
-                elapsed = totalSeconds - clock.secondsRemaining()
-                restoreOriginalPlayback()
-                status = .paused
-            }
-        }
-        .onChange(of: appState.focusRequestToken) { _, _ in resetSession() }
-        .onChange(of: appState.scene) { _, newScene in
-            // A practice must not resume under a different scene than its record.
-            if (status == .running || status == .paused), practiceSceneID != newScene.rawValue {
-                resetSession()
-            }
+        .onDisappear { appState.leaveFocusSession() }
+        .onChange(of: appState.focusRestMode) { _, _ in restViewportID += 1 }
+        .onChange(of: appState.scene) { _, _ in
+            if appState.focusRestMode == .listening { restViewportID += 1 }
         }
         .sensoryFeedback(.selection, trigger: phase)
         .sheet(isPresented: $paywallOpen) {
@@ -190,8 +183,86 @@ struct FocusView: View {
         }
     }
 
+    private func listeningRestPanel(size: CGSize) -> some View {
+        VStack(spacing: 24) {
+            Text(appState.language.text(zh: "静心 · 听一会儿", en: "FOCUS · JUST LISTEN"))
+                .yixiuSecondary(11)
+            Text(appState.language.text(zh: "给自己 \(appState.duration) 分钟", en: "\(appState.duration) minutes to yourself"))
+                .font(appState.language == .zh ? YixiuTheme.chineseDisplay(32) : YixiuTheme.englishSerif(30))
+                .foregroundStyle(YixiuTheme.moon)
+                .accessibilityIdentifier("focus.restTitle")
+            Text(sceneName)
+                .font(YixiuTheme.chineseDisplay(18))
+                .foregroundStyle(YixiuTheme.mist)
+                .accessibilityIdentifier("focus.sceneTitle")
+
+            Image(systemName: "water.waves")
+                .font(.system(size: 62, weight: .ultraLight))
+                .foregroundStyle(YixiuTheme.aquaStrong)
+                .frame(width: 190, height: 190)
+                .background(Circle().fill(YixiuTheme.aqua.opacity(0.08)))
+                .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 1))
+                .padding(.vertical, 4)
+                .accessibilityHidden(true)
+
+            Text(appState.sessionCompleted
+                 ? appState.language.text(zh: "这一刻，留给自己。", en: "A little room, just for you.")
+                 : appState.language.text(zh: "不用跟随呼吸，让声音轻轻陪着你。", en: "No breathing pattern to follow. Let the sound keep you company."))
+                .font(YixiuTheme.sans(13))
+                .foregroundStyle(YixiuTheme.mist)
+                .lineSpacing(5)
+
+            Text(appState.formattedRemaining)
+                .font(YixiuTheme.englishSerif(36))
+                .monospacedDigit()
+                .foregroundStyle(YixiuTheme.moon)
+                .accessibilityIdentifier("focus.listeningCountdown")
+
+            Button {
+                appState.togglePlayback()
+            } label: {
+                Label(appState.isPlaying
+                      ? appState.language.text(zh: "暂停", en: "Pause")
+                      : appState.language.text(zh: "继续聆听", en: "Continue listening"),
+                      systemImage: appState.isPlaying ? "pause.fill" : "play.fill")
+                    .font(YixiuTheme.sans(15, weight: .semibold))
+                    .foregroundStyle(YixiuTheme.deepWater)
+                    .frame(minWidth: 220, minHeight: 52)
+                    .background(Capsule().fill(YixiuTheme.aquaStrong))
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("focus.listeningPlayback")
+
+            if let error = appState.audioError {
+                Text(error).font(YixiuTheme.sans(12)).foregroundStyle(YixiuTheme.mist)
+                    .accessibilityAddTraits(.updatesFrequently)
+            }
+
+            Button {
+                appState.prepareFocus(minutes: 1)
+            } label: {
+                Text(appState.language.text(zh: "也可以跟着呼吸一分钟", en: "Or breathe along for a minute"))
+                    .font(YixiuTheme.sans(13))
+                    .foregroundStyle(YixiuTheme.aquaStrong)
+                    .frame(minHeight: 44)
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("focus.chooseBreathing")
+
+            quickPractices
+        }
+        .multilineTextAlignment(.center)
+        .padding(24)
+        .frame(maxWidth: 600)
+        .frame(minHeight: size.height)
+        .frame(maxWidth: .infinity)
+    }
+
     private func focusLayout(_ size: CGSize) -> AnyLayout {
-        size.width >= 620 && !dynamicTypeSize.isAccessibilitySize
+        YixiuAdaptiveLayout.usesColumns(
+            size: size, horizontalSizeClass: horizontalSizeClass,
+            dynamicTypeSize: dynamicTypeSize, minimumColumnWidth: 286
+        )
             ? AnyLayout(HStackLayout(spacing: 32))
             : AnyLayout(VStackLayout(spacing: 12))
     }
@@ -207,7 +278,7 @@ struct FocusView: View {
                             return
                         }
                         appState.focusDuration = minutes
-                        elapsed = 0
+                        appState.resetFocusSession()
                     } label: {
                         Text("\(minutes) \(appState.language == .zh ? "分钟" : "MIN")")
                             .font(.system(size: 10, weight: .medium))
@@ -234,7 +305,6 @@ struct FocusView: View {
 
             Button {
                 appState.focusSoundEnabled.toggle()
-                syncFocusSound()
             } label: {
                 Label(
                     sceneName,
@@ -274,8 +344,8 @@ struct FocusView: View {
                 Text(status == .complete
                      ? appState.language.text(zh: "再来一次", en: "Begin again")
                      : appState.language.text(
-                        zh: "开始 \(appState.focusDuration) 分钟",
-                        en: "Start \(appState.focusDuration) minute\(appState.focusDuration == 1 ? "" : "s")"
+                        zh: "跟着呼吸 · \(appState.focusDuration) 分钟",
+                        en: "Breathe along · \(appState.focusDuration) min"
                      ))
                     .font(YixiuTheme.sans(15, weight: .semibold))
                     .foregroundStyle(YixiuTheme.deepWater)
@@ -290,16 +360,9 @@ struct FocusView: View {
             HStack(spacing: 12) {
                 Button {
                     if status == .running {
-                        ProductAnalytics.shared.event("focus_pause", ["scene_id": practiceSceneID])
-                        clock.pause()
-                        elapsed = totalSeconds - clock.secondsRemaining()
-                        status = .paused
-                        restoreOriginalPlayback()
+                        appState.pauseFocusSession()
                     } else {
-                        ProductAnalytics.shared.event("focus_resume", ["scene_id": practiceSceneID])
-                        acquireFocusAudio()
-                        clock.start()
-                        status = .running
+                        appState.resumeFocusSession()
                     }
                 } label: {
                     Label(
@@ -337,71 +400,29 @@ struct FocusView: View {
             paywallOpen = true
             return
         }
-        acquireFocusAudio()
-        practiceSceneID = appState.scene.rawValue
-        ProductAnalytics.shared.event("focus_start", ["scene_id": practiceSceneID, "focus_minutes": appState.focusDuration])
-        clock.reset(seconds: totalSeconds)
-        clock.start()
-        elapsed = 0
-        status = .running
-    }
-
-    private func acquireFocusAudio() {
-        guard !appState.isFocusActive else { return }
-        originalAudioWasPlaying = appState.isPlaying
-        appState.isFocusActive = true
-        if appState.focusSoundEnabled {
-            if !appState.isPlaying { appState.play() }
-        } else if appState.isPlaying {
-            appState.pause()
-        }
+        appState.beginFocusSession()
     }
 
     private func resetSession() {
-        if status == .running || status == .paused { ProductAnalytics.shared.event("focus_exit", ["scene_id": practiceSceneID]) }
-        restoreOriginalPlayback()
-        clock.reset(seconds: totalSeconds)
-        elapsed = 0
-        status = .idle
-    }
-
-    private func syncFocusSound() {
-        guard status == .running else { return }
-
-        if appState.focusSoundEnabled, !appState.isPlaying {
-            appState.play()
-        } else if !appState.focusSoundEnabled, appState.isPlaying {
-            appState.pause()
-        }
-    }
-
-    private func restoreOriginalPlayback() {
-        guard appState.isFocusActive else { return }
-        if originalAudioWasPlaying, !appState.isPlaying {
-            appState.play()
-        } else if !originalAudioWasPlaying, appState.isPlaying {
-            appState.pause()
-        }
-        appState.isFocusActive = false
+        appState.resetFocusSession()
     }
 
     private var quickPractices: some View {
         VStack(spacing: 12) {
             Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7).padding(.bottom, 10)
-            Text(appState.language.text(zh: "换一种放松方式", en: "Another way to unwind"))
+            Text(appState.language.text(zh: "此刻，想怎样休息？", en: "How would you like to pause?"))
                 .font(YixiuTheme.sans(11))
                 .foregroundStyle(YixiuTheme.mist)
             HStack(alignment: .top, spacing: 12) {
-            quickPractice(title: appState.language.text(zh: "睡前放松", en: "Bedtime"), minutes: 15) {
-                appState.startQuickListening(scene: .rain, minutes: 15)
+            quickPractice(title: appState.language.text(zh: "午休一下", en: "Lunch break"), minutes: 15) {
+                appState.startQuickListening(scene: .lake, minutes: 15, restIntent: "lunch", entryPoint: "focus_quick", stayInFocus: true)
             }
-            quickPractice(title: appState.language.text(zh: "片刻呼吸", en: "Breathe"), minutes: 1) {
-                appState.focusDuration = 1
-                appState.focusSoundEnabled = true
+            quickPractice(title: appState.language.text(zh: "夜里醒了", en: "Night waking"), minutes: 15) {
+                appState.startQuickListening(scene: .window, minutes: 15, restIntent: "night_waking", entryPoint: "focus_quick", stayInFocus: true)
+            }
+            quickPractice(title: appState.language.text(zh: "工作间隙", en: "Work break"), minutes: 1) {
+                appState.prepareFocus(minutes: 1, restIntent: "work_break", entryPoint: "focus_quick")
                 beginSession()
-            }
-            quickPractice(title: appState.language.text(zh: "清晨唤醒", en: "Morning"), minutes: 5) {
-                appState.startQuickListening(scene: .birds, minutes: 5)
             }
             }
         }
@@ -428,5 +449,6 @@ struct FocusView: View {
             .overlay(RoundedRectangle(cornerRadius: 16).stroke(YixiuTheme.hairline, lineWidth: 0.7))
             .multilineTextAlignment(.center)
         }.buttonStyle(.plain)
+            .accessibilityIdentifier(minutes == 1 ? "focus.preset.work_break" : title == appState.language.text(zh: "午休一下", en: "Lunch break") ? "focus.preset.lunch" : "focus.preset.night_waking")
     }
 }

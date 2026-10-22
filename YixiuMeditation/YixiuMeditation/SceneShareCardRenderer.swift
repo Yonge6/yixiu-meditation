@@ -101,7 +101,7 @@ enum SceneShareCardRenderer {
             withAttributes: [.font: sans, .foregroundColor: mist]
         )
 
-        language.text(zh: "真实自己，流动人生。", en: "True to yourself, flow with life.").draw(
+        language.text(zh: "随时，给自己一休。", en: "Make room for quiet.").draw(
             in: CGRect(x: 72, y: 1010, width: 680, height: 58),
             withAttributes: [.font: serifSmall, .foregroundColor: moon]
         )

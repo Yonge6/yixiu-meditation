@@ -1,0 +1,1842 @@
+[
+  {
+    "locale": "zh",
+    "associatedNew": 16,
+    "placements": [
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "49000005-717d-8f35-8f1a-2075b9fa1540",
+        "attributes": {
+          "createdDate": "2026-10-20T01:59:52.718972Z",
+          "lastModifiedDate": "2026-10-20T01:59:52.718972Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "4b400005-717d-8f35-8017-cf8fc439b246"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/49000005-717d-8f35-8f1a-2075b9fa1540"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "98400005-717d-8f35-8f24-6dfbf75e0ea1",
+        "attributes": {
+          "createdDate": "2026-10-20T01:59:53.38652Z",
+          "lastModifiedDate": "2026-10-20T01:59:53.38652Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "12c00005-717d-8f35-801d-5bfa232f4690"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/98400005-717d-8f35-8f24-6dfbf75e0ea1"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "b3800005-717d-8f35-8f39-4e5bd68d3c75",
+        "attributes": {
+          "createdDate": "2026-10-20T01:59:53.924162Z",
+          "lastModifiedDate": "2026-10-20T01:59:53.924162Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "49800005-717d-8f35-8034-5863f743d2c5"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/b3800005-717d-8f35-8f39-4e5bd68d3c75"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "ac800005-717d-8f35-8f0c-39bb291db29d",
+        "attributes": {
+          "createdDate": "2026-10-20T01:59:54.59765Z",
+          "lastModifiedDate": "2026-10-20T01:59:54.59765Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "17000005-717d-8f35-800b-040d4a5b0161"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/ac800005-717d-8f35-8f0c-39bb291db29d"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "be800005-717d-8f35-8f02-102809aded77",
+        "attributes": {
+          "createdDate": "2026-10-20T01:59:55.355477Z",
+          "lastModifiedDate": "2026-10-20T01:59:55.355477Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "cdc00005-717d-8f35-800d-718d8d9199a6"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/be800005-717d-8f35-8f02-102809aded77"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "aac00005-717d-8f35-8f10-b644fb764b2e",
+        "attributes": {
+          "createdDate": "2026-10-20T01:59:56.024601Z",
+          "lastModifiedDate": "2026-10-20T01:59:56.024601Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "b2400005-717d-8f35-800b-d4f8ef1188d1"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/aac00005-717d-8f35-8f10-b644fb764b2e"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "27800005-717d-8f35-8f15-e9c4ae0ec9d1",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:31.956506Z",
+          "lastModifiedDate": "2026-10-19T16:45:31.956506Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPAD_13_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "e2800005-717d-8f35-8034-3f3ab9595720"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/27800005-717d-8f35-8f15-e9c4ae0ec9d1"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "86000005-717d-8f35-8f2c-91823df9ea72",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:32.495959Z",
+          "lastModifiedDate": "2026-10-19T16:45:32.495959Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPAD_13_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "4e800005-717d-8f35-803b-38b498af25a6"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/86000005-717d-8f35-8f2c-91823df9ea72"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "e7c00005-717d-8f35-8f14-e3ab5836e012",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:33.325741Z",
+          "lastModifiedDate": "2026-10-19T16:45:33.325741Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPAD_13_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "00400005-717d-8f35-8000-b1996ccaee04"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/e7c00005-717d-8f35-8f14-e3ab5836e012"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "cc000005-717d-8f35-8f12-ba4404fa2914",
+        "attributes": {
+          "createdDate": "2026-10-20T01:57:50.172094Z",
+          "lastModifiedDate": "2026-10-20T01:57:50.172094Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "7d800005-717d-8f35-800c-a41cc6f99105"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/cc000005-717d-8f35-8f12-ba4404fa2914"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "b1000005-717d-8f35-8f01-a037efa5ef03",
+        "attributes": {
+          "createdDate": "2026-10-20T01:57:50.821645Z",
+          "lastModifiedDate": "2026-10-20T01:57:50.821645Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "bac00005-717d-8f35-8033-06f6ad465729"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/b1000005-717d-8f35-8f01-a037efa5ef03"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "3a000005-717d-8f35-8f35-dfcec0b0d4b3",
+        "attributes": {
+          "createdDate": "2026-10-20T01:57:51.409161Z",
+          "lastModifiedDate": "2026-10-20T01:57:51.409161Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "f8c00005-717d-8f35-801b-d1d7a7b01911"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/3a000005-717d-8f35-8f35-dfcec0b0d4b3"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "72400005-717d-8f35-8f2f-614a980b4cb9",
+        "attributes": {
+          "createdDate": "2026-10-20T01:57:52.000853Z",
+          "lastModifiedDate": "2026-10-20T01:57:52.000853Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "7a400005-717d-8f35-8026-745a9a76fb46"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/72400005-717d-8f35-8f2f-614a980b4cb9"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "ad400005-717d-8f35-8f16-ca732d78cb82",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:36.017533Z",
+          "lastModifiedDate": "2026-10-19T16:45:36.017533Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "WATCH_SERIES_10_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "73000005-717d-8f35-801c-8943fd000511"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/ad400005-717d-8f35-8f16-ca732d78cb82"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "a0800005-717d-8f35-8f31-25d928b3486e",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:41.014889Z",
+          "lastModifiedDate": "2026-10-19T16:45:41.014889Z",
+          "placementType": "APP_STORE_SEARCH_RESULTS_ASSET",
+          "mediaType": "IMAGE",
+          "placementGroup": "DEFAULT_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "ac800005-717d-8f35-802a-f0a3427d1986"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/a0800005-717d-8f35-8f31-25d928b3486e"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "2a000005-717d-8f35-8f0a-2b901c421c3f",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:38.137397Z",
+          "lastModifiedDate": "2026-10-19T16:45:38.137397Z",
+          "placementType": "PRODUCT_PAGE_HEADER_ASSET",
+          "mediaType": "IMAGE",
+          "placementGroup": "DEFAULT_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "84400005-717d-8f35-801e-dd7c7e4d5001"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/2a000005-717d-8f35-8f0a-2b901c421c3f"
+        }
+      }
+    ],
+    "images": [
+      {
+        "type": "appAssetLibraryImages",
+        "id": "17000005-717d-8f35-800b-040d4a5b0161",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
+          "createdDate": "2026-10-20T01:56:50.27868Z",
+          "encodedJoeColor": "b:d8d6d0p:101919s:25261at:383f3dq:49493e",
+          "lastModifiedDate": "2026-10-20T01:56:53.403346Z",
+          "fileSize": 991384,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/OjGvMUZ-5SkpHdCFi47MJA/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/e8/b3/db/e8b3dbe0-f2d8-a4e7-5beb-1c8ca72bc412/yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg (57)"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/17000005-717d-8f35-800b-040d4a5b0161/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/17000005-717d-8f35-800b-040d4a5b0161/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/17000005-717d-8f35-800b-040d4a5b0161"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "12c00005-717d-8f35-801d-5bfa232f4690",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
+          "createdDate": "2026-10-20T01:56:47.188154Z",
+          "encodedJoeColor": "b:d8d6d0p:080b0bs:1f211ct:313432q:444540",
+          "lastModifiedDate": "2026-10-20T01:56:50.449647Z",
+          "fileSize": 829997,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/2X_FR25e6dO6Q79Z_nZyzw/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/27/e2/2b/27e22b9f-d5a8-d75d-eebf-f246a082893f/yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg (56)"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/12c00005-717d-8f35-801d-5bfa232f4690/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/12c00005-717d-8f35-801d-5bfa232f4690/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/12c00005-717d-8f35-801d-5bfa232f4690"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "4b400005-717d-8f35-8017-cf8fc439b246",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
+          "createdDate": "2026-10-20T01:56:43.188465Z",
+          "encodedJoeColor": "b:d8d6d0p:292311s:342e1et:4c4737q:544f41",
+          "lastModifiedDate": "2026-10-20T01:56:47.258634Z",
+          "fileSize": 980950,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/uwnCD8cJDeifBR_yBMWUaA/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource221/v4/df/10/a8/df10a853-aa05-fd8c-baf0-a7c3b74cd13a/yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg (55)"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/4b400005-717d-8f35-8017-cf8fc439b246/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/4b400005-717d-8f35-8017-cf8fc439b246/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/4b400005-717d-8f35-8017-cf8fc439b246"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "7a400005-717d-8f35-8026-745a9a76fb46",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-zh-04-classical.jpg",
+          "createdDate": "2026-10-20T01:56:21.989733Z",
+          "encodedJoeColor": "b:d0d5d6p:0b110fs:1e2019t:323837q:42443e",
+          "lastModifiedDate": "2026-10-20T01:56:25.124157Z",
+          "fileSize": 1126114,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/cAO2hVh6rLLOBSVep4duNg/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource211/v4/ae/b4/6f/aeb46f94-fb77-487d-1401-a466cff4baef/yixiu-121-brand-20261020-iphone-zh-04-classical.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-zh-04-classical.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/7a400005-717d-8f35-8026-745a9a76fb46/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/7a400005-717d-8f35-8026-745a9a76fb46/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/7a400005-717d-8f35-8026-745a9a76fb46"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "f8c00005-717d-8f35-801b-d1d7a7b01911",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-zh-03-original.jpg",
+          "createdDate": "2026-10-20T01:56:19.118326Z",
+          "encodedJoeColor": "b:d0d5d6p:161e26s:21262ft:3b4249q:444950",
+          "lastModifiedDate": "2026-10-20T01:56:22.190396Z",
+          "fileSize": 955612,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/XLrsx8v9iinAUi7JjNRcsA/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource221/v4/eb/bd/fd/ebbdfdb3-b298-f104-8824-5f4d334b7cc9/yixiu-121-brand-20261020-iphone-zh-03-original.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-zh-03-original.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f8c00005-717d-8f35-801b-d1d7a7b01911/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f8c00005-717d-8f35-801b-d1d7a7b01911/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f8c00005-717d-8f35-801b-d1d7a7b01911"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "bac00005-717d-8f35-8033-06f6ad465729",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-zh-02-focus.jpg",
+          "createdDate": "2026-10-20T01:56:15.917712Z",
+          "encodedJoeColor": "b:d0d5d6p:0c1312s:181912t:333a39q:3d3f39",
+          "lastModifiedDate": "2026-10-20T01:56:19.249809Z",
+          "fileSize": 980600,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/vpoB5vqp1SKkbnwapcfxKw/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource221/v4/1e/7a/5e/1e7a5ebf-c3d5-d2e7-6cbc-5306e32f66b7/yixiu-121-brand-20261020-iphone-zh-02-focus.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-zh-02-focus.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/bac00005-717d-8f35-8033-06f6ad465729/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/bac00005-717d-8f35-8033-06f6ad465729/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/bac00005-717d-8f35-8033-06f6ad465729"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "7d800005-717d-8f35-800c-a41cc6f99105",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-zh-01-nature.jpg",
+          "createdDate": "2026-10-20T01:56:11.073584Z",
+          "encodedJoeColor": "b:d0d5d6p:2a2516s:302c22t:4b483cq:504e46",
+          "lastModifiedDate": "2026-10-20T01:56:16.038325Z",
+          "fileSize": 1127855,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/xvjGLTN_yNilOjavXkSxgg/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource211/v4/b6/80/fd/b680fda1-09e2-8e77-5ea8-15f6b410372a/yixiu-121-brand-20261020-iphone-zh-01-nature.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-zh-01-nature.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/7d800005-717d-8f35-800c-a41cc6f99105/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/7d800005-717d-8f35-800c-a41cc6f99105/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/7d800005-717d-8f35-800c-a41cc6f99105"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "ac800005-717d-8f35-802a-f0a3427d1986",
+        "attributes": {
+          "specId": "d2ffa3b7-6c55-5cdf-8512-229d92791333",
+          "fileName": "yixiu-121-brand-20261020-search-zh.jpg",
+          "createdDate": "2026-10-19T16:42:05.553504Z",
+          "encodedJoeColor": "b:cccac2p:0b0b0bs:0d0d0dt:313130q:333331",
+          "lastModifiedDate": "2026-10-19T16:43:28.538255Z",
+          "fileSize": 1418510,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "CREATIVE_ASSETS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/R2tTk6k93_lMlefr2dnRIw/{w}x{h}bb.{f}",
+            "width": 3840,
+            "height": 2560
+          },
+          "assetToken": "PurpleSource221/v4/6d/c4/d7/6dc4d778-2c31-f092-3c17-6a98a2989b16/yixiu-121-brand-20261020-search-zh.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-search-zh.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/ac800005-717d-8f35-802a-f0a3427d1986/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/ac800005-717d-8f35-802a-f0a3427d1986/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/ac800005-717d-8f35-802a-f0a3427d1986"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "84400005-717d-8f35-801e-dd7c7e4d5001",
+        "attributes": {
+          "specId": "1eb43b80-e0b7-4d96-bd32-47a42a8c5fed",
+          "fileName": "yixiu-121-brand-20261020-header-zh.png",
+          "createdDate": "2026-10-19T16:41:58.653326Z",
+          "encodedJoeColor": "b:c4bcb6p:0c0c0cs:151412t:312f2eq:383533",
+          "lastModifiedDate": "2026-10-19T16:42:06.099012Z",
+          "fileSize": 4277405,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "CREATIVE_ASSETS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/NUH0mgyCSp8fcoGALlHE4Q/{w}x{h}bb.{f}",
+            "width": 3840,
+            "height": 1646
+          },
+          "assetToken": "PurpleSource211/v4/f7/4f/1e/f74f1e6e-6ede-5684-3160-449dd03b7a74/yixiu-121-brand-20261020-header-zh.png",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-header-zh.png"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/84400005-717d-8f35-801e-dd7c7e4d5001/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/84400005-717d-8f35-801e-dd7c7e4d5001/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/84400005-717d-8f35-801e-dd7c7e4d5001"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "73000005-717d-8f35-801c-8943fd000511",
+        "attributes": {
+          "specId": "2a69af7c-6fb7-5269-8a2a-5f7cfa59aa72",
+          "fileName": "yixiu-121-brand-20261020-watch-zh-01-smart-stack.png",
+          "createdDate": "2026-10-19T16:41:52.86836Z",
+          "encodedJoeColor": "b:e0dbd3p:020a0ds:313332t:2e3435q:545452",
+          "lastModifiedDate": "2026-10-19T16:41:55.413429Z",
+          "fileSize": 265057,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Mk6DRxqHI1xLsDROB0mg-g/{w}x{h}bb.{f}",
+            "width": 416,
+            "height": 496
+          },
+          "assetToken": "PurpleSource221/v4/40/e7/b0/40e7b0c6-8fe4-fbad-03cc-4450bbcdfb77/yixiu-121-brand-20261020-watch-zh-01-smart-stack.png",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-watch-zh-01-smart-stack.png"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/73000005-717d-8f35-801c-8943fd000511/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/73000005-717d-8f35-801c-8943fd000511/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/73000005-717d-8f35-801c-8943fd000511"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "00400005-717d-8f35-8000-b1996ccaee04",
+        "attributes": {
+          "specId": "1751a63a-af79-5c7f-a2f2-41140bf28f9e",
+          "fileName": "yixiu-121-brand-20261020-ipad-zh-04-classical.jpg",
+          "createdDate": "2026-10-19T16:41:38.426069Z",
+          "encodedJoeColor": "b:dcd8d1p:080d0ds:161e22t:323634q:3e4345",
+          "lastModifiedDate": "2026-10-19T16:41:42.815452Z",
+          "fileSize": 1329163,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/N7JBr4nPhJOLLuCNmINE5A/{w}x{h}bb.{f}",
+            "width": 2064,
+            "height": 2752
+          },
+          "assetToken": "PurpleSource221/v4/5b/41/b4/5b41b412-de13-42ed-73dc-e607e3ba5432/yixiu-121-brand-20261020-ipad-zh-04-classical.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-ipad-zh-04-classical.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/00400005-717d-8f35-8000-b1996ccaee04/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/00400005-717d-8f35-8000-b1996ccaee04/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/00400005-717d-8f35-8000-b1996ccaee04"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "4e800005-717d-8f35-803b-38b498af25a6",
+        "attributes": {
+          "specId": "1751a63a-af79-5c7f-a2f2-41140bf28f9e",
+          "fileName": "yixiu-121-brand-20261020-ipad-zh-02-focus.jpg",
+          "createdDate": "2026-10-19T16:41:35.155043Z",
+          "encodedJoeColor": "b:dcd8d1p:060c10s:0e161at:313536q:373d3f",
+          "lastModifiedDate": "2026-10-19T16:41:51.50941Z",
+          "fileSize": 1213509,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/9c4A5zk1Xl-E8iafi7643A/{w}x{h}bb.{f}",
+            "width": 2064,
+            "height": 2752
+          },
+          "assetToken": "PurpleSource211/v4/f1/3d/cd/f13dcda6-761d-10a2-bfeb-6a3b8b504456/yixiu-121-brand-20261020-ipad-zh-02-focus.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-ipad-zh-02-focus.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/4e800005-717d-8f35-803b-38b498af25a6/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/4e800005-717d-8f35-803b-38b498af25a6/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/4e800005-717d-8f35-803b-38b498af25a6"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "e2800005-717d-8f35-8034-3f3ab9595720",
+        "attributes": {
+          "specId": "1751a63a-af79-5c7f-a2f2-41140bf28f9e",
+          "fileName": "yixiu-121-brand-20261020-ipad-zh-01-nature.jpg",
+          "createdDate": "2026-10-19T16:41:32.166893Z",
+          "encodedJoeColor": "b:dcd8d1p:090e11s:162227t:333737q:3e4649",
+          "lastModifiedDate": "2026-10-19T16:42:16.766054Z",
+          "fileSize": 1402705,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/2cofPxZL0oSI2JY4P44LPw/{w}x{h}bb.{f}",
+            "width": 2064,
+            "height": 2752
+          },
+          "assetToken": "PurpleSource211/v4/09/2b/46/092b46ae-ead7-2952-46cc-abc13b7cfe26/yixiu-121-brand-20261020-ipad-zh-01-nature.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-ipad-zh-01-nature.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/e2800005-717d-8f35-8034-3f3ab9595720/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/e2800005-717d-8f35-8034-3f3ab9595720/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/e2800005-717d-8f35-8034-3f3ab9595720"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "b2400005-717d-8f35-800b-d4f8ef1188d1",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-zh-06-library.jpg",
+          "createdDate": "2026-10-19T16:41:11.485984Z",
+          "encodedJoeColor": "b:d8d6d0p:020b0fs:081014t:2d3335q:323739",
+          "lastModifiedDate": "2026-10-19T16:41:23.242186Z",
+          "fileSize": 986619,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/UDyBWgepM5W84v0D0AUobA/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/56/dd/85/56dd854c-2d8c-b465-fe11-9403f7b02b9c/yixiu-121-brand-20261020-duo-zh-06-library.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-zh-06-library.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/b2400005-717d-8f35-800b-d4f8ef1188d1/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/b2400005-717d-8f35-800b-d4f8ef1188d1/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/b2400005-717d-8f35-800b-d4f8ef1188d1"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "cdc00005-717d-8f35-800d-718d8d9199a6",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-zh-05-original-library.jpg",
+          "createdDate": "2026-10-19T16:41:08.642215Z",
+          "encodedJoeColor": "b:d8d6d0p:080f13s:1f2325t:313739q:444647",
+          "lastModifiedDate": "2026-10-19T16:41:11.489049Z",
+          "fileSize": 959478,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/xHlkWZYRYOTYhVlWcX8O_g/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/93/3c/b3/933cb3ee-20be-346f-6763-d568b55918ac/yixiu-121-brand-20261020-duo-zh-05-original-library.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-zh-05-original-library.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/cdc00005-717d-8f35-800d-718d8d9199a6/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/cdc00005-717d-8f35-800d-718d8d9199a6/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/cdc00005-717d-8f35-800d-718d8d9199a6"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "49800005-717d-8f35-8034-5863f743d2c5",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-zh-03-original.jpg",
+          "createdDate": "2026-10-19T16:41:00.158869Z",
+          "encodedJoeColor": "b:d8d5d0p:121d26s:262b35t:394248q:494d54",
+          "lastModifiedDate": "2026-10-19T16:41:06.166803Z",
+          "fileSize": 842590,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/QMqrttQcQb1gu7_iwVVbaQ/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/2d/1e/36/2d1e36b6-45e0-f51d-fd22-e57eb20ded70/yixiu-121-brand-20261020-duo-zh-03-original.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-zh-03-original.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/49800005-717d-8f35-8034-5863f743d2c5/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/49800005-717d-8f35-8034-5863f743d2c5/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/49800005-717d-8f35-8034-5863f743d2c5"
+        }
+      }
+    ]
+  },
+  {
+    "locale": "en",
+    "associatedNew": 16,
+    "placements": [
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "a2c00005-717d-8f35-8f16-6a4e1ad7749c",
+        "attributes": {
+          "createdDate": "2026-10-20T02:00:01.177987Z",
+          "lastModifiedDate": "2026-10-20T02:00:01.177987Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "43400005-717d-8f35-803e-4946e66bbe3f"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/a2c00005-717d-8f35-8f16-6a4e1ad7749c"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "f4c00005-717d-8f35-8f17-ef38fcf0acc5",
+        "attributes": {
+          "createdDate": "2026-10-20T02:00:02.182363Z",
+          "lastModifiedDate": "2026-10-20T02:00:02.182363Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "35400005-717d-8f35-802e-70a28ead6b0c"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/f4c00005-717d-8f35-8f17-ef38fcf0acc5"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "3a400005-717d-8f35-8f05-8648ac85615a",
+        "attributes": {
+          "createdDate": "2026-10-20T02:00:03.013696Z",
+          "lastModifiedDate": "2026-10-20T02:00:03.013696Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "f2c00005-717d-8f35-8029-1de8ac0c6aff"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/3a400005-717d-8f35-8f05-8648ac85615a"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "43c00005-717d-8f35-8f0c-ae9784e31596",
+        "attributes": {
+          "createdDate": "2026-10-20T02:00:03.65115Z",
+          "lastModifiedDate": "2026-10-20T02:00:03.65115Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "73000005-717d-8f35-8034-a5f9f722f96a"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/43c00005-717d-8f35-8f0c-ae9784e31596"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "4e400005-717d-8f35-8f0f-713f87cc0b5f",
+        "attributes": {
+          "createdDate": "2026-10-20T02:00:04.307685Z",
+          "lastModifiedDate": "2026-10-20T02:00:04.307685Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "90400005-717d-8f35-801b-15284f1d8851"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/4e400005-717d-8f35-8f0f-713f87cc0b5f"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "26800005-717d-8f35-8f16-c3ebd65fbe1f",
+        "attributes": {
+          "createdDate": "2026-10-20T02:00:04.956044Z",
+          "lastModifiedDate": "2026-10-20T02:00:04.956044Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "87800005-717d-8f35-802c-dd1b2731f559"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/26800005-717d-8f35-8f16-c3ebd65fbe1f"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "b1800005-717d-8f35-8f3a-a830cd5c0427",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:48.936238Z",
+          "lastModifiedDate": "2026-10-19T16:45:48.936238Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPAD_13_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "42800005-717d-8f35-8000-9bf890353609"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/b1800005-717d-8f35-8f3a-a830cd5c0427"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "19800005-717d-8f35-8f3e-a98d51439da4",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:49.409514Z",
+          "lastModifiedDate": "2026-10-19T16:45:49.409514Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPAD_13_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "96c00005-717d-8f35-8023-fa98b3cfc63a"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/19800005-717d-8f35-8f3e-a98d51439da4"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "2b400005-717d-8f35-8f2f-4870ef73604f",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:49.880066Z",
+          "lastModifiedDate": "2026-10-19T16:45:49.880066Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPAD_13_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "13000005-717d-8f35-8004-7a7da171a753"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/2b400005-717d-8f35-8f2f-4870ef73604f"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "0b800005-717d-8f35-8f35-8fea44277e78",
+        "attributes": {
+          "createdDate": "2026-10-20T01:57:59.804339Z",
+          "lastModifiedDate": "2026-10-20T01:57:59.804339Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "9b400005-717d-8f35-802a-138cdcccc1df"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/0b800005-717d-8f35-8f35-8fea44277e78"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "1b800005-717d-8f35-8f30-c6dba02888be",
+        "attributes": {
+          "createdDate": "2026-10-20T01:58:00.320864Z",
+          "lastModifiedDate": "2026-10-20T01:58:00.320864Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "52000005-717d-8f35-800c-e5e31bf5be87"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/1b800005-717d-8f35-8f30-c6dba02888be"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "6b000005-717d-8f35-8f08-843730912bcc",
+        "attributes": {
+          "createdDate": "2026-10-20T01:58:01.539914Z",
+          "lastModifiedDate": "2026-10-20T01:58:01.539914Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "f8000005-717d-8f35-800d-5803686a278b"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/6b000005-717d-8f35-8f08-843730912bcc"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "6e000005-717d-8f35-8f06-fed830f62ff0",
+        "attributes": {
+          "createdDate": "2026-10-20T01:58:02.27316Z",
+          "lastModifiedDate": "2026-10-20T01:58:02.27316Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "69800005-717d-8f35-8030-8db5ff535258"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/6e000005-717d-8f35-8f06-fed830f62ff0"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "09c00005-717d-8f35-8f22-223a54049b9e",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:51.634323Z",
+          "lastModifiedDate": "2026-10-19T16:45:51.634323Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "WATCH_SERIES_10_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "53000005-717d-8f35-803e-287ef7e20e27"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/09c00005-717d-8f35-8f22-223a54049b9e"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "10400005-717d-8f35-8f00-5efcf79ac3df",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:57.367478Z",
+          "lastModifiedDate": "2026-10-19T16:45:57.367478Z",
+          "placementType": "APP_STORE_SEARCH_RESULTS_ASSET",
+          "mediaType": "IMAGE",
+          "placementGroup": "DEFAULT_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "85400005-717d-8f35-8033-472c13764d12"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/10400005-717d-8f35-8f00-5efcf79ac3df"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "fb800005-717d-8f35-8f29-8ca8b432d874",
+        "attributes": {
+          "createdDate": "2026-10-19T16:45:54.617037Z",
+          "lastModifiedDate": "2026-10-19T16:45:54.617037Z",
+          "placementType": "PRODUCT_PAGE_HEADER_ASSET",
+          "mediaType": "IMAGE",
+          "placementGroup": "DEFAULT_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "relationships": {
+          "image": {
+            "data": {
+              "type": "appAssetLibraryImages",
+              "id": "a9000005-717d-8f35-8027-ad8ccdf3f318"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/fb800005-717d-8f35-8f29-8ca8b432d874"
+        }
+      }
+    ],
+    "images": [
+      {
+        "type": "appAssetLibraryImages",
+        "id": "73000005-717d-8f35-8034-a5f9f722f96a",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-en-04-classical.jpg",
+          "createdDate": "2026-10-20T01:56:59.164121Z",
+          "encodedJoeColor": "b:d8d6d0p:070e0es:191d16t:313635q:3f423b",
+          "lastModifiedDate": "2026-10-20T01:57:02.025531Z",
+          "fileSize": 985763,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/96JoOLi87sOUiL7Moq_uIA/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/d5/ed/68/d5ed684c-5063-62b8-f80b-0a27e4ae60ce/yixiu-121-brand-20261020-duo-en-04-classical.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-en-04-classical.jpg (60)"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/73000005-717d-8f35-8034-a5f9f722f96a/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/73000005-717d-8f35-8034-a5f9f722f96a/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/73000005-717d-8f35-8034-a5f9f722f96a"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "35400005-717d-8f35-802e-70a28ead6b0c",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-en-02-focus.jpg",
+          "createdDate": "2026-10-20T01:56:55.992015Z",
+          "encodedJoeColor": "b:d8d6d0p:080b0bs:1f211ct:313432q:444540",
+          "lastModifiedDate": "2026-10-20T01:56:59.251938Z",
+          "fileSize": 837571,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/zu7ggCgCM7C6Pnk7YQ-dQw/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource221/v4/99/67/a5/9967a519-e2e3-b1b5-a033-1b9bff97f2df/yixiu-121-brand-20261020-duo-en-02-focus.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-en-02-focus.jpg (59)"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/35400005-717d-8f35-802e-70a28ead6b0c/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/35400005-717d-8f35-802e-70a28ead6b0c/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/35400005-717d-8f35-802e-70a28ead6b0c"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "43400005-717d-8f35-803e-4946e66bbe3f",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-en-01-nature.jpg",
+          "createdDate": "2026-10-20T01:56:53.194971Z",
+          "encodedJoeColor": "b:d8d6d0p:282311s:312d22t:4b4638q:524f45",
+          "lastModifiedDate": "2026-10-20T01:56:55.913296Z",
+          "fileSize": 959961,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/T9k0x6QDa3eQIPqDdU0UZg/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/31/7c/73/317c73a2-918f-2601-f3fb-f8bdaf7415e1/yixiu-121-brand-20261020-duo-en-01-nature.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-en-01-nature.jpg (58)"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/43400005-717d-8f35-803e-4946e66bbe3f/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/43400005-717d-8f35-803e-4946e66bbe3f/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/43400005-717d-8f35-803e-4946e66bbe3f"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "69800005-717d-8f35-8030-8db5ff535258",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-en-04-classical.jpg",
+          "createdDate": "2026-10-20T01:56:39.887127Z",
+          "encodedJoeColor": "b:d0d5d6p:0b110fs:1d1f18t:323837q:41443e",
+          "lastModifiedDate": "2026-10-20T01:56:44.228144Z",
+          "fileSize": 1116418,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/5tliLwXXIbbPRL2baFR1bg/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource211/v4/31/68/45/31684591-3a38-4eb0-a482-319719837f3e/yixiu-121-brand-20261020-iphone-en-04-classical.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-en-04-classical.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/69800005-717d-8f35-8030-8db5ff535258/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/69800005-717d-8f35-8030-8db5ff535258/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/69800005-717d-8f35-8030-8db5ff535258"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "f8000005-717d-8f35-800d-5803686a278b",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-en-03-original.jpg",
+          "createdDate": "2026-10-20T01:56:34.058556Z",
+          "encodedJoeColor": "b:d0d5d6p:161e26s:21262ft:3b4249q:444950",
+          "lastModifiedDate": "2026-10-20T01:56:40.073026Z",
+          "fileSize": 954834,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Ta7tiivviqRei4xejC3Q3A/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource221/v4/3b/0e/55/3b0e5597-c5be-5887-233e-54ba2b5c61ca/yixiu-121-brand-20261020-iphone-en-03-original.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-en-03-original.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f8000005-717d-8f35-800d-5803686a278b/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f8000005-717d-8f35-800d-5803686a278b/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f8000005-717d-8f35-800d-5803686a278b"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "52000005-717d-8f35-800c-e5e31bf5be87",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-en-02-focus.jpg",
+          "createdDate": "2026-10-20T01:56:28.635366Z",
+          "encodedJoeColor": "b:d0d5d6p:0d1515s:1a1a14t:343b3cq:3e403b",
+          "lastModifiedDate": "2026-10-20T01:56:34.038864Z",
+          "fileSize": 983525,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/oE5hykv_oBpHgdg0yKJTGA/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource211/v4/a8/aa/95/a8aa9554-2e69-34ad-e81e-ea628885584f/yixiu-121-brand-20261020-iphone-en-02-focus.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-en-02-focus.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/52000005-717d-8f35-800c-e5e31bf5be87/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/52000005-717d-8f35-800c-e5e31bf5be87/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/52000005-717d-8f35-800c-e5e31bf5be87"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "9b400005-717d-8f35-802a-138cdcccc1df",
+        "attributes": {
+          "specId": "bd402f1a-26ee-5b83-9dd7-972c60c43d47",
+          "fileName": "yixiu-121-brand-20261020-iphone-en-01-nature.jpg",
+          "createdDate": "2026-10-20T01:56:24.933127Z",
+          "encodedJoeColor": "b:d0d5d6p:2a2516s:302c22t:4b483cq:504e46",
+          "lastModifiedDate": "2026-10-20T01:56:28.617411Z",
+          "fileSize": 1108289,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/mYR1n2m6n1IeYhRuS6r5CA/{w}x{h}bb.{f}",
+            "width": 1320,
+            "height": 2868
+          },
+          "assetToken": "PurpleSource221/v4/41/5c/a8/415ca8f2-bc76-790c-02be-205af9a021fd/yixiu-121-brand-20261020-iphone-en-01-nature.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-iphone-en-01-nature.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/9b400005-717d-8f35-802a-138cdcccc1df/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/9b400005-717d-8f35-802a-138cdcccc1df/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/9b400005-717d-8f35-802a-138cdcccc1df"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "85400005-717d-8f35-8033-472c13764d12",
+        "attributes": {
+          "specId": "d2ffa3b7-6c55-5cdf-8512-229d92791333",
+          "fileName": "yixiu-121-brand-20261020-search-en.jpg",
+          "createdDate": "2026-10-19T16:42:11.859025Z",
+          "encodedJoeColor": "b:e3d8cbp:0b0b0bs:0f0f0et:363431q:393733",
+          "lastModifiedDate": "2026-10-19T16:43:27.76546Z",
+          "fileSize": 1426868,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "CREATIVE_ASSETS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Cys3-J2XMJJbqzL4e2PkWQ/{w}x{h}bb.{f}",
+            "width": 3840,
+            "height": 2560
+          },
+          "assetToken": "PurpleSource211/v4/80/c2/67/80c2675b-66e9-e402-2661-4564589c1d0c/yixiu-121-brand-20261020-search-en.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-search-en.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/85400005-717d-8f35-8033-472c13764d12/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/85400005-717d-8f35-8033-472c13764d12/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/85400005-717d-8f35-8033-472c13764d12"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "a9000005-717d-8f35-8027-ad8ccdf3f318",
+        "attributes": {
+          "specId": "1eb43b80-e0b7-4d96-bd32-47a42a8c5fed",
+          "fileName": "yixiu-121-brand-20261020-header-en.png",
+          "createdDate": "2026-10-19T16:42:08.419031Z",
+          "encodedJoeColor": "b:dcd3c9p:0c0c0cs:0f0f0et:363431q:383633",
+          "lastModifiedDate": "2026-10-19T16:43:02.387095Z",
+          "fileSize": 4293697,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "CREATIVE_ASSETS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/jw_d1R66Sstj5Ud5q0EeJA/{w}x{h}bb.{f}",
+            "width": 3840,
+            "height": 1646
+          },
+          "assetToken": "PurpleSource211/v4/89/39/46/89394620-0b99-0753-8537-63b01c905b1d/yixiu-121-brand-20261020-header-en.png",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-header-en.png"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/a9000005-717d-8f35-8027-ad8ccdf3f318/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/a9000005-717d-8f35-8027-ad8ccdf3f318/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/a9000005-717d-8f35-8027-ad8ccdf3f318"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "53000005-717d-8f35-803e-287ef7e20e27",
+        "attributes": {
+          "specId": "2a69af7c-6fb7-5269-8a2a-5f7cfa59aa72",
+          "fileName": "yixiu-121-brand-20261020-watch-en-01-smart-stack.png",
+          "createdDate": "2026-10-19T16:41:55.486802Z",
+          "encodedJoeColor": "b:e0dbd3p:020a0ds:313332t:2e3435q:545452",
+          "lastModifiedDate": "2026-10-19T16:41:58.615391Z",
+          "fileSize": 264730,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/58co1MuFpPVKkG-dhX23Jg/{w}x{h}bb.{f}",
+            "width": 416,
+            "height": 496
+          },
+          "assetToken": "PurpleSource221/v4/03/0d/7f/030d7fb4-6761-fb41-3b0c-2faff6abe05d/yixiu-121-brand-20261020-watch-en-01-smart-stack.png",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-watch-en-01-smart-stack.png"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/53000005-717d-8f35-803e-287ef7e20e27/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/53000005-717d-8f35-803e-287ef7e20e27/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/53000005-717d-8f35-803e-287ef7e20e27"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "13000005-717d-8f35-8004-7a7da171a753",
+        "attributes": {
+          "specId": "1751a63a-af79-5c7f-a2f2-41140bf28f9e",
+          "fileName": "yixiu-121-brand-20261020-ipad-en-04-classical.jpg",
+          "createdDate": "2026-10-19T16:41:49.875215Z",
+          "encodedJoeColor": "b:dcd8d1p:080d0es:161e22t:323635q:3e4345",
+          "lastModifiedDate": "2026-10-19T16:41:53.111057Z",
+          "fileSize": 1321447,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/NyvT8ruEcx9zRz_-OjbW5w/{w}x{h}bb.{f}",
+            "width": 2064,
+            "height": 2752
+          },
+          "assetToken": "PurpleSource211/v4/d7/70/fd/d770fd45-b0a0-9893-3361-6a0eb456c237/yixiu-121-brand-20261020-ipad-en-04-classical.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-ipad-en-04-classical.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/13000005-717d-8f35-8004-7a7da171a753/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/13000005-717d-8f35-8004-7a7da171a753/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/13000005-717d-8f35-8004-7a7da171a753"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "96c00005-717d-8f35-8023-fa98b3cfc63a",
+        "attributes": {
+          "specId": "1751a63a-af79-5c7f-a2f2-41140bf28f9e",
+          "fileName": "yixiu-121-brand-20261020-ipad-en-02-focus.jpg",
+          "createdDate": "2026-10-19T16:41:45.701327Z",
+          "encodedJoeColor": "b:dcd8d1p:060c10s:0e161at:313536q:373d3f",
+          "lastModifiedDate": "2026-10-19T16:41:50.811312Z",
+          "fileSize": 1212798,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/0UlrQc9UZI8WQzkSwFR4cA/{w}x{h}bb.{f}",
+            "width": 2064,
+            "height": 2752
+          },
+          "assetToken": "PurpleSource221/v4/32/1a/31/321a31f6-4c8b-0af4-840e-b55ec2c2fab1/yixiu-121-brand-20261020-ipad-en-02-focus.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-ipad-en-02-focus.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/96c00005-717d-8f35-8023-fa98b3cfc63a/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/96c00005-717d-8f35-8023-fa98b3cfc63a/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/96c00005-717d-8f35-8023-fa98b3cfc63a"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "42800005-717d-8f35-8000-9bf890353609",
+        "attributes": {
+          "specId": "1751a63a-af79-5c7f-a2f2-41140bf28f9e",
+          "fileName": "yixiu-121-brand-20261020-ipad-en-01-nature.jpg",
+          "createdDate": "2026-10-19T16:41:42.089147Z",
+          "encodedJoeColor": "b:dcd8d1p:090e11s:162227t:333737q:3e4649",
+          "lastModifiedDate": "2026-10-19T16:41:51.277767Z",
+          "fileSize": 1378767,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Px7IFjKAQE2Mz7KuMmMrrA/{w}x{h}bb.{f}",
+            "width": 2064,
+            "height": 2752
+          },
+          "assetToken": "PurpleSource221/v4/7e/fb/0c/7efb0c4f-18e8-4cad-b313-075baacc988f/yixiu-121-brand-20261020-ipad-en-01-nature.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-ipad-en-01-nature.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/42800005-717d-8f35-8000-9bf890353609/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/42800005-717d-8f35-8000-9bf890353609/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/42800005-717d-8f35-8000-9bf890353609"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "87800005-717d-8f35-802c-dd1b2731f559",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-en-06-library.jpg",
+          "createdDate": "2026-10-19T16:41:29.258405Z",
+          "encodedJoeColor": "b:d8d6d0p:060d11s:161a1bt:303538q:3c403f",
+          "lastModifiedDate": "2026-10-19T16:41:32.471352Z",
+          "fileSize": 980452,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/p0W_1hdRMie6aGHmL-YaSA/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource221/v4/cf/4a/61/cf4a61b1-380c-fd32-d9f3-ca063274d062/yixiu-121-brand-20261020-duo-en-06-library.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-en-06-library.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/87800005-717d-8f35-802c-dd1b2731f559/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/87800005-717d-8f35-802c-dd1b2731f559/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/87800005-717d-8f35-802c-dd1b2731f559"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "90400005-717d-8f35-801b-15284f1d8851",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-en-05-original-library.jpg",
+          "createdDate": "2026-10-19T16:41:26.307563Z",
+          "encodedJoeColor": "b:d8d6d0p:050d11s:1f2325t:2f3537q:444647",
+          "lastModifiedDate": "2026-10-19T16:41:31.060841Z",
+          "fileSize": 961920,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/tWTQsx015VEh-ZIrkNL3PA/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/6e/54/f7/6e54f73c-3df7-55c9-12b3-83170164091b/yixiu-121-brand-20261020-duo-en-05-original-library.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-en-05-original-library.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/90400005-717d-8f35-801b-15284f1d8851/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/90400005-717d-8f35-801b-15284f1d8851/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/90400005-717d-8f35-801b-15284f1d8851"
+        }
+      },
+      {
+        "type": "appAssetLibraryImages",
+        "id": "f2c00005-717d-8f35-8029-1de8ac0c6aff",
+        "attributes": {
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "fileName": "yixiu-121-brand-20261020-duo-en-03-original.jpg",
+          "createdDate": "2026-10-19T16:41:20.406368Z",
+          "encodedJoeColor": "b:d8d6d0p:121d26s:232c36t:394248q:474e55",
+          "lastModifiedDate": "2026-10-19T16:41:23.204748Z",
+          "fileSize": 843718,
+          "state": "PREPARE_FOR_SUBMISSION",
+          "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+          "imageAsset": {
+            "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/_1thT5jpDHTCTr4GpPzZDg/{w}x{h}bb.{f}",
+            "width": 1398,
+            "height": 2034
+          },
+          "assetToken": "PurpleSource211/v4/5d/c1/a1/5dc1a17a-3d65-3337-db62-56a642bb1410/yixiu-121-brand-20261020-duo-en-03-original.jpg",
+          "stateDetails": null,
+          "referenceName": "yixiu-121-brand-20261020-duo-en-03-original.jpg"
+        },
+        "relationships": {
+          "placements": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f2c00005-717d-8f35-8029-1de8ac0c6aff/relationships/placements",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f2c00005-717d-8f35-8029-1de8ac0c6aff/placements"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryImages/f2c00005-717d-8f35-8029-1de8ac0c6aff"
+        }
+      }
+    ]
+  }
+]

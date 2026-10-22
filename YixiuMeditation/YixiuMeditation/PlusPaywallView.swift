@@ -1,3 +1,18 @@
+import Foundation
+
+enum PaywallPriceState: Equatable {
+    case loading
+    case available
+    case unavailable
+
+    static func resolve(isLoading: Bool, hasRequestedPrices: Bool, hasProduct: Bool) -> Self {
+        if isLoading { return .loading }
+        if hasProduct { return .available }
+        return hasRequestedPrices ? .unavailable : .loading
+    }
+}
+
+#if canImport(StoreKit) && canImport(SwiftUI) && canImport(UIKit)
 import StoreKit
 import SwiftUI
 
@@ -8,6 +23,7 @@ struct PlusPaywallView: View {
     @Environment(\.openURL) private var openURL
     @State private var selectedPlan: YixiuPlusPlan = .yearly
     @State private var resultMessage: String?
+    @State private var hasRequestedPrices = false
 
     private var language: AppLanguage { appState.language }
 
@@ -16,9 +32,9 @@ struct PlusPaywallView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 22) {
                     hero
+                    benefits
                     planPicker
                     purchaseButton
-                    benefits
                     legacyNote
                     footer
                 }
@@ -46,7 +62,7 @@ struct PlusPaywallView: View {
         .preferredColorScheme(.dark)
         .task {
             ProductAnalytics.shared.event("paywall_view")
-            await subscriptionStore.loadProducts()
+            await reloadPrices()
         }
         .onChange(of: subscriptionStore.hasPlus) { _, hasPlus in
             if hasPlus { dismiss() }
@@ -70,21 +86,20 @@ struct PlusPaywallView: View {
 
     private var hero: some View {
         VStack(spacing: 10) {
-            Image(systemName: "drop.fill")
-                .font(.system(size: 31, weight: .light))
-                .foregroundStyle(YixiuTheme.aquaStrong)
+            PremiumGemIcon()
+                .frame(width: 39, height: 36)
                 .frame(width: 70, height: 70)
-                .background(Circle().fill(YixiuTheme.aqua.opacity(0.10)))
-                .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.38), lineWidth: 0.8))
+                .background(Circle().fill(YixiuTheme.plusGold.opacity(0.08)))
+                .overlay(Circle().stroke(YixiuTheme.plusGold.opacity(0.35), lineWidth: 0.8))
 
             Text("YIXIU PLUS")
                 .yixiuSecondary(10)
-            Text(language.text(zh: "让安静持续生长", en: "Let quiet keep growing"))
+            Text(language.text(zh: "让安静，陪伴久一点", en: "More room for quiet"))
                 .font(language == .zh ? YixiuTheme.chineseDisplay(30) : YixiuTheme.englishSerif(29))
                 .foregroundStyle(YixiuTheme.moon)
             Text(language.text(
-                zh: "订阅支持我们持续采集自然声、创作流动画面与新的静心练习。",
-                en: "Your subscription funds new field recordings, flowing scenes, and quiet practices."
+                zh: "更丰富的声音，更从容的聆听。无需账号；免费声音与一分钟呼吸始终可用。",
+                en: "More sounds and longer listening. No account needed; free sounds and one-minute breathing stay available."
             ))
             .font(YixiuTheme.sans(13))
             .foregroundStyle(YixiuTheme.mist)
@@ -95,13 +110,11 @@ struct PlusPaywallView: View {
 
     private var benefits: some View {
         VStack(spacing: 0) {
-            benefit("waveform", zh: "全部 14 种自然声与 30 首音乐（含 20 首古典）", en: "All 14 nature sounds and 30 music tracks (including 20 classical works)")
+            benefit("waveform", zh: "全部 14 种自然声与 40 首音乐（20 首古典、10 首 AI 原创）", en: "All 14 nature sounds and 40 music tracks (20 classical and 10 AI originals)")
             Divider().overlay(YixiuTheme.hairline)
             benefit("timer", zh: "60 分钟与不限时聆听", en: "60-minute and unlimited listening")
             Divider().overlay(YixiuTheme.hairline)
             benefit("circle.circle", zh: "3 / 5 / 10 分钟水之呼吸", en: "3 / 5 / 10-minute water breathing")
-            Divider().overlay(YixiuTheme.hairline)
-            benefit("sparkles", zh: "未来混音与日常静心练习", en: "Future mixes and daily practices")
         }
         .padding(.horizontal, 16)
         .yixiuPanel()
@@ -156,17 +169,31 @@ struct PlusPaywallView: View {
                     }
                 }
 
-                HStack(alignment: .firstTextBaseline, spacing: 7) {
-                    Text(subscriptionStore.introductoryOffer(for: plan)?.displayPrice ?? price(for: plan))
-                        .font(YixiuTheme.englishSerif(28, weight: .semibold))
-                        .monospacedDigit()
-                    Text(subscriptionStore.introductoryOffer(for: plan).map { offerPeriod($0.period) } ?? (plan == .yearly
-                         ? language.text(zh: "/ 年", en: "/ year")
-                         : language.text(zh: "/ 月", en: "/ month")))
-                        .font(YixiuTheme.sans(13, weight: .medium))
-                        .foregroundStyle(YixiuTheme.mist)
+                if priceState(for: plan) == .available, let product = subscriptionStore.product(for: plan) {
+                    HStack(alignment: .firstTextBaseline, spacing: 7) {
+                        Text(subscriptionStore.introductoryOffer(for: plan)?.displayPrice ?? product.displayPrice)
+                            .font(YixiuTheme.englishSerif(28, weight: .semibold))
+                            .monospacedDigit()
+                        Text(subscriptionStore.introductoryOffer(for: plan).map { offerPeriod($0.period) } ?? (plan == .yearly
+                             ? language.text(zh: "/ 年", en: "/ year")
+                             : language.text(zh: "/ 月", en: "/ month")))
+                            .font(YixiuTheme.sans(13, weight: .medium))
+                            .foregroundStyle(YixiuTheme.mist)
+                    }
+                    .foregroundStyle(YixiuTheme.moon)
+                } else {
+                    HStack(spacing: 8) {
+                        if priceState(for: plan) == .loading {
+                            ProgressView().tint(YixiuTheme.aqua)
+                        }
+                        Text(priceState(for: plan) == .loading
+                             ? language.text(zh: "载入 Apple 价格中", en: "Loading Apple prices")
+                             : language.text(zh: "价格暂未载入", en: "Price unavailable"))
+                            .font(YixiuTheme.sans(16, weight: .medium))
+                            .foregroundStyle(YixiuTheme.mist)
+                    }
+                    .frame(minHeight: 34)
                 }
-                .foregroundStyle(YixiuTheme.moon)
 
                 Text(planSubtitle(plan))
                     .font(YixiuTheme.sans(11))
@@ -189,6 +216,11 @@ struct PlusPaywallView: View {
     }
 
     private func planSubtitle(_ plan: YixiuPlusPlan) -> String {
+        guard priceState(for: plan) == .available, let product = subscriptionStore.product(for: plan) else {
+            return priceState(for: plan) == .loading
+                ? language.text(zh: "正在获取你所在地区的价格与订阅优惠。", en: "Fetching prices and offers for your region.")
+                : language.text(zh: "暂时无法取得 Apple 价格，请重试。", en: "Apple prices are unavailable. Please retry.")
+        }
         if let offer = subscriptionStore.introductoryOffer(for: plan) {
             let period = offerPeriod(offer.period)
             let intro: String
@@ -203,22 +235,32 @@ struct PlusPaywallView: View {
                 intro = ""
             }
             let renewal = plan == .yearly ? language.text(zh: "年", en: "year") : language.text(zh: "月", en: "month")
-            return intro + language.text(zh: "之后每\(renewal) \(price(for: plan)) 自动续订，可随时取消。", en: "Then \(price(for: plan)) per \(renewal), auto-renewing until canceled.")
+            return intro + language.text(zh: "之后每\(renewal) \(product.displayPrice) 自动续订，可随时取消。", en: "Then \(product.displayPrice) per \(renewal), auto-renewing until canceled.")
         }
         if plan == .yearly {
             return language.text(
-                zh: "每年 \(price(for: plan)) 自动续订，可随时取消。",
-                en: "\(price(for: plan)) per year. Renews automatically until canceled."
+                zh: "每年 \(product.displayPrice) 自动续订，可随时取消。",
+                en: "\(product.displayPrice) per year. Renews automatically until canceled."
             )
         }
         return language.text(
-            zh: "每月 \(price(for: plan)) 自动续订，可随时取消。",
-            en: "\(price(for: plan)) per month. Renews automatically until canceled."
+            zh: "每月 \(product.displayPrice) 自动续订，可随时取消。",
+            en: "\(product.displayPrice) per month. Renews automatically until canceled."
         )
     }
 
-    private func price(for plan: YixiuPlusPlan) -> String {
-        subscriptionStore.product(for: plan)?.displayPrice ?? language.text(zh: "所示价格", en: "the displayed price")
+    private func priceState(for plan: YixiuPlusPlan) -> PaywallPriceState {
+        PaywallPriceState.resolve(
+            isLoading: subscriptionStore.isLoadingProducts,
+            hasRequestedPrices: hasRequestedPrices,
+            hasProduct: subscriptionStore.product(for: plan) != nil
+        )
+    }
+
+    @MainActor
+    private func reloadPrices() async {
+        await subscriptionStore.loadProducts()
+        hasRequestedPrices = true
     }
 
     private func offerPeriod(_ period: Product.SubscriptionPeriod) -> String {
@@ -241,10 +283,12 @@ struct PlusPaywallView: View {
                 }
             } label: {
                 HStack(spacing: 9) {
-                    if subscriptionStore.isBusy {
+                    if subscriptionStore.isBusy || priceState(for: selectedPlan) == .loading {
                         ProgressView().tint(YixiuTheme.deepWater)
                     }
-                    Text(language.text(zh: "继续", en: "Continue"))
+                    Text(priceState(for: selectedPlan) == .loading
+                         ? language.text(zh: "载入价格中", en: "Loading prices")
+                         : language.text(zh: "继续", en: "Continue"))
                 }
                 .font(YixiuTheme.sans(15, weight: .semibold))
                 .foregroundStyle(YixiuTheme.deepWater)
@@ -254,7 +298,8 @@ struct PlusPaywallView: View {
                 .shadow(color: YixiuTheme.aqua.opacity(0.18), radius: 18, y: 8)
             }
             .buttonStyle(.plain)
-            .disabled(subscriptionStore.isBusy || subscriptionStore.isLoadingProducts || subscriptionStore.product(for: selectedPlan) == nil)
+            .disabled(subscriptionStore.isBusy || priceState(for: selectedPlan) != .available)
+            .opacity(priceState(for: selectedPlan) == .available ? 1 : 0.55)
 
             Text(purchaseDisclosure)
                 .font(YixiuTheme.sans(11, weight: .medium))
@@ -263,25 +308,20 @@ struct PlusPaywallView: View {
                 .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Button {
-                Task { await subscriptionStore.loadProducts() }
-            } label: {
-                Text(language.text(zh: "重新载入 Apple 价格", en: "Reload Apple prices"))
-                    .font(YixiuTheme.sans(11))
-                    .foregroundStyle(YixiuTheme.aqua)
-            }
-            .disabled(subscriptionStore.isBusy || subscriptionStore.isLoadingProducts)
-
-            if subscriptionStore.productsUnavailable {
+            if !subscriptionStore.isLoadingProducts && hasRequestedPrices && subscriptionStore.productsUnavailable {
                 Button {
-                    Task { await subscriptionStore.loadProducts() }
+                    Task { await reloadPrices() }
                 } label: {
-                    Text(language.text(zh: "价格暂时未载入，点此重试", en: "Prices unavailable. Tap to retry."))
-                        .font(YixiuTheme.sans(11))
+                    Label(language.text(zh: "重新载入 Apple 价格", en: "Retry Apple prices"), systemImage: "arrow.clockwise")
+                        .font(YixiuTheme.sans(12, weight: .medium))
                         .foregroundStyle(YixiuTheme.aqua)
+                        .frame(minHeight: 44)
                 }
                 .buttonStyle(.plain)
-            } else if let resultMessage {
+                .disabled(subscriptionStore.isBusy)
+                .accessibilityIdentifier("paywall.retryPrices")
+            }
+            if let resultMessage {
                 Text(resultMessage)
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
@@ -296,8 +336,8 @@ struct PlusPaywallView: View {
 
     private var legacyNote: some View {
         Text(language.text(
-            zh: "已拥有一休 1.2 或更早版本的用户，原有 14 种自然声与功能继续保留；绿洲停歇、初息及 10 首古典名曲免费，其余音乐属于 Plus。",
-            en: "If you owned Yixiu 1.2 or earlier, all 14 original nature sounds remain yours. Oasis Rest, First Breath and 10 classical works are free; the other music tracks require Plus."
+            zh: "已拥有一休 1.2 或更早版本的用户，原有 14 种自然声与功能继续保留；绿洲停歇、初息、10 首古典名曲及 5 首 AI 原创免费，其余音乐属于 Plus。",
+            en: "If you owned Yixiu 1.2 or earlier, all 14 original nature sounds remain yours. Oasis Rest, First Breath, 10 classical works and 5 AI originals are free; the other music tracks require Plus."
         ))
         .font(YixiuTheme.sans(11))
         .foregroundStyle(YixiuTheme.mist.opacity(0.78))
@@ -347,3 +387,4 @@ struct PlusPaywallView: View {
         }
     }
 }
+#endif

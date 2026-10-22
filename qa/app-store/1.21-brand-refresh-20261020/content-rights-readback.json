@@ -1,0 +1,10 @@
+{
+  "appId": "1461182261",
+  "declaration": "是，此 App 拥有对其第三方内容的必要权利。",
+  "evidence": [
+    "yixiu-prototype/AUDIO_SOURCES.md",
+    "docs/audio/classical-ten-sources.json",
+    "docs/audio/classical-expansion-sources.json"
+  ],
+  "verifiedAt": "2026-10-20T01:47:48.684Z"
+}

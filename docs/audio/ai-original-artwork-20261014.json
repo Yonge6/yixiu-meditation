@@ -1,0 +1,92 @@
+[
+  {
+    "number": "01",
+    "title": "月泊",
+    "slug": "moon-anchorage",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-d8bfe1a5-3cee-4c2a-ab70-99b6cc08d0fc.png",
+    "artDirection": "Luminous dawn turquoise mountain lake, anchored boat, fading crescent moon",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "02",
+    "title": "雨灯",
+    "slug": "rain-lantern",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-797df4ec-b323-446f-bad3-e09f58a752bc.png",
+    "artDirection": "A sunlit ivory-linen window looking onto a lush green garden after gentle summer rain, clear raindrops catching pearly light on the glass, pale hydrangeas and misted trees outdoors, a small warm amber lamp low at one side. Bright soft morning, no people.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "03",
+    "title": "蓝眠",
+    "slug": "blue-quiet",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-30c423eb-f418-47ff-828b-8840cfbad6fd.png",
+    "artDirection": "A quiet crystal blue bay with translucent shallow aqua water and smooth pale sandy shoreline, distant hazy blue mountains, small cotton clouds and warm sunlight, subtle wave ripples, tranquil spacious horizon.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "04",
+    "title": "雪絮",
+    "slug": "snowfall-in-silence",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-6bc3980d-a4e3-4f5a-8184-d7305920b715.png",
+    "artDirection": "A pristine snowy birch grove in delicate winter morning sunlight, soft golden shafts through white branches, sparkling snow crystals, pastel peach and sky blue shadows, light gentle snowfall, inviting bright silence.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "05",
+    "title": "暖枕",
+    "slug": "bedside-glow",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-09160c6f-5437-4fad-9335-52c15bb74a15.png",
+    "artDirection": "An elegant airy lakeside cabin interior, close gentle fold of ivory linen pillow and duvet in foreground, open window with sheer curtains showing a pale jade lake and soft peach sunrise, warm honey sunlight, uncluttered restful tactile textures.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "06",
+    "title": "云被",
+    "slug": "cloud-blanket",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-3e5e4011-764c-4be7-8a4a-7a1e7250a186.png",
+    "artDirection": "A bright sea of soft white mist above rolling sage-green mountains at sunrise, cotton cloud banks like a blanket, warm pale rose sun glow, clear powder blue sky, smooth mountain silhouettes, serene airy spaciousness.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "07",
+    "title": "竹息",
+    "slug": "bamboo-stillness",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-d991c945-8ec4-43cd-be59-4541d40a1e75.png",
+    "artDirection": "A serene bamboo grove with a narrow pale stone path and a small clear pool, fresh chartreuse bamboo leaves catching filtered morning sunlight, soft jade mist, nuanced moss texture, elegant vertical bamboo trunks, tranquil bright garden.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "08",
+    "title": "一叶",
+    "slug": "one-quiet-leaf",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-d353b519-9cde-4d70-8fdd-1c1017f7415b.png",
+    "artDirection": "A single luminous green ginkgo leaf floating on still pale turquoise pond water, delicate sunlit ripples, reflection of soft white clouds, distant soft-focus garden grasses, poetic minimal natural scene with detailed translucent leaf veins.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "09",
+    "title": "松影",
+    "slug": "pine-shadows",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-6701c1ee-faa4-4027-8dfd-134dd68fe3f8.png",
+    "artDirection": "A peaceful pine forest beside a clear warm emerald lake, late-morning dappled sunlight and graceful tall pines casting long soft shadows onto fern-covered ground, golden-green light, pale mountains beyond, elegant calming natural rhythm.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  },
+  {
+    "number": "10",
+    "title": "归静",
+    "slug": "returning-to-stillness",
+    "sourceImage": "/Users/yongyuan/.codex/generated_images/01a06cf3-0bd8-7d30-a137-9bbcbcf39c1d/exec-6460ca41-b2d3-40c7-a573-7224ef9adbb7.png",
+    "artDirection": "A broad mirror-still green mountain lake with a pale wooden jetty entering gently from the lower edge, soft pink lotus blossoms near shore, silver and sage mountains lit by golden morning sun, ivory-pink sky reflections, quiet inviting spacious composition.",
+    "format": "2:3 vertical, full-bleed, bright pastel fine-art photographic realism, no text or logo",
+    "tool": "built-in image_gen"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "file": "duo-zh-nature.png",
+    "device": "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+    "scene": "oasisRest",
+    "lang": "zh",
+    "topic": "nature",
+    "method": "simctl io screenshot",
+    "capturedAt": "2026-10-20T01:50:12.171Z",
+    "sha256": "1188c294b589c5a76687896fd53bd8a763cf65909866081cb306c25fc5e85701"
+  },
+  {
+    "file": "duo-zh-classical.png",
+    "device": "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+    "scene": "canon",
+    "lang": "zh",
+    "topic": "classical",
+    "method": "simctl io screenshot",
+    "capturedAt": "2026-10-20T01:50:17.965Z",
+    "sha256": "6c7be70786a10c7f95d76715d773914a2b89d9fe4ed23f95869c77861b9fda4f"
+  },
+  {
+    "file": "duo-en-nature.png",
+    "device": "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+    "scene": "oasisRest",
+    "lang": "en",
+    "topic": "nature",
+    "method": "simctl io screenshot",
+    "capturedAt": "2026-10-20T01:50:23.802Z",
+    "sha256": "0070d77e65d1e729610884466bcbde450f0ea2e9753b0990486daf5095cb06c3"
+  },
+  {
+    "file": "duo-en-classical.png",
+    "device": "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+    "scene": "canon",
+    "lang": "en",
+    "topic": "classical",
+    "method": "simctl io screenshot",
+    "capturedAt": "2026-10-20T01:50:30.020Z",
+    "sha256": "cc941ac814da36235e0fab1fb5a93a7382b27f1f207368174b93db797e18d39c"
+  }
+]

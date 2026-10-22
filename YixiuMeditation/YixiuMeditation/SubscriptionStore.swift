@@ -43,6 +43,8 @@ final class SubscriptionStore: ObservableObject {
     private let forcedAccessLevel: YixiuAccessLevel?
     private var verifiedLegacyAccess: Bool
     private var updatesTask: Task<Void, Never>?
+    private var verificationTimeoutTask: Task<Void, Never>?
+    private static let initialVerificationTimeoutSeconds: UInt64 = 30
     private var hasStarted = false
 
     init(defaults: UserDefaults = .standard) {
@@ -66,6 +68,7 @@ final class SubscriptionStore: ObservableObject {
 
     deinit {
         updatesTask?.cancel()
+        verificationTimeoutTask?.cancel()
     }
 
     func start() async {
@@ -73,15 +76,30 @@ final class SubscriptionStore: ObservableObject {
         hasStarted = true
         if let forcedAccessLevel {
             accessLevel = forcedAccessLevel
+            finishInitialVerification()
             await loadProducts()
-            isReady = true
             return
         }
         listenForTransactions()
-        await resolveLegacyAccess()
+        // Listening may start immediately, but an unresolved StoreKit request
+        // must never grant unlimited access. Fall back to the last verified
+        // legacy result / Free, and still apply any later verified response.
+        verificationTimeoutTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: Self.initialVerificationTimeoutSeconds * 1_000_000_000)
+            guard !Task.isCancelled else { return }
+            self?.finishInitialVerification()
+        }
         await refreshEntitlements()
+        if hasPlus || hasLegacyAccess { finishInitialVerification() }
+        await resolveLegacyAccess()
+        finishInitialVerification()
         await loadProducts()
+    }
+
+    private func finishInitialVerification() {
         isReady = true
+        verificationTimeoutTask?.cancel()
+        verificationTimeoutTask = nil
     }
 
     func product(for plan: YixiuPlusPlan) -> Product? {

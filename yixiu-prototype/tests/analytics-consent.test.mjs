@@ -4,17 +4,18 @@ import vm from "node:vm";
 import { readFile } from "node:fs/promises";
 
 const script = await readFile(new URL("../public/analytics.js", import.meta.url), "utf8");
-function harness(search = "") {
+function harness(search = "", {hostname = "yixiu.wonderelian.com", native = false, webdriver = false} = {}) {
   const listeners = {}, scripts = [], cookies = [];
   let consent = null;
-  const window = { location: { hostname: "yixiu.wonderelian.com", origin: "https://yixiu.wonderelian.com", pathname: "/", search },
+  const window = { location: { hostname, origin: "https://yixiu.wonderelian.com", pathname: "/", search },
+    Capacitor: {isNativePlatform: () => native},
     addEventListener: (key, handler) => listeners[key] = handler };
   const document = { documentElement: { lang: "zh" }, referrer: "", querySelector: () => null,
     createElement: () => ({}), head: { appendChild: item => scripts.push(item) },
     addEventListener: (key, handler) => listeners[key] = handler,
     get cookie() { return "_ga=old; _ga_HDHST6WKKB=old; preference=keep"; }, set cookie(value) { cookies.push(value); } };
-  vm.runInNewContext(script, { window, document, navigator: { webdriver: false }, URL, URLSearchParams, localStorage: { getItem: () => consent } });
-  return { window, scripts, cookies, grant(value = "granted") { consent = value; listeners["yixiu:consent"](); },
+  vm.runInNewContext(script, { window, document, navigator: { webdriver }, URL, URLSearchParams, localStorage: { getItem: () => consent } });
+  return { window, scripts, cookies, grant(value = "granted") { consent = value; listeners["yixiu:consent"]?.(); },
     event(event, parameters={}) { listeners["yixiu:analytics"]({detail: { event, ...parameters }}); },
     events() { return (window.dataLayer ?? []).filter(item => item[0] === "event"); } };
 }
@@ -31,10 +32,26 @@ test("default denial loads no Google tag; opt-in loads once; withdrawal stops al
 test("test/preview exclusion cannot be overridden by consent", () => {
   for (const query of ["?analytics=off","?preview=1"]) { const h=harness(query); h.grant(); assert.equal(h.scripts.length,0); }
 });
+test("production-only and native/automated exclusions remain closed after consent", () => {
+  for (const [query,options] of [["",{hostname:"127.0.0.1"}],["",{hostname:"preview.example.com"}],["",{native:true}],["?surface=ios",{}],["",{webdriver:true}]]) {
+    const h=harness(query,options); h.grant();
+    assert.equal(h.scripts.length,0); assert.equal(h.events().length,0);
+  }
+});
 test("new membership events are mirrored once; URL parameters are allowlisted", () => {
   const h=harness("?scene=rain&email=private%40example.com&utm_source=private%40example.com"); h.grant();
   h.event("yixiu_download_click", {placement:"header"});
   assert.equal(h.events().filter(e=>e[1]==="yixiu_v2_download_click").length,1);
   const config=h.window.dataLayer.find(e=>e[0]==="config")[2];
   assert.equal(config.page_location,"https://yixiu.wonderelian.com/?scene=rain");
+});
+test("rest context is allowlisted without session IDs or private free text", () => {
+  const h=harness(); h.grant();
+  h.event("yixiu_v2_meaningful_rest", {rest_intent:"lunch",entry_point:"focus_quick",qualification_method:"audio_60s",session_id:"never",journal:"private",private_email:"never"});
+  const sent=h.events().at(-1)[2];
+  assert.equal(sent.rest_intent,"lunch"); assert.equal(sent.entry_point,"focus_quick"); assert.equal(sent.qualification_method,"audio_60s");
+  assert.equal(sent.session_id,undefined); assert.equal(sent.journal,undefined); assert.equal(sent.private_email,undefined);
+  h.event("yixiu_v2_meaningful_rest", {rest_intent:"private text",entry_point:"private@example.com",qualification_method:"unknown"});
+  const invalid=h.events().at(-1)[2];
+  assert.equal(invalid.rest_intent,undefined); assert.equal(invalid.entry_point,undefined); assert.equal(invalid.qualification_method,undefined);
 });

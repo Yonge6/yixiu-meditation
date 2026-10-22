@@ -1,0 +1,116 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "2DBB7B50-4E4B-4278-9637-B27421C0DF6C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-en-library_0_3C0BEBB8-660D-4AD0-A31F-7432B017D448.png",
+        "timestamp" : 1792427109.323
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "4AC779D1-7017-451B-BD9B-2E194C93E755.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-en-focus_0_E32467DB-67FA-4C3F-B6C2-D665F57CE5B3.png",
+        "timestamp" : 1792427103.513
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "70537F19-52FA-4B51-AFAF-3F530EDAA9CE.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-en-classical_0_5D58AA17-A58C-4E33-90AF-CC13A448026D.png",
+        "timestamp" : 1792427080.726
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "18B51B53-A57B-439F-8DE3-4011328DA1A5.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-en-original-library_0_8041AD97-D72D-4DC8-B2D0-28E2A4CB4F4A.png",
+        "timestamp" : 1792427063.011
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "4EB738F9-10D7-4B83-A788-7D9BD66BBE1D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-en-original_0_05517BE8-C79F-4036-9480-20C0583C6306.png",
+        "timestamp" : 1792427044.224
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "4F2B12DA-3817-4BDA-8B4E-82B67647F391.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-en-nature_0_4C25F061-F871-411A-8EA2-DA1AB5F05204.png",
+        "timestamp" : 1792427027.224
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "247C99BE-B2DC-4E3C-8011-8CD242EB1B6F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-zh-library_0_2B055CBF-4F91-4F98-BC5D-AEEC31FCA369.png",
+        "timestamp" : 1792426988.705
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "265B4E00-5374-42E9-9FF3-2486396B8D3E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-zh-focus_0_0858654D-2F68-4D89-A445-461E8E03483F.png",
+        "timestamp" : 1792426982.727
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "09FCDD8F-8FC8-4703-A258-F51A209AE1AD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-zh-classical_0_73FFE53F-38F7-4500-833C-3744D1024A6A.png",
+        "timestamp" : 1792426957.932
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "9609EC5D-EF40-44CC-9679-A69ED9411738.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-zh-original-library_0_442A8495-85CB-4627-BCA6-4AFF4C105C35.png",
+        "timestamp" : 1792426942.885
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "3BF41F04-D3F5-4FE6-837D-DDCF572DC2B9.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-zh-original_0_15912DB2-40E0-4235-A87F-7E554B4CC074.png",
+        "timestamp" : 1792426935.196
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "3BB7CA6E-B597-493F-911F-E1BC0DBC626B",
+        "deviceName" : "Yixiu Duo QA",
+        "exportedFileName" : "28C0192C-9514-4ED9-9C8C-BFAEE6B22476.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "store-zh-nature_0_C75783FC-A953-4FE4-B230-E1A43045E923.png",
+        "timestamp" : 1792426928.209
+      }
+    ],
+    "testIdentifier" : "HomeInteractionUITests/testStoreScreenshotCapture()",
+    "testIdentifierURL" : "test://com.apple.xcode/YixiuMeditation/HomeInteractionUITests/HomeInteractionUITests/testStoreScreenshotCapture"
+  }
+]

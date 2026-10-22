@@ -96,7 +96,9 @@ test -f "$site_path/assets/yixiu/spring-creek.webp"
 test -f "$site_path/assets/yixiu/study-sounds-comparison-pinterest.jpg"
 test -f "$site_path/assets/yixiu/meditation-duration-choice-pinterest.jpg"
 test -f "$site_path/assets/yixiu/audio/sunrise-river.m4a"
-test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 24
+test "$(find "$site_path/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 44
+test "$(find "$site_path/assets/yixiu/original" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
+(cd "$site_path" && sha256sum -c ai-original-checksums.txt)
 test "$(find "$site_path/assets/yixiu/classical" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
 (cd "$site_path" && sha256sum -c classical-checksums.txt)
 test -f "$site_path/music-credits.html"
@@ -295,7 +297,11 @@ grep -F 'https://yixiu.wonderelian.com/20-minute-meditation-music/' "$site_path/
 grep -F 'https://yixiu.wonderelian.com/free-online-sound-machine/' "$site_path/sitemap.xml" >/dev/null
 
 # Do not publish an older bundle that silently drops native-parity features.
-grep -FR '20260911-native-parity' "$site_path/assets" >/dev/null
+grep -FR '20261019-me-playback-corrections' "$site_path/assets" >/dev/null
+grep -FR 'ai-level-20261019' "$site_path/assets" >/dev/null
+grep -FR 'favorites-heading' "$site_path/assets" >/dev/null
+grep -FR 'library-discovery-filters' "$site_path/assets" >/dev/null
+grep -FR 'meaningful_rest' "$site_path/assets" >/dev/null
 grep -FR 'yixiu.practiceJournal.v1' "$site_path/assets" >/dev/null
 grep -FR 'quick-practice-grid' "$site_path/assets" >/dev/null
 grep -FR 'web-membership' "$site_path/assets" >/dev/null
@@ -342,7 +348,9 @@ grep -FR 'instagram_profile_guide_white_noise_black_screen' "$deploy_target/asse
 grep -FR 'instagram_profile_guide_mountain_wind_sleep' "$deploy_target/assets" >/dev/null
 grep -FR 'yixiu_h5_music_plus_20260830' "$deploy_target/assets" >/dev/null
 grep -FR 'still-water.m4a' "$deploy_target/assets" >/dev/null
-test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 24
+test "$(find "$deploy_target/assets/yixiu/audio/meditation" -maxdepth 1 -type f -name '*.m4a' | wc -l)" -eq 44
+test "$(find "$deploy_target/assets/yixiu/original" -maxdepth 1 -type f -name '*.jpg' | wc -l)" -eq 10
+(cd "$deploy_target" && sha256sum -c ai-original-checksums.txt)
 (cd "$deploy_target" && sha256sum -c classical-checksums.txt)
 test -f "$deploy_target/music-credits.html"
 test -f "$deploy_target/assets/yixiu/audio/end-bell.wav"
@@ -607,7 +615,9 @@ curl --compressed -fsS \
   https://yixiu.wonderelian.com/waterfall-sounds-for-noise-masking/ \
   | grep -F 'data-preview-timer' >/dev/null
 
-grep -FR '20260911-native-parity' "$deploy_target/assets" >/dev/null
+grep -FR '20261019-me-playback-corrections' "$deploy_target/assets" >/dev/null
+grep -FR 'ai-level-20261019' "$deploy_target/assets" >/dev/null
+grep -FR 'favorites-heading' "$deploy_target/assets" >/dev/null
 curl --compressed -fsS --resolve 'yixiu.wonderelian.com:443:127.0.0.1' https://yixiu.wonderelian.com/journal/zh/ | grep -F '一休日常' >/dev/null
 test "$(find "$deploy_target/journal" -type f -name index.html | wc -l)" -eq "$journal_page_count"
 echo "DEPLOY_OK_YIXIU_${release_id}"

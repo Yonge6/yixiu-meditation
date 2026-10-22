@@ -1,0 +1,21 @@
+{
+  "version": "1.21",
+  "build": "37",
+  "widgetVersion": "1.21",
+  "widgetBuild": "37",
+  "configuration": "Release unsigned iphoneos",
+  "releaseBuild": "BUILD SUCCEEDED",
+  "buildLog": "/tmp/yixiu-corrections-final-release-20261019.log",
+  "calibratedAudioResourcesMatched": 10,
+  "audioManifest": "docs/audio/ai-original-playback-levels-20261019.json",
+  "uiTest": "HomeInteractionUITests/testEverydayRestChineseScreensAndVisibleLifestyle",
+  "uiTestResult": "TEST SUCCEEDED",
+  "resultBundle": "/Volumes/LaCie/XcodePlatforms/YixiuCorrections-20261019-r2.xcresult",
+  "device": "Duo simulator only",
+  "physicalDeviceTested": false,
+  "realStoreKitPurchaseTested": false,
+  "phoneInstalled": false,
+  "signedBuildUploaded": false,
+  "appStoreSubmitted": false,
+  "workingTreeNote": "Preserved existing native tab-localization and project edits; this is not a clean-checkout certification."
+}

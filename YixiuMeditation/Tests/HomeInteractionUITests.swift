@@ -69,6 +69,14 @@ final class HomeInteractionUITests: XCTestCase {
         drag(CGVector(dx: 0.2, dy: 0.3), CGVector(dx: 0.8, dy: 0.3))
         expectScene("Ocean Waves")
         drag(CGVector(dx: 0.5, dy: 0.4), CGVector(dx: 0.5, dy: 0.2))
+        if app.scrollViews["listen.scrollFallback"].exists {
+            // Short windows reserve vertical swipes for scrolling; the library
+            // remains reachable through its explicit button.
+            let library = app.buttons["listen.library"]
+            for _ in 0..<6 where !library.isHittable { app.swipeUp() }
+            XCTAssertTrue(library.isHittable)
+            library.tap()
+        }
         XCTAssertTrue(app.staticTexts["Sound Library"].waitForExistence(timeout: 3))
         capture("swipe-up-library")
     }
@@ -101,11 +109,25 @@ final class HomeInteractionUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Sound Library"].waitForExistence(timeout: 3))
     }
 
-    func testSwipeIntoPremiumSceneShowsPaywall() {
-        for name in ["RAIN ON EAVES", "SPRING CREEK", "MORNING BIRDS", "MOUNTAIN STREAM"] {
-            drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
-            expectScene(name)
+    func testPlaybackSurvivesWindowOrientationChanges() {
+        app.buttons["Play"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5))
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait, .landscapeRight, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            expectScene("Ocean Waves")
+            XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5),
+                          "Resizing must preserve active playback")
         }
+        capture("playback-after-resizing")
+    }
+
+    func testSwipeIntoPremiumSceneShowsPaywall() {
+        // Mozart Andante is the last free scene in the free-first home order.
+        // The next scene (Forest Falls) must remain behind the entitlement gate.
+        app.terminate()
+        app.launchArguments = ["-language", "en", "-scene", "mozartAndante", "-volume", "0.72"]
+        app.launch()
+        XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
         drag(CGVector(dx: 0.8, dy: 0.3), CGVector(dx: 0.2, dy: 0.3))
         XCTAssertTrue(app.staticTexts["YIXIU PLUS"].waitForExistence(timeout: 3))
         capture("premium-swipe-entitlement-preserved")
@@ -145,15 +167,158 @@ final class HomeInteractionUITests: XCTestCase {
 
     func testQuickBreathingKeepsHomeScene() {
         selectTab("Focus")
-        let breathe = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Breathe")).firstMatch
+        let soundBeforePractice = app.buttons["focus.sceneSound"].value as? String
+        let breathe = app.buttons["focus.preset.work_break"]
         for _ in 0..<5 where !breathe.isHittable { app.swipeUp() }
         XCTAssertTrue(breathe.isHittable)
         breathe.tap()
         XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Ocean Waves")
-        XCTAssertEqual(app.buttons["focus.sceneSound"].value as? String, "On")
+        XCTAssertEqual(app.buttons["focus.sceneSound"].value as? String, soundBeforePractice, "A quick breathing practice must preserve the scene-sound preference")
         selectTab("Sounds")
         expectScene("Ocean Waves")
         XCTAssertTrue(app.buttons["Play"].exists)
+    }
+
+    func testFocusFreePresetsStayInFocusAndPauseListening() {
+        app.terminate()
+        app.launchArguments = ["-language", "en", "-scene", "ocean", "-volume", "0.72", "-focusSoundEnabled", "NO", "-YixiuForceFreeAccess"]
+        app.launch()
+        XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+        selectTab("Focus")
+        func tapPreset(_ id: String) {
+            let preset = app.buttons[id]
+            for _ in 0..<7 where !preset.isHittable { app.swipeUp() }
+            XCTAssertTrue(preset.isHittable)
+            preset.tap()
+        }
+        tapPreset("focus.preset.lunch")
+        let countdown = app.staticTexts["focus.listeningCountdown"]
+        XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Morning Lake")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable, "A newly chosen rest must open from the top, not retain the preset-list scroll offset")
+        XCTAssertTrue(app.buttons["focus.listeningPlayback"].exists)
+        XCTAssertFalse(app.staticTexts["YIXIU PLUS"].exists)
+        for _ in 0..<6 where !app.buttons["focus.listeningPlayback"].isHittable { app.swipeDown() }
+        capture("everyday-rest-en-lunch-focus")
+        app.buttons["focus.listeningPlayback"].tap()
+        let paused = countdown.label
+        sleep(2)
+        XCTAssertEqual(countdown.label, paused)
+        app.buttons["focus.listeningPlayback"].tap()
+        sleep(2)
+        XCTAssertNotEqual(countdown.label, paused)
+
+        tapPreset("focus.preset.night_waking")
+        XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "Window Rain")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable)
+        XCTAssertFalse(app.staticTexts["YIXIU PLUS"].exists)
+        for _ in 0..<6 where !app.buttons["focus.listeningPlayback"].isHittable { app.swipeDown() }
+        capture("everyday-rest-en-night-focus")
+        tapPreset("focus.preset.work_break")
+        XCTAssertTrue(app.staticTexts["focus-countdown"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.buttons["focus.sceneSound"].value as? String, "Off")
+        XCTAssertFalse(app.staticTexts["YIXIU PLUS"].exists)
+        capture("everyday-rest-en-work-break")
+    }
+
+    func testEverydayRestChineseScreensAndVisibleLifestyle() {
+        app.terminate()
+        app.launchArguments = ["-language", "zh", "-scene", "rain", "-volume", "0.72", "-focusSoundEnabled", "NO", "-YixiuForceFreeAccess"]
+        app.launch()
+        XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+        selectTab("我的")
+        let favorites = app.buttons["me.favorites.open"]
+        for _ in 0..<8 where !favorites.isHittable { app.swipeUp() }
+        XCTAssertTrue(favorites.isHittable)
+        favorites.tap()
+        XCTAssertTrue(app.buttons["library.scope.menu"].waitForExistence(timeout: 4))
+        capture("corrections-zh-favorites-library")
+        XCTAssertTrue(app.buttons["library.scope.menu"].label.contains("收藏"), app.buttons["library.scope.menu"].label)
+        app.buttons["library.close"].tap()
+        selectTab("静心")
+        let lunch = app.buttons["focus.preset.lunch"]
+        for _ in 0..<7 where !lunch.isHittable { app.swipeUp() }
+        lunch.tap()
+        XCTAssertTrue(app.staticTexts["focus.listeningCountdown"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "晨雾湖岸")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable)
+        capture("everyday-rest-zh-lunch-focus")
+        let night = app.buttons["focus.preset.night_waking"]
+        for _ in 0..<7 where !night.isHittable { app.swipeUp() }
+        night.tap()
+        XCTAssertEqual(app.staticTexts["focus.sceneTitle"].label, "窗边夜雨")
+        XCTAssertTrue(app.staticTexts["focus.restTitle"].isHittable)
+        capture("everyday-rest-zh-night-focus")
+        selectTab("我的")
+        capture("everyday-rest-zh-me-continue-first")
+        let lifestyle = app.descendants(matching: .any)["me.lifestyle.WonderElian"].firstMatch
+        for _ in 0..<15 where !lifestyle.isHittable { app.swipeUp() }
+        XCTAssertTrue(lifestyle.isHittable)
+        capture("everyday-rest-zh-lifestyle-inline")
+        XCTAssertFalse(app.buttons["me.detail.back"].exists)
+        let about = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "一休是谁，我们相信什么")).firstMatch
+        for _ in 0..<8 where !about.isHittable { app.swipeDown() }
+        XCTAssertTrue(about.isHittable)
+        about.tap()
+        XCTAssertTrue(app.buttons["me.detail.back"].waitForExistence(timeout: 4))
+        let philosophy = app.staticTexts["我们的生命观"]
+        for _ in 0..<5 where !philosophy.isHittable { app.swipeUp() }
+        XCTAssertTrue(philosophy.isHittable)
+        capture("everyday-rest-zh-about-expanded")
+        app.buttons["me.detail.back"].tap()
+        XCTAssertFalse(app.buttons["me.detail.back"].exists)
+    }
+
+    func testFocusPauseFreezesCountdownAndResumes() {
+        selectTab("Focus")
+        let start = app.buttons["focus.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 15))
+        start.tap()
+        let countdown = app.staticTexts["focus-countdown"]
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 3))
+        sleep(3)
+        pause.tap()
+        let remainingWhilePaused = countdown.label
+        sleep(2)
+        XCTAssertEqual(countdown.label, remainingWhilePaused, "A paused practice must not keep counting")
+        let resume = app.buttons["Continue"]
+        XCTAssertTrue(resume.exists)
+        resume.tap()
+        sleep(2)
+        XCTAssertNotEqual(countdown.label, remainingWhilePaused, "An explicit resume must continue the practice")
+        capture("focus-pause-resume-countdown")
+    }
+
+    func testLibraryFreeSearchEmptyResetAndStickyControls() {
+        app.buttons["listen.library"].tap()
+        let scopeMenu = app.buttons["library.scope.menu"]
+        XCTAssertTrue(scopeMenu.waitForExistence(timeout: 4))
+        scopeMenu.tap()
+        let free = app.buttons["Free"]
+        XCTAssertTrue(free.waitForExistence(timeout: 2))
+        free.tap()
+        let beforeScroll = scopeMenu.frame.minY
+        app.scrollViews["library.results"].swipeUp()
+        XCTAssertTrue(scopeMenu.isHittable)
+        XCTAssertEqual(scopeMenu.frame.minY, beforeScroll, accuracy: 1, "Library scopes must remain above the scrolling cards")
+        app.buttons["library.type.menu"].tap()
+        app.buttons["Classical"].tap()
+        app.buttons["library.search.toggle"].tap()
+        let search = app.textFields["library.search"]
+        search.tap()
+        search.typeText("debussy\n")
+        XCTAssertTrue(app.buttons["Switch to Clair de lune"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["Nocturne Op. 9 No. 2, Yixiu Plus"].exists)
+        capture("library-free-composer-search")
+        app.buttons["Clear search"].tap()
+        search.tap()
+        search.typeText("zzzz-no-match\n")
+        XCTAssertTrue(app.staticTexts["No matching sounds"].waitForExistence(timeout: 3))
+        app.buttons["library.reset"].tap()
+        XCTAssertTrue(app.buttons["Switch to Ocean Waves"].waitForExistence(timeout: 3))
+        capture("library-reset-fixed-controls")
     }
 
     func testUsageConsentDefaultsOffPersistsAndCanBeWithdrawn() {
@@ -184,7 +349,7 @@ final class HomeInteractionUITests: XCTestCase {
     }
 
     func testExplicitReviewButtonOpensExternalStoreOrShowsFailure() {
-        app.tabBars.buttons["Me"].tap()
+        selectTab("Me")
         let rate = app.buttons["me.writeReview"]
         for _ in 0..<20 where !rate.isHittable { app.swipeUp() }
         XCTAssertTrue(rate.isHittable)
@@ -196,5 +361,36 @@ final class HomeInteractionUITests: XCTestCase {
         XCTAssertTrue(browser.wait(for: .runningForeground, timeout: 5)
                       || store.state == .runningForeground
                       || app.alerts["Could not open the App Store"].exists)
+    }
+
+    func testBrandBrightHomeCapture() {
+        for language in ["zh", "en"] {
+            app.terminate()
+            app.launchArguments = ["-language", language, "-scene", "oasisRest", "-volume", "0.72", "-YixiuForceFreeAccess"]
+            app.launch()
+            let library = app.buttons["listen.library"]
+            XCTAssertTrue(library.waitForExistence(timeout: 15))
+            XCTAssertTrue(library.isHittable)
+            expectScene(language == "zh" ? "绿洲停歇" : "Oasis Rest")
+            capture("bright-home-\(language)")
+        }
+    }
+
+    func testBrandBreathingStoreCapture() {
+        for language in ["zh", "en"] {
+            app.terminate()
+            app.launchArguments = ["-language", language, "-scene", "oasisRest", "-volume", "0.72", "-YixiuForceFreeAccess"]
+            app.launch()
+            XCTAssertTrue(app.buttons["listen.library"].waitForExistence(timeout: 15))
+            capture("storebrand-\(language)-nature")
+            selectTab(language == "zh" ? "静心" : "Focus")
+            let start = app.buttons["focus.start"]
+            XCTAssertTrue(start.waitForExistence(timeout: 5))
+            // A mid-scroll capture keeps the real primary action fully visible,
+            // rather than presenting a partially clipped button in store art.
+            drag(CGVector(dx: 0.65, dy: 0.72), CGVector(dx: 0.65, dy: 0.53))
+            XCTAssertTrue(start.isHittable)
+            capture("storebrand-\(language)-focus")
+        }
     }
 }

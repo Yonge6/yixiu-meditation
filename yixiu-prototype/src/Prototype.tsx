@@ -12,6 +12,8 @@ import {
   HeartFilledIcon,
   HeartIcon,
   LockClosedIcon,
+  GridIcon,
+  ReloadIcon,
   PauseIcon,
   PersonIcon,
   PlayIcon,
@@ -24,15 +26,22 @@ import {
 import QRCode from "qrcode";
 import { QuietJournal, type QuietArticle } from "./QuietJournal";
 import { useEndBell } from "./useEndBell";
+import { filterLibrary, type LibraryScope } from "./library";
+import { useModalFocus } from "./useModalFocus";
+import { SoundLibrary } from "./SoundLibrary";
+import { useAmbientSound } from "./useAmbientSound";
 import { PracticeClock, validateJournal, weekSummary, canUseWebFocus, canUseWebTimer, type PracticeEntry } from "./practice";
 
 import { classicalMusic } from "./data/classical-music";
-import { analyticsConsent, setAnalyticsConsent, observeAudio, productEvent } from "./product-analytics";
+import { originalMusic } from "./data/original-music";
+import { analyticsConsent, setAnalyticsConsent, productEvent, setRestContext, beginRestSession, completeBreathingRest, type RestEntryPoint } from "./product-analytics";
+import { readRestLink, restPresets, matchesRestPurpose, type RestIntent, type RestPurpose } from "./rest-presets";
 
 type Language = "zh" | "en";
 type RootTab = "sounds" | "focus" | "me";
 type SceneId =
   | (typeof classicalMusic)[number]["id"]
+  | (typeof originalMusic)[number]["id"]
   | "ocean"
   | "rain"
   | "spring"
@@ -64,10 +73,10 @@ type SceneId =
 type DurationOption = 5 | 15 | 30 | 60 | 0;
 type FocusDuration = 1 | 3 | 5 | 10;
 type BreathingStatus = "idle" | "running" | "paused" | "complete";
-type SceneCategory = "all" | "nature" | "meditation" | "classical" | "sleep" | "focus" | "morning" | "relax";
+type SceneCategory = "all" | "original" | "nature" | "meditation" | "classical" | "sleep" | "focus" | "morning" | "relax";
 type InfoPanel = "privacy" | "support" | "philosophy" | null;
 type DrawerView = "journal" | "home" | "library" | "focus" | "me" | "timer" | "privacy" | "sources" | "support" | "philosophy";
-type MeView = "home" | "about" | "privacy" | "sources" | "support";
+type MeView = "home" | "about" | "privacy" | "sources" | "support" | "works";
 type ShareCardPreview = {
   imageUrl: string;
   fileName: string;
@@ -100,6 +109,14 @@ type Scene = {
 };
 
 const classicalSceneIds = classicalMusic.map(track => track.id);
+const originalSceneIds = originalMusic.map(track => track.id);
+const originalScenes = Object.fromEntries(originalMusic.map(track => [track.id, {
+  id: track.id, zh: track.zh, en: track.en,
+  useZh: "AI 原创 · " + track.duration, useEn: "AI Original · " + track.duration,
+  image: "/assets/yixiu/original/" + track.slug + ".jpg",
+  audio: "/assets/yixiu/audio/meditation/" + track.slug + ".m4a?v=ai-level-20261019",
+  kind: "meditation", free: track.free, filter: "lowpass", frequency: 20000, level: 0.08,
+}])) as Record<(typeof originalMusic)[number]["id"], Scene>;
 const freeClassicalSceneIds = new Set<SceneId>(["clairDeLune", "gymnopedie", "canon", "moonlightSonata", "preludeC", "traumerei", "raindrop", "waltzAMinor", "gnossienne", "mozartAndante"]);
 const classicalScenes = Object.fromEntries(classicalMusic.map(track => [track.id, {
   id: track.id, zh: track.zh, en: track.en,
@@ -111,6 +128,7 @@ const classicalScenes = Object.fromEntries(classicalMusic.map(track => [track.id
 
 const scenes: Record<SceneId, Scene> = {
   ...classicalScenes,
+  ...originalScenes,
   ocean: {
     id: "ocean",
     zh: "大海",
@@ -409,10 +427,16 @@ const sceneOrder: SceneId[] = [
   "deepWaterRest",
   "quietHour",
   ...classicalSceneIds,
+  ...originalSceneIds,
 ];
 const durations: DurationOption[] = [5, 15, 30, 60, 0];
 const focusDurations: FocusDuration[] = [1, 3, 5, 10];
-const sceneCategories: SceneCategory[] = ["all", "classical", "nature", "meditation", "sleep", "focus", "morning", "relax"];
+const sceneCategories: SceneCategory[] = ["all", "nature", "classical", "original", "meditation"];
+const restPurposes: RestPurpose[] = ["all", "lunch", "sleep", "night_waking", "work_break", "focus", "morning", "relax"];
+function purposeLabel(purpose: RestPurpose, language: Language) {
+  const labels = { all: ["全部", "All"], lunch: ["午休", "Lunch break"], sleep: ["睡前", "Bedtime"], night_waking: ["夜里醒了", "Night waking"], work_break: ["工作间隙", "Work break"], focus: ["专注", "Focus"], morning: ["清晨", "Morning"], relax: ["放松", "Unwind"] };
+  return labels[purpose][language === "zh" ? 0 : 1];
+}
 const publicYixiuUrl = "https://yixiu.wonderelian.com/";
 const sleepAppStoreUrl = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
 const musicPlusAppStoreUrl = "https://apps.apple.com/app/id1461182261?pt=120014121&ct=yixiu_h5_music_plus_20260830&mt=8";
@@ -420,23 +444,26 @@ const freeSceneIds = new Set<SceneId>(["ocean", "rain", "spring", "birds", "stre
 const homeSceneOrder = [...sceneOrder.filter(id => freeSceneIds.has(id)), ...sceneOrder.filter(id => !freeSceneIds.has(id))];
 
 const sceneThumbs: Record<SceneId, string> = Object.fromEntries(
-  sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].kind === "meditation" ? scenes[sceneId].image : `/assets/yixiu/thumbs/${sceneId}.jpg`]),
+  sceneOrder.map((sceneId) => [sceneId, scenes[sceneId].image.replace("/assets/yixiu/", "/assets/yixiu/card-thumbs/").replace(/\.(jpg|png|webp)$/i, ".webp")]),
 ) as Record<SceneId, string>;
 
 const scenesByCategory: Record<SceneCategory, SceneId[]> = {
   all: sceneOrder,
+  original: originalSceneIds,
   classical: classicalSceneIds,
   nature: sceneOrder.filter((sceneId) => scenes[sceneId].kind !== "meditation"),
   meditation: sceneOrder.filter((sceneId) => scenes[sceneId].kind === "meditation"),
-  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "softLightRest", "deepWaterRest", "quietHour"],
-  focus: ["rain", "birds", "stream", "bamboo", "falls", "underwater", "snow"],
+  sleep: ["ocean", "rain", "window", "thunder", "snow", "tide", "softLightRest", "deepWaterRest", "quietHour", ...originalMusic.filter(track => track.purpose === "sleep").map(track => track.id)],
+  focus: ["rain", "birds", "stream", "bamboo", "falls", "underwater", "snow", ...originalMusic.filter(track => track.purpose === "focus").map(track => track.id)],
   morning: ["spring", "birds", "lake", "valley"],
-  relax: ["ocean", "spring", "lake", "valley", "falls", "tide", "softLightRest", "deepWaterRest", "quietHour"],
+  relax: ["ocean", "spring", "lake", "valley", "falls", "tide", "softLightRest", "deepWaterRest", "quietHour", ...originalSceneIds],
 };
 
 function AmbientMusicCredits({ language }: { language: Language }) {
   return <>
-    <p>{language === "zh" ? "古典静听：10 首名曲，按各自录音的 CC0、公共领域或 CC BY 许可使用。AAC 转码，曲速与音高不变。作者不为一休背书。" : "Classical: ten works, used under each recording’s CC0, public-domain dedication or CC BY license. AAC conversion; tempo and pitch unchanged. No artist endorsement."}</p>
+    <p>{language === "zh" ? "AI 原创 · 一休《十段安静》：10 首新作，由 Gemini / Lyria 辅助生成，并做音量调整与柔和淡入淡出。标注为“一休创作 · AI 辅助生成”。5 首免费，5 首需 Plus。" : "AI Originals · Ten Quiet Moments: ten tracks created for Yixiu with Gemini / Lyria, with level adjustment and gentle fades. Created for Yixiu · AI-assisted music. Five are Free; five require Plus."}</p>
+    <a href="/music-credits.html#ai-originals">{language === "zh" ? "AI 原创 · 曲目与创作来源" : "AI Originals · Track list & creation sources"}</a>
+    <p>{language === "zh" ? "古典静听：20 首名曲，按各自录音的 CC0、公共领域或 CC BY 许可使用。AAC 转码，曲速与音高不变。作者不为一休背书。" : "Classical: twenty works, used under each recording’s CC0, public-domain dedication or CC BY license. AAC conversion; tempo and pitch unchanged. No artist endorsement."}</p>
     <a href="/music-credits.html#classical">{language === "zh" ? "古典名曲 · 完整试听、演奏者与许可" : "Classical works · Full listening, performers & licenses"}</a>
     <p>{language === "zh"
       ? "午后留白是 HoliznaCC0 的 Too Brief A Time To Be Anything（CC0 1.0）的 60 分钟延长版。一休重复原曲中段，以 20 秒交叉淡化衔接，降低电平，加入 8 秒淡入和 12 秒淡出并转为 AAC，未改变曲速。不是原生一小时作品，也不代表作者为一休背书。"
@@ -455,6 +482,7 @@ function AmbientMusicCredits({ language }: { language: Language }) {
 function categoryLabel(category: SceneCategory, language: Language) {
   const labels: Record<SceneCategory, { zh: string; en: string }> = {
     all: { zh: "全部", en: "All" },
+    original: { zh: "AI 原创", en: "AI Originals" },
     classical: { zh: "古典静听", en: "Classical" },
     nature: { zh: "自然声", en: "Nature" },
     meditation: { zh: "冥想音乐", en: "Meditation" },
@@ -503,9 +531,15 @@ function WaterWavesIcon() {
 
 function PremiumGemIcon() {
   return (
-    <svg data-premium-gem viewBox="0 0 18 16" aria-hidden="true">
-      <path className="premium-gem-outline" d="M1 5.2 4.7 1h8.6L17 5.2 9 15 1 5.2Z" />
-      <path className="premium-gem-facets" d="M1 5.2h16M4.7 1 9 5.2 13.3 1M9 5.2V15" />
+    <svg data-premium-gem viewBox="0 0 24 22" aria-hidden="true">
+      <path fill="#ffe9b3" d="M1 7 6 1 12 7Z" />
+      <path fill="#ffde91" d="M6 1h12l-6 6Z" />
+      <path fill="#f5b34e" d="m18 1 5 6H12Z" />
+      <path fill="#f5ac3d" d="M1 7h7l4 14Z" />
+      <path fill="#ffd375" d="M8 7h8l-4 14Z" />
+      <path fill="#df8129" d="M16 7h7L12 21Z" />
+      <path className="premium-gem-outline" d="M1 7 6 1h12l5 6-11 14Z" />
+      <path className="premium-gem-facets" d="M1 7h22M6 1l6 6 6-6M8 7l4 14 4-14" />
     </svg>
   );
 }
@@ -518,104 +552,6 @@ function SceneAccessBadge({ free }: { free: boolean }) {
       <PremiumGemIcon />
     </span>
   );
-}
-
-type AudioGraph = {
-  audio: HTMLAudioElement;
-  analytics?: ReturnType<typeof observeAudio>;
-};
-
-function stopAudioGraph(graph: AudioGraph | null) {
-  if (!graph) return;
-  graph.analytics?.dispose();
-  graph.audio.pause();
-  graph.audio.removeAttribute("src");
-  graph.audio.load();
-}
-
-function useAmbientSound(sceneId: SceneId, isPlaying: boolean, volume: number, fadeFactor: number) {
-  const graphRef = useRef<AudioGraph | null>(null);
-  const fadingGraphRef = useRef<AudioGraph | null>(null);
-  const fadeFrameRef = useRef<number | null>(null);
-  const fadeGenerationRef = useRef(0);
-  const fadeActiveRef = useRef(false);
-
-  useEffect(() => {
-    fadeGenerationRef.current += 1;
-    const generation = fadeGenerationRef.current;
-    if (fadeFrameRef.current !== null) {
-      window.cancelAnimationFrame(fadeFrameRef.current);
-      fadeFrameRef.current = null;
-    }
-    fadeActiveRef.current = false;
-    stopAudioGraph(fadingGraphRef.current);
-    fadingGraphRef.current = null;
-
-    if (!isPlaying) {
-      stopAudioGraph(graphRef.current);
-      graphRef.current = null;
-      return;
-    }
-
-    const scene = scenes[sceneId];
-    const previousGraph = graphRef.current;
-    const audio = new Audio(scene.audio);
-    audio.loop = true;
-    audio.preload = "auto";
-    audio.playbackRate = scene.playbackRate ?? 1;
-    const targetVolume = Math.min(1, (volume / 100) * Math.min(scene.level * 11, 1) * fadeFactor);
-    audio.volume = previousGraph ? 0 : targetVolume;
-    fadeActiveRef.current = previousGraph !== null;
-    fadingGraphRef.current = previousGraph;
-    const analytics = observeAudio(audio, sceneId, classicalSceneIds.includes(sceneId as typeof classicalSceneIds[number]) ? "classical" : (scene.kind ?? "nature"), freeSceneIds.has(sceneId));
-    graphRef.current = { audio, analytics };
-    void audio.play().then(() => {
-      if (generation !== fadeGenerationRef.current) return;
-      previousGraph?.analytics?.dispose("scene_change");
-      if (!previousGraph) return;
-      fadeActiveRef.current = true;
-      const startedAt = performance.now();
-      const previousStartVolume = previousGraph.audio.volume;
-      const animate = (now: number) => {
-        if (generation !== fadeGenerationRef.current) return;
-        const progress = Math.max(0, Math.min((now - startedAt) / 600, 1));
-        audio.volume = targetVolume * progress;
-        previousGraph.audio.volume = previousStartVolume * (1 - progress);
-        if (progress < 1) {
-          fadeFrameRef.current = window.requestAnimationFrame(animate);
-        } else {
-          stopAudioGraph(previousGraph);
-          if (fadingGraphRef.current === previousGraph) fadingGraphRef.current = null;
-          fadeFrameRef.current = null;
-          fadeActiveRef.current = false;
-        }
-      };
-      fadeFrameRef.current = window.requestAnimationFrame(animate);
-    }).catch(() => {
-      if (generation !== fadeGenerationRef.current) { stopAudioGraph({ audio, analytics }); return; }
-      analytics.failed();
-      analytics.dispose("playback_error");
-      if (graphRef.current?.audio === audio) graphRef.current = previousGraph;
-      fadeActiveRef.current = false;
-      stopAudioGraph({ audio });
-    });
-  }, [isPlaying, sceneId]);
-
-  useEffect(() => () => {
-    fadeGenerationRef.current += 1;
-    if (fadeFrameRef.current !== null) window.cancelAnimationFrame(fadeFrameRef.current);
-    stopAudioGraph(graphRef.current);
-    stopAudioGraph(fadingGraphRef.current);
-    graphRef.current = null;
-    fadingGraphRef.current = null;
-  }, []);
-
-  useEffect(() => {
-    const graph = graphRef.current;
-    if (!graph || fadeActiveRef.current) return;
-    const scene = scenes[sceneId];
-    graph.audio.volume = Math.min(1, (volume / 100) * Math.min(scene.level * 11, 1) * fadeFactor);
-  }, [fadeFactor, sceneId, volume]);
 }
 
 function formatSeconds(value: number) {
@@ -712,7 +648,7 @@ async function createSceneShareCard(scene: Scene, language: Language, shareUrl: 
 
   context.fillStyle = "rgba(236, 247, 243, 0.94)";
   context.font = language === "zh" ? "400 38px 'Noto Serif SC'" : "400 34px 'Noto Serif SC'";
-  context.fillText(language === "zh" ? "真实自己，流动人生。" : "True to yourself, flow with life.", 72, 1080, 650);
+  context.fillText(language === "zh" ? "随时，给自己一休。" : "Make room for quiet.", 72, 1080, 650);
   context.fillStyle = "rgba(169, 224, 224, 0.74)";
   context.font = "400 22px 'Noto Sans SC'";
   context.fillText(language === "zh" ? "扫码聆听这一刻" : "Scan to listen to this moment", 72, 1124, 620);
@@ -804,24 +740,48 @@ function preferredLanguage(): Language {
   return "en";
 }
 
+function LifestyleWorks({ language }: { language: Language }) {
+  return <section className="me-works" aria-label={language === "zh" ? "生活方式作品" : "Lifestyle projects"}>
+                  <a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "一" : "01"}</b><span><strong>WonderElian</strong><em>{language === "zh" ? "让复杂的想法变得清晰、好看而有人情味" : "Make complex ideas clear, beautiful, and human"}</em><small>{language === "zh" ? "WonderElian 是永歌 Elian 的个人创作空间。这里记录作品，也记录关于设计、AI、产品，以及如何慢慢成为自己的思考与探索。" : "An independent creative world from Wuhan, connecting visual culture, wellbeing, and real life through design, AI, and digital products."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://xiazishuo.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "二" : "02"}</b><span><strong>{language === "zh" ? "虾子曰" : "Xiazi Says"}</strong><em>{language === "zh" ? "昨日世界" : "Yesterday's World"}</em><small>{language === "zh" ? "每天用全球热点与双语海报，看清复杂世界。" : "Global stories and bilingual posters make the world easier to see."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://buer.wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "三" : "03"}</b><span><strong>{language === "zh" ? "不二见己" : "Buer Within"}</strong><em>{language === "zh" ? "与真实的自己 · 温柔相遇" : "Meet your true self"}</em><small>{language === "zh" ? "和 AI 成长伙伴豆豆龙聊聊，在对话与成长档案中，更清楚地认识自己。" : "Talk with Doudoulong, your AI growth companion, and get to know yourself through conversations and your growth profile."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://wendao.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "四" : "04"}</b><span><strong>{language === "zh" ? "三慢问道" : "Wendao"}</strong><em>{language === "zh" ? "道德经" : "Tao Te Ching"}</em><small>{language === "zh" ? "读懂经典，也在慢下来时读懂自己。" : "Read the classic slowly—and yourself with it."}</small></span><ExternalLinkIcon /></a>
+                  <a href="https://style-atlas.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "五" : "05"}</b><span><strong>{language === "zh" ? "艺术风格图鉴" : "Style Atlas"}</strong><em>{language === "zh" ? "学习看懂一种美" : "Learn to see a style"}</em><small>{language === "zh" ? "沿着艺术与设计风格的脉络，找到自己的观看方式。" : "Follow art and design lineages to find your own way of looking."}</small></span><ExternalLinkIcon /></a>
+  </section>;
+}
+
 export default function Prototype() {
+  const [restLink] = useState(() => readRestLink(window.location.search));
+  const [restIntent, setRestIntent] = useState<RestIntent>(restLink?.intent ?? "none");
+  const [focusMode, setFocusMode] = useState<"breathe" | "listen">(restLink?.mode ?? "breathe");
   const [usageAnalytics, setUsageAnalytics] = useState(analyticsConsent);
   const [analyticsChoiceNeeded, setAnalyticsChoiceNeeded] = useState(() => { try { return localStorage.getItem("yixiu.analyticsConsent.v2") === null; } catch { return false; } });
   const chooseAnalytics = (enabled: boolean) => { setUsageAnalytics(enabled); setAnalyticsConsent(enabled); setAnalyticsChoiceNeeded(false); };
   const [language, setLanguage] = useStoredState<Language>("yixiu.language", preferredLanguage(), linkedLanguage());
-  const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", linkedScene(), availableScene);
-  const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30, null, value => typeof value === "number" && canUseWebTimer(value) ? value as DurationOption : 30);
+  const [activeScene, setActiveScene] = useStoredState<SceneId>("yixiu.scene", "ocean", restLink?.scene ?? linkedScene(), availableScene);
+  const [duration, setDuration] = useStoredState<DurationOption>("yixiu.duration", 30, restLink?.timerMinutes ?? null, value => typeof value === "number" && canUseWebTimer(value) ? value as DurationOption : 30);
   const [favorites, setFavorites] = useStoredState<SceneId[]>("yixiu.favorites", [], null, availableSceneList);
   const [recentScenes, setRecentScenes] = useStoredState<SceneId[]>("yixiu.recentScenes", [], null, availableSceneList);
-  const [focusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1, null, value => typeof value === "number" && canUseWebFocus(value) ? value as FocusDuration : 1);
+  const [focusDuration, setFocusDuration] = useStoredState<FocusDuration>("yixiu.focusDuration", 1, restLink?.focusMinutes ?? null, value => typeof value === "number" && canUseWebFocus(value) ? value as FocusDuration : 1);
   const [journal, setJournal] = useStoredState<PracticeEntry[]>("yixiu.practiceJournal.v1", [], null, value => validateJournal(value, Object.keys(scenes)));
   const [focusSoundEnabled, setFocusSoundEnabled] = useStoredState<boolean>("yixiu.focusSoundEnabled", false);
   const [endBell, setEndBell] = useStoredState<boolean>("yixiu.endBell", false);
   const [backgroundPlayback, setBackgroundPlayback] = useStoredState<boolean>("yixiu.backgroundPlayback", true);
-  const [activeTab, setActiveTab] = useState<RootTab>(() => new URLSearchParams(window.location.search).get("tab") === "focus" ? "focus" : "sounds");
+  const [activeTab, setActiveTab] = useState<RootTab>(() => restLink || new URLSearchParams(window.location.search).get("tab") === "focus" ? "focus" : "sounds");
   const [meView, setMeView] = useState<MeView>("home");
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [sceneCategory, setSceneCategory] = useState<SceneCategory>("all");
+  const [restPurpose, setRestPurpose] = useState<RestPurpose>("all");
+  const [libraryScope, setLibraryScope] = useState<LibraryScope>("all");
+  const openPersonalLibrary = (scope: LibraryScope) => {
+    setLibraryScope(scope);
+    setLibraryQuery("");
+    setSceneCategory("all");
+    setRestPurpose("all");
+    setLibraryOpen(true);
+  };
+  const [libraryQuery, setLibraryQuery] = useState("");
+  const libraryTriggerRef = useRef<HTMLButtonElement>(null);
   const analyticsMounted = useRef(false);
   useEffect(() => {
     if (analyticsMounted.current) productEvent("library_filter", { filter: sceneCategory });
@@ -848,6 +808,8 @@ export default function Prototype() {
   const swipeStartRef = useRef<SwipeStart | null>(null);
   const meBackSwipeRef = useRef<SwipeStart | null>(null);
   const meScreenRef = useRef<HTMLElement>(null);
+  const focusScreenRef = useRef<HTMLElement>(null);
+  const restEntryRef = useRef<RestEntryPoint>(restLink ? "campaign" : "direct");
   const meHomeScrollTopRef = useRef(0);
   const swipeSettleTimerRef = useRef<number | null>(null);
   const drawerScrollRef = useRef<HTMLDivElement>(null);
@@ -866,6 +828,7 @@ export default function Prototype() {
   const [swipeSettling, setSwipeSettling] = useState(false);
   const [meBackOffset, setMeBackOffset] = useState(0);
   const [meBackDragging, setMeBackDragging] = useState(false);
+  useEffect(() => { focusScreenRef.current?.scrollTo({ top: 0 }); }, [focusMode, restIntent]);
 
   const active = scenes[activeScene] ?? scenes.ocean;
   const activeSceneName = language === "zh" ? active.zh : active.en;
@@ -876,10 +839,48 @@ export default function Prototype() {
   const isFavorite = favorites.includes(active.id);
   const fadeFactor = duration === 0 || remainingSeconds > 20 ? 1 : Math.max(remainingSeconds / 20, 0);
   const breathingTotalSeconds = focusDuration * 60;
-  const filteredSceneOrder = scenesByCategory[sceneCategory];
+  const filteredSceneOrder = useMemo(() => filterLibrary(
+    scenesByCategory[sceneCategory].filter(id => matchesRestPurpose(restPurpose, id, scenesByCategory[restPurpose === "work_break" ? "focus" : restPurpose as SceneCategory] ?? [])).map(id => ({ id, searchText: `${scenes[id].zh} ${scenes[id].en} ${scenes[id].useZh} ${scenes[id].useEn}` })),
+    { scope: libraryScope, query: libraryQuery, free: freeSceneIds, favorites, recent: recentScenes },
+  ).map(item => item.id), [sceneCategory, restPurpose, libraryScope, libraryQuery, favorites, recentScenes]);
 
-  useAmbientSound(active.id, isPlaying, volume, fadeFactor);
+  useEffect(() => { beginRestSession({ rest_intent: restLink?.intent ?? "none", entry_point: restLink ? "campaign" : linkedScene() ? "scene_link" : "direct" }); }, [restLink]);
+
+
+  const ambientPlayback = useAmbientSound({
+    scene: {
+      id: active.id, audio: active.audio, playbackRate: active.playbackRate, level: active.level,
+      category: originalSceneIds.includes(active.id as typeof originalSceneIds[number]) ? "original" : (classicalSceneIds.includes(active.id as typeof classicalSceneIds[number]) ? "classical" : (active.kind ?? "nature")),
+      free: freeSceneIds.has(active.id),
+    },
+    requested: isPlaying, volume, fadeFactor, onRequestChange: setIsPlaying,
+  });
   const playEndBell = useEndBell(endBell, volume);
+
+  useEffect(() => {
+    const pauseWhenHidden = () => {
+      if (backgroundPlayback || document.visibilityState !== "hidden") return;
+      // Pause Focus without restoring the ambience it captured before starting.
+      if (breathingStatus === "running") {
+        focusClockRef.current.pause();
+        setBreathingStatus("paused");
+        productEvent("focus_pause", { focus_minutes: focusDuration, end_reason: "background_disabled" });
+      }
+      listeningClockRef.current.pause();
+      ambientPlayback.pause();
+    };
+    pauseWhenHidden();
+    document.addEventListener("visibilitychange", pauseWhenHidden);
+    return () => document.removeEventListener("visibilitychange", pauseWhenHidden);
+  }, [backgroundPlayback, breathingStatus, focusDuration, ambientPlayback.pause]);
+
+  useEffect(() => {
+    if (breathingStatus !== "running" || !focusSoundEnabled) return;
+    if (isPlaying || (ambientPlayback.status !== "error" && ambientPlayback.status !== "paused")) return;
+    focusClockRef.current.pause();
+    setBreathingStatus("paused");
+    productEvent("focus_pause", { focus_minutes: focusDuration, end_reason: "audio_interrupted" });
+  }, [ambientPlayback.status, breathingStatus, focusSoundEnabled, focusDuration, isPlaying]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -888,8 +889,10 @@ export default function Prototype() {
     url.searchParams.set("lang", language);
     if (activeTab === "focus") url.searchParams.set("tab", "focus");
     else url.searchParams.delete("tab");
+    if (activeTab === "focus" && restIntent !== "none") url.searchParams.set("rest", restIntent);
+    else url.searchParams.delete("rest");
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  }, [active.id, language, activeTab]);
+  }, [active.id, language, activeTab, restIntent]);
 
   useEffect(() => {
     [previousScene, active, nextScene].forEach((scene) => {
@@ -913,7 +916,7 @@ export default function Prototype() {
   }, [downloadFeedback]);
 
   useEffect(() => {
-    if (!isPlaying || duration === 0 || breathingStatus === "running") return;
+    if (ambientPlayback.status !== "playing" || duration === 0 || breathingStatus === "running") return;
     const clock = listeningClockRef.current;
     if (clock.remaining() === 0) {
       clock.reset(duration * 60);
@@ -940,10 +943,11 @@ export default function Prototype() {
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [active.id, duration, isPlaying, breathingStatus, setJournal, playEndBell]);
+  }, [active.id, duration, ambientPlayback.status, breathingStatus, setJournal, playEndBell]);
 
   useEffect(() => {
     if (breathingStatus !== "running" || activeTab !== "focus") return;
+    if (focusSoundEnabled && ambientPlayback.status !== "playing") return;
     const clock = focusClockRef.current;
     clock.start();
     let completed = false;
@@ -960,12 +964,13 @@ export default function Prototype() {
       playEndBell();
       recordGrowthEvent("yixiu_focus_complete", { focus_minutes: focusDuration, nature_sound: focusSoundEnabled });
       productEvent("focus_complete", { focus_minutes: focusDuration });
+      completeBreathingRest({ focus_minutes: focusDuration });
     };
     tick();
     const interval = window.setInterval(tick, 250);
     document.addEventListener("visibilitychange", tick);
     return () => { clock.pause(); window.clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [activeTab, breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, setJournal, playEndBell]);
+  }, [activeTab, breathingStatus, breathingTotalSeconds, focusDuration, focusSoundEnabled, ambientPlayback.status, setJournal, playEndBell]);
 
   useEffect(() => {
     if (activeTab !== "focus" && breathingStatus === "running") {
@@ -1040,8 +1045,7 @@ export default function Prototype() {
     () => ({
       scenePrimary: language === "zh" ? active.zh : active.en,
       sceneSecondary: language === "zh" ? active.en : active.zh,
-      philosophyPrimary: language === "zh" ? "如水而行" : "Be water, my friend.",
-      philosophySecondary: language === "zh" ? "BE WATER, MY FRIEND." : "如水而行",
+      philosophyPrimary: language === "zh" ? "随时，给自己一休。" : "Make room for quiet.",
     }),
     [active, language],
   );
@@ -1055,22 +1059,23 @@ export default function Prototype() {
     if (nextIndex < 0 || nextIndex >= homeSceneOrder.length) return;
     const sceneId = homeSceneOrder[nextIndex];
     if (!freeSceneIds.has(sceneId)) {
-      setIsPlaying(false);
       setUpgradeOpen(true);
       recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: sceneId, placement: "scene_navigation" });
       return;
     }
+    beginRestSession({ rest_intent: "none", entry_point: "sounds" });
+    setRestIntent("none");
     setActiveScene(sceneId);
     recordRecentScene(sceneId);
   };
 
   const shareScene = async () => {
     const title = language === "zh"
-      ? `一休 · ${active.zh}｜如水而行`
-      : `Yixiu · ${active.en} | Be water, my friend.`;
+      ? `一休 · ${active.zh}｜给自己一小会儿`
+      : `Yixiu · ${active.en} | A quiet moment`;
     const text = language === "zh"
-      ? `此刻，我在一休聆听「${active.zh}」。真实自己，流动人生。`
-      : `I am listening to ${active.en} in Yixiu. True to yourself, flow with life.`;
+      ? `听一会儿「${active.zh}」，给自己留一小段安静。`
+      : `A little ${active.en}, and a quiet moment to yourself.`;
     const url = sceneShareUrl(active.id, language);
     const nativeShare = Reflect.get(navigator, "share") as Navigator["share"] | undefined;
 
@@ -1101,6 +1106,12 @@ export default function Prototype() {
     setShareCardPreview(null);
     setShareCardCopyState("idle");
   };
+
+  useModalFocus(shareCardPreview ? "share" : upgradeOpen ? "plus" : libraryOpen ? "library" : null, () => {
+    if (shareCardPreview) closeShareCard();
+    else if (upgradeOpen) setUpgradeOpen(false);
+    else setLibraryOpen(false);
+  }, libraryTriggerRef);
 
   const copyShareCardLink = async () => {
     if (!shareCardPreview) return;
@@ -1227,7 +1238,7 @@ export default function Prototype() {
     productEvent("timer_select", { timer_minutes: minutes });
     listeningClockRef.current.reset(minutes * 60);
     listeningSessionRef.current = crypto.randomUUID();
-    if (isPlaying && breathingStatus !== "running") listeningClockRef.current.start();
+    if (ambientPlayback.status === "playing" && breathingStatus !== "running") listeningClockRef.current.start();
     setDuration(minutes);
     setRemainingSeconds(minutes === 0 ? 0 : minutes * 60);
     setTimerOpen(false);
@@ -1292,15 +1303,15 @@ export default function Prototype() {
     setMeBackOffset(0);
   };
 
-  const selectScene = (sceneId: SceneId, play = true) => {
+  const selectScene = (sceneId: SceneId, play = true, preserveRest = false, entryPoint: "library" | "continue" | "sounds" = "library") => {
     if (!sceneOrder.includes(sceneId)) return;
     if (!freeSceneIds.has(sceneId)) {
-      setIsPlaying(false);
       setLibraryOpen(false);
       setUpgradeOpen(true);
       recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: sceneId, placement: "sound_library" });
       return;
     }
+    if (!preserveRest) { beginRestSession({ rest_intent: "none", entry_point: entryPoint }); setRestIntent("none"); }
     setActiveScene(sceneId);
     recordRecentScene(sceneId);
     setActiveTab("sounds");
@@ -1314,10 +1325,10 @@ export default function Prototype() {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: language === "zh" ? active.zh : active.en,
       artist: "一休 · YIXIU",
-      album: language === "zh" ? "如水而行" : "Be Water, My Friend.",
+      album: language === "zh" ? "随时，给自己一休。" : "Make room for quiet.",
       artwork: [{ src: new URL(active.image, window.location.origin).toString(), sizes: "1200x1600", type: "image/jpeg" }],
     });
-    navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+    navigator.mediaSession.playbackState = ambientPlayback.status === "playing" ? "playing" : "paused";
 
     const actions: Array<[MediaSessionAction, MediaSessionActionHandler | null]> = [
       ["play", () => {
@@ -1341,23 +1352,29 @@ export default function Prototype() {
         try { navigator.mediaSession.setActionHandler(action, null); } catch { /* unsupported action */ }
       });
     };
-  }, [active, isPlaying, language, nextScene, previousScene]);
+  }, [active, ambientPlayback.status, language, nextScene, previousScene]);
 
-  const beginBreathing = (withSound = focusSoundEnabled) => {
-    if (!canUseWebFocus(focusDuration)) { setUpgradeOpen(true); return; }
+  const beginBreathing = (withSound = focusSoundEnabled, minutes = focusDuration, intent: RestIntent = restIntent === "work_break" ? "work_break" : "none") => {
+    if (!canUseWebFocus(minutes)) { setUpgradeOpen(true); return; }
     if (withSound && !freeSceneIds.has(active.id)) {
       setUpgradeOpen(true);
       return;
     }
     breathingSceneRef.current = active.id;
-    focusClockRef.current.reset(focusDuration * 60);
+    const entryPoint = restEntryRef.current === "campaign" || restEntryRef.current === "continue" ? restEntryRef.current : "focus_breathing";
+    beginRestSession({ rest_intent: intent, entry_point: entryPoint });
+    restEntryRef.current = "focus_breathing";
+    setRestIntent(intent);
+    setFocusMode("breathe");
+    setFocusDuration(minutes);
+    focusClockRef.current.reset(minutes * 60);
     focusSessionRef.current = crypto.randomUUID();
     breathingOriginalPlaybackRef.current = isPlaying;
     setIsPlaying(withSound);
     setBreathingElapsed(0);
     setBreathingStatus("running");
-    recordGrowthEvent("yixiu_focus_start", { focus_minutes: focusDuration, nature_sound: withSound });
-    productEvent("focus_start", { focus_minutes: focusDuration });
+    recordGrowthEvent("yixiu_focus_start", { focus_minutes: minutes, nature_sound: withSound });
+    productEvent("focus_start", { focus_minutes: minutes, rest_intent: intent, entry_point: entryPoint });
   };
 
   const resetBreathing = () => {
@@ -1395,24 +1412,42 @@ export default function Prototype() {
     if (breathingStatus === "running") setIsPlaying(enabled);
   };
 
-  const startQuickListening = (scene: SceneId, minutes: 5 | 15) => {
+  const startQuickListening = (scene: SceneId, minutes: 5 | 15, intent: RestIntent = "none") => {
     resetBreathing();
+    beginRestSession({ rest_intent: intent, entry_point: restEntryRef.current === "campaign" ? "campaign" : "focus_quick" });
+    restEntryRef.current = "focus_quick";
+    setRestIntent(intent);
+    setFocusMode("listen");
     selectDuration(minutes);
-    selectScene(scene);
+    selectScene(scene, true, true);
+    setActiveTab("focus");
+  };
+
+  const startRestPreset = (intent: Exclude<RestIntent, "none">) => {
+    const preset = restPresets[intent];
+    setRestIntent(intent);
+    restEntryRef.current = "focus_quick";
+    productEvent("rest_select", { rest_intent: intent, entry_point: "focus_quick" });
+    if (preset.mode === "listen") startQuickListening(preset.scene, preset.timerMinutes, intent);
+    else { resetBreathing(); setFocusMode("breathe"); beginBreathing(focusSoundEnabled, 1, intent); }
   };
 
   const repeatPractice = (entry: PracticeEntry) => {
     if (!sceneOrder.includes(entry.sceneID as SceneId)) return;
+    setRestIntent("none");
+    restEntryRef.current = "continue";
+    setRestContext({ rest_intent: "none", entry_point: "continue" });
     if (entry.kind === "breathing") {
       if (!canUseWebFocus(entry.seconds / 60) || !freeSceneIds.has(entry.sceneID as SceneId)) { setUpgradeOpen(true); return; }
       resetBreathing();
       setActiveScene(entry.sceneID as SceneId);
       setFocusDuration(entry.seconds / 60 as FocusDuration);
+      setFocusMode("breathe");
       setActiveTab("focus");
     } else {
       if (!canUseWebTimer(entry.seconds / 60) || !freeSceneIds.has(entry.sceneID as SceneId)) { setUpgradeOpen(true); return; }
       selectDuration(entry.seconds / 60 as DurationOption);
-      selectScene(entry.sceneID as SceneId);
+      selectScene(entry.sceneID as SceneId, true, false, "continue");
     }
   };
 
@@ -1464,7 +1499,7 @@ export default function Prototype() {
   return (
     <main
       className={`yixiu-app ${isPlaying ? "is-audio-playing" : ""} ${swipeOffset !== 0 ? "is-scene-dragging" : ""} ${swipeSettling ? "is-swipe-settling" : ""}`}
-      data-ui-version="20260911-native-parity"
+      data-ui-version="20261019-me-playback-corrections"
       data-language={language}
       data-scene={active.id}
       data-tab={activeTab}
@@ -1502,7 +1537,7 @@ export default function Prototype() {
 
       {activeTab === "sounds" ? <header className="player-header">
         <div className="brand-lockup">
-          <img className="brand-app-icon" src="/assets/yixiu/app-icon.png" width="44" height="44" alt="" draggable={false} />
+          <img className="brand-app-icon" src="/assets/yixiu/app-icon-96.webp" srcSet="/assets/yixiu/app-icon-192.webp 2x" width="44" height="44" alt="" draggable={false} />
           <div className="brand-copy">
             <span className="brand-name">{language === "zh" ? "一休冥想" : "Yixiu Meditation"}</span>
             <small>{language === "zh" ? "休息、睡眠与静心" : "Rest, Sleep & Calm"}</small>
@@ -1629,7 +1664,7 @@ export default function Prototype() {
               ) : drawerView === "home" ? (
                 <>
                   <section className="yixiu-drawer-hero">
-                    <small>{language === "zh" ? "14 种自然声 · 30 首音乐（含 20 首古典）" : "14 NATURE SOUNDS · 30 MUSIC TRACKS"}</small>
+                    <small>{language === "zh" ? "14 种自然声 · 40 首音乐（20 首古典、10 首 AI 原创）" : "14 NATURE SOUNDS · 40 MUSIC TRACKS"}</small>
                     <h3>{language === "zh" ? "让声音带你回到此刻" : "Let sound return you to now"}</h3>
                     <p>{language === "zh" ? `正在聆听的场景：${active.zh}` : `Current scene: ${active.en}`}</p>
                     <button type="button" onClick={() => setDrawerView("library")}>
@@ -1795,8 +1830,6 @@ export default function Prototype() {
             <p className="scene-english">{localized.sceneSecondary}</p>
             <p className="scene-philosophy">
               <span>{localized.philosophyPrimary}</span>
-              <i aria-hidden="true">·</i>
-              <em>{localized.philosophySecondary}</em>
             </p>
           </section>
 
@@ -1816,7 +1849,6 @@ export default function Prototype() {
             </button>
             <button className={`primary-transport ${isPlaying ? "is-playing" : ""}`} type="button" aria-label={isPlaying ? (language === "zh" ? "暂停" : "Pause") : language === "zh" ? "播放" : "Play"} aria-pressed={isPlaying} data-scene-id={active.id} onClick={() => {
               if (!freeSceneIds.has(active.id)) {
-                setIsPlaying(false);
                 setUpgradeOpen(true);
                 recordGrowthEvent("yixiu_plus_gate_view", { gated_scene: active.id, placement: "player" });
                 return;
@@ -1824,7 +1856,7 @@ export default function Prototype() {
               if (!isPlaying) recordRecentScene(active.id);
               setIsPlaying((current) => !current);
             }}>
-              {isPlaying ? <PauseIcon /> : <PlayIcon />}
+              {ambientPlayback.status === "loading" ? <ReloadIcon className="audio-loading-icon" /> : isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
             <button className="icon-button transport-skip" type="button" aria-label={language === "zh" ? "下一种声音" : "Next sound"} disabled={!nextScene} onClick={() => moveScene(1)}>
               <TrackNextIcon />
@@ -1843,19 +1875,29 @@ export default function Prototype() {
             <SpeakerLoudIcon />
           </section>
 
-          <p className="sound-swipe-hint">{language === "zh" ? "上滑浏览全部声音" : "SWIPE UP FOR ALL SOUNDS"}</p>
+          <div className="sound-library-entry">
+            <button ref={libraryTriggerRef} type="button" aria-haspopup="dialog" onClick={() => setLibraryOpen(true)}>
+              <GridIcon /><span>{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</span>
+            </button>
+          </div>
+          {ambientPlayback.status === "loading" ? <p className="audio-feedback" role="status">{language === "zh" ? "正在加载声音…" : "Loading sound…"}</p> : null}
+          {ambientPlayback.error ? <div className="audio-feedback audio-error" role="alert"><span>{language === "zh" ? "声音暂时无法播放" : "Unable to play this sound"}</span><button type="button" onClick={ambientPlayback.retry}>{language === "zh" ? "重试" : "Retry"}</button></div> : null}
 
         </section>
       ) : null}
 
       {activeTab === "focus" ? (
-        <section className="focus-screen" aria-label={activeSceneName}>
+        <section ref={focusScreenRef} className="focus-screen" data-focus-mode={focusMode} aria-label={language === "zh" ? "静心与休息" : "Rest and breathing"}>
           <div className="focus-main"><div className="focus-heading">
-          <div className="section-kicker">{language === "zh" ? "静心 · FOCUS" : "FOCUS · 静心"}</div>
-          <h1>{activeSceneName}</h1>
-          <p className="section-intro">{language === "zh" ? "吸气，停驻，流动" : "Breathe in, pause, flow"}</p>
+          <div className="section-kicker">{language === "zh" ? "一小段属于你的时间" : "A LITTLE TIME FOR YOU"}</div>
+          <h1>{focusMode === "breathe" ? (language === "zh" ? (focusDuration === 1 ? "给自己一分钟" : `给自己 ${focusDuration} 分钟`) : (focusDuration === 1 ? "A minute to yourself" : `${focusDuration} minutes to yourself`)) : (restIntent === "lunch" ? (language === "zh" ? "午休一下" : "A little lunch break") : restIntent === "night_waking" ? (language === "zh" ? "夜里醒了，听一会儿" : "Awake? Rest a little.") : (language === "zh" ? "听一会儿，歇一会儿" : "Listen a little. Rest a little."))}</h1>
+          <p className="section-intro">{language === "zh" ? "不必做得更好，先停一停。" : "Nothing to achieve. Just a moment to pause."}</p>
+          <div className="focus-mode-switch" role="group" aria-label={language === "zh" ? "休息方式" : "Rest style"}>
+            <button type="button" aria-pressed={focusMode === "breathe"} onClick={() => { resetBreathing(); setRestIntent("none"); setFocusMode("breathe"); }}>{language === "zh" ? "跟着呼吸" : "Follow your breath"}</button>
+            <button type="button" aria-pressed={focusMode === "listen"} onClick={() => { resetBreathing(); setRestIntent("none"); setFocusMode("listen"); }}>{language === "zh" ? "只听声音" : "Just listen"}</button>
+          </div>
 
-          <div className="focus-preferences" aria-label={language === "zh" ? "静心设置" : "Focus settings"}>
+          {focusMode === "breathe" && <div className="focus-preferences" aria-label={language === "zh" ? "静心设置" : "Focus settings"}>
             <div className="focus-duration-options">
               {focusDurations.map((minutes) => (
                 <button key={minutes} type="button" className={focusDuration === minutes ? "is-active" : ""} aria-pressed={focusDuration === minutes} onClick={() => {
@@ -1873,16 +1915,17 @@ export default function Prototype() {
               <WaterWavesIcon />
               <span>{activeSceneName}</span>
             </button>
-          </div>
+          </div>}
 
           </div><div className="focus-exercise">
+          {focusMode === "breathe" ? <>
           <div className={`breathing-orbit phase-${breathingPhase} status-${breathingStatus}`} aria-hidden="true">
             <span className="ripple ripple-one" />
             <span className="ripple ripple-two" />
             <span className="breathing-core" />
           </div>
 
-          <div className="breathing-readout" aria-live="polite">
+          <div className="breathing-readout">
             <strong>{breathingPhaseCopy}</strong>
             <span>{formatSeconds(Math.max(breathingTotalSeconds - breathingElapsed, 0))}</span>
           </div>
@@ -1905,14 +1948,28 @@ export default function Prototype() {
             </div>
           )}
 
+          {focusSoundEnabled && ambientPlayback.status === "loading" && breathingStatus === "running" ? <p className="focus-audio-feedback" role="status">{language === "zh" ? "正在加载声音，练习计时暂缓…" : "Loading sound. The practice timer is waiting…"}</p> : null}
+          {focusSoundEnabled && ambientPlayback.error && breathingStatus === "paused" ? <div className="focus-audio-feedback" role="alert"><span>{language === "zh" ? "声音暂时无法播放，练习已暂停。" : "Sound could not play. Your practice is paused."}</span><button type="button" onClick={() => { ambientPlayback.retry(); setBreathingStatus("running"); }}>{language === "zh" ? "重试并继续" : "Retry & continue"}</button></div> : null}
           <p className="safety-note">{language === "zh" ? "顺其自然；如有不适，请暂停。" : "Let it be easy. Pause if you feel uncomfortable."}</p>
+          </> : <div className="focus-listen-card">
+            <img src={sceneThumbs[active.id]} alt="" />
+            <div><small>{language === "zh" ? "此刻的声音" : "YOUR SOUND"}</small><strong>{activeSceneName}</strong><p>{language === "zh" ? "不用跟随节奏，随时可以停下。" : "No rhythm to follow. Stop whenever you like."}</p>{isPlaying || remainingSeconds < duration * 60 ? <span className="focus-listen-countdown" role="timer" aria-label={language === "zh" ? "剩余聆听时间" : "Listening time remaining"}>{formatSeconds(remainingSeconds)}</span> : <span className="focus-listen-countdown">15 {language === "zh" ? "分钟" : "MIN"}</span>}</div>
+            <button className="focus-primary" type="button" onClick={() => {
+              if (isPlaying) setIsPlaying(false);
+              else if (remainingSeconds > 0 && remainingSeconds < duration * 60) setIsPlaying(true);
+              else startQuickListening(active.id, 15, restIntent);
+            }}>{isPlaying ? (language === "zh" ? "暂停聆听" : "Pause listening") : remainingSeconds > 0 && remainingSeconds < duration * 60 ? (language === "zh" ? "继续聆听" : "Continue listening") : (language === "zh" ? "先听 15 分钟" : "Listen for 15 minutes")}</button>
+            {ambientPlayback.status === "loading" ? <p className="focus-audio-feedback" role="status">{language === "zh" ? "正在加载声音…" : "Loading sound…"}</p> : null}
+            {ambientPlayback.error ? <p className="focus-audio-feedback" role="alert">{language === "zh" ? "声音暂时无法播放，请重试。" : "Sound could not play. Please try again."}</p> : null}
+            <button className="focus-browse-sounds" type="button" onClick={() => setLibraryOpen(true)}>{language === "zh" ? "换一种声音" : "Choose another sound"}<ChevronRightIcon /></button>
+          </div>}
           </div></div>
           {(breathingStatus === "idle" || breathingStatus === "complete") && <section className="quick-practices" aria-label={language === "zh" ? "快捷练习" : "Quick practices"}>
-            <p>{language === "zh" ? "换一种放松方式" : "Another way to unwind"}</p>
+            <p>{language === "zh" ? "这一刻，你想怎样休息？" : "What kind of pause do you need?"}</p>
             <div className="quick-practice-grid">
-              <button type="button" onClick={() => startQuickListening("rain", 15)}><PlayIcon /><strong>{language === "zh" ? "睡前放松" : "Bedtime"}</strong><small>15 {language === "zh" ? "分钟" : "MIN"}</small></button>
-              <button type="button" onClick={() => { setFocusSoundEnabled(true); beginBreathing(true); }}><PlayIcon /><strong>{language === "zh" ? "片刻呼吸" : "Breathe"}</strong><small>1 {language === "zh" ? "分钟" : "MIN"}</small></button>
-              <button type="button" onClick={() => startQuickListening("birds", 5)}><PlayIcon /><strong>{language === "zh" ? "清晨唤醒" : "Morning"}</strong><small>5 {language === "zh" ? "分钟" : "MIN"}</small></button>
+              <button type="button" onClick={() => startRestPreset("lunch")}><PlayIcon /><strong>{language === "zh" ? "午休一下" : "Lunch break"}</strong><small>{language === "zh" ? "15 分钟 · 湖岸" : "15 min · Lake"}</small></button>
+              <button type="button" onClick={() => startRestPreset("night_waking")}><PlayIcon /><strong>{language === "zh" ? "夜里醒了" : "Awake at night"}</strong><small>{language === "zh" ? "听一会儿 · 夜雨" : "A little night rain"}</small></button>
+              <button type="button" onClick={() => startRestPreset("work_break")}><PlayIcon /><strong>{language === "zh" ? "工作间隙" : "Work break"}</strong><small>{language === "zh" ? "1 分钟 · 呼吸" : "1 min · Breathe"}</small></button>
             </div>
           </section>}
         </section>
@@ -1926,51 +1983,23 @@ export default function Prototype() {
               <h1>{language === "zh" ? "回到自己的节奏" : "Return to your own rhythm"}</h1>
 
               <div className="me-scroll">
-                <section className="me-card practice-journal" aria-label={language === "zh" ? "练习记录" : "Practice journal"}>
-                  <div className="journal-heading"><div><small>{language === "zh" ? "留给自己的时间" : "TIME TO YOURSELF"}</small><p><strong data-testid="week-minutes">{week.minutes}</strong><span>{language === "zh" ? "分钟 · 本周" : "min · this week"}</span></p></div><WaterWavesIcon /></div>
-                  <div className="journal-week">{week.days.map((day, index) => <div key={day.getTime()} aria-label={`${day.toLocaleDateString(language === "zh" ? "zh-CN" : "en-US")} · ${week.practiced[index] ? (language === "zh" ? "有完成练习" : "Practice completed") : (language === "zh" ? "暂无记录" : "No practice recorded")}`}><i className={week.practiced[index] ? "is-complete" : ""} /><span>{day.toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", { weekday: "narrow" })}</span></div>)}</div>
-                  <div className="journal-entries">{journal.length ? journal.slice(0, 3).map(entry => <button key={entry.id} type="button" disabled={!sceneOrder.includes(entry.sceneID as SceneId)} title={!sceneOrder.includes(entry.sceneID as SceneId) ? (language === "zh" ? "此声音已移除，记录保留" : "Sound removed; record preserved") : undefined} onClick={() => repeatPractice(entry)} aria-label={`${language === "zh" ? "再次练习" : "Repeat"} ${language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}`}><span><strong>{language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}</strong><small>{entry.seconds / 60} {language === "zh" ? "分钟" : "MIN"} · {entry.kind === "breathing" ? (language === "zh" ? "静心" : "Focus") : (language === "zh" ? "聆听" : "Listening")} · {new Date(entry.completedAt).toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", {month:"short", day:"numeric"})}</small></span><PlayIcon /></button>) : <p>{language === "zh" ? "不必连续，每次回来都算数。\n完成一次练习，时间会留在这里。" : "No streak to keep. Every return matters.\nYour completed practices will appear here."}</p>}</div>
-                  <small className="journal-privacy">{language === "zh" ? "仅保存在此浏览器 · 不上传 · 最多 200 条" : "In this browser only · Not uploaded · Up to 200 entries"}</small>
-                </section>
+
                 <section className="me-sound-space">
                   <img src={active.image} data-image-scene={active.id} alt="" />
                   <div className="me-sound-space-shade" />
                   <div className="me-sound-space-copy">
-                    <small>{language === "zh" ? "声音空间" : "SOUND SPACE"}</small>
+                    <small>{language === "zh" ? "继续上次" : "PICK UP WHERE YOU LEFT OFF"}</small>
                     <strong>{language === "zh" ? active.zh : active.en}</strong>
-                    <span>{language === "zh" ? "正在聆听 · 14 种自然声 + 30 首音乐（含 20 首古典）" : "Now listening · 14 nature sounds + 30 music tracks (including 20 classical works)"}</span>
-                    <button type="button" onClick={() => setLibraryOpen(true)}><WaterWavesIcon />{language === "zh" ? "浏览全部声音" : "Browse all sounds"}</button>
+                    <span>{language === "zh" ? "无需重新寻找，听一会儿就好。" : "No need to search again. Just listen a little."}</span>
+                    <button type="button" onClick={() => selectScene(active.id, true, false, "continue")}><PlayIcon />{language === "zh" ? "继续聆听" : "Continue listening"}</button>
                   </div>
                 </section>
 
-                <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
-                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "10 种自然声 + 12 首音乐（含 10 首古典）" : "10 nature sounds + 12 music tracks (10 classical)"}</small></div><PremiumGemIcon /></div>
-                  <p>{language === "zh" ? "免费静心 1 分钟，聆听定时 5 / 15 / 30 分钟。Plus 可在 App 中使用更长练习与全部声音。" : "Free: 1-minute Focus and 5 / 15 / 30-minute timers. Plus offers longer practices and every sound in the app."}</p>
-                  <button type="button" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
-                  <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
-                </section>
 
-                <section className="me-card favorites-card">
-                  <div className="card-heading">
-                    <div>
-                      <strong>{language === "zh" ? "我的收藏" : "Favorites"}</strong>
-                      <small>{language === "zh" ? "常听的自然声" : "Your returning sounds"}</small>
-                    </div>
-                    <HeartIcon />
-                  </div>
-                  {favorites.length ? (
-                    <div className="favorite-scenes">
-                      {favorites.map((sceneId) => (
-                        <button key={sceneId} type="button" onClick={() => selectScene(sceneId, false)}>
-                          <img src={scenes[sceneId].image} data-image-scene={sceneId} alt="" />
-                          <span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span>
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="empty-copy">{language === "zh" ? "在声音页点亮心形，常听的自然声会留在这里。" : "Tap the heart while listening and your favorite sounds will stay here."}</p>
-                  )}
-                </section>
+
+
+
+
 
                 {recentScenes.length ? (
                   <section className="me-card recent-card">
@@ -1992,6 +2021,35 @@ export default function Prototype() {
                     </div>
                   </section>
                 ) : null}
+
+                <section className="me-card favorites-card">
+                  <button className="card-heading favorites-heading" type="button" aria-label={language === "zh" ? "查看我的收藏" : "View favorites"} onClick={() => openPersonalLibrary("favorites")}>
+                    <div>
+                      <strong>{language === "zh" ? "我的收藏" : "Favorites"}</strong>
+                      <small>{language === "zh" ? "喜欢的声音，随时回来听" : "Your returning sounds"}</small>
+                    </div>
+                    <span className="favorites-heading-icons"><HeartIcon /><ChevronRightIcon /></span>
+                  </button>
+                  {favorites.length ? (
+                    <div className="favorite-scenes">
+                      {favorites.map((sceneId) => (
+                        <button key={sceneId} type="button" onClick={() => selectScene(sceneId, false)}>
+                          <img src={scenes[sceneId].image} data-image-scene={sceneId} alt="" />
+                          <span>{language === "zh" ? scenes[sceneId].zh : scenes[sceneId].en}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="favorites-empty"><p className="empty-copy">{language === "zh" ? "点亮心形，把喜欢的声音留在这里。" : "Tap the heart while listening and your favorite sounds will stay here."}</p><button type="button" className="favorites-empty-action" onClick={() => openPersonalLibrary("all")}>{language === "zh" ? "浏览声音，添加收藏" : "Browse sounds to add favorites"}<ChevronRightIcon /></button></div>
+                  )}
+                </section>
+
+                <section className="me-card web-membership" aria-label={language === "zh" ? "会员资格" : "Membership"}>
+                  <div className="card-heading"><div><strong>{language === "zh" ? "一休 · 免费版" : "Yixiu · Free"}</strong><small>{language === "zh" ? "10 种自然声 + 17 首音乐（10 首古典、5 首 AI 原创）" : "10 nature sounds + 17 music tracks (10 classical, 5 AI originals)"}</small></div><PremiumGemIcon /></div>
+                  <p>{language === "zh" ? "无需账号，没有广告。免费使用 1 分钟呼吸、27 个声音和 5 / 15 / 30 分钟定时。Plus 在 App 中提供更长、更丰富的声音陪伴。" : "No account. No ads. Enjoy 1-minute breathing, 27 free sounds and 5 / 15 / 30-minute timers. Plus adds longer listening and the full collection in the app."}</p>
+                  <button type="button" aria-haspopup="dialog" onClick={() => setUpgradeOpen(true)}>{language === "zh" ? "查看会员权益" : "Explore Plus"}<ChevronRightIcon /></button>
+                  <small>{language === "zh" ? "已购买或老用户请在 App 中恢复购买。每日提醒与小组件也在 App 中使用。" : "Restore purchases and legacy access in the app. Daily reminders and widgets are also available there."}</small>
+                </section>
 
                 <section className="me-card">
                   <div className="setting-title">
@@ -2021,10 +2079,16 @@ export default function Prototype() {
                     <button className={`switch-control ${endBell ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "结束提示音" : "End bell"} aria-checked={endBell} onClick={() => setEndBell((current) => !current)}><i /></button>
                   </div>
                   <div className="setting-row">
-                    <span><strong>{language === "zh" ? "后台播放" : "Background playback"}</strong><small>{language === "zh" ? "离开画面，水声仍可继续" : "Keep listening off-screen"}</small></span>
+                    <span><strong>{language === "zh" ? "后台播放" : "Background playback"}</strong><small>{language === "zh" ? "允许离开页面后继续；实际效果取决于浏览器" : "Allow off-screen audio; browser support varies"}</small></span>
                     <button className={`switch-control ${backgroundPlayback ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "后台播放" : "Background playback"} aria-checked={backgroundPlayback} onClick={() => setBackgroundPlayback((current) => !current)}><i /></button>
                   </div>
                 </section>
+
+                <details className="me-card practice-journal" aria-label={language === "zh" ? "休息记录" : "Rest history"}>
+                  <summary>{language === "zh" ? "我的休息记录" : "My rest history"}<span><b data-testid="week-minutes">{week.minutes}</b> {language === "zh" ? "分钟 · 本周" : "min · this week"}</span></summary>
+                  <div className="journal-entries">{journal.length ? journal.slice(0, 3).map(entry => <button key={entry.id} type="button" disabled={!sceneOrder.includes(entry.sceneID as SceneId)} title={!sceneOrder.includes(entry.sceneID as SceneId) ? (language === "zh" ? "此声音已移除，记录保留" : "Sound removed; record preserved") : undefined} onClick={() => repeatPractice(entry)} aria-label={`${language === "zh" ? "再次练习" : "Repeat"} ${language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}`}><span><strong>{language === "zh" ? scenes[entry.sceneID as SceneId].zh : scenes[entry.sceneID as SceneId].en}</strong><small>{entry.seconds / 60} {language === "zh" ? "分钟" : "MIN"} · {entry.kind === "breathing" ? (language === "zh" ? "静心" : "Focus") : (language === "zh" ? "聆听" : "Listening")} · {new Date(entry.completedAt).toLocaleDateString(language === "zh" ? "zh-CN" : "en-US", {month:"short", day:"numeric"})}</small></span><PlayIcon /></button>) : <p>{language === "zh" ? "不必连续，每次回来都算数。\n完成的定时聆听与呼吸会留在这里，不代表全部休息时间。" : "No streak to keep. Every return matters.\nCompleted timers and breathing appear here, not all time spent resting."}</p>}</div>
+                  <small className="journal-privacy">{language === "zh" ? "仅保存在此浏览器 · 不上传 · 最多 200 条" : "In this browser only · Not uploaded · Up to 200 entries"}</small>
+                </details>
 
                 <a className="me-app-download" href={sleepAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="me" onClick={handleAppStoreClick}>
                   <span>
@@ -2046,9 +2110,13 @@ export default function Prototype() {
                 </section>
 
                 <p className="me-group-label">{language === "zh" ? "关于一休" : "ABOUT YIXIU"}</p>
-                <section className="me-card">
-                  <label className="setting-row"><span><strong>{language === "zh" ? "帮助改进一休" : "Help improve Yixiu"}</strong><small>{language === "zh" ? "自愿分享播放时长、声音选择与功能使用统计；不含姓名、录音或练习手记。可随时关闭。" : "Optionally share listening duration, sound choices and feature use. No names, recordings or journal history. Turn off anytime."}</small></span><input type="checkbox" aria-label={language === "zh" ? "分享使用统计" : "Share usage analytics"} checked={usageAnalytics} onChange={event => chooseAnalytics(event.target.checked)} /></label>
-                  <a href="/privacy.html">{language === "zh" ? "了解数据与隐私" : "Data and privacy"}</a>
+                <section className="me-card analytics-preference">
+                  <div className="analytics-preference-heading">
+                    <strong id="analytics-preference-title">{language === "zh" ? "帮助改进一休" : "Help improve Yixiu"}</strong>
+                    <button className={`analytics-switch ${usageAnalytics ? "is-active" : ""}`} role="switch" type="button" aria-label={language === "zh" ? "分享使用统计" : "Share usage analytics"} aria-describedby="analytics-preference-description" aria-checked={usageAnalytics} onClick={() => chooseAnalytics(!usageAnalytics)}><span aria-hidden="true" /></button>
+                  </div>
+                  <p id="analytics-preference-description">{language === "zh" ? "自愿分享播放时长、声音选择与功能使用统计；不含姓名、录音或练习手记。可随时关闭。" : "Optionally share listening duration, sound choices and feature use. No names, recordings or journal history. Turn off anytime."}</p>
+                  <a className="analytics-privacy-link" href="/privacy.html"><span>{language === "zh" ? "了解数据与隐私" : "Data and privacy"}</span><ChevronRightIcon /></a>
                 </section>
                 <section className="trust-links" aria-label={language === "zh" ? "关于与支持" : "About and support"}>
                   <button type="button" onClick={() => openMeDetail("about")}><span><strong>{language === "zh" ? "关于我们" : "About Us"}</strong><small>{language === "zh" ? "一休是谁，我们相信什么" : "Who we are and what we believe"}</small></span><ChevronRightIcon /></button>
@@ -2057,16 +2125,11 @@ export default function Prototype() {
                   <button type="button" onClick={() => openMeDetail("support")}><span><strong>{language === "zh" ? "联系与反馈" : "Contact and feedback"}</strong><small>{language === "zh" ? "邮箱与社交媒体" : "Email and social channels"}</small></span><ChevronRightIcon /></button>
                 </section>
 
-                <p className="me-group-label">{language === "zh" ? "沿途所作" : "WORKS ALONG THE WAY"}</p>
-                <section className="me-works">
-                  <a href="https://wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "一" : "01"}</b><span><strong>WonderElian</strong><em>{language === "zh" ? "让复杂的想法变得清晰、好看而有人情味" : "Make complex ideas clear, beautiful, and human"}</em><small>{language === "zh" ? "WonderElian 是永歌 Elian 的个人创作空间。这里记录作品，也记录关于设计、AI、产品，以及如何慢慢成为自己的思考与探索。" : "An independent creative world from Wuhan, connecting visual culture, wellbeing, and real life through design, AI, and digital products."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://xiazishuo.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "二" : "02"}</b><span><strong>{language === "zh" ? "虾子曰" : "Xiazi Says"}</strong><em>{language === "zh" ? "昨日世界" : "Yesterday's World"}</em><small>{language === "zh" ? "每天用全球热点与双语海报，看清复杂世界。" : "Global stories and bilingual posters make the world easier to see."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://buer.wonderelian.com/" target="_blank" rel="noreferrer"><b>{language === "zh" ? "三" : "03"}</b><span><strong>{language === "zh" ? "不二见己" : "Buer Within"}</strong><em>{language === "zh" ? "与真实的自己 · 温柔相遇" : "Meet your true self"}</em><small>{language === "zh" ? "和 AI 成长伙伴豆豆龙聊聊，在对话与成长档案中，更清楚地认识自己。" : "Talk with Doudoulong, your AI growth companion, and get to know yourself through conversations and your growth profile."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://wendao.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "四" : "04"}</b><span><strong>{language === "zh" ? "三慢问道" : "Wendao"}</strong><em>{language === "zh" ? "道德经" : "Tao Te Ching"}</em><small>{language === "zh" ? "读懂经典，也在慢下来时读懂自己。" : "Read the classic slowly—and yourself with it."}</small></span><ExternalLinkIcon /></a>
-                  <a href="https://style-atlas.wonderelian.com" target="_blank" rel="noreferrer"><b>{language === "zh" ? "五" : "05"}</b><span><strong>{language === "zh" ? "艺术风格图鉴" : "Style Atlas"}</strong><em>{language === "zh" ? "学习看懂一种美" : "Learn to see a style"}</em><small>{language === "zh" ? "沿着艺术与设计风格的脉络，找到自己的观看方式。" : "Follow art and design lineages to find your own way of looking."}</small></span><ExternalLinkIcon /></a>
-                </section>
 
-                <p className="me-philosophy-footnote">{language === "zh" ? "向内认识自己，向外如水而行。" : "Know within. Move like water."}</p>
+
+                <p className="me-group-label">{language === "zh" ? "探索健康的工作和生活方式" : "EXPLORE HEALTHIER WAYS TO WORK AND LIVE"}</p>
+                <LifestyleWorks language={language} />
+                <p className="me-philosophy-footnote">{language === "zh" ? "不必等到有空，才可以休息。" : "You do not have to wait for free time to rest."}</p>
               </div>
             </>
           ) : (
@@ -2080,16 +2143,17 @@ export default function Prototype() {
             >
               <header className="me-detail-header">
                 <button type="button" aria-label={language === "zh" ? "返回" : "Back"} onClick={returnToMeHome}><ArrowLeftIcon /></button>
-                <div><small>一休 · YIXIU</small><strong>{meView === "about" ? (language === "zh" ? "关于我们" : "About Us") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
+                <div><small>一休 · YIXIU</small><strong>{meView === "about" ? (language === "zh" ? "关于我们" : "About Us") : meView === "works" ? (language === "zh" ? "探索健康的工作和生活方式" : "Healthier ways to work and live") : meView === "privacy" ? (language === "zh" ? "隐私说明" : "Privacy") : meView === "sources" ? (language === "zh" ? "声音来源" : "Audio Sources") : (language === "zh" ? "联系与反馈" : "Contact")}</strong></div>
               </header>
               <div className="me-detail-scroll">
                 {meView === "about" ? (
                   <article className="me-article me-about">
-                    <small>{language === "zh" ? "真实自己，流动人生" : "TRUE TO YOURSELF. FLOW WITH LIFE."}</small>
-                    <h2>{language === "zh" ? "一休，是一处让声音带你回到当下的空间。" : "Yixiu is a space where sound brings you back to the present."}</h2>
-                    <p>{language === "zh" ? "我们用真实自然声、定时聆听与水之呼吸，陪你在工作、阅读、睡眠或情绪起伏时先停一停，照顾身体，听见自己，再继续前行。" : "Through real nature sounds, timed listening and water breathing, we help you pause, care for the body, hear yourself and continue—through work, reading, sleep and emotional change."}</p>
-                    <section className="life-philosophy">
-                      <small>{language === "zh" ? "我们的生命观" : "OUR PHILOSOPHY OF LIFE"}</small>
+                    <small>{language === "zh" ? "随时，给自己一休。" : "MAKE ROOM FOR QUIET."}</small>
+                    <h2>{language === "zh" ? "不必等到有空，才可以休息。" : "You do not have to wait for free time to rest."}</h2>
+                    <p>{language === "zh" ? "一休是日常的休息与声音陪伴。在午休、夜里醒来或工作间隙，听一会儿自然声与轻音乐，或者跟着呼吸一分钟。" : "Yixiu is an everyday rest and sound companion. Take a lunch break, rest when you wake at night, or pause between tasks—with nature sounds, gentle music or a minute of breathing."}</p>
+                    <p>{language === "zh" ? "无需账号，没有广告。不必完成课程，也没有连续打卡。免费声音、1 分钟呼吸和短时定时，就可以好好用。" : "No account, no ads, no courses to finish and no streaks to maintain. Free sounds, one-minute breathing and short timers are ready whenever you need them."}</p>
+                    <section className="life-philosophy" aria-label={language === "zh" ? "我们的生命观" : "Our philosophy of life"}>
+                      <h2 className="life-philosophy-heading">{language === "zh" ? "我们的生命观" : "Our philosophy of life"}</h2>
                       <h3>{language === "zh" ? "生命不是用来证明自己的，而是用来认识、接纳、成为并活出自己。" : "Life is not for proving yourself. It is for knowing, accepting, becoming, and living as yourself."}</h3>
                       <p>{language === "zh" ? "真正的成长，不是把自己改造成某个标准答案，而是在变化中越来越诚实地看见自己，越来越从容地选择自己的活法。" : "Growth is not the work of turning yourself into a standard answer. It is learning to see yourself more honestly through change, and to choose your way of living with greater ease."}</p>
                       <div className="life-path" aria-label={language === "zh" ? "核心路径" : "Core path"}>
@@ -2112,6 +2176,8 @@ export default function Prototype() {
                       <p className="life-vision">{language === "zh" ? "我们愿陪伴彼此走过低谷与高峰，探索身心健康的工作与生活方式；真实面对自己与世界，善待自己、他人与生命，并在创造和欣赏中活出生命之美。" : "We hope to accompany one another through valleys and peaks, exploring healthier ways to work and live: facing self and world truthfully, treating life with kindness, and creating and appreciating beauty."}</p>
                     </section>
                   </article>
+                ) : meView === "works" ? (
+                  <LifestyleWorks language={language} />
                 ) : meView === "privacy" ? (
                   <article className="me-article"><small>{language === "zh" ? "你的数据" : "YOUR DATA"}</small><h2>{language === "zh" ? "安静，也应该是私密的" : "Quiet should remain private"}</h2><p>{language === "zh" ? "一休无需账号。声音、收藏、语言、音量与定时时长只保存在当前设备。" : "Yixiu requires no account. Your sound, favorites, language, volume and timer preferences stay on this device."}</p><p>{language === "zh" ? "一休不会读取精确位置、照片、通讯录或健康数据。清除浏览器数据会同时移除本地偏好。" : "Yixiu does not access precise location, photos, contacts or health data. Clearing browser data also removes local preferences."}</p><p>{language === "zh" ? "使用统计默认关闭。自愿开启后，Google Analytics 使用随机浏览器标识统计播放时长、声音选择和功能使用，不上传练习手记。可随时在“我的”关闭。" : "Usage analytics is off by default. If you opt in, Google Analytics uses a random browser identifier to measure listening duration, sound choices and feature use. Journal history is not uploaded. Disable anytime in Me."} <a href="/privacy.html">{language === "zh" ? "完整隐私说明" : "Full privacy notice"}</a></p><blockquote>{language === "zh" ? "少一些记录，多一些当下。" : "Less tracking. More presence."}</blockquote></article>
                 ) : meView === "sources" ? (
@@ -2126,31 +2192,23 @@ export default function Prototype() {
       ) : null}
 
       <nav className="bottom-nav" aria-label={language === "zh" ? "主导航" : "Main navigation"}>
-        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="sounds" onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><span className="nav-icon"><WaterWavesIcon /></span><span className="nav-label">{language === "zh" ? "声音" : "Sounds"}</span><small>{language === "zh" ? "SOUNDS" : "声音"}</small></button>
-        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="focus" onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-icon"><span className="nav-focus-orbit" /></span><span className="nav-label">{language === "zh" ? "静心" : "Focus"}</span><small>{language === "zh" ? "FOCUS" : "静心"}</small></button>
-        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="me" onClick={() => { setActiveTab("me"); setMeView("home"); }}><span className="nav-icon"><PersonIcon /></span><span className="nav-label">{language === "zh" ? "我的" : "Me"}</span><small>{language === "zh" ? "ME" : "我的"}</small></button>
+        <button type="button" className={activeTab === "sounds" ? "is-active" : ""} aria-current={activeTab === "sounds" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="sounds" onClick={() => { setActiveTab("sounds"); setMeView("home"); }}><span className="nav-icon"><WaterWavesIcon /></span><span className="nav-label">{language === "zh" ? "声音" : "Sounds"}</span></button>
+        <button type="button" className={activeTab === "focus" ? "is-active" : ""} aria-current={activeTab === "focus" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="focus" onClick={() => { setActiveTab("focus"); setMeView("home"); }}><span className="nav-icon"><span className="nav-focus-orbit" /></span><span className="nav-label">{language === "zh" ? "静心" : "Focus"}</span></button>
+        <button type="button" className={activeTab === "me" ? "is-active" : ""} aria-current={activeTab === "me" ? "page" : undefined} data-analytics-event="yixiu_tab_select" data-analytics-value="me" onClick={() => { setActiveTab("me"); setMeView("home"); }}><span className="nav-icon"><PersonIcon /></span><span className="nav-label">{language === "zh" ? "我的" : "Me"}</span></button>
       </nav>
 
       {libraryOpen ? (
         <>
           <button className="library-scrim" type="button" aria-label={language === "zh" ? "关闭声音库" : "Close sound library"} onClick={() => setLibraryOpen(false)} />
-          <section className="sound-library" role="dialog" aria-modal="true" aria-label={language === "zh" ? "声音库" : "Sound library"}>
-            <div className="sheet-handle" />
-            <header><div><small>{language === "zh" ? "14 种自然声 · 30 首音乐（含 20 首古典）" : "14 NATURE SOUNDS · 30 MUSIC TRACKS"}</small><h2>{language === "zh" ? "声音库" : "Sound Library"}</h2></div><button type="button" onClick={() => setLibraryOpen(false)}>{language === "zh" ? "完成" : "Done"}</button></header>
-            <div className="scene-category-tabs" role="tablist" aria-label={language === "zh" ? "声音分类" : "Sound categories"}>
-              {sceneCategories.map((category) => (
-                <button key={category} type="button" role="tab" aria-selected={sceneCategory === category} className={sceneCategory === category ? "is-active" : ""} onClick={() => setSceneCategory(category)}>
-                  {categoryLabel(category, language)}
-                </button>
-              ))}
-            </div>
-            <div className="scene-grid">
-              {filteredSceneOrder.map((sceneId) => {
-                const scene = scenes[sceneId];
-                return <article key={scene.id} className={activeScene === scene.id ? "is-active" : ""}><button className="scene-select" type="button" data-scene-id={scene.id} aria-label={language === "zh" ? `切换到${scene.zh}` : `Switch to ${scene.en}`} onClick={() => selectScene(scene.id)}><img src={sceneThumbs[scene.id]} data-image-scene={scene.id} alt="" loading="eager" decoding="async" /><span className="scene-card-shade" /><span className="scene-card-copy"><strong>{language === "zh" ? scene.zh : scene.en}</strong><small>{language === "zh" ? scene.en : scene.zh}</small><em>{language === "zh" ? scene.useZh : scene.useEn}</em></span><SceneAccessBadge free={freeSceneIds.has(scene.id)} /></button><button className="scene-favorite" type="button" aria-label={language === "zh" ? `收藏${scene.zh}` : `Favorite ${scene.en}`} aria-pressed={favorites.includes(scene.id)} onClick={() => toggleFavorite(scene.id)}>{favorites.includes(scene.id) ? <HeartFilledIcon /> : <HeartIcon />}</button></article>;
-              })}
-            </div>
-          </section>
+          <SoundLibrary language={language} items={filteredSceneOrder.map(id => scenes[id])} activeID={activeScene}
+            scope={libraryScope} query={libraryQuery} category={sceneCategory}
+            categories={sceneCategories.map(id => ({ id, label: categoryLabel(id, language) }))}
+            purpose={restPurpose} purposes={restPurposes.map(id => ({ id, label: purposeLabel(id, language) }))}
+            onPurpose={value => { setRestPurpose(value); productEvent("library_filter", { filter: value }); }}
+            favorites={favorites} recent={recentScenes} thumbnails={sceneThumbs}
+            badge={id => <SceneAccessBadge free={freeSceneIds.has(id)} />}
+            onScope={setLibraryScope} onQuery={setLibraryQuery} onCategory={setSceneCategory}
+            onSelect={id => { if (activeTab === "focus" && focusMode === "listen") { selectScene(id, true, true); setActiveTab("focus"); } else selectScene(id); }} onFavorite={toggleFavorite} onClose={() => setLibraryOpen(false)} />
         </>
       ) : null}
 
@@ -2203,23 +2261,23 @@ export default function Prototype() {
       ) : null}
 
       {upgradeOpen ? (
-        <div className="plus-upgrade-modal" role="dialog" aria-modal="true" aria-label={language === "zh" ? "升级一休 Plus" : "Upgrade to Yixiu Plus"}>
-          <button className="plus-upgrade-backdrop" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)} />
+        <div className="plus-upgrade-modal" data-modal="plus" role="dialog" aria-modal="true" aria-label={language === "zh" ? "升级一休 Plus" : "Upgrade to Yixiu Plus"}>
+          <button className="plus-upgrade-backdrop" type="button" tabIndex={-1} aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)} />
           <section>
-            <button className="plus-upgrade-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
+            <button className="plus-upgrade-close" type="button" data-modal-initial aria-label={language === "zh" ? "关闭" : "Close"} onClick={() => setUpgradeOpen(false)}><Cross2Icon /></button>
             <small>YIXIU PLUS</small>
-            <h2>{language === "zh" ? "让安静继续流动" : "Let quiet keep flowing"}</h2>
-            <p>{language === "zh" ? "免费聆听 10 种自然声、绿洲停歇与初息，以及 10 首古典名曲。其余 4 种自然声和 18 首音乐（含另外 10 首古典）属于 Plus。" : "Listen free to 10 nature sounds, Oasis Rest, First Breath and 10 classical works. The remaining 4 nature sounds and 18 music tracks (including 10 more classical works) are Plus."}</p>
-            <p>{language === "zh" ? "Plus：静心 1 / 3 / 5 / 10 分钟、长时与不限时聆听。老用户保留原有 14 种自然声、1 / 3 分钟静心与原有定时权益，请在 App 中恢复购买。H5 当前提供免费体验，不读取 Apple 购买状态。" : "Plus: 1 / 3 / 5 / 10-minute Focus and extended or unlimited listening. Legacy users retain 14 nature sounds, 1 / 3-minute Focus and their existing timers; restore purchases in the app. H5 offers the free experience and does not read Apple purchase status."}</p>
+            <h2>{language === "zh" ? "更长、更丰富的声音陪伴" : "More sounds. More time to unwind."}</h2>
+            <p>{language === "zh" ? "无需账号，没有广告。27 个免费声音、1 分钟呼吸和短时定时，已经可以陪你好好休息。想多听一会儿，再来了解 Plus。" : "No account. No ads. Start with 27 free sounds, one-minute breathing and short timers. Explore Plus whenever you want more."}</p>
+            <ul className="plus-benefits"><li>{language === "zh" ? `解锁全部 ${sceneOrder.length} 个声音` : `Unlock all ${sceneOrder.length} sounds`}</li><li>{language === "zh" ? "静心 1 / 3 / 5 / 10 分钟" : "1 / 3 / 5 / 10-minute Focus"}</li><li>{language === "zh" ? "长时与不限时聆听" : "Extended and unlimited listening"}</li></ul>
             <a href={musicPlusAppStoreUrl} data-analytics-event="yixiu_download_click" data-analytics-placement="music_plus_gate" onClick={(event) => {
               handleAppStoreClick(event);
               recordGrowthEvent("yixiu_plus_app_store_click", { gated_scene: active.id });
             }}>
-              {language === "zh" ? "在 App Store 查看一休 Plus" : "View Yixiu Plus on the App Store"}
+              {language === "zh" ? "下载 App，了解 Plus" : "Get the app · Explore Plus"}
               <ExternalLinkIcon />
             </a>
-            <a href="/music-credits.html#classical">{language === "zh" ? "20 首古典名曲 · 免费完整试听" : "20 classical works · Free full listening"}</a>
-            <em>{language === "zh" ? "古典名曲已在网页来源页提供；App 内新曲随后续更新提供。会员权益由 App Store 管理。" : "Classical recordings are available on the web credits page; the in-app collection arrives with an upcoming update. Membership is managed by the App Store."}</em>
+            <a className="plus-source-link" href="/music-credits.html#classical">{language === "zh" ? "录音来源与完整试听" : "Recording sources & full listening"}<ExternalLinkIcon /></a>
+            <em>{language === "zh" ? "会员权益在 App 内由 App Store 验证；网页提供免费体验。老用户可在 App 内恢复购买，保留原有权益。" : "Membership is verified by the App Store in the app. The web offers free listening. Legacy users can restore purchases in the app to retain their original access."}</em>
           </section>
         </div>
       ) : null}
@@ -2227,11 +2285,12 @@ export default function Prototype() {
       {shareCardPreview ? (
         <div
           className="share-card-dialog"
+          data-modal="share"
           role="dialog"
           aria-modal="true"
           aria-label={language === "zh" ? `分享${active.zh}` : `Share ${active.en}`}
         >
-          <button className="share-card-backdrop" type="button" aria-label={language === "zh" ? "关闭分享图" : "Close share card"} onClick={closeShareCard} />
+          <button className="share-card-backdrop" type="button" tabIndex={-1} aria-label={language === "zh" ? "关闭分享图" : "Close share card"} onClick={closeShareCard} />
           <section>
             <button className="share-card-close" type="button" aria-label={language === "zh" ? "关闭" : "Close"} onClick={closeShareCard}><Cross2Icon /></button>
             <div className="share-card-copy">

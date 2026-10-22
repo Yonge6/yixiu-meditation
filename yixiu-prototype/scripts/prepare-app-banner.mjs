@@ -2,11 +2,14 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const tags = '<link rel="stylesheet" href="/app-banner.css?v=20261001"><script src="/app-banner.js?v=20261001" defer></script>';
+const tags = '<link rel="stylesheet" href="/app-banner.css?v=20261013"><script src="/app-banner.js?v=20261013" defer></script>';
 async function inject(file) {
   const source = await readFile(file, "utf8");
-  if (!source.includes("</head>") || source.includes('/app-banner.js?')) return;
-  await writeFile(file, source.replace("</head>", `${tags}\n</head>`));
+  if (!source.includes("</head>")) return;
+  if (source.includes('/app-banner.js?')) {
+    const updated = source.replace(/\/app-banner\.(css|js)\?v=\d+/g, "/app-banner.$1?v=20261013");
+    if (updated !== source) await writeFile(file, updated);
+  } else await writeFile(file, source.replace("</head>", `${tags}\n</head>`));
 }
 async function walk(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {

@@ -26,14 +26,18 @@ test("starts fresh visitors in English while preserving explicit Chinese links",
   await expect(page.getByRole("button", { name: "Switch to Chinese" })).toHaveText("中");
 
   const headerActions = page.locator(".header-actions > *");
-  await expect(headerActions).toHaveCount(4);
-  await expect(headerActions.nth(0)).toHaveAttribute("aria-label", "Open Quiet Journal");
-  await expect(headerActions.nth(2)).toHaveAttribute("aria-label", "Share Ocean Waves");
-  await expect(headerActions.nth(3)).toHaveAttribute("aria-label", "Switch to Chinese");
+  await expect(headerActions).toHaveCount(3);
+  await expect(headerActions.nth(0)).toHaveAttribute("aria-label", "Download Yixiu on the App Store");
+  await expect(headerActions.nth(1)).toHaveAttribute("aria-label", "Share Ocean Waves");
+  await expect(headerActions.nth(2)).toHaveAttribute("aria-label", "Switch to Chinese");
+
+  const englishTabs = page.locator(".bottom-nav .nav-label");
+  await expect(englishTabs).toHaveText(["Sounds", "Focus", "Me"]);
 
   await page.goto("/?lang=zh");
   await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
   await expect(page.getByRole("button", { name: "切换到英文" })).toHaveText("EN");
+  await expect(page.locator(".bottom-nav .nav-label")).toHaveText(["声音", "静心", "我的"]);
 });
 
 test("keeps a low-saturation color in every scene image slot while assets load", async ({ page }) => {
@@ -41,7 +45,7 @@ test("keeps a low-saturation color in every scene image slot while assets load",
   await expect(backdrop).toHaveAttribute("data-image-scene", "ocean");
   expect(await backdrop.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(82, 109, 120)");
 
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   const soundSpaceImage = page.locator(".me-sound-space img");
   await expect(soundSpaceImage).toHaveAttribute("data-image-scene", "ocean");
   expect(await soundSpaceImage.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(82, 109, 120)");
@@ -327,7 +331,7 @@ test("selects timer and switches the interface language", async ({ page }) => {
   await page.getByRole("button", { name: "切换到英文" }).click();
   await expect(page.getByRole("heading", { name: "OCEAN WAVES" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Switch to Chinese" })).toHaveText("中");
-  await expect(page.getByRole("button", { name: "Focus 静心" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Focus" })).toBeVisible();
 });
 
 test("opens the full sound library with an upward gesture", async ({ page }) => {
@@ -344,7 +348,7 @@ test("opens the full sound library with an upward gesture", async ({ page }) => 
 });
 
 test("runs and pauses breathing in the current scene", async ({ page }) => {
-  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await page.getByRole("button", { name: "静心" }).click();
   await expect(page.getByRole("heading", { name: "大海" })).toBeVisible();
 
   await page.getByRole("button", { name: "开始 1 分钟" }).click();
@@ -354,7 +358,7 @@ test("runs and pauses breathing in the current scene", async ({ page }) => {
 });
 
 test("persists optional scene sound while keeping extended Focus gated", async ({ page }) => {
-  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await page.getByRole("button", { name: "静心" }).click();
   await page.getByRole("button", { name: "3 分钟" }).click();
   const upgrade = page.getByRole("dialog", { name: "升级一休 Plus" });
   await expect(upgrade).toBeVisible();
@@ -368,13 +372,13 @@ test("persists optional scene sound while keeping extended Focus gated", async (
   await expect(page.getByRole("button", { name: "暂停呼吸" })).toBeVisible();
 
   await page.reload();
-  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await page.getByRole("button", { name: "静心" }).click();
   await expect(page.getByRole("button", { name: "1 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("switch", { name: "场景声音：大海" })).toHaveAttribute("aria-checked", "true");
 });
 
 test("filters the sound library by use and serves lightweight thumbnails", async ({ page }) => {
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
 
   const library = page.getByRole("dialog", { name: "声音库" });
@@ -388,7 +392,7 @@ test("filters the sound library by use and serves lightweight thumbnails", async
 test("keeps recent listening in My and restores it after reload", async ({ page }) => {
   await page.getByRole("button", { name: "播放" }).click();
   await page.getByRole("button", { name: "下一种声音" }).click();
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
 
   const recent = page.locator(".recent-card");
   await expect(recent.getByText("最近聆听", { exact: true })).toBeVisible();
@@ -396,24 +400,24 @@ test("keeps recent listening in My and restores it after reload", async ({ page 
   await expect(recent.getByRole("button").first()).toContainText("屋檐雨");
 
   await page.reload();
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await expect(page.locator(".recent-card").getByRole("button").first()).toContainText("屋檐雨");
 });
 
 test("updates and restores local settings", async ({ page }) => {
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await expect(page.getByRole("heading", { name: "回到自己的节奏" })).toBeVisible();
   await page.getByRole("button", { name: "5 分钟", exact: true }).click();
   await page.getByRole("switch", { name: "结束提示音" }).click();
   await page.reload();
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
 
   await expect(page.getByRole("button", { name: "5 分钟", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("switch", { name: "结束提示音" })).toHaveAttribute("aria-checked", "true");
 });
 
 test("keeps About Us and the Wendao life philosophy in My", async ({ page }) => {
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   const groupLabels = page.locator(".me-group-label");
   await expect(groupLabels).toHaveCount(3);
   expect(await groupLabels.first().evaluate((element) => getComputedStyle(element).fontSize)).toBe("14px");
@@ -551,7 +555,7 @@ test("does not allow the download handoff to redirect away from Yixiu's App Stor
 });
 
 test("shows the WonderElian WeChat Channels QR code in Contact", async ({ page }) => {
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await page.getByRole("button", { name: /联系与反馈/ }).click();
 
   const website = page.getByRole("link", { name: "WonderElian wonderelian.com" });
@@ -565,10 +569,11 @@ test("shows the WonderElian WeChat Channels QR code in Contact", async ({ page }
 });
 
 test("keeps the current sound playing across Focus and My tabs", async ({ page }) => {
+  await page.getByRole("button", { name: "暂不分享" }).click();
   await page.getByRole("button", { name: "播放" }).click();
-  await page.getByRole("button", { name: "静心 FOCUS" }).click();
-  await page.getByRole("button", { name: "我的 ME" }).click();
-  await page.getByRole("button", { name: "声音 SOUNDS" }).click();
+  await page.getByRole("button", { name: "静心", exact: true }).click();
+  await page.getByRole("button", { name: "我的", exact: true }).click();
+  await page.getByRole("button", { name: "声音", exact: true }).click();
   await expect(page.getByRole("button", { name: "暂停" })).toHaveAttribute("aria-pressed", "true");
 });
 
@@ -581,7 +586,7 @@ test("uses a conventional full-width web tab bar on mobile and desktop", async (
   expect(new Set(initialBoxes.map((box) => box.y)).size).toBe(1);
   expect(new Set(initialBoxes.map((box) => box.height)).size).toBe(1);
 
-  await page.getByRole("button", { name: "静心 FOCUS" }).click();
+  await page.getByRole("button", { name: "静心" }).click();
   const activeBoxes = await tabs.evaluateAll((buttons) => buttons.map((button) => {
     const box = button.getBoundingClientRect();
     return { y: box.y, height: box.height };
@@ -630,7 +635,7 @@ test("uses a conventional full-width web tab bar on mobile and desktop", async (
 
 test("loads a real morning-birds recording instead of generated noise", async ({ page }) => {
   const request = page.waitForRequest((candidate) => candidate.url().endsWith("/assets/yixiu/audio/morning-birds.m4a"));
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
   await page.getByText("晨林鸟语", { exact: true }).click();
 
@@ -640,7 +645,7 @@ test("loads a real morning-birds recording instead of generated noise", async ({
 });
 
 test("lays out all twenty-eight sounds and tracks in an even two-column library", async ({ page }) => {
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
 
   const cards = page.locator(".scene-grid article");
@@ -658,7 +663,7 @@ test("lays out all twenty-eight sounds and tracks in an even two-column library"
 });
 
 test("enforces exactly five free nature sounds and three free meditation tracks", async ({ page }) => {
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
 
   const library = page.getByRole("dialog", { name: "声音库" });
@@ -679,7 +684,7 @@ test("enforces exactly five free nature sounds and three free meditation tracks"
 
 test("plays free meditation music and gates a Plus track", async ({ page }) => {
   const freeRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/assets/yixiu/audio/meditation/oasis-rest.m4a"));
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
   const library = page.getByRole("dialog", { name: "声音库" });
   await library.getByRole("tab", { name: "冥想音乐" }).click();
@@ -689,7 +694,7 @@ test("plays free meditation music and gates a Plus track", async ({ page }) => {
   await expect(page).toHaveURL(/music=oasisRest/);
   expect((await freeRequest).url()).toContain("oasis-rest.m4a");
 
-  await page.getByRole("button", { name: "我的 ME" }).click();
+  await page.getByRole("button", { name: "我的" }).click();
   await page.getByRole("button", { name: "浏览全部声音" }).click();
   await page.getByRole("dialog", { name: "声音库" }).getByRole("tab", { name: "冥想音乐" }).click();
   await page.getByRole("dialog", { name: "声音库" }).getByText("深流", { exact: true }).click();

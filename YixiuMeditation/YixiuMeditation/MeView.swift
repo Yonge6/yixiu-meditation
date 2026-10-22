@@ -8,6 +8,7 @@ private enum MePage: Equatable {
     case privacy
     case sources
     case support
+    case lifestyle
 }
 
 struct MeView: View {
@@ -17,7 +18,7 @@ struct MeView: View {
     @EnvironmentObject private var dailyReminder: DailyReminderManager
     @Environment(\.openURL) private var openURL
     @State private var page: MePage = .home
-    @State private var libraryOpen = false
+    @State private var libraryScope: SoundLibraryScope?
     @State private var videoChannelOpen = false
     @State private var paywallOpen = false
     @State private var reviewOpenFailed = false
@@ -51,8 +52,8 @@ struct MeView: View {
             }
             .ignoresSafeArea()
         }
-        .sheet(isPresented: $libraryOpen) {
-            SoundLibraryView()
+        .sheet(item: $libraryScope) { scope in
+            SoundLibraryView(initialScope: scope)
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
@@ -111,14 +112,8 @@ struct MeView: View {
                     .foregroundStyle(YixiuTheme.moon)
                     .padding(.top, 12)
 
-                journalCard
-                    .padding(.top, 20)
-
                 soundSpaceCard
-                    .padding(.top, 12)
-
-                membershipCard
-                    .padding(.top, 12)
+                    .padding(.top, 20)
 
                 if !appState.recentScenes.isEmpty {
                     recentScenesCard
@@ -126,6 +121,9 @@ struct MeView: View {
                 }
 
                 favoritesCard
+                    .padding(.top, 12)
+
+                membershipCard
                     .padding(.top, 12)
 
                 timerCard
@@ -137,17 +135,20 @@ struct MeView: View {
                 settingsCard
                     .padding(.top, 12)
 
+                journalCard
+                    .padding(.top, 20)
+
                 sectionLabel(language.text(zh: "关于一休", en: "ABOUT YIXIU"))
                     .padding(.top, 24)
 
                 aboutCard
 
-                sectionLabel(language.text(zh: "沿途所作", en: "WORKS ALONG THE WAY"))
+                sectionLabel(language.text(zh: "生活方式", en: "LIFESTYLE"))
                     .padding(.top, 24)
 
                 worksCard
 
-                Text(language.text(zh: "向内认识自己，向外如水而行。", en: "Know within. Move like water."))
+                Text(language.text(zh: "不必等到有空，才可以休息。", en: "You don't have to wait for a free day to pause."))
                     .font(YixiuTheme.chineseDisplay(13))
                     .tracking(1)
                     .foregroundStyle(YixiuTheme.mist.opacity(0.52))
@@ -177,19 +178,19 @@ struct MeView: View {
             )
 
             VStack(alignment: .leading, spacing: 5) {
-                Text(language.text(zh: "声音空间", en: "SOUND SPACE"))
+                Text(language.text(zh: "继续聆听", en: "CONTINUE LISTENING"))
                     .yixiuSecondary(9)
                 Text(language.text(zh: appState.scene.zhName, en: appState.scene.enName))
                     .font(YixiuTheme.chineseDisplay(21))
                     .foregroundStyle(YixiuTheme.moon)
-                Text(language.text(zh: "正在聆听 · 14 种自然声 + 30 首音乐（含 20 首古典）", en: "Now listening · 14 nature sounds + 30 music tracks (including 20 classical works)"))
+                Text(language.text(zh: "熟悉的声音，一点就能回来", en: "A familiar sound, one tap away"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.mist)
 
                 Button {
-                    libraryOpen = true
+                    openScene(appState.scene)
                 } label: {
-                    Label(language.text(zh: "浏览全部声音", en: "Browse all sounds"), systemImage: "water.waves")
+                    Label(language.text(zh: "继续听一会儿", en: "Listen for a while"), systemImage: "play.fill")
                         .font(YixiuTheme.sans(13, weight: .semibold))
                         .foregroundStyle(YixiuTheme.deepWater)
                         .padding(.horizontal, 16)
@@ -214,34 +215,16 @@ struct MeView: View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(language.text(zh: "留给自己的时间", en: "TIME TO YOURSELF"))
+                    Text(language.text(zh: "我的休息记录", en: "YOUR QUIET MOMENTS"))
                         .font(YixiuTheme.sans(11, weight: .medium)).tracking(1.4)
                     HStack(alignment: .firstTextBaseline, spacing: 7) {
-                        Text("\(PracticeEntry.weekMinutes(appState.practiceJournal))")
-                            .font(YixiuTheme.englishSerif(44)).foregroundStyle(YixiuTheme.moon)
-                        Text(language.text(zh: "分钟 · 本周", en: "min · this week"))
-                            .font(YixiuTheme.sans(12))
+                        Text(language.text(zh: "不必赶进度", en: "No pace to keep"))
+                            .font(YixiuTheme.chineseDisplay(22)).foregroundStyle(YixiuTheme.moon)
                     }
                 }
                 Spacer()
                 Image(systemName: "water.waves").font(.system(size: 27, weight: .ultraLight))
                     .foregroundStyle(YixiuTheme.aquaStrong)
-            }
-            HStack(spacing: 0) {
-                ForEach(PracticeEntry.weekDays(), id: \.self) { day in
-                    let completed = appState.practiceJournal.contains {
-                        $0.completedAt <= Date() && Calendar.current.isDate($0.completedAt, inSameDayAs: day)
-                    }
-                    VStack(spacing: 9) {
-                        Circle().fill(completed ? YixiuTheme.aquaStrong : YixiuTheme.mist.opacity(0.15))
-                            .frame(width: 8, height: 8)
-                        Text(day.formatted(.dateTime.weekday(.narrow).locale(Locale(identifier: language == .zh ? "zh_CN" : "en_US"))))
-                            .font(YixiuTheme.sans(11))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(day.formatted(date: .abbreviated, time: .omitted) + language.text(zh: completed ? "，有完成练习" : "，暂无记录", en: completed ? ", practice completed" : ", no practice recorded"))
-                }
             }
             Rectangle().fill(YixiuTheme.hairline).frame(height: 0.7)
             if appState.practiceJournal.isEmpty {
@@ -303,12 +286,11 @@ struct MeView: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(YixiuTheme.aqua.opacity(0.10))
+                        .fill(YixiuTheme.plusGold.opacity(0.08))
                     Circle()
-                        .stroke(YixiuTheme.aqua.opacity(0.42), lineWidth: 0.8)
-                    Image(systemName: subscriptionStore.hasPlus ? "drop.fill" : "drop")
-                        .font(.system(size: 18, weight: .light))
-                        .foregroundStyle(YixiuTheme.aquaStrong)
+                        .stroke(YixiuTheme.plusGold.opacity(0.35), lineWidth: 0.8)
+                    PremiumGemIcon()
+                        .frame(width: 27, height: 25)
                 }
                 .frame(width: 46, height: 46)
 
@@ -372,17 +354,17 @@ struct MeView: View {
     private var membershipSubtitle: String {
         if subscriptionStore.isInternalPlusExperience {
             return language.text(
-                zh: "内部体验版 · 全部 44 种声音已解锁",
-                en: "Internal preview · All 44 sounds unlocked"
+                zh: "内部体验版 · 全部 54 种声音已解锁",
+                en: "Internal preview · All 54 sounds unlocked"
             )
         }
         switch subscriptionStore.accessLevel {
         case .plus:
-            return language.text(zh: "持续新增的声音、画面与静心练习", en: "New sounds, scenes, and quiet practices")
+            return language.text(zh: "全部声音、长时聆听与 3 / 5 / 10 分钟呼吸", en: "All sounds, longer listening and 3 / 5 / 10-minute breathing")
         case .legacy:
-            return language.text(zh: "原有 14 种自然声继续保留，12 首音乐免费（含 10 首古典）", en: "Your 14 nature sounds remain, plus 12 free music tracks (10 classical)")
+            return language.text(zh: "原有 14 种自然声继续保留，17 首音乐免费（10 首古典、5 首 AI 原创）", en: "Your 14 nature sounds remain, plus 17 free music tracks (10 classical, 5 AI originals)")
         case .free:
-            return language.text(zh: "10 种自然声 + 12 首音乐免费（含 10 首古典）", en: "10 nature sounds + 12 music tracks are free (10 classical)")
+            return language.text(zh: "10 种自然声 + 17 首音乐免费（10 首古典、5 首 AI 原创）", en: "10 nature sounds + 17 music tracks are free (10 classical, 5 AI originals)")
         }
     }
 
@@ -391,24 +373,36 @@ struct MeView: View {
             paywallOpen = true
             return
         }
-        appState.selectScene(scene, autoplay: autoplay)
+        appState.selectScene(scene, autoplay: autoplay, entryPoint: "continue")
         appState.activeTab = .listen
     }
 
     private var favoritesCard: some View {
         VStack(alignment: .leading, spacing: 14) {
+            Button {
+                libraryScope = .favorites
+            } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(language.text(zh: "我的收藏", en: "Favorites"))
                         .font(YixiuTheme.chineseDisplay(18))
-                    Text(language.text(zh: "常听的水声", en: "Your returning waters"))
+                    Text(language.text(zh: "把喜欢的声音留在身边", en: "Keep your favorite sounds close"))
                         .font(YixiuTheme.sans(11))
                         .foregroundStyle(YixiuTheme.mist)
                 }
                 Spacer()
                 Image(systemName: "heart")
                     .foregroundStyle(YixiuTheme.mist)
+                Image(systemName: "chevron.right")
+                    .font(YixiuTheme.sans(12))
+                    .foregroundStyle(YixiuTheme.mist)
             }
+            .frame(minHeight: 50)
+            .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(language.text(zh: "查看我的收藏", en: "View favorites"))
+            .accessibilityIdentifier("me.favorites.open")
 
             if appState.favorites.isEmpty {
                 Text(language.text(
@@ -418,6 +412,16 @@ struct MeView: View {
                 .font(YixiuTheme.sans(13))
                 .foregroundStyle(YixiuTheme.mist.opacity(0.66))
                 .lineSpacing(5)
+                Button {
+                    libraryScope = .all
+                } label: {
+                    Label(language.text(zh: "浏览声音，添加收藏", en: "Browse sounds to add favorites"), systemImage: "chevron.right")
+                        .font(YixiuTheme.sans(13))
+                        .foregroundStyle(YixiuTheme.aquaStrong)
+                        .frame(minHeight: 44)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("me.favorites.browse")
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 9) {
@@ -835,6 +839,7 @@ struct MeView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(language.text(zh: "返回", en: "Back"))
+                .accessibilityIdentifier("me.detail.back")
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("一休 · YIXIU")
@@ -865,7 +870,6 @@ struct MeView: View {
         }
         .frame(width: geometry.size.width, height: geometry.size.height)
         .clipped()
-        .ignoresSafeArea(edges: .top)
     }
 
     private var detailBackGesture: some Gesture {
@@ -890,6 +894,8 @@ struct MeView: View {
         switch page {
         case .about:
             AboutYixiuView(language: language)
+        case .lifestyle:
+            worksCard
         case .privacy:
             MeArticle(
                 eyebrow: language.text(zh: "你的数据", en: "YOUR DATA"),
@@ -904,8 +910,8 @@ struct MeView: View {
                         en: "The journal keeps the date, duration, type and sound of up to 200 completed practices on this device. It is not uploaded or synced. Removing the app also removes local preferences and entries."
                     ),
                     language.text(
-                        zh: "使用统计默认关闭。自愿开启后，Google Analytics for Firebase 使用随机安装标识统计实际播放时长、声音选择、功能操作、播放错误与购买或订阅事件，以及设备类别和由网络连接推算的粗略地区。不会读取定位权限，也不采集广告标识、姓名、录音或练习手记。Apple 处理支付，我们不获取银行卡信息。可随时在“我的”关闭后续统计；此前汇总数据不会因此自动删除。详情见网站隐私说明。",
-                        en: "Usage analytics is off by default. If you opt in, Google Analytics for Firebase uses a random installation identifier to measure actual listening time, sound choices, feature use, playback errors and purchase or subscription events, plus device categories and a coarse region derived from the network connection. We do not access location services or collect advertising IDs, names, recordings or journal history. Apple handles payment; we do not receive card details. Turn off future collection anytime in Me; this does not automatically delete earlier aggregate data. See our website privacy notice for details."
+                        zh: "使用统计默认关闭。自愿开启后，Google Analytics for Firebase 使用随机安装标识统计休息用途与功能入口、实际播放时长、声音选择、完成呼吸、播放错误与购买或订阅事件，以及设备类别和由网络连接推算的粗略地区。一次实际聆听满 60 秒或完成呼吸，会计为一次有效休息；不上传练习手记。不会读取定位权限，也不采集广告标识、姓名或录音。Apple 处理支付，我们不获取银行卡信息。可随时在“我的”关闭后续统计；此前汇总数据不会因此自动删除。详情见网站隐私说明。",
+                        en: "Usage analytics is off by default. If you opt in, Google Analytics for Firebase uses a random installation identifier to measure rest purposes and entry points, actual listening time, sound choices, completed breathing, playback errors and purchase or subscription events, plus device categories and a coarse region derived from the network connection. Listening for 60 actual seconds or completing breathing counts once as a meaningful rest; journal history is not uploaded. We do not access location services or collect advertising IDs, names or recordings. Apple handles payment; we do not receive card details. Turn off future collection anytime in Me; this does not automatically delete earlier aggregate data. See our website privacy notice for details."
                     )
                 ],
                 quote: language.text(zh: "少一些记录，多一些当下。", en: "Less tracking. More presence.")
@@ -978,6 +984,17 @@ struct MeView: View {
                 }
                 Link(destination: URL(string: "https://yixiu.wonderelian.com/music-credits.html")!) {
                     actionLinkLabel(language.text(zh: "原曲与可下载音频", en: "Original tracks & audio downloads"), icon: "arrow.down.circle")
+                }
+
+                Text(language.text(
+                    zh: "AI 原创 · 一休《十段安静》：10 首新作，由 Gemini / Lyria 辅助生成，并做音量调整与柔和淡入淡出。一休创作 · AI 辅助生成，5 首免费、5 首需要 Plus；每首配有独立 AI 风景图。",
+                    en: "AI Originals · Ten Quiet Moments: ten tracks created for Yixiu with Gemini / Lyria, with level adjustment and gentle fades. Created for Yixiu · AI-assisted music. Five are Free and five require Plus, each with its own AI-generated landscape."
+                ))
+                .font(YixiuTheme.sans(14))
+                .lineSpacing(7)
+                .foregroundStyle(YixiuTheme.mist)
+                Link(destination: URL(string: "https://yixiu.wonderelian.com/music-credits.html#ai-originals")!) {
+                    actionLinkLabel(language.text(zh: "AI 原创 · 曲目与创作来源", en: "AI Originals · Track list & creation sources"), icon: "music.note.list")
                 }
 
                 Link(destination: URL(string: "https://mixkit.co/license/")!) {
@@ -1058,6 +1075,7 @@ struct MeView: View {
         case .privacy: language.text(zh: "隐私说明", en: "Privacy")
         case .sources: language.text(zh: "声音来源", en: "Audio Sources")
         case .support: language.text(zh: "联系与反馈", en: "Contact")
+        case .lifestyle: language.text(zh: "生活方式", en: "Lifestyle")
         }
     }
 
@@ -1162,6 +1180,7 @@ struct MeView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("me.lifestyle.\(title)")
     }
 
     private func contactLink(title: String, value: String, icon: String, url: String) -> some View {
@@ -1267,12 +1286,12 @@ private struct AboutYixiuView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(language.text(zh: "真实自己，流动人生", en: "TRUE TO YOURSELF. FLOW WITH LIFE."))
+            Text(language.text(zh: "休息、睡眠与静心", en: "REST, SLEEP & CALM"))
                 .yixiuSecondary(9)
 
             Text(language.text(
-                zh: "一休，是一处让声音带你回到当下的空间。",
-                en: "Yixiu is a space where sound brings you back to the present."
+                zh: "随时，给自己一休。",
+                en: "Make room for quiet."
             ))
             .font(YixiuTheme.chineseDisplay(25))
             .lineSpacing(7)
@@ -1280,8 +1299,8 @@ private struct AboutYixiuView: View {
             .padding(.top, 12)
 
             Text(language.text(
-                zh: "我们用真实自然声、定时聆听与水之呼吸，陪你在工作、阅读、睡眠或情绪起伏时先停一停，照顾身体，听见自己，再继续前行。",
-                en: "Through real nature sounds, timed listening and water breathing, we help you pause, care for the body, hear yourself and continue—through work, reading, sleep and emotional change."
+                zh: "一休是日常的声音陪伴。午休时、夜里醒来，或工作间隙，用自然声、轻音乐与一分钟呼吸，给自己留一小会儿。无需账号，没有广告，也没有必须完成的打卡。不必等到有空，才可以休息。",
+                en: "Yixiu is an everyday sound companion. During a lunch break, a night waking, or a gap between tasks, make a little room with nature sounds, gentle music and one-minute breathing. No account, no ads, no streak to keep. You don't have to wait for a free day to pause."
             ))
             .font(YixiuTheme.sans(13))
             .lineSpacing(7)

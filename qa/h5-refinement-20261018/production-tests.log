@@ -1,0 +1,17 @@
+
+> yixiu-prototype@0.1.0 test:runtime
+> playwright test tests/ui-refinement.spec.ts --workers=1
+
+[WebServer] (node:65894) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:65899) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/ui-refinement.spec.ts:10:3 › refined H5 390x844 zh (2.9s)
+  ✓  2 tests/ui-refinement.spec.ts:10:3 › refined H5 320x740 en (1.7s)
+  ✓  3 tests/ui-refinement.spec.ts:10:3 › refined H5 1280x900 zh (2.1s)
+  ✓  4 tests/ui-refinement.spec.ts:10:3 › refined H5 844x390 en (1.5s)
+
+  4 passed (9.9s)

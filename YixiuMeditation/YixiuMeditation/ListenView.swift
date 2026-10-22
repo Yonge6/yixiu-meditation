@@ -1,3 +1,90 @@
+import Foundation
+
+enum SoundLibraryScope: String, CaseIterable, Identifiable {
+    case all
+    case free
+    case favorites
+    case recent
+
+    var id: String { rawValue }
+
+    func title(language: AppLanguage) -> String {
+        switch self {
+        case .all: language.text(zh: "全部", en: "All")
+        case .free: language.text(zh: "免费", en: "Free")
+        case .favorites: language.text(zh: "收藏", en: "Favorites")
+        case .recent: language.text(zh: "最近听过", en: "Recent")
+        }
+    }
+}
+
+enum SoundLibraryPurpose: String, CaseIterable, Identifiable {
+    case all, lunch, bedtime, nightWaking, workBreak, focus, morning, relax
+    var id: String { rawValue }
+    func title(language: AppLanguage) -> String {
+        switch self {
+        case .all: language.text(zh: "全部", en: "All")
+        case .lunch: language.text(zh: "午休", en: "Lunch break")
+        case .bedtime: language.text(zh: "睡前", en: "Bedtime")
+        case .nightWaking: language.text(zh: "夜醒", en: "Night waking")
+        case .workBreak: language.text(zh: "工作间隙", en: "Work break")
+        case .focus: language.text(zh: "专注", en: "Focus")
+        case .morning: language.text(zh: "清晨", en: "Morning")
+        case .relax: language.text(zh: "放松", en: "Relax")
+        }
+    }
+    func matches(_ scene: MeditationScene) -> Bool {
+        switch self {
+        case .all: return true
+        case .lunch: return [.lake, .spring, .stream, .softLightRest, .quietHour, .gymnopedie, .mozartAndante, .bedsideGlow].contains(scene)
+        case .bedtime: return scene.matches(.sleep)
+        case .nightWaking: return [.window, .rain, .ocean, .tide, .moonAnchorage, .blueQuiet, .nocturne, .moonlightSonata].contains(scene)
+        case .workBreak: return scene.matches(.focus) || [.lake, .spring, .birds, .bamboo].contains(scene)
+        case .focus: return scene.matches(.focus)
+        case .morning: return scene.matches(.morning)
+        case .relax: return scene.matches(.relax)
+        }
+    }
+}
+
+enum SoundLibraryFilter {
+    static func scenes(
+        in catalog: [MeditationScene] = MeditationScene.availableScenes,
+        scope: SoundLibraryScope,
+        category: SceneCategory,
+        purpose: SoundLibraryPurpose = .all,
+        query: String,
+        favorites: [MeditationScene],
+        recent: [MeditationScene]
+    ) -> [MeditationScene] {
+        let available = Set(catalog.filter(\.isAvailable))
+        let favoriteScenes = Set(favorites)
+        let words = normalized(query).split(whereSeparator: \.isWhitespace)
+        let source = scope == .recent ? recent : catalog
+        var seen = Set<MeditationScene>()
+
+        return source.filter { scene in
+            guard available.contains(scene), seen.insert(scene).inserted,
+                  scene.matches(category), purpose.matches(scene) else { return false }
+            switch scope {
+            case .free:
+                guard SubscriptionAccessPolicy.freeScenes.contains(scene) else { return false }
+            case .favorites:
+                guard favoriteScenes.contains(scene) else { return false }
+            case .all, .recent:
+                break
+            }
+            let searchable = normalized([scene.zhName, scene.enName, scene.useZh, scene.useEn].joined(separator: " "))
+            return words.allSatisfy { searchable.contains($0) }
+        }
+    }
+
+    private static func normalized(_ value: String) -> String {
+        value.folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: Locale(identifier: "en_US_POSIX"))
+    }
+}
+
+#if canImport(SwiftUI) && canImport(UIKit)
 import SwiftUI
 import UIKit
 
@@ -52,6 +139,7 @@ struct ListenView: View {
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var timerOpen = false
     @State private var showPlusAfterTimer = false
     @State private var libraryOpen = false
@@ -218,7 +306,10 @@ struct ListenView: View {
     }
 
     private func isExpanded(_ size: CGSize) -> Bool {
-        size.width >= 680 && !dynamicTypeSize.isAccessibilitySize
+        YixiuAdaptiveLayout.usesColumns(
+            size: size, horizontalSizeClass: horizontalSizeClass,
+            dynamicTypeSize: dynamicTypeSize, minimumColumnWidth: 320
+        )
     }
 
     private func playerLayout(_ size: CGSize) -> AnyLayout {
@@ -410,13 +501,14 @@ struct ListenView: View {
                 .frame(width: 40, height: 40)
                 .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 1) {
                 Text(language.text(zh: "一休冥想", en: "Yixiu Meditation"))
                     .font(language == .zh ? YixiuTheme.chineseDisplay(22) : YixiuTheme.englishSerif(20))
                     .foregroundStyle(YixiuTheme.moon)
                 Text(language.text(zh: "休息、睡眠与静心", en: "Rest, Sleep & Calm"))
                     .font(YixiuTheme.sans(11))
                     .foregroundStyle(YixiuTheme.moon.opacity(0.88))
+                    .offset(y: -3)
             }
             .fixedSize(horizontal: false, vertical: true)
         }
@@ -493,9 +585,9 @@ struct ListenView: View {
                 .padding(.top, 10)
 
             HStack(spacing: 11) {
-                Text(language.text(zh: "如水而行", en: "Be water, my friend."))
+                Text(language.text(zh: "随时，给自己一休。", en: "Make room for quiet."))
                 Text("·")
-                Text(language.secondary(zh: "如水而行", en: "BE WATER, MY FRIEND."))
+                Text(language.secondary(zh: "随时，给自己一休。", en: "MAKE ROOM FOR QUIET."))
                     .italic()
             }
             .font(YixiuTheme.englishSerif(11))
@@ -684,72 +776,256 @@ struct SoundLibraryView: View {
     @EnvironmentObject private var subscriptionStore: SubscriptionStore
     @Environment(\.dismiss) private var dismiss
     @State private var selectedCategory: SceneCategory = .all
+    @State private var selectedPurpose: SoundLibraryPurpose = .all
+    @State private var selectedScope: SoundLibraryScope = .all
+    @State private var searchQuery = ""
+    @State private var searchOpen = false
     @State private var paywallOpen = false
+    @FocusState private var searchFocused: Bool
+
+    init(initialScope: SoundLibraryScope = .all) {
+        _selectedScope = State(initialValue: initialScope)
+    }
 
     private var language: AppLanguage { appState.language }
     private var filteredScenes: [MeditationScene] {
-        MeditationScene.availableScenes.filter { $0.matches(selectedCategory) }
+        SoundLibraryFilter.scenes(
+            scope: selectedScope,
+            category: selectedCategory,
+            purpose: selectedPurpose,
+            query: searchQuery,
+            favorites: appState.favorites,
+            recent: appState.recentScenes
+        )
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 7) {
-                        ForEach(SceneCategory.allCases) { category in
-                            Button {
-                                selectedCategory = category
-                            } label: {
-                                Text(category.title(language: language))
-                                    .font(.system(size: 11, weight: .medium))
-                                    .foregroundStyle(selectedCategory == category ? YixiuTheme.deepWater : YixiuTheme.mist)
-                                    .padding(.horizontal, 15)
-                                    .frame(height: 34)
-                                    .background(
-                                        Capsule().fill(selectedCategory == category ? YixiuTheme.aquaStrong : YixiuTheme.deepWaterSoft.opacity(0.56))
-                                    )
-                                    .overlay(
-                                        Capsule().stroke(selectedCategory == category ? .clear : YixiuTheme.hairline, lineWidth: 0.8)
-                                    )
+        VStack(spacing: 0) {
+            libraryControls
+            ScrollView {
+                Group {
+                    if filteredScenes.isEmpty {
+                        emptyResults
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
+                            ForEach(filteredScenes) { scene in
+                                sceneCard(scene)
                             }
-                            .buttonStyle(.plain)
-                            .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
                         }
                     }
-                    .padding(.horizontal, 1)
                 }
-                .frame(height: 34)
                 .padding(.horizontal, 18)
-                .padding(.vertical, 14)
-                .background(YixiuTheme.deepWater)
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 11)], spacing: 11) {
-                        ForEach(filteredScenes) { scene in
-                            sceneCard(scene)
-                        }
-                    }
-                    .padding(.horizontal, 18)
-                    .padding(.bottom, 18)
-                    .frame(maxWidth: 1040)
-                    .frame(maxWidth: .infinity)
-                }
+                .frame(maxWidth: 1040)
+                .frame(maxWidth: .infinity)
             }
-            .background(YixiuTheme.deepWater)
-            .navigationTitle(language.text(zh: "声音库", en: "Sound Library"))
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbarBackground(YixiuTheme.deepWater, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(language.text(zh: "完成", en: "Done")) { dismiss() }
-                }
-            }
+            .scrollDismissesKeyboard(.interactively)
+            .accessibilityIdentifier("library.results")
         }
+        .background(YixiuTheme.deepWater.ignoresSafeArea())
         .sheet(isPresented: $paywallOpen) {
             PlusPaywallView()
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YixiuTheme.deepWater)
         }
+    }
+
+    // Search, personal scopes and categories share a fixed header, so they remain
+    // available while the card grid scrolls on both compact and expanded devices.
+    private var libraryControls: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 6) {
+                Text(language.text(zh: "声音库", en: "Sound Library"))
+                    .font(YixiuTheme.chineseDisplay(30))
+                    .foregroundStyle(YixiuTheme.moon)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+
+                Button {
+                    withAnimation(.easeInOut(duration: 0.18)) {
+                        if searchOpen { searchQuery = "" }
+                        searchOpen.toggle()
+                    }
+                    searchFocused = searchOpen
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 17, weight: .regular))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                        .overlay(Circle().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(language.text(zh: "搜索声音", en: "Search sounds"))
+                .accessibilityIdentifier("library.search.toggle")
+
+                Menu {
+                    Picker(language.text(zh: "聆听筛选", en: "Listening filter"), selection: $selectedScope) {
+                        ForEach(SoundLibraryScope.allCases) { scope in
+                            Text(scope.title(language: language))
+                                .tag(scope)
+                                .accessibilityIdentifier("library.scope.\(scope.rawValue)")
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 8) {
+                        Text(selectedScope.title(language: language))
+                            .font(YixiuTheme.sans(13, weight: .medium))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundStyle(YixiuTheme.mist)
+                    .padding(.horizontal, 12)
+                    .frame(height: 36)
+                    .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                    .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                }
+                .accessibilityIdentifier("library.scope.menu")
+
+                Spacer(minLength: 0)
+
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                        .overlay(Circle().stroke(YixiuTheme.aqua.opacity(0.7), lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(language.text(zh: "关闭声音库", en: "Close sound library"))
+                .accessibilityIdentifier("library.close")
+            }
+
+            if searchOpen {
+                HStack(spacing: 9) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(YixiuTheme.mist)
+                    TextField(language.text(zh: "搜索声音、曲名或作曲家", en: "Search sounds, titles or composers"), text: $searchQuery)
+                        .font(YixiuTheme.sans(16))
+                        .foregroundStyle(YixiuTheme.moon)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .submitLabel(.search)
+                        .focused($searchFocused)
+                        .onSubmit { searchFocused = false }
+                        .accessibilityIdentifier("library.search")
+                    if !searchQuery.isEmpty {
+                        Button { searchQuery = "" } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(YixiuTheme.mist)
+                                .frame(width: 32, height: 44)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(language.text(zh: "清除搜索", en: "Clear search"))
+                    }
+                }
+                .padding(.horizontal, 13)
+                .frame(minHeight: 44)
+                .background(RoundedRectangle(cornerRadius: 13).fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+                .overlay(RoundedRectangle(cornerRadius: 13).stroke(YixiuTheme.hairline, lineWidth: 0.8))
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+
+            HStack(spacing: 9) {
+                Menu {
+                    Picker(language.text(zh: "休息用途", en: "Rest purpose"), selection: $selectedPurpose) {
+                        ForEach(SoundLibraryPurpose.allCases) { purpose in
+                            Text(purpose.title(language: language)).tag(purpose)
+                                .accessibilityIdentifier("library.purpose.\(purpose.rawValue)")
+                        }
+                    }
+                } label: {
+                    filterLabel(kind: language.text(zh: "用途", en: "Purpose"), value: selectedPurpose.title(language: language))
+                }
+                .accessibilityIdentifier("library.purpose.menu")
+                Menu {
+                    Picker(language.text(zh: "声音类型", en: "Sound type"), selection: $selectedCategory) {
+                        ForEach([SceneCategory.all, .nature, .classical, .original, .meditation]) { category in
+                            Text(category.title(language: language)).tag(category)
+                                .accessibilityIdentifier("library.category.\(category.rawValue)")
+                        }
+                    }
+                } label: {
+                    filterLabel(kind: language.text(zh: "声音", en: "Sound"), value: selectedCategory.title(language: language))
+                }
+                .accessibilityIdentifier("library.type.menu")
+            }
+
+        }
+        .padding(.horizontal, 18)
+        .padding(.top, 18)
+        .padding(.bottom, 9)
+        .frame(maxWidth: 1040)
+        .frame(maxWidth: .infinity)
+        .background(YixiuTheme.deepWater)
+    }
+
+    private func filterLabel(kind: String, value: String) -> some View {
+        HStack(spacing: 7) {
+            Text("\(kind) · \(value)")
+                .font(YixiuTheme.sans(12, weight: .medium))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.down").font(.system(size: 10, weight: .medium))
+        }
+        .foregroundStyle(YixiuTheme.moon)
+        .padding(.horizontal, 13)
+        .frame(maxWidth: .infinity, minHeight: 44)
+        .background(Capsule().fill(YixiuTheme.deepWaterSoft.opacity(0.56)))
+        .overlay(Capsule().stroke(YixiuTheme.hairline, lineWidth: 0.8))
+    }
+
+    private var emptyResults: some View {
+        VStack(spacing: 12) {
+            Image(systemName: selectedScope == .favorites ? "heart" : selectedScope == .recent ? "clock" : "magnifyingglass")
+                .font(.system(size: 27, weight: .light))
+                .foregroundStyle(YixiuTheme.aqua)
+            Text(emptyResultsTitle)
+                .font(YixiuTheme.sans(16, weight: .medium))
+                .foregroundStyle(YixiuTheme.moon)
+            Text(emptyResultsMessage)
+                .font(YixiuTheme.sans(13))
+                .foregroundStyle(YixiuTheme.mist)
+                .multilineTextAlignment(.center)
+            Button {
+                searchQuery = ""
+                selectedScope = .all
+                selectedCategory = .all
+                selectedPurpose = .all
+                searchFocused = false
+            } label: {
+                Text(language.text(zh: "浏览全部声音", en: "Explore all sounds"))
+                    .font(YixiuTheme.sans(13, weight: .medium))
+                    .foregroundStyle(YixiuTheme.deepWater)
+                    .padding(.horizontal, 22)
+                    .frame(minHeight: 44)
+                    .background(Capsule().fill(YixiuTheme.aquaStrong))
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("library.reset")
+        }
+        .padding(.vertical, 40)
+    }
+
+    private var emptyResultsTitle: String {
+        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all, selectedPurpose == .all {
+            if selectedScope == .favorites { return language.text(zh: "还没有收藏的声音", en: "No favorites yet") }
+            if selectedScope == .recent { return language.text(zh: "还没有聆听记录", en: "No recent sounds yet") }
+        }
+        return language.text(zh: "没有找到匹配的声音", en: "No matching sounds")
+    }
+
+    private var emptyResultsMessage: String {
+        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, selectedCategory == .all, selectedPurpose == .all {
+            if selectedScope == .favorites { return language.text(zh: "点卡片上的爱心，把喜欢的声音留在这里。", en: "Tap a card’s heart to keep a favorite here.") }
+            if selectedScope == .recent { return language.text(zh: "开始聆听后，最近的声音会出现在这里。", en: "Start listening and your recent sounds will appear here.") }
+        }
+        return language.text(zh: "试试其他关键词，或重置筛选。", en: "Try another search, or reset your filters.")
     }
 
     private func sceneCard(_ scene: MeditationScene) -> some View {
@@ -759,7 +1035,7 @@ struct SoundLibraryView: View {
                     paywallOpen = true
                     return
                 }
-                appState.selectScene(scene)
+                appState.selectScene(scene, entryPoint: "library")
                 dismiss()
             } label: {
                 GeometryReader { geometry in
@@ -846,8 +1122,8 @@ private struct PremiumGemBadge: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            YixiuTheme.moon.opacity(0.16),
-                            YixiuTheme.deepWaterSoft.opacity(0.94),
+                            YixiuTheme.plusGold.opacity(0.24),
+                            YixiuTheme.deepWaterSoft.opacity(0.96),
                             YixiuTheme.deepWater.opacity(0.98)
                         ],
                         startPoint: .topLeading,
@@ -859,9 +1135,9 @@ private struct PremiumGemBadge: View {
                 .stroke(
                     LinearGradient(
                         colors: [
-                            YixiuTheme.moon.opacity(0.78),
-                            YixiuTheme.aquaStrong.opacity(0.46),
-                            YixiuTheme.mist.opacity(0.18)
+                            YixiuTheme.plusGold.opacity(0.64),
+                            YixiuTheme.plusGold.opacity(0.32),
+                            YixiuTheme.plusGold.opacity(0.12)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -869,20 +1145,12 @@ private struct PremiumGemBadge: View {
                     lineWidth: 0.8
                 )
 
-            FacetedGemShape()
-                .stroke(
-                    LinearGradient(
-                        colors: [YixiuTheme.moon, YixiuTheme.aquaStrong, YixiuTheme.mist],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    style: StrokeStyle(lineWidth: 1.05, lineCap: .round, lineJoin: .round)
-                )
-                .frame(width: 16, height: 14)
+            PremiumGemIcon()
+                .frame(width: 21, height: 19)
         }
         .frame(width: 30, height: 30)
         .shadow(color: .black.opacity(0.34), radius: 5, y: 2)
-        .shadow(color: YixiuTheme.aqua.opacity(0.16), radius: 7)
+        .shadow(color: YixiuTheme.plusGold.opacity(0.08), radius: 5)
         .drawingGroup()
     }
 }
@@ -904,30 +1172,4 @@ private struct CutCornerMedallion: Shape {
     }
 }
 
-private struct FacetedGemShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        let left = CGPoint(x: rect.minX + 0.8, y: rect.minY + rect.height * 0.34)
-        let topLeft = CGPoint(x: rect.minX + rect.width * 0.26, y: rect.minY + 0.8)
-        let topRight = CGPoint(x: rect.maxX - rect.width * 0.26, y: rect.minY + 0.8)
-        let right = CGPoint(x: rect.maxX - 0.8, y: rect.minY + rect.height * 0.34)
-        let crown = CGPoint(x: rect.midX, y: rect.minY + rect.height * 0.34)
-        let tip = CGPoint(x: rect.midX, y: rect.maxY - 0.8)
-
-        var path = Path()
-        path.move(to: left)
-        path.addLine(to: topLeft)
-        path.addLine(to: topRight)
-        path.addLine(to: right)
-        path.addLine(to: tip)
-        path.closeSubpath()
-
-        path.move(to: left)
-        path.addLine(to: right)
-        path.move(to: topLeft)
-        path.addLine(to: crown)
-        path.addLine(to: topRight)
-        path.move(to: crown)
-        path.addLine(to: tip)
-        return path
-    }
-}
+#endif

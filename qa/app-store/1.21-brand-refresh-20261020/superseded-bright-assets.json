@@ -1,0 +1,62 @@
+[
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/01-nature.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-zh-01-nature.jpg",
+    "id": "c3800005-717d-8f35-801d-aa4291db376c",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/02-focus.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-zh-02-focus.jpg",
+    "id": "a3000005-717d-8f35-8021-fab732a4ba7f",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-zh/04-classical.jpg",
+    "lang": "zh",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-zh-04-classical.jpg",
+    "id": "ca000005-717d-8f35-8026-e3a64cac1cc8",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/01-nature.jpg",
+    "lang": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-en-01-nature.jpg",
+    "id": "0b400005-717d-8f35-802b-f2eb54b1d52b",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/02-focus.jpg",
+    "lang": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-en-02-focus.jpg",
+    "id": "61000005-717d-8f35-8035-574e1d9d87f4",
+    "uploaded": true
+  },
+  {
+    "file": "/Users/yongyuan/.codex/worktrees/yixiu-reliability-library/冥想/qa/app-store/1.21-brand-refresh-20261020/posters-v2/duo-en/04-classical.jpg",
+    "lang": "en",
+    "group": "IPHONE_DUO_PROFILE",
+    "type": "APP_SCREENSHOT",
+    "category": "APP_SCREENSHOTS_AND_PREVIEWS",
+    "name": "yixiu-121-brand-20261020-duo-en-04-classical.jpg",
+    "id": "e0c00005-717d-8f35-800a-ceff2723b2a8",
+    "uploaded": true
+  }
+]

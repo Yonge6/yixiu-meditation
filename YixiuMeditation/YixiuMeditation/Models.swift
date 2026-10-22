@@ -15,6 +15,11 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 }
 
+enum FocusRestMode {
+    case breathing
+    case listening
+}
+
 enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case ocean
     case rain
@@ -64,6 +69,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
     case nocturne27
     case farewellWaltz
     case preludeBMinor
+    case moonAnchorage
+    case rainLantern
+    case blueQuiet
+    case snowfallSilence
+    case bedsideGlow
+    case cloudBlanket
+    case bambooStillness
+    case oneQuietLeaf
+    case pineShadows
+    case returningStillness
 
     // Keep retired identifiers decodable for completed practice history only.
     var isAvailable: Bool { ![Self.sunlitShore, .oceanPassage, .cloudDrift, .quietOrbit].contains(self) }
@@ -77,6 +92,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var zhName: String {
         switch self {
+        case .moonAnchorage: "月泊"
+        case .rainLantern: "雨灯"
+        case .blueQuiet: "蓝眠"
+        case .snowfallSilence: "雪絮"
+        case .bedsideGlow: "暖枕"
+        case .cloudBlanket: "云被"
+        case .bambooStillness: "竹息"
+        case .oneQuietLeaf: "一叶"
+        case .pineShadows: "松影"
+        case .returningStillness: "归静"
         case .traumerei: "梦幻曲"
         case .raindrop: "雨滴前奏曲"
         case .waltzAMinor: "A 小调圆舞曲"
@@ -130,6 +155,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var enName: String {
         switch self {
+        case .moonAnchorage: "Moon Anchorage"
+        case .rainLantern: "Rain at the Window"
+        case .blueQuiet: "Blue Quiet"
+        case .snowfallSilence: "Snowfall in Silence"
+        case .bedsideGlow: "Bedside Glow"
+        case .cloudBlanket: "A Blanket of Clouds"
+        case .bambooStillness: "Bamboo Stillness"
+        case .oneQuietLeaf: "One Quiet Leaf"
+        case .pineShadows: "Pine Shadows"
+        case .returningStillness: "Returning to Stillness"
         case .traumerei: "Träumerei · Op. 15 No. 7"
         case .raindrop: "Raindrop Prelude · Op. 28 No. 15"
         case .waltzAMinor: "Waltz in A minor · B. 150"
@@ -183,6 +218,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var useZh: String {
         switch self {
+        case .moonAnchorage: "AI 原创 · 2:55"
+        case .rainLantern: "AI 原创 · 2:54"
+        case .blueQuiet: "AI 原创 · 2:43"
+        case .snowfallSilence: "AI 原创 · 2:49"
+        case .bedsideGlow: "AI 原创 · 2:59"
+        case .cloudBlanket: "AI 原创 · 2:51"
+        case .bambooStillness: "AI 原创 · 2:49"
+        case .oneQuietLeaf: "AI 原创 · 2:55"
+        case .pineShadows: "AI 原创 · 2:50"
+        case .returningStillness: "AI 原创 · 2:57"
         case .traumerei: "舒曼 · 3:22"
         case .raindrop: "肖邦 · 4:55"
         case .waltzAMinor: "肖邦 · 2:10"
@@ -232,6 +277,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var useEn: String {
         switch self {
+        case .moonAnchorage: "AI Original · 2:55"
+        case .rainLantern: "AI Original · 2:54"
+        case .blueQuiet: "AI Original · 2:43"
+        case .snowfallSilence: "AI Original · 2:49"
+        case .bedsideGlow: "AI Original · 2:59"
+        case .cloudBlanket: "AI Original · 2:51"
+        case .bambooStillness: "AI Original · 2:49"
+        case .oneQuietLeaf: "AI Original · 2:55"
+        case .pineShadows: "AI Original · 2:50"
+        case .returningStillness: "AI Original · 2:57"
         case .traumerei: "Robert Schumann · 3:22"
         case .raindrop: "Frédéric Chopin · 4:55"
         case .waltzAMinor: "Frédéric Chopin · 2:10"
@@ -281,6 +336,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var assetName: String {
         switch self {
+        case .moonAnchorage: "OriginalMoonAnchorage"
+        case .rainLantern: "OriginalRainLantern"
+        case .blueQuiet: "OriginalBlueQuiet"
+        case .snowfallSilence: "OriginalSnowfallSilence"
+        case .bedsideGlow: "OriginalBedsideGlow"
+        case .cloudBlanket: "OriginalCloudBlanket"
+        case .bambooStillness: "OriginalBambooStillness"
+        case .oneQuietLeaf: "OriginalOneQuietLeaf"
+        case .pineShadows: "OriginalPineShadows"
+        case .returningStillness: "OriginalReturningStillness"
         case .traumerei: "ClassicalGymnopedie"
         case .raindrop: "ClassicalCanon"
         case .waltzAMinor: "ClassicalPrelude17"
@@ -334,6 +399,16 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var audioResource: String {
         switch self {
+        case .moonAnchorage: "moon-anchorage"
+        case .rainLantern: "rain-lantern"
+        case .blueQuiet: "blue-quiet"
+        case .snowfallSilence: "snowfall-in-silence"
+        case .bedsideGlow: "bedside-glow"
+        case .cloudBlanket: "cloud-blanket"
+        case .bambooStillness: "bamboo-stillness"
+        case .oneQuietLeaf: "one-quiet-leaf"
+        case .pineShadows: "pine-shadows"
+        case .returningStillness: "returning-to-stillness"
         case .traumerei: "traumerei"
         case .raindrop: "raindrop"
         case .waltzAMinor: "waltz-a-minor"
@@ -383,6 +458,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isMeditationMusic: Bool {
         switch self {
+        case .moonAnchorage, .rainLantern, .blueQuiet, .snowfallSilence, .bedsideGlow, .cloudBlanket, .bambooStillness, .oneQuietLeaf, .pineShadows, .returningStillness: true
         case .traumerei, .raindrop, .waltzAMinor, .gnossienne, .mozartAndante, .liebestraum, .schubertImpromptu, .nocturne27, .farewellWaltz, .preludeBMinor: true
         case .clairDeLune, .nocturne, .gymnopedie, .canon, .moonlightSonata, .pathetique, .preludeC, .goldbergAria, .berceuse, .prelude17: true
         case .stillWater, .deepCurrent, .moonlitDrift, .quietOrbit, .dreamscape,
@@ -398,6 +474,10 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         isMeditationMusic ? "Audio/Meditation" : "Audio"
     }
 
+    var isAIOriginal: Bool {
+        [Self.moonAnchorage, Self.rainLantern, Self.blueQuiet, Self.snowfallSilence, Self.bedsideGlow, Self.cloudBlanket, Self.bambooStillness, Self.oneQuietLeaf, Self.pineShadows, Self.returningStillness].contains(self)
+    }
+
     var playbackRate: Float {
         switch self {
         case .lake: 0.86
@@ -410,6 +490,7 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     var isBright: Bool {
         switch self {
+        case .moonAnchorage, .rainLantern, .blueQuiet, .snowfallSilence, .bedsideGlow, .cloudBlanket, .bambooStillness, .oneQuietLeaf, .pineShadows, .returningStillness: true
         case .ocean, .spring, .birds, .stream, .lake, .valley, .bamboo, .falls, .snow,
              .stillWater, .openMeadow, .oasisRest, .sunlitShore, .oceanPassage, .cloudDrift, .softLightRest, .quietHour:
             true
@@ -432,6 +513,8 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         return switch category {
         case .all:
             true
+        case .original:
+            isAIOriginal
         case .classical:
             ["clairDeLune","nocturne","gymnopedie","canon","moonlightSonata","pathetique","preludeC","goldbergAria","berceuse","prelude17","traumerei","raindrop","waltzAMinor","gnossienne","mozartAndante","liebestraum","schubertImpromptu","nocturne27","farewellWaltz","preludeBMinor"].contains(rawValue)
         case .nature:
@@ -439,13 +522,13 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
         case .meditation:
             isMeditationMusic
         case .sleep:
-            [.ocean, .rain, .window, .thunder, .snow, .tide, .cloudDrift, .softLightRest, .deepWaterRest, .quietHour].contains(self)
+            [.ocean, .rain, .window, .thunder, .snow, .tide, .cloudDrift, .softLightRest, .deepWaterRest, .quietHour, .moonAnchorage, .rainLantern, .blueQuiet, .snowfallSilence, .bedsideGlow, .cloudBlanket].contains(self)
         case .focus:
-            [.rain, .birds, .stream, .bamboo, .falls, .underwater, .snow].contains(self)
+            [.rain, .birds, .stream, .bamboo, .falls, .underwater, .snow, .bambooStillness, .oneQuietLeaf, .pineShadows, .returningStillness].contains(self)
         case .morning:
             [.spring, .birds, .lake, .valley].contains(self)
         case .relax:
-            [.ocean, .spring, .lake, .valley, .falls, .tide, .cloudDrift, .softLightRest, .deepWaterRest, .quietHour].contains(self)
+            isAIOriginal || [.ocean, .spring, .lake, .valley, .falls, .tide, .cloudDrift, .softLightRest, .deepWaterRest, .quietHour].contains(self)
         }
     }
 
@@ -464,21 +547,22 @@ enum MeditationScene: String, CaseIterable, Identifiable, Codable {
 
     func shareTitle(language: AppLanguage) -> String {
         language.text(
-            zh: "一休 · \(zhName)｜如水而行",
-            en: "Yixiu · \(enName) | Be water, my friend."
+            zh: "一休 · \(zhName)｜随时，给自己一休",
+            en: "Yixiu · \(enName) | Make room for quiet."
         )
     }
 
     func shareMessage(language: AppLanguage) -> String {
         language.text(
-            zh: "此刻，我在一休聆听「\(zhName)」。真实自己，流动人生。",
-            en: "I am listening to \(enName) in Yixiu. True to yourself, flow with life."
+            zh: "给自己留一小会儿，听听「\(zhName)」。不必等到有空，才可以休息。",
+            en: "Make a little room for yourself with \(enName). You don't have to wait for a free day to pause."
         )
     }
 }
 
 enum SceneCategory: String, CaseIterable, Identifiable {
     case all
+    case original
     case nature
     case meditation
     case classical
@@ -491,6 +575,7 @@ enum SceneCategory: String, CaseIterable, Identifiable {
 
     func title(language: AppLanguage) -> String {
         switch self {
+        case .original: language.text(zh: "AI 原创", en: "AI Originals")
         case .classical: language.text(zh: "古典静听", en: "Classical")
         case .all: language.text(zh: "全部", en: "All")
         case .nature: language.text(zh: "自然声", en: "Nature")

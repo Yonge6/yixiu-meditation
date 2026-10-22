@@ -1,0 +1,146 @@
+[
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "5cc00005-717d-8f35-8f0d-70fcc2c61745",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DUO_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "c5800005-717d-8f35-801c-55a36f7e00fe"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/5cc00005-717d-8f35-8f0d-70fcc2c61745"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "7e400005-717d-8f35-8f17-36606d75df43",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DUO_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "41000005-717d-8f35-8019-83806ad336e3"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/7e400005-717d-8f35-8f17-36606d75df43"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "17c00005-717d-8f35-8f3e-660f15705cf3",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DUO_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "92800005-717d-8f35-800a-c3d9b46cfbe7"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/17c00005-717d-8f35-8f3e-660f15705cf3"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "0c000005-717d-8f35-8f0a-e47cee73870d",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DUO_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "8a400005-717d-8f35-8008-b22b5c5a8a68"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/0c000005-717d-8f35-8f0a-e47cee73870d"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "b1c00005-717d-8f35-8f16-6e94cdadc13f",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DUO_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "72400005-717d-8f35-800d-2e3f9c9d28e1"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/b1c00005-717d-8f35-8f16-6e94cdadc13f"
+    }
+  },
+  {
+    "type": "appAssetLibraryPlacements",
+    "id": "15c00005-717d-8f35-8f05-944597d98075",
+    "attributes": {
+      "createdDate": "2026-10-19T07:48:52.071286Z",
+      "lastModifiedDate": "2026-10-19T07:48:52.071286Z",
+      "placementType": "APP_SCREENSHOT",
+      "mediaType": "IMAGE",
+      "placementGroup": "IPHONE_DUO_PROFILE",
+      "state": "ACTIVE",
+      "stateDetails": null
+    },
+    "relationships": {
+      "image": {
+        "data": {
+          "type": "appAssetLibraryImages",
+          "id": "37800005-717d-8f35-8021-0967ec19e44d"
+        }
+      }
+    },
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/appAssetLibraryPlacements/15c00005-717d-8f35-8f05-944597d98075"
+    }
+  }
+]

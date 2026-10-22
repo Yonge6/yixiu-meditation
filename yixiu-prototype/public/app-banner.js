@@ -7,7 +7,7 @@
   const store = "https://apps.apple.com/app/id1461182261?ppid=67cb8784-2b16-4849-b940-90fdf4d99752&pt=120014121&ct=yixiu_h5_20260827&mt=8";
   const banner = document.createElement("aside");
   banner.className = "yixiu-download-banner";
-  banner.innerHTML = '<button type="button" class="yixiu-banner-close"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button><img src="/assets/yixiu/app-icon.png" width="44" height="44" alt=""><div class="yixiu-banner-copy"><strong></strong><span></span></div><a class="yixiu-banner-action" data-analytics-event="yixiu_download_click" data-analytics-placement="download_banner"></a>';
+  banner.innerHTML = '<button type="button" class="yixiu-banner-close"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button><img src="/assets/yixiu/app-icon-96.webp" srcset="/assets/yixiu/app-icon-192.webp 2x" width="44" height="44" alt=""><div class="yixiu-banner-copy"><strong></strong><span></span></div><a class="yixiu-banner-action" data-analytics-event="yixiu_download_click" data-analytics-placement="download_banner"></a>';
   const close = banner.querySelector("button");
   const link = banner.querySelector("a");
   let language;

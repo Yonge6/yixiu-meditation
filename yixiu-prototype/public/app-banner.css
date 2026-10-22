@@ -42,3 +42,10 @@
 @media (min-width: 768px) {
   .yixiu-download-banner { padding-right: max(32px, calc((100vw - 1100px) / 2)); padding-left: max(20px, calc((100vw - 1100px) / 2)); }
 }
+@media (max-width: 719px), (max-height: 560px) {
+  .has-yixiu-banner { --yixiu-banner-height: calc(64px + env(safe-area-inset-top, 0px)); }
+  .yixiu-download-banner { min-height: 64px; padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: 8px; gap: 8px; }
+  .yixiu-download-banner > img { width: 38px; height: 38px; }
+  .yixiu-banner-copy { gap: 2px; }
+  .yixiu-banner-action { min-height: 42px; }
+}

@@ -5,6 +5,23 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const publicDir = path.join(root, "public");
 const entries = JSON.parse(await readFile(path.join(root, "src/data/quiet-journal.json"), "utf8"));
+const relatedSlugsByArticle = {
+  "an-afternoon-without-a-sleep-target": ["sound-does-not-need-to-last-all-night", "listening-timer-focus-and-end-bell"],
+  "make-room-beside-the-bed": ["a-rainy-end-to-the-day", "sound-does-not-need-to-last-all-night"],
+  "sound-does-not-need-to-last-all-night": ["make-room-beside-the-bed", "listening-timer-focus-and-end-bell"],
+  "begin-work-with-one-small-step": ["a-morning-before-the-messages", "an-afternoon-without-a-sleep-target"],
+  "a-break-that-is-not-another-feed": ["a-morning-before-the-messages", "an-afternoon-without-a-sleep-target"],
+  "choose-background-sound-without-a-ranking": ["one-sound-one-page", "keep-your-favorites-close"],
+  "a-morning-before-the-messages": ["begin-work-with-one-small-step", "a-minute-between-things"],
+  "arrive-home-before-starting-again": ["a-break-that-is-not-another-feed", "make-room-beside-the-bed"],
+  "rest-without-a-streak": ["a-minute-between-things", "arrive-home-before-starting-again"],
+  "keep-your-favorites-close": ["choose-background-sound-without-a-ranking", "yixiu-free-and-plus-guide"],
+  "listening-timer-focus-and-end-bell": ["yixiu-free-and-plus-guide", "sound-does-not-need-to-last-all-night"],
+  "yixiu-free-and-plus-guide": ["keep-your-favorites-close", "listening-timer-focus-and-end-bell"],
+  "a-rainy-end-to-the-day": ["make-room-beside-the-bed", "sound-does-not-need-to-last-all-night"],
+  "one-sound-one-page": ["begin-work-with-one-small-step", "choose-background-sound-without-a-ranking"],
+  "a-minute-between-things": ["rest-without-a-streak", "a-break-that-is-not-another-feed"],
+};
 const origin = "https://yixiu.wonderelian.com";
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
 const route = (lang, slug = "") => `/journal/${lang === "zh" ? "zh/" : ""}${slug ? slug + "/" : ""}`;
@@ -26,6 +43,10 @@ for (const entry of entries) {
     if (!copy?.title || !copy.summary || !copy.category || !copy.readTime || !copy.cta || copy.sections?.length < 2 || copy.sections.some(section => !section.title || !section.body)) throw new Error("Journal needs complete bilingual copy");
   }
 }
+if (entries.some(entry => !relatedSlugsByArticle[entry.slug])) throw new Error("Every journal article needs related reading");
+for (const [slug, relatedSlugs] of Object.entries(relatedSlugsByArticle)) {
+  if (!slugs.has(slug) || relatedSlugs.length !== 2 || new Set(relatedSlugs).size !== relatedSlugs.length || relatedSlugs.some(relatedSlug => relatedSlug === slug || !slugs.has(relatedSlug))) throw new Error("Invalid related journal article");
+}
 
 function page(lang, entry) {
   const zh = lang === "zh";
@@ -39,7 +60,8 @@ function page(lang, entry) {
   const cards = entries.map(item => `<a class="quiet-card" href="${route(lang, item.slug)}" data-journal-link data-analytics-event="yixiu_journal_read" data-analytics-value="${item.slug}"><img src="${escape(item.image)}" alt="" loading="lazy" width="${item.imageWidth}" height="${item.imageHeight}"><span class="quiet-card-copy"><span class="quiet-meta">${escape(item[lang].category)} · ${escape(item[lang].readTime)}</span><strong>${escape(item[lang].title)}</strong><span>${escape(item[lang].summary)}</span><span class="quiet-card-link">${zh ? "读一读" : "Read the note"} ↗</span></span></a>`).join("\n");
   const appQuery = entry ? new URLSearchParams({ scene: entry.scene, lang, ...(entry.action === "focus" ? { tab: "focus" } : {}) }) : null;
   const sources = entry?.sources?.length ? `<section class="quiet-sources"><h2>${zh ? "资料与核验" : "Sources and verification"}</h2><ul>${entry.sources.map(source => `<li><a href="${escape(source.url)}">${escape(source[lang])}</a></li>`).join("")}</ul></section>` : "";
-  const related = entry ? `<nav class="quiet-related" aria-label="${zh ? "继续阅读" : "Keep reading"}"><h2>${zh ? "继续阅读" : "Keep reading"}</h2>${entries.filter(item => item.slug !== entry.slug).slice(0, 2).map(item => `<a class="quiet-permalink" href="${route(lang, item.slug)}" data-journal-link>${escape(item[lang].title)} ↗</a>`).join("")}</nav>` : "";
+  const relatedEntries = entry ? relatedSlugsByArticle[entry.slug].map(slug => entries.find(item => item.slug === slug)) : [];
+  const related = entry ? `<nav class="quiet-related" aria-label="${zh ? "继续阅读" : "Keep reading"}"><h2>${zh ? "继续阅读" : "Keep reading"}</h2>${relatedEntries.map(item => `<a class="quiet-permalink" href="${route(lang, item.slug)}" data-journal-link>${escape(item[lang].title)} ↗</a>`).join("")}</nav>` : "";
   const body = entry ? `<a class="quiet-permalink" href="${route(lang)}" data-journal-link>← ${name}</a><div class="quiet-meta"><span>${escape(copy.category)}</span><span>${escape(copy.readTime)}</span></div><h1>${escape(copy.title)}</h1><p class="quiet-intro">${escape(copy.summary)}</p><div class="quiet-article-cover"><img class="quiet-article-image" src="${escape(entry.image)}" alt="" width="${entry.imageWidth}" height="${entry.imageHeight}"></div>${copy.sections.map(section => `<section><h2>${escape(section.title)}</h2><p>${escape(section.body)}</p></section>`).join("")}<a class="quiet-practice" href="/?${escape(appQuery)}" data-journal-link data-analytics-event="yixiu_journal_practice" data-analytics-value="${entry.slug}">${escape(copy.cta)} <span aria-hidden="true">↗</span></a>${sources}${related}<p class="quiet-date">${zh ? "一休编辑" : "Yixiu Editorial"} · <time datetime="${entry.date}">${entry.date}</time></p>` : `<p class="quiet-meta">YIXIU · NOTES FOR EVERYDAY LIFE</p><h1>${name}</h1><p class="quiet-intro">${escape(description)}</p><div class="quiet-articles">${cards}</div>`;
   const structured = entry ? { "@context": "https://schema.org", "@type": "Article", headline: copy.title, description, datePublished: entry.date, inLanguage: zh ? "zh-Hans" : "en", image: origin + entry.image, mainEntityOfPage: origin + pathname, author: { "@type": "Organization", name: "Yixiu Editorial", url: origin + route(lang) }, publisher: { "@type": "Organization", name: "Yixiu", url: origin }, ...(entry.sources?.length ? { citation: entry.sources.map(source => source.url) } : {}) } : { "@context": "https://schema.org", "@type": "CollectionPage", name, description, url: origin + pathname, inLanguage: zh ? "zh-Hans" : "en" };
   return `<!doctype html>

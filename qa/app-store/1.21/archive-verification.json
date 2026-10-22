@@ -1,0 +1,65 @@
+{
+  "app_id": "1461182261",
+  "version": "1.21",
+  "build": "36",
+  "feature_commit": "1d809d4",
+  "source_state": "Final frozen worktree, including preserved pre-existing changes; not a clean-checkout claim.",
+  "preserved_worktree_file_sha256": {
+    "YixiuMeditation/YixiuMeditation/ContentView.swift": "42024eeca9bb878090765453ec722bea95758cb772715dce43aa4f2a323c6db9",
+    "YixiuMeditation/YixiuMeditation.xcodeproj/project.pbxproj": "c7d3aa74cca8bc1e37f56976b78432c3fa0a14a1c6c8931deb2b2c971c615bb7",
+    "YixiuMeditation/Tests/HomeInteractionUITests.swift": "e58c9298d2a2d2e0a719258d4797d3b3b20d56be2a58d39c1ff11f9e79cefa5d"
+  },
+  "xcode": "27.1 (27A9275)",
+  "configuration": "Release",
+  "version_overrides": {
+    "MARKETING_VERSION": "1.21",
+    "CURRENT_PROJECT_VERSION": "36"
+  },
+  "archive_path": "/Volumes/LaCie/XcodePlatforms/Yixiu-1.21-36.xcarchive",
+  "archive_creation_date_utc": "2026-10-19T08:04:17Z",
+  "archive_succeeded": true,
+  "host": {
+    "bundle_identifier": "com.health.yixiu",
+    "version": "1.21",
+    "build": "36",
+    "codesign_deep_strict_verified": true
+  },
+  "widget": {
+    "bundle_identifier": "com.health.yixiu.YixiuQuietWidget",
+    "version": "1.21",
+    "build": "36",
+    "codesign_strict_verified": true
+  },
+  "audio": {
+    "source_to_archive_sha256_matches": 55,
+    "source_to_archive_files_checked": 55,
+    "ai_original_delivery_manifest_matches": 10,
+    "ai_original_delivery_manifest_tracks_checked": 10,
+    "note": "55 audio resources include the end cue; the active catalog remains 54 scenes."
+  },
+  "release_guards": {
+    "debug_or_internal_compilation_flags_present": false,
+    "forced_access_or_internal_preview_executable_markers_present": false,
+    "firebase_analytics_collection_default": false,
+    "idfv_collection_enabled": false,
+    "ad_personalization_default": false,
+    "automatic_screen_reporting_enabled": false,
+    "uses_non_exempt_encryption": false
+  },
+  "upload": {
+    "export_options": "YixiuMeditation/ExportOptions-AppStore.plist",
+    "destination": "upload",
+    "method": "app-store-connect",
+    "manage_app_version_and_build_number": false,
+    "export_succeeded": true,
+    "exit_code": 0,
+    "apple_upload_succeeded_at_utc": "2026-10-19T08:11:28.065Z",
+    "processing_state_at_export_completion": "Uploaded package is processing",
+    "receipt": "qa/app-store/1.21/binary-upload-receipt.log"
+  },
+  "non_blocking_warnings": [
+    "FirebaseAnalytics.framework vendor dSYM absent; symbol upload warning.",
+    "GoogleAppMeasurement.framework vendor dSYM absent; symbol upload warning."
+  ],
+  "limitations": "Archive/export success is not App Review submission, approval, public release, or physical-device installation. App Store Connect must independently verify processed build 36."
+}
